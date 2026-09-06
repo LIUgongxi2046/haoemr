@@ -5478,7 +5478,7 @@ export type ArchiveCaseWire = z.infer<typeof archiveCaseWireSchema>;
 export const archiveReadinessWireSchema = z.object({
   "patient_id": z.string().uuid(),
   "encounter_id": z.string().uuid(),
-  "encounter_status": z.enum(["PLANNED","IN_PROGRESS","FINISHED","CANCELLED"]),
+  "encounter_status": z.enum(["PLANNED","ARRIVED","IN_PROGRESS","SUSPENDED","FINISHED","CANCELLED"]),
   "document_count": z.number().int(),
   "ready": z.boolean(),
   "blockers": z.array(archiveBlockerWireSchema),

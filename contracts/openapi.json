@@ -44704,7 +44704,9 @@
             "type": "string",
             "enum": [
               "PLANNED",
+              "ARRIVED",
               "IN_PROGRESS",
+              "SUSPENDED",
               "FINISHED",
               "CANCELLED"
             ]

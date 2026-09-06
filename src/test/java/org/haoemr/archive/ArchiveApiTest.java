@@ -134,6 +134,22 @@ final class ArchiveApiTest {
         assertThat(unavailableAfterUnseal.body()).contains("ARCHIVE_EXPORT_NOT_AVAILABLE");
     }
 
+    @Test
+    void givenArrivedEncounter_whenReadinessRequested_thenItReturnsTheLifecycleStatusAndBlocker() throws Exception {
+        Actor reader = createActor("MEDICAL_RECORDS");
+        Fixture fixture = createEligibleFixture(reader.userId(), "ARRIVED");
+
+        Lease lease = issueLease(reader, fixture.encounterId());
+        HttpResponse<String> readiness = send(reader, lease, "GET",
+                "/api/v1/archive/readiness?encounter_id=" + fixture.encounterId(), null, null);
+
+        assertThat(readiness.statusCode()).isEqualTo(200);
+        JsonNode response = objectMapper.readTree(readiness.body());
+        assertThat(response.path("encounter_status").stringValue()).isEqualTo("ARRIVED");
+        assertThat(response.path("ready").booleanValue()).isFalse();
+        assertThat(response.path("blockers").toString()).contains("ENCOUNTER_NOT_FINISHED");
+    }
+
     private Actor createActor(String roleCode) {
         UUID user = UUID.randomUUID();
         UUID role = UUID.randomUUID();
@@ -155,6 +171,10 @@ final class ArchiveApiTest {
     }
 
     private Fixture createEligibleFixture(UUID actor) {
+        return createEligibleFixture(actor, "FINISHED");
+    }
+
+    private Fixture createEligibleFixture(UUID actor, String encounterStatus) {
         UUID encounter = UUID.randomUUID();
         UUID document = UUID.randomUUID();
         UUID version = UUID.randomUUID();
@@ -165,11 +185,13 @@ final class ArchiveApiTest {
                   tenant_id, encounter_id, patient_id, organization_id, facility_id,
                   encounter_type, status, started_at, ended_at, source_system, source_key)
                 values (:tenant, :encounter, :patient, :organization, :facility,
-                  'OUTPATIENT', 'FINISHED', now() - interval '2 hours', now() - interval '1 hour',
+                  'OUTPATIENT', :status, now() - interval '2 hours',
+                  case when :status = 'FINISHED' then now() - interval '1 hour' else null end,
                   'ARCHIVE-TEST', :source_key)
                 """).param("tenant", UUID.fromString(TENANT)).param("encounter", encounter)
                 .param("patient", UUID.fromString(PATIENT)).param("organization", UUID.fromString(ORGANIZATION))
-                .param("facility", UUID.fromString(FACILITY)).param("source_key", encounter.toString()).update();
+                .param("facility", UUID.fromString(FACILITY)).param("status", encounterStatus)
+                .param("source_key", encounter.toString()).update();
         jdbc.sql("""
                 insert into clinical_document(
                   tenant_id, document_id, patient_id, encounter_id, document_type_code,

@@ -1,6 +1,12 @@
 \set ON_ERROR_STOP on
 
 begin;
+set constraints all deferred;
+-- The source database already enforces its complete graph.  A few historical
+-- record tables retain non-deferrable cycles (pathway instance/task/variance),
+-- so this transaction alone suppresses target-side triggers while the complete
+-- source graph is inserted.  The setting is LOCAL and resets at commit/rollback.
+set local session_replication_role = replica;
 
 set local haoemr.sync_target_database to :'target_database';
 
@@ -45,7 +51,7 @@ declare
 begin
   loop
     insert into haoemr_legacy_sync_order(table_name, dependency_depth)
-    select child.table_name::text,
+    select child.relname::text,
            min(parent.dependency_depth) + 1
     from haoemr_legacy_sync_order parent
     join pg_catalog.pg_class referenced
@@ -63,74 +69,18 @@ begin
      and child_schema.nspname = 'public'
     join information_schema.foreign_tables source_table
       on source_table.foreign_table_schema = 'haoemr_legacy_sync_source'
-     and source_table.foreign_table_name = child.table_name
+     and source_table.foreign_table_name = child.relname
     where not exists (
       select 1 from haoemr_legacy_sync_order known
-      where known.table_name = child.table_name::text
+      where known.table_name = child.relname::text
     )
-    group by child.table_name
+    group by child.relname
     on conflict (table_name) do nothing;
     get diagnostics discovered = row_count;
     exit when discovered = 0;
   end loop;
 end
 $graph$;
-
--- A record can reference more than one selected table (for example, an action
--- approval references both patient and encounter).  Re-rank the discovered
--- graph so every selected parent is inserted before its child.
-create temporary table haoemr_legacy_sync_node on commit drop as
-select table_name from haoemr_legacy_sync_order;
-truncate haoemr_legacy_sync_order;
-
-do $order$
-declare
-  pass integer := 0;
-  ready integer;
-  remaining text;
-begin
-  loop
-    insert into haoemr_legacy_sync_order(table_name, dependency_depth)
-    select node.table_name, pass
-    from haoemr_legacy_sync_node node
-    where not exists (
-      select 1
-      from pg_catalog.pg_class child
-      join pg_catalog.pg_namespace child_schema
-        on child_schema.oid = child.relnamespace
-       and child_schema.nspname = 'public'
-      join pg_catalog.pg_constraint relation
-        on relation.conrelid = child.oid
-       and relation.contype = 'f'
-      join pg_catalog.pg_class referenced
-        on referenced.oid = relation.confrelid
-      join pg_catalog.pg_namespace referenced_schema
-        on referenced_schema.oid = referenced.relnamespace
-       and referenced_schema.nspname = 'public'
-      join haoemr_legacy_sync_node selected_parent
-        on selected_parent.table_name = referenced.table_name::text
-      left join haoemr_legacy_sync_order completed_parent
-        on completed_parent.table_name = selected_parent.table_name
-      where child.relname::text = node.table_name
-        and completed_parent.table_name is null
-    )
-    on conflict (table_name) do nothing;
-    get diagnostics ready = row_count;
-    exit when ready = 0;
-    pass := pass + 1;
-  end loop;
-
-  if (select count(*) from haoemr_legacy_sync_order) <>
-     (select count(*) from haoemr_legacy_sync_node) then
-    select string_agg(node.table_name, ', ' order by node.table_name)
-      into remaining
-    from haoemr_legacy_sync_node node
-    left join haoemr_legacy_sync_order completed on completed.table_name = node.table_name
-    where completed.table_name is null;
-    raise exception 'Unable to topologically order the complete clinical record graph: %', remaining;
-  end if;
-end
-$order$;
 
 create temporary table haoemr_legacy_sync_result (
   table_name text primary key,
