@@ -32,13 +32,13 @@ const requiredOutputFields = contract?.response?.content_schema?.required ?? [];
 for (const field of ['summary', 'facts', 'gaps', 'warnings']) if (!requiredOutputFields.includes(field)) failures.push({ issue: 'PROVIDER_OUTPUT_CONTRACT_STALE', field });
 
 const providerSource = (await Promise.all([
-  'src/main/java/org/openemr2026/agent/MedicalAgentModelGateway.java',
-  'src/main/java/org/openemr2026/agent/DeepSeekHttpChatTransport.java',
+  'src/main/java/org/haoemr/agent/MedicalAgentModelGateway.java',
+  'src/main/java/org/haoemr/agent/DeepSeekHttpChatTransport.java',
 ].map((file) => readFile(resolve(projectDir, file), 'utf8')))).join('\n');
 if (!/DeepSeek/i.test(providerSource)) failures.push({ issue: 'DEEPSEEK_PROVIDER_ADAPTER_MISSING' });
 
 const blockers = [];
-if (config?.provisioned !== true && process.env.OPENEMR2026_EVAL_GOVERNANCE_APPROVED !== 'true') {
+if (config?.provisioned !== true && process.env.HAOEMR_EVAL_GOVERNANCE_APPROVED !== 'true') {
   blockers.push({ issue: 'HARNESS_GOVERNANCE_APPROVAL_REQUIRED' });
 }
 if (config?.execution_mode === 'MANAGED_REMOTE') {

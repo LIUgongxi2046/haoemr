@@ -8,17 +8,17 @@ const projectDir = resolve(webDir, '..');
 const contract = JSON.parse(await readFile(resolve(projectDir, 'contracts/generated/route-contract.generated.json'), 'utf8'));
 const semanticContract = JSON.parse(await readFile(resolve(projectDir, 'docs/process/testing/route-semantic-contract.json'), 'utf8'));
 const semanticById = new Map(semanticContract.routes.map((route) => [route.route_id, route]));
-const requestedRoutes = new Set((process.env.OPENEMR2026_BROWSER_ROUTES || '').split(',').filter(Boolean));
+const requestedRoutes = new Set((process.env.HAOEMR_BROWSER_ROUTES || '').split(',').filter(Boolean));
 const routes = contract.routes
   .map((route) => ({ id: route.route_id, title: route.title, semantics: semanticById.get(route.route_id) }))
   .filter((route) => requestedRoutes.size === 0 || requestedRoutes.has(route.id));
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
 const evidenceDir = resolve(projectDir, 'artifacts/playwright-ci');
 const viewport = {
-  width: Number(process.env.OPENEMR2026_BROWSER_WIDTH || 1440),
-  height: Number(process.env.OPENEMR2026_BROWSER_HEIGHT || 1000),
+  width: Number(process.env.HAOEMR_BROWSER_WIDTH || 1440),
+  height: Number(process.env.HAOEMR_BROWSER_HEIGHT || 1000),
 };
-const evidenceLabel = (process.env.OPENEMR2026_BROWSER_LABEL || `${viewport.width}x${viewport.height}`)
+const evidenceLabel = (process.env.HAOEMR_BROWSER_LABEL || `${viewport.width}x${viewport.height}`)
   .replace(/[^a-zA-Z0-9_-]/g, '-');
 await mkdir(evidenceDir, { recursive: true });
 
@@ -71,8 +71,8 @@ async function waitForApiIdle(timeoutMs = 10_000) {
 try {
   // 登录：路由审计需要已认证会话，否则所有路由都会被重定向到登录页，
   // 导致后续 H1/语义/导航断言全部误报。
-  const loginUsername = process.env.OPENEMR2026_DEV_LOGIN_USERNAME || 'linwei';
-  const loginPassword = process.env.OPENEMR2026_DEV_LOGIN_PASSWORD || 'OpenEMR2026-dev!';
+  const loginUsername = process.env.HAOEMR_DEV_LOGIN_USERNAME || 'linwei';
+  const loginPassword = process.env.HAOEMR_DEV_LOGIN_PASSWORD || 'HaoEMR-dev!';
   await page.goto(`${baseUrl}/#/clinical`, { waitUntil: 'domcontentloaded' });
   const loginSubmit = page.getByRole('button', { name: '登录系统', exact: true });
   await loginSubmit.waitFor({ state: 'visible', timeout: 30_000 }).catch(() => undefined);
@@ -110,7 +110,7 @@ try {
     // The shell and page may both use <main>; read the document body to avoid
     // strict-locator failure while still checking route-specific critical text.
     const mainText = await page.locator('body').innerText().catch(() => '');
-    if (process.env.OPENEMR2026_BROWSER_DEBUG === '1') {
+    if (process.env.HAOEMR_BROWSER_DEBUG === '1') {
       observations.push({ route: route.id, h1, renderedRoute: await page.getAttribute('html', 'data-route-id'), mainText: mainText.slice(0, 1000) });
     }
     if (!h1) failures.push({ route: route.id, issue: 'H1_MISSING' });
@@ -138,7 +138,7 @@ try {
     consoleIssues,
     failedResponses,
     unknownSafe,
-    ...(process.env.OPENEMR2026_BROWSER_DEBUG === '1' ? { observations } : {}),
+    ...(process.env.HAOEMR_BROWSER_DEBUG === '1' ? { observations } : {}),
   };
   await writeFile(resolve(evidenceDir, `route-audit-${evidenceLabel}.json`), `${JSON.stringify(result, null, 2)}\n`);
   await writeFile(resolve(evidenceDir, 'route-audit.json'), `${JSON.stringify(result, null, 2)}\n`);

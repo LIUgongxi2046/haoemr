@@ -1,0 +1,1628 @@
+[
+  {
+    "main_agent_code": "CARDIOVASCULAR_CARE",
+    "main_name": "心血管诊疗主 Agent",
+    "agent_code": "ANTICOAGULATION_ADVISOR",
+    "name": "抗凝用药建议",
+    "stage": "ANTICOAGULATION",
+    "run_id": "cd722681-a2e6-493e-97b3-041abb38512f",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "1b72fbd9-cc94-42cb-843e-29542a9b4ed9",
+    "source_count": 6,
+    "model_usage": {
+      "duration_ms": 8117,
+      "total_tokens": 2702,
+      "prompt_tokens": 1683,
+      "completion_tokens": 1019
+    },
+    "handoff": {
+      "agent_code": "ANTICOAGULATION_ADVISOR",
+      "run_id": "cd722681-a2e6-493e-97b3-041abb38512f",
+      "reminder_id": "3b05937c-2761-4ac5-807e-089377e9cd04",
+      "task_id": "336c832d-063f-4746-9978-48af146a548e",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "CARDIOVASCULAR_CARE",
+    "main_name": "心血管诊疗主 Agent",
+    "agent_code": "CHEST_PAIN_TRIAGE",
+    "name": "胸痛风险分层",
+    "stage": "CHEST_PAIN",
+    "run_id": "2aff92bb-bb8f-4227-b953-bd19c9a7ce32",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "d95a1f56-7340-4a3b-af68-979770120deb",
+    "source_count": 7,
+    "model_usage": {
+      "duration_ms": 8191,
+      "total_tokens": 3033,
+      "prompt_tokens": 1869,
+      "completion_tokens": 1164
+    },
+    "handoff": {
+      "agent_code": "CHEST_PAIN_TRIAGE",
+      "run_id": "2aff92bb-bb8f-4227-b953-bd19c9a7ce32",
+      "reminder_id": "d35dae33-463e-4512-8a78-4c58f50c76bb",
+      "task_id": "c9159596-8766-42d5-9db1-0dbd36e6dd69",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "CARDIOVASCULAR_CARE",
+    "main_name": "心血管诊疗主 Agent",
+    "agent_code": "HEART_FAILURE_FOLLOWUP",
+    "name": "心衰随访计划",
+    "stage": "HEART_FAILURE",
+    "run_id": "166f48f1-28cd-498e-baa6-afe118ed8278",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "3b8c8455-12ba-4593-bcbe-5bad4dae2b91",
+    "source_count": 12,
+    "model_usage": {
+      "duration_ms": 9185,
+      "total_tokens": 3917,
+      "prompt_tokens": 2643,
+      "completion_tokens": 1274
+    },
+    "handoff": {
+      "agent_code": "HEART_FAILURE_FOLLOWUP",
+      "run_id": "166f48f1-28cd-498e-baa6-afe118ed8278",
+      "reminder_id": "c68893a5-ee04-4de0-a5d6-40120a0fa815",
+      "task_id": "4eeac91b-dd7f-452a-bf6b-ecbc7cf03505",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "CARE_COORDINATOR",
+    "main_name": "诊疗协同主 Agent",
+    "agent_code": "CONSULT_PREPARATION_AGENT",
+    "name": "会诊准备医助",
+    "stage": "CONSULT",
+    "run_id": "c4155554-2440-4416-9d8b-d253fa22a8c4",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "517d18e9-fdbd-40c5-b3e6-7b8841ea9828",
+    "source_count": 15,
+    "model_usage": {
+      "duration_ms": 14636,
+      "total_tokens": 4724,
+      "prompt_tokens": 3089,
+      "completion_tokens": 1635
+    },
+    "handoff": {
+      "agent_code": "CONSULT_PREPARATION_AGENT",
+      "run_id": "c4155554-2440-4416-9d8b-d253fa22a8c4",
+      "reminder_id": "43a43da5-d552-41d6-99dd-bbbdd3817f69",
+      "task_id": "ee366a4d-07e0-45a2-9f1b-cf2f97c28f20",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "CARE_COORDINATOR",
+    "main_name": "诊疗协同主 Agent",
+    "agent_code": "DISCHARGE_TRANSITION_AGENT",
+    "name": "出院衔接医助",
+    "stage": "DISCHARGE",
+    "run_id": "b2e45088-494c-4e55-bb82-88bd50f6cb3f",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "5f0cec2b-f5b1-425f-85d6-8e9be49a3812",
+    "source_count": 16,
+    "model_usage": {
+      "duration_ms": 11691,
+      "total_tokens": 4878,
+      "prompt_tokens": 3254,
+      "completion_tokens": 1624
+    },
+    "handoff": {
+      "agent_code": "DISCHARGE_TRANSITION_AGENT",
+      "run_id": "b2e45088-494c-4e55-bb82-88bd50f6cb3f",
+      "reminder_id": "7b3d7601-b230-4905-8350-4ee5052b8ee6",
+      "task_id": "40a2f7a1-b4d2-4a00-ac27-a7c7188aac75",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "CARE_COORDINATOR",
+    "main_name": "诊疗协同主 Agent",
+    "agent_code": "FOLLOWUP_COORDINATION_AGENT",
+    "name": "随访协调医助",
+    "stage": "FOLLOWUP",
+    "run_id": "8a4fae6c-3865-4cc8-a603-7dd9d0bef75f",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "2519df52-d0e5-45ad-a75e-37e079c3fc1b",
+    "source_count": 18,
+    "model_usage": {
+      "duration_ms": 8088,
+      "total_tokens": 4663,
+      "prompt_tokens": 3588,
+      "completion_tokens": 1075
+    },
+    "handoff": {
+      "agent_code": "FOLLOWUP_COORDINATION_AGENT",
+      "run_id": "8a4fae6c-3865-4cc8-a603-7dd9d0bef75f",
+      "reminder_id": "7d4a7338-eae0-4c84-94df-f14bc3ae3626",
+      "task_id": "6fcb4832-9ef6-462c-9956-735337e6373f",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "CARE_COORDINATOR",
+    "main_name": "诊疗协同主 Agent",
+    "agent_code": "MDT_BRIEF_AGENT",
+    "name": "MDT 简报医助",
+    "stage": "MDT",
+    "run_id": "c1644210-0b21-42d6-a232-b986db2c5b2a",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "921f5d85-f82f-4623-b0dd-e3cc195b7d84",
+    "source_count": 20,
+    "model_usage": {
+      "duration_ms": 8704,
+      "total_tokens": 8306,
+      "prompt_tokens": 7024,
+      "completion_tokens": 1282
+    },
+    "handoff": {
+      "agent_code": "MDT_BRIEF_AGENT",
+      "run_id": "c1644210-0b21-42d6-a232-b986db2c5b2a",
+      "reminder_id": "1af0c575-e997-41c8-9069-3b99d00dde3e",
+      "task_id": "1f94d8a0-f360-4f99-a64f-74b3059ad43b",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "CARE_COORDINATOR",
+    "main_name": "诊疗协同主 Agent",
+    "agent_code": "TASK_RECONCILIATION_AGENT",
+    "name": "任务对账医助",
+    "stage": "TASK_RECONCILIATION",
+    "run_id": "7345e6be-2c59-47a7-baf7-05738f9d7b34",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "44d290dd-b21f-4a61-9c95-10a0e38e97bc",
+    "source_count": 19,
+    "model_usage": {
+      "duration_ms": 10087,
+      "total_tokens": 5214,
+      "prompt_tokens": 3796,
+      "completion_tokens": 1418
+    },
+    "handoff": {
+      "agent_code": "TASK_RECONCILIATION_AGENT",
+      "run_id": "7345e6be-2c59-47a7-baf7-05738f9d7b34",
+      "reminder_id": "5c22096f-338d-4ae1-a632-82c9c99fa452",
+      "task_id": "dbec3305-b485-4498-9d3c-28ce6f8b55f4",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "CARE_COORDINATOR",
+    "main_name": "诊疗协同主 Agent",
+    "agent_code": "TRANSFER_HANDOFF_AGENT",
+    "name": "转科交接医助",
+    "stage": "TRANSFER",
+    "run_id": "5a77ad14-05f4-4509-9b53-28b997b0355d",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "c5422aca-82b7-4dde-bf3c-2ebdf0e8b4a2",
+    "source_count": 20,
+    "model_usage": {
+      "duration_ms": 9948,
+      "total_tokens": 5475,
+      "prompt_tokens": 3970,
+      "completion_tokens": 1505
+    },
+    "handoff": {
+      "agent_code": "TRANSFER_HANDOFF_AGENT",
+      "run_id": "5a77ad14-05f4-4509-9b53-28b997b0355d",
+      "reminder_id": "c07b4e58-8756-4d80-8138-4677c7ce2523",
+      "task_id": "cbcc1dee-dbdd-46c3-bc53-a63fb1aa69a8",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "DOCUMENT_DRAFTER",
+    "main_name": "文书起草主 Agent",
+    "agent_code": "ADMISSION_NOTE_DRAFTER",
+    "name": "入院记录起草医助",
+    "stage": "ADMISSION",
+    "run_id": "a9a146f9-eebb-4fee-ac22-b5b73904762d",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "5bdd1ddf-9130-4eb8-8322-a6ba6a3e513d",
+    "source_count": 54,
+    "model_usage": {
+      "duration_ms": 11904,
+      "total_tokens": 13493,
+      "prompt_tokens": 11678,
+      "completion_tokens": 1815
+    },
+    "handoff": {
+      "agent_code": "ADMISSION_NOTE_DRAFTER",
+      "run_id": "a9a146f9-eebb-4fee-ac22-b5b73904762d",
+      "reminder_id": "578c6717-9e22-48fe-9854-cb042d5a7097",
+      "task_id": "1af80564-60a7-40d0-a5db-49522ab29ae7",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": {
+      "reminder_id": "bf6abc2d-f2c0-4965-bc6f-9b046d572f01",
+      "task_id": "f88faf05-7a47-4e4f-a2e1-da6e8c581bbd",
+      "document_id": "28bbc743-ed65-39d8-9d9e-e36092cbc9a0",
+      "document_version_id": "95c1b2aa-cdc8-428b-811c-0f394598e0ac",
+      "stale_source_rejected": true
+    }
+  },
+  {
+    "main_agent_code": "DOCUMENT_DRAFTER",
+    "main_name": "文书起草主 Agent",
+    "agent_code": "CONSULT_NOTE_DRAFTER",
+    "name": "会诊文书起草医助",
+    "stage": "CONSULT",
+    "run_id": "058d2c04-3025-46fd-95c8-87d36e8cae55",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "0ba18e4c-2af1-4513-a0c0-f3a22b60af1b",
+    "source_count": 54,
+    "model_usage": {
+      "duration_ms": 7848,
+      "total_tokens": 12957,
+      "prompt_tokens": 11660,
+      "completion_tokens": 1297
+    },
+    "handoff": {
+      "agent_code": "CONSULT_NOTE_DRAFTER",
+      "run_id": "058d2c04-3025-46fd-95c8-87d36e8cae55",
+      "reminder_id": "85a42865-3e15-4b7d-b96a-cbed814fae93",
+      "task_id": "73d6c4e6-52f9-4ccc-b53d-4773ad0c1f63",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": {
+      "reminder_id": "d5692a8c-e390-4223-9b66-6b3071e30a01",
+      "task_id": "9172e9a0-5c05-4563-9d3f-d9efe62bc637",
+      "document_id": "28bbc743-ed65-39d8-9d9e-e36092cbc9a0",
+      "document_version_id": "ac647ec4-4b08-4432-b775-cedef9498033",
+      "stale_source_rejected": true
+    }
+  },
+  {
+    "main_agent_code": "DOCUMENT_DRAFTER",
+    "main_name": "文书起草主 Agent",
+    "agent_code": "DISCHARGE_NOTE_DRAFTER",
+    "name": "出院文书起草医助",
+    "stage": "DISCHARGE",
+    "run_id": "1356b7b0-2d8a-4ca8-81cd-62ef896e7bb6",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "5841e2b1-7d22-4573-93af-7ee9c7f252ad",
+    "source_count": 54,
+    "model_usage": {
+      "duration_ms": 10568,
+      "total_tokens": 13318,
+      "prompt_tokens": 11657,
+      "completion_tokens": 1661
+    },
+    "handoff": {
+      "agent_code": "DISCHARGE_NOTE_DRAFTER",
+      "run_id": "1356b7b0-2d8a-4ca8-81cd-62ef896e7bb6",
+      "reminder_id": "51dc12a9-a71e-4aba-9b21-5ea8bbe56246",
+      "task_id": "22c341d2-5884-4ec1-8212-af99b36e2dd3",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": {
+      "reminder_id": "a4548860-f9d3-4515-949b-3d4f056a6b90",
+      "task_id": "e1cac6a6-2670-4e2e-abed-29829d4bd830",
+      "document_id": "28bbc743-ed65-39d8-9d9e-e36092cbc9a0",
+      "document_version_id": "a1e7f0c6-d238-494d-8897-605b190e85be",
+      "stale_source_rejected": true
+    }
+  },
+  {
+    "main_agent_code": "DOCUMENT_DRAFTER",
+    "main_name": "文书起草主 Agent",
+    "agent_code": "EMERGENCY_NOTE_DRAFTER",
+    "name": "急诊记录起草医助",
+    "stage": "EMERGENCY",
+    "run_id": "f779a387-bbb3-4a63-9dc6-de1d7c64d527",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "13648ede-2d3c-4a80-a6f4-aa8fd5fbf0da",
+    "source_count": 54,
+    "model_usage": {
+      "duration_ms": 9496,
+      "total_tokens": 13261,
+      "prompt_tokens": 11658,
+      "completion_tokens": 1603
+    },
+    "handoff": {
+      "agent_code": "EMERGENCY_NOTE_DRAFTER",
+      "run_id": "f779a387-bbb3-4a63-9dc6-de1d7c64d527",
+      "reminder_id": "9113f1d3-175d-4da4-931c-2d264ea3af91",
+      "task_id": "934bebc6-e1e7-4e17-9016-13cfec4587c3",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": {
+      "reminder_id": "ef5a5d1f-08ad-476b-a4e1-a28ecd45c905",
+      "task_id": "a0e57206-297e-4536-acae-6ab255d2c0a4",
+      "document_id": "28bbc743-ed65-39d8-9d9e-e36092cbc9a0",
+      "document_version_id": "6089ca3a-f228-4471-9598-571556b5afd8",
+      "stale_source_rejected": true
+    }
+  },
+  {
+    "main_agent_code": "DOCUMENT_DRAFTER",
+    "main_name": "文书起草主 Agent",
+    "agent_code": "FIRST_COURSE_DRAFTER",
+    "name": "首次病程起草医助",
+    "stage": "FIRST_COURSE",
+    "run_id": "15eea614-417b-4614-9232-4ec480547e45",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "ce2da83e-8101-4990-bcca-16df414c09fe",
+    "source_count": 54,
+    "model_usage": {
+      "duration_ms": 8919,
+      "total_tokens": 13025,
+      "prompt_tokens": 11647,
+      "completion_tokens": 1378
+    },
+    "handoff": {
+      "agent_code": "FIRST_COURSE_DRAFTER",
+      "run_id": "15eea614-417b-4614-9232-4ec480547e45",
+      "reminder_id": "245c8d15-33e3-4978-aef9-7dca611073fb",
+      "task_id": "5aa299c5-4f02-4c62-9364-282001bfeee7",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": {
+      "reminder_id": "15ca0c40-2be3-4c8d-891d-c4f6af8b1d68",
+      "task_id": "16b0c20d-a9ca-43d7-8759-b50ebde2461c",
+      "document_id": "28bbc743-ed65-39d8-9d9e-e36092cbc9a0",
+      "document_version_id": "2800c027-17d7-4283-b84b-56acf76002b1",
+      "stale_source_rejected": true
+    }
+  },
+  {
+    "main_agent_code": "DOCUMENT_DRAFTER",
+    "main_name": "文书起草主 Agent",
+    "agent_code": "NURSING_HANDOFF_DRAFTER",
+    "name": "护理交班起草医助",
+    "stage": "NURSING_HANDOFF",
+    "run_id": "80d88ac4-ab10-494b-a6d6-4e443d2d01e5",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "0377ccf9-8952-49ad-a4e8-8482337476a0",
+    "source_count": 57,
+    "model_usage": {
+      "duration_ms": 10380,
+      "total_tokens": 17253,
+      "prompt_tokens": 15615,
+      "completion_tokens": 1638
+    },
+    "handoff": {
+      "agent_code": "NURSING_HANDOFF_DRAFTER",
+      "run_id": "80d88ac4-ab10-494b-a6d6-4e443d2d01e5",
+      "reminder_id": "063d1247-9df8-4920-8be7-0d7fec68439e",
+      "task_id": "2888b483-e04f-4650-9a7f-35f94c225c0c",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": {
+      "reminder_id": "1018a677-bf83-47ff-89bd-f9bd90fb8d0e",
+      "task_id": "ca9567cd-b47a-432e-95c4-7416779589bd",
+      "document_id": "28bbc743-ed65-39d8-9d9e-e36092cbc9a0",
+      "document_version_id": "39a94cce-e132-4cbd-baca-3f45396f634b",
+      "stale_source_rejected": true
+    }
+  },
+  {
+    "main_agent_code": "DOCUMENT_DRAFTER",
+    "main_name": "文书起草主 Agent",
+    "agent_code": "OUTPATIENT_NOTE_DRAFTER",
+    "name": "门诊病历起草医助",
+    "stage": "OUTPATIENT",
+    "run_id": "44ef6fb5-5516-4ce2-9891-d768e4ab32f5",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "25186167-f273-462b-8977-b8118ea45470",
+    "source_count": 28,
+    "model_usage": {
+      "duration_ms": 8928,
+      "total_tokens": 11055,
+      "prompt_tokens": 9764,
+      "completion_tokens": 1291
+    },
+    "handoff": {
+      "agent_code": "OUTPATIENT_NOTE_DRAFTER",
+      "run_id": "44ef6fb5-5516-4ce2-9891-d768e4ab32f5",
+      "reminder_id": "1a651784-517f-4fa6-a3e5-6e2b34e01ad7",
+      "task_id": "6e078be1-3a91-4809-a116-c52a6fe2d63a",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": {
+      "reminder_id": "1b931bc7-12c9-4759-943e-1a50b0d56b2b",
+      "task_id": "3277e1e2-55ec-4dad-b48c-cf7b7ba7a615",
+      "document_id": "424207cb-8f4a-37a1-8805-0b6cc44aa90b",
+      "document_version_id": "a5574d29-75eb-4fb0-9583-c3c071e83fcb",
+      "stale_source_rejected": true
+    }
+  },
+  {
+    "main_agent_code": "DOCUMENT_DRAFTER",
+    "main_name": "文书起草主 Agent",
+    "agent_code": "PERIOPERATIVE_NOTE_DRAFTER",
+    "name": "围术期文书起草医助",
+    "stage": "PERIOPERATIVE",
+    "run_id": "c24375cb-3e45-48e3-94e6-cb50d7a81910",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "b6dfedc1-5136-4102-8838-80d39268d303",
+    "source_count": 35,
+    "model_usage": {
+      "duration_ms": 12941,
+      "total_tokens": 10117,
+      "prompt_tokens": 8172,
+      "completion_tokens": 1945
+    },
+    "handoff": {
+      "agent_code": "PERIOPERATIVE_NOTE_DRAFTER",
+      "run_id": "c24375cb-3e45-48e3-94e6-cb50d7a81910",
+      "reminder_id": "65f48763-192f-42f4-8391-2086193020bf",
+      "task_id": "2c2ba8d5-0ba1-40e9-a7ba-f0c60be49cd2",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": {
+      "reminder_id": "e655e748-ffc7-410d-9758-4f54973be0cf",
+      "task_id": "ff1f0f07-53a4-4cec-8b94-270be2599e48",
+      "document_id": "55fbf8a1-5a2b-3e92-9858-77a2556a3bc8",
+      "document_version_id": "6e1d5c75-53f2-4f10-b06e-85b10a7cbfe7",
+      "stale_source_rejected": true
+    }
+  },
+  {
+    "main_agent_code": "DOCUMENT_DRAFTER",
+    "main_name": "文书起草主 Agent",
+    "agent_code": "PROGRESS_NOTE_DRAFTER",
+    "name": "病程记录起草医助",
+    "stage": "PROGRESS",
+    "run_id": "4722a824-a8e7-4fd8-913f-6afe3695c6ed",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "59320917-928b-4aba-8607-d19147ec5c4d",
+    "source_count": 54,
+    "model_usage": {
+      "duration_ms": 11012,
+      "total_tokens": 13324,
+      "prompt_tokens": 11683,
+      "completion_tokens": 1641
+    },
+    "handoff": {
+      "agent_code": "PROGRESS_NOTE_DRAFTER",
+      "run_id": "4722a824-a8e7-4fd8-913f-6afe3695c6ed",
+      "reminder_id": "c5e4f684-f5e3-42a5-830c-2a6f58c1af0e",
+      "task_id": "69e709df-cd6b-4fb1-a339-590774cb44ca",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": {
+      "reminder_id": "800c212b-756c-4055-a308-34e51692683b",
+      "task_id": "c6ed0043-224c-4412-a6d8-8c9e32bb210e",
+      "document_id": "28bbc743-ed65-39d8-9d9e-e36092cbc9a0",
+      "document_version_id": "13d3dbff-cd2c-4646-a27c-248ebafe2dec",
+      "stale_source_rejected": true
+    }
+  },
+  {
+    "main_agent_code": "DOCUMENT_DRAFTER",
+    "main_name": "文书起草主 Agent",
+    "agent_code": "WARD_ROUND_NOTE_DRAFTER",
+    "name": "查房记录起草医助",
+    "stage": "WARD_ROUND",
+    "run_id": "b216ac1e-3162-4bb1-b9a4-50ca3e982e65",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "d96cecf8-ee34-419c-be02-06c1e70ac19e",
+    "source_count": 54,
+    "model_usage": {
+      "duration_ms": 12071,
+      "total_tokens": 13705,
+      "prompt_tokens": 11738,
+      "completion_tokens": 1967
+    },
+    "handoff": {
+      "agent_code": "WARD_ROUND_NOTE_DRAFTER",
+      "run_id": "b216ac1e-3162-4bb1-b9a4-50ca3e982e65",
+      "reminder_id": "7e0faf19-2300-49c4-9ee6-7cac92e3aba0",
+      "task_id": "85a95c01-e753-4687-83e5-0fb3eb0a81c8",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": {
+      "reminder_id": "7da4b652-68c9-4273-87d9-79c8c3531443",
+      "task_id": "93add963-61f3-4f5f-a6a3-a01aa78d7faa",
+      "document_id": "28bbc743-ed65-39d8-9d9e-e36092cbc9a0",
+      "document_version_id": "df17b85d-638b-44b8-b32d-4144fd7006a9",
+      "stale_source_rejected": true
+    }
+  },
+  {
+    "main_agent_code": "ENCOUNTER_SUMMARIZER",
+    "main_name": "就诊摘要主 Agent",
+    "agent_code": "ACTIVE_ENCOUNTER_SUMMARIZER",
+    "name": "接诊摘要医助",
+    "stage": "ACTIVE_ENCOUNTER",
+    "run_id": "1da39a58-696d-43cc-b05c-29cc23386c9a",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "5a11e744-1515-4889-b55b-7872a7ac82a4",
+    "source_count": 36,
+    "model_usage": {
+      "duration_ms": 13145,
+      "total_tokens": 9679,
+      "prompt_tokens": 7596,
+      "completion_tokens": 2083
+    },
+    "handoff": {
+      "agent_code": "ACTIVE_ENCOUNTER_SUMMARIZER",
+      "run_id": "1da39a58-696d-43cc-b05c-29cc23386c9a",
+      "reminder_id": "9c7f0d0f-5c85-4b7c-814f-be9ea50923fb",
+      "task_id": "bbe97d9a-dbd9-4250-8074-d11f95af279f",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "ENCOUNTER_SUMMARIZER",
+    "main_name": "就诊摘要主 Agent",
+    "agent_code": "DISCHARGE_READINESS_SUMMARIZER",
+    "name": "出院准备摘要医助",
+    "stage": "DISCHARGE",
+    "run_id": "282e8d3e-d3d2-4c90-893f-4f7baf5e8788",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "cfacd926-65f0-487d-9659-104d61864370",
+    "source_count": 38,
+    "model_usage": {
+      "duration_ms": 10105,
+      "total_tokens": 9332,
+      "prompt_tokens": 7957,
+      "completion_tokens": 1375
+    },
+    "handoff": {
+      "agent_code": "DISCHARGE_READINESS_SUMMARIZER",
+      "run_id": "282e8d3e-d3d2-4c90-893f-4f7baf5e8788",
+      "reminder_id": "0d8dce0e-cd91-493e-8793-190f18209b8e",
+      "task_id": "6f2e6899-4fad-43f0-99d3-61fa1b8d3876",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "ENCOUNTER_SUMMARIZER",
+    "main_name": "就诊摘要主 Agent",
+    "agent_code": "INPATIENT_DAILY_SUMMARIZER",
+    "name": "住院每日摘要医助",
+    "stage": "INPATIENT_DAILY",
+    "run_id": "a225d914-2981-48d0-bf2e-ab4b33b6588d",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "b087b978-af3d-46d0-a09d-565410372599",
+    "source_count": 40,
+    "model_usage": {
+      "duration_ms": 11826,
+      "total_tokens": 9939,
+      "prompt_tokens": 8296,
+      "completion_tokens": 1643
+    },
+    "handoff": {
+      "agent_code": "INPATIENT_DAILY_SUMMARIZER",
+      "run_id": "a225d914-2981-48d0-bf2e-ab4b33b6588d",
+      "reminder_id": "4dacc27f-652c-4fb2-ae31-87aeb8584c5e",
+      "task_id": "7d6a0ec6-27af-4781-b6b4-4a753840ba8c",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "ENCOUNTER_SUMMARIZER",
+    "main_name": "就诊摘要主 Agent",
+    "agent_code": "PERIOPERATIVE_CONTEXT_SUMMARIZER",
+    "name": "围术期上下文医助",
+    "stage": "PERIOPERATIVE",
+    "run_id": "44bc674d-2347-4abe-a935-f33222be531a",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "8889e21b-5fa4-4182-bdb3-1d95b13456e1",
+    "source_count": 16,
+    "model_usage": {
+      "duration_ms": 9295,
+      "total_tokens": 4825,
+      "prompt_tokens": 3682,
+      "completion_tokens": 1143
+    },
+    "handoff": {
+      "agent_code": "PERIOPERATIVE_CONTEXT_SUMMARIZER",
+      "run_id": "44bc674d-2347-4abe-a935-f33222be531a",
+      "reminder_id": "c5a4b1a5-042e-4bd2-a467-94c002d9665e",
+      "task_id": "05da93a4-d615-4e38-9bf8-7d3b295f861e",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "ENCOUNTER_SUMMARIZER",
+    "main_name": "就诊摘要主 Agent",
+    "agent_code": "PRE_VISIT_SUMMARIZER",
+    "name": "诊前摘要医助",
+    "stage": "PRE_VISIT",
+    "run_id": "4a00e3b2-7282-4f9b-859c-5b0af634b823",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "b7d35b59-3e5c-4a9b-a35d-efbc5787300e",
+    "source_count": 8,
+    "model_usage": {
+      "duration_ms": 11209,
+      "total_tokens": 3509,
+      "prompt_tokens": 2352,
+      "completion_tokens": 1157
+    },
+    "handoff": {
+      "agent_code": "PRE_VISIT_SUMMARIZER",
+      "run_id": "4a00e3b2-7282-4f9b-859c-5b0af634b823",
+      "reminder_id": "aaaaa411-749e-46f7-8275-b5e94a6b0f6f",
+      "task_id": "4cfb9a41-62c0-4c2a-9f4e-6fb776dac3cb",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "ENCOUNTER_SUMMARIZER",
+    "main_name": "就诊摘要主 Agent",
+    "agent_code": "TRIAGE_CONTEXT_SUMMARIZER",
+    "name": "分诊上下文医助",
+    "stage": "TRIAGE",
+    "run_id": "92802685-6f48-4b3c-a3ec-c5a10901d7c4",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "fd012fcc-2607-4eac-8ed2-30a2a1b8d243",
+    "source_count": 42,
+    "model_usage": {
+      "duration_ms": 8996,
+      "total_tokens": 9837,
+      "prompt_tokens": 8650,
+      "completion_tokens": 1187
+    },
+    "handoff": {
+      "agent_code": "TRIAGE_CONTEXT_SUMMARIZER",
+      "run_id": "92802685-6f48-4b3c-a3ec-c5a10901d7c4",
+      "reminder_id": "3b35939e-43e0-4a6c-a3b8-27e3942c9c65",
+      "task_id": "566e63c6-43db-4dfb-b1c5-727f7d332ecd",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "GLYCEMIC_MANAGEMENT",
+    "main_name": "血糖治理主 Agent",
+    "agent_code": "ADMISSION_GLUCOSE_ASSESSOR",
+    "name": "入院血糖评估",
+    "stage": "ADMISSION_GLUCOSE",
+    "run_id": "118a1d6f-c716-428d-a7cd-1fb513123413",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "8b70a27a-81fb-4eab-866d-d8ef39906849",
+    "source_count": 6,
+    "model_usage": {
+      "duration_ms": 6843,
+      "total_tokens": 2504,
+      "prompt_tokens": 1714,
+      "completion_tokens": 790
+    },
+    "handoff": {
+      "agent_code": "ADMISSION_GLUCOSE_ASSESSOR",
+      "run_id": "118a1d6f-c716-428d-a7cd-1fb513123413",
+      "reminder_id": "db0e360a-6d79-4d1f-aed1-4a0058ca00a0",
+      "task_id": "8451c332-57d5-4c54-9b4c-73dc8be3ae92",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "GLYCEMIC_MANAGEMENT",
+    "main_name": "血糖治理主 Agent",
+    "agent_code": "DISCHARGE_GLUCOSE_PLAN",
+    "name": "出院血糖随访",
+    "stage": "DISCHARGE_GLUCOSE",
+    "run_id": "07883e26-daf2-487f-a734-cc2bcbd57b1c",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "e41ca58a-974d-4383-90c1-fc6f58ae8d48",
+    "source_count": 7,
+    "model_usage": {
+      "duration_ms": 6009,
+      "total_tokens": 2647,
+      "prompt_tokens": 1862,
+      "completion_tokens": 785
+    },
+    "handoff": {
+      "agent_code": "DISCHARGE_GLUCOSE_PLAN",
+      "run_id": "07883e26-daf2-487f-a734-cc2bcbd57b1c",
+      "reminder_id": "4776e45f-0834-4076-a5c5-e4f047f28314",
+      "task_id": "0018d480-5f1a-4437-bfac-4ae40895fd73",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "GLYCEMIC_MANAGEMENT",
+    "main_name": "血糖治理主 Agent",
+    "agent_code": "HYPOGLYCEMIA_GUARD",
+    "name": "低血糖预警",
+    "stage": "HYPOGLYCEMIA",
+    "run_id": "cc5b880a-0b2d-448f-8146-5aaaab66cf3a",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "de6742bc-c91c-48c2-89fc-d8ceb4a727d4",
+    "source_count": 6,
+    "model_usage": {
+      "duration_ms": 8529,
+      "total_tokens": 2640,
+      "prompt_tokens": 1650,
+      "completion_tokens": 990
+    },
+    "handoff": {
+      "agent_code": "HYPOGLYCEMIA_GUARD",
+      "run_id": "cc5b880a-0b2d-448f-8146-5aaaab66cf3a",
+      "reminder_id": "a80084a7-9d14-4a9e-a6e6-90bca09f22a7",
+      "task_id": "e8abc989-7f42-41ee-8350-8595e51bf670",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "GLYCEMIC_MANAGEMENT",
+    "main_name": "血糖治理主 Agent",
+    "agent_code": "INSULIN_DOSE_ADVISOR",
+    "name": "胰岛素剂量建议",
+    "stage": "INSULIN_DOSING",
+    "run_id": "50ca0eae-8471-41bf-b965-45f69df30beb",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "8dfee74d-c990-45fe-a342-2a522b8e0c5d",
+    "source_count": 6,
+    "model_usage": {
+      "duration_ms": 7819,
+      "total_tokens": 2531,
+      "prompt_tokens": 1723,
+      "completion_tokens": 808
+    },
+    "handoff": {
+      "agent_code": "INSULIN_DOSE_ADVISOR",
+      "run_id": "50ca0eae-8471-41bf-b965-45f69df30beb",
+      "reminder_id": "2152d46e-15a5-4e1c-b13d-1e2f2f361321",
+      "task_id": "2fe23747-364c-4bfd-a173-2ec502d1173a",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "ICU_RISK_ASSESSMENT",
+    "main_name": "重症风险研判主 Agent",
+    "agent_code": "DETERIORATION_MONITOR",
+    "name": "病情恶化预警",
+    "stage": "DETERIORATION",
+    "run_id": "0787dc45-7d93-4e29-baa5-59622dd95c64",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "cb02753d-aa8a-4623-93c2-69768d30932e",
+    "source_count": 6,
+    "model_usage": {
+      "duration_ms": 8721,
+      "total_tokens": 2654,
+      "prompt_tokens": 1673,
+      "completion_tokens": 981
+    },
+    "handoff": {
+      "agent_code": "DETERIORATION_MONITOR",
+      "run_id": "0787dc45-7d93-4e29-baa5-59622dd95c64",
+      "reminder_id": "a414534c-f65c-4142-b23b-425f09680383",
+      "task_id": "77f77e4b-8555-48fd-b8eb-2b743fb24cbe",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "ICU_RISK_ASSESSMENT",
+    "main_name": "重症风险研判主 Agent",
+    "agent_code": "ICU_HANDOFF_SUMMARIZER",
+    "name": "重症交班摘要",
+    "stage": "ICU_HANDOFF",
+    "run_id": "75ff2612-9995-4af1-8e1c-01f5e7cc69c3",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "e0676742-0b61-4271-8e4b-5aa815b3ed77",
+    "source_count": 6,
+    "model_usage": {
+      "duration_ms": 6469,
+      "total_tokens": 2526,
+      "prompt_tokens": 1682,
+      "completion_tokens": 844
+    },
+    "handoff": {
+      "agent_code": "ICU_HANDOFF_SUMMARIZER",
+      "run_id": "75ff2612-9995-4af1-8e1c-01f5e7cc69c3",
+      "reminder_id": "b47903ac-2c61-42e5-a3cd-90d3cfb82d39",
+      "task_id": "6c454ab4-d1b0-4375-ac40-3bafbf92911d",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "ICU_RISK_ASSESSMENT",
+    "main_name": "重症风险研判主 Agent",
+    "agent_code": "SEPSIS_RISK_ASSESSOR",
+    "name": "脓毒症风险分层",
+    "stage": "SEPSIS_RISK",
+    "run_id": "c50a3961-5325-44f8-b128-42ac43be6d3f",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "8ab010eb-ba88-40d1-89c9-b73f85a174c4",
+    "source_count": 6,
+    "model_usage": {
+      "duration_ms": 9081,
+      "total_tokens": 2895,
+      "prompt_tokens": 1692,
+      "completion_tokens": 1203
+    },
+    "handoff": {
+      "agent_code": "SEPSIS_RISK_ASSESSOR",
+      "run_id": "c50a3961-5325-44f8-b128-42ac43be6d3f",
+      "reminder_id": "b22a3298-2c52-4ea9-a5b9-691809ba2a58",
+      "task_id": "a8cbcf45-2706-40ce-9738-8c0c4dbeaea8",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "INFECTION_SURVEILLANCE",
+    "main_name": "院感监测主 Agent",
+    "agent_code": "INFECTION_CASE_REVIEWER",
+    "name": "感染病例线索复核",
+    "stage": "INFECTION_CASE",
+    "run_id": "a7b40b72-2e11-485d-b2f2-6a9bbd47c727",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "26a29285-6d81-4006-8f9b-0cbe5a1eeaef",
+    "source_count": 6,
+    "model_usage": {
+      "duration_ms": 8463,
+      "total_tokens": 2586,
+      "prompt_tokens": 1634,
+      "completion_tokens": 952
+    },
+    "handoff": {
+      "agent_code": "INFECTION_CASE_REVIEWER",
+      "run_id": "a7b40b72-2e11-485d-b2f2-6a9bbd47c727",
+      "reminder_id": "5f56e46f-cac3-4abd-b572-9706e5e953fb",
+      "task_id": "f271a833-0727-4458-b64a-b544d592b180",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "INFECTION_SURVEILLANCE",
+    "main_name": "院感监测主 Agent",
+    "agent_code": "NOTIFIABLE_REPORT_ASSISTANT",
+    "name": "法定传染病直报协助",
+    "stage": "NOTIFIABLE",
+    "run_id": "0ab028d9-63e5-4cc9-815c-7c682e9dbcd2",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "a7017a47-cdc0-4bdc-9de2-d3bbb4fb6994",
+    "source_count": 6,
+    "model_usage": {
+      "duration_ms": 8035,
+      "total_tokens": 2588,
+      "prompt_tokens": 1635,
+      "completion_tokens": 953
+    },
+    "handoff": {
+      "agent_code": "NOTIFIABLE_REPORT_ASSISTANT",
+      "run_id": "0ab028d9-63e5-4cc9-815c-7c682e9dbcd2",
+      "reminder_id": "15de9fa7-1930-424e-9e5d-86dd04f9d81e",
+      "task_id": "20255c83-a229-48ef-ae6f-11944af4a6c5",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "INFECTION_SURVEILLANCE",
+    "main_name": "院感监测主 Agent",
+    "agent_code": "OUTBREAK_ALERT_ASSESSOR",
+    "name": "暴发预警评估",
+    "stage": "OUTBREAK",
+    "run_id": "4b1e9dbe-0333-4c14-ba47-fba573296741",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "b227f438-748f-422e-bf8c-873d88489c1b",
+    "source_count": 6,
+    "model_usage": {
+      "duration_ms": 7110,
+      "total_tokens": 2505,
+      "prompt_tokens": 1637,
+      "completion_tokens": 868
+    },
+    "handoff": {
+      "agent_code": "OUTBREAK_ALERT_ASSESSOR",
+      "run_id": "4b1e9dbe-0333-4c14-ba47-fba573296741",
+      "reminder_id": "68aff3d7-dc20-45cd-b75b-6a20ad952271",
+      "task_id": "c04d2d34-86bc-48f9-a35a-b17acc90361b",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "INSURANCE_COMPLIANCE",
+    "main_name": "医保合规主 Agent",
+    "agent_code": "CHARGE_RATIONALITY_REVIEWER",
+    "name": "费用合理性核查",
+    "stage": "CHARGE",
+    "run_id": "9a6068fe-e27e-46e8-920a-13f022663546",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "50088de7-d57b-41bc-bb54-f263b3d1400a",
+    "source_count": 14,
+    "model_usage": {
+      "duration_ms": 8235,
+      "total_tokens": 4461,
+      "prompt_tokens": 3434,
+      "completion_tokens": 1027
+    },
+    "handoff": {
+      "agent_code": "CHARGE_RATIONALITY_REVIEWER",
+      "run_id": "9a6068fe-e27e-46e8-920a-13f022663546",
+      "reminder_id": "2d5bf4ea-253d-49fa-9691-40334594f933",
+      "task_id": "fcda58cc-9780-4317-9587-d6a46f332eaa",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "INSURANCE_COMPLIANCE",
+    "main_name": "医保合规主 Agent",
+    "agent_code": "DRG_CODING_REVIEWER",
+    "name": "DRG/DIP 编码核对",
+    "stage": "DRG_CODING",
+    "run_id": "bdd9d3cf-785b-4453-81fe-830135f00b2c",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "fbef2e54-8f69-4f35-acfd-5922ff03d8de",
+    "source_count": 14,
+    "model_usage": {
+      "duration_ms": 8321,
+      "total_tokens": 4483,
+      "prompt_tokens": 3450,
+      "completion_tokens": 1033
+    },
+    "handoff": {
+      "agent_code": "DRG_CODING_REVIEWER",
+      "run_id": "bdd9d3cf-785b-4453-81fe-830135f00b2c",
+      "reminder_id": "63e61a4c-40ea-43c1-ace7-c6c93ca5ae9f",
+      "task_id": "12d37598-00d4-4fac-a6a9-869a02ffaea1",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "MEDICAL_TECH_SCHEDULING",
+    "main_name": "医技预约调度主 Agent",
+    "agent_code": "EQUIPMENT_UTILIZATION_REVIEWER",
+    "name": "设备利用分析",
+    "stage": "EQUIPMENT",
+    "run_id": "5264acbb-07a0-42e9-a74e-f1b3cf038ec8",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "f40150b2-70e5-47b1-ab33-3c61ef5ea281",
+    "source_count": 11,
+    "model_usage": {
+      "duration_ms": 7561,
+      "total_tokens": 3381,
+      "prompt_tokens": 2560,
+      "completion_tokens": 821
+    },
+    "handoff": {
+      "agent_code": "EQUIPMENT_UTILIZATION_REVIEWER",
+      "run_id": "5264acbb-07a0-42e9-a74e-f1b3cf038ec8",
+      "reminder_id": "d7a2a153-397c-407b-8755-2e7cd9dfaa77",
+      "task_id": "ac480667-f96b-447b-a476-9a3ea397f496",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "MEDICAL_TECH_SCHEDULING",
+    "main_name": "医技预约调度主 Agent",
+    "agent_code": "EXAM_SLOT_PLANNER",
+    "name": "检查号源规划",
+    "stage": "EXAM_SLOT",
+    "run_id": "4e5032d4-3b43-4f93-979c-0fb60a71d929",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "a282913d-b7e3-4ac5-98f0-0a4e3dc6f1d6",
+    "source_count": 11,
+    "model_usage": {
+      "duration_ms": 8291,
+      "total_tokens": 3429,
+      "prompt_tokens": 2563,
+      "completion_tokens": 866
+    },
+    "handoff": {
+      "agent_code": "EXAM_SLOT_PLANNER",
+      "run_id": "4e5032d4-3b43-4f93-979c-0fb60a71d929",
+      "reminder_id": "d919b69f-1000-46e4-84e1-e0dd08df7c4e",
+      "task_id": "a57e3c6d-1bc0-410c-a07d-24870d5c791d",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "PATIENT_EDUCATION",
+    "main_name": "患者宣教主 Agent",
+    "agent_code": "FOLLOWUP_REMINDER_ASSISTANT",
+    "name": "复诊提醒",
+    "stage": "FOLLOWUP_REMINDER",
+    "run_id": "13d9121a-0629-4859-b6d1-6604bc78612f",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "2759a041-48ac-4787-92be-7eacc9bce0d7",
+    "source_count": 26,
+    "model_usage": {
+      "duration_ms": 7972,
+      "total_tokens": 6373,
+      "prompt_tokens": 5254,
+      "completion_tokens": 1119
+    },
+    "handoff": {
+      "agent_code": "FOLLOWUP_REMINDER_ASSISTANT",
+      "run_id": "13d9121a-0629-4859-b6d1-6604bc78612f",
+      "reminder_id": "9b7ffe13-e29c-432b-ab5e-803ea25614f8",
+      "task_id": "ce7ce59e-3dc8-4c97-a1d7-1784c6189a47",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "PATIENT_EDUCATION",
+    "main_name": "患者宣教主 Agent",
+    "agent_code": "DISCHARGE_MEDICATION_GUIDE",
+    "name": "出院带药说明",
+    "stage": "MEDICATION_GUIDE",
+    "run_id": "542ac672-0b09-4cfd-85fe-899cb17f3ae4",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "b9c9a24a-f294-414b-8f01-853d24540559",
+    "source_count": 27,
+    "model_usage": {
+      "duration_ms": 12105,
+      "total_tokens": 7025,
+      "prompt_tokens": 5433,
+      "completion_tokens": 1592
+    },
+    "handoff": {
+      "agent_code": "DISCHARGE_MEDICATION_GUIDE",
+      "run_id": "542ac672-0b09-4cfd-85fe-899cb17f3ae4",
+      "reminder_id": "dca2f078-6454-449b-bbbc-ebb1eaf2c47a",
+      "task_id": "e7cbae00-91e9-4735-a0f3-d0a02fd5db26",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "RECORD_QC",
+    "main_name": "病历质控主 Agent",
+    "agent_code": "ACTIVE_RECORD_QC_REVIEWER",
+    "name": "运行病历质控医助",
+    "stage": "ACTIVE_RECORD",
+    "run_id": "eababcb3-64d2-4809-957c-cdbdeeaf4a3c",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "10fecc2e-3cb5-43ff-958a-50efd3a6a51f",
+    "source_count": 15,
+    "model_usage": {
+      "duration_ms": 11106,
+      "total_tokens": 9782,
+      "prompt_tokens": 8622,
+      "completion_tokens": 1160
+    },
+    "handoff": {
+      "agent_code": "ACTIVE_RECORD_QC_REVIEWER",
+      "run_id": "eababcb3-64d2-4809-957c-cdbdeeaf4a3c",
+      "reminder_id": "50a266a9-ea2d-467c-bf86-35a8d48b6848",
+      "task_id": "dab877b2-a742-425d-9ff0-c4646b793a80",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "RECORD_QC",
+    "main_name": "病历质控主 Agent",
+    "agent_code": "CORRECTION_CONSISTENCY_REVIEWER",
+    "name": "更正一致性医助",
+    "stage": "CORRECTION",
+    "run_id": "07d6f96b-4383-42c6-a370-4cf74b71af03",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "ad64621b-b5b3-4f5d-9e75-b50b0241e3e3",
+    "source_count": 10,
+    "model_usage": {
+      "duration_ms": 13817,
+      "total_tokens": 3768,
+      "prompt_tokens": 2350,
+      "completion_tokens": 1418
+    },
+    "handoff": {
+      "agent_code": "CORRECTION_CONSISTENCY_REVIEWER",
+      "run_id": "07d6f96b-4383-42c6-a370-4cf74b71af03",
+      "reminder_id": "d2030cdd-404d-4709-afc8-08dda789f670",
+      "task_id": "bf53dc5b-ff43-452c-9851-3788bbf5e1eb",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "RECORD_QC",
+    "main_name": "病历质控主 Agent",
+    "agent_code": "PRE_SIGN_QC_REVIEWER",
+    "name": "签署前质控医助",
+    "stage": "PRE_SIGN",
+    "run_id": "246f3b38-a7c8-4faa-acf9-37d03526e469",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "44039f26-ce3f-46ff-861a-f9ed02c2da24",
+    "source_count": 13,
+    "model_usage": {
+      "duration_ms": 6649,
+      "total_tokens": 7743,
+      "prompt_tokens": 7105,
+      "completion_tokens": 638
+    },
+    "handoff": {
+      "agent_code": "PRE_SIGN_QC_REVIEWER",
+      "run_id": "246f3b38-a7c8-4faa-acf9-37d03526e469",
+      "reminder_id": "30535966-e0de-4d94-ad18-942abc4d6c48",
+      "task_id": "e5468d77-8e4c-48ca-8e20-4ea03f67a212",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "RECORD_QC",
+    "main_name": "病历质控主 Agent",
+    "agent_code": "TERMINAL_RECORD_QC_REVIEWER",
+    "name": "终末质控医助",
+    "stage": "TERMINAL_RECORD",
+    "run_id": "dfea7fd2-27f2-465c-9be2-4520f6643188",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "70c2dfc1-ab34-4844-97e0-3e0eaf1b35ea",
+    "source_count": 13,
+    "model_usage": {
+      "duration_ms": 13924,
+      "total_tokens": 8900,
+      "prompt_tokens": 7112,
+      "completion_tokens": 1788
+    },
+    "handoff": {
+      "agent_code": "TERMINAL_RECORD_QC_REVIEWER",
+      "run_id": "dfea7fd2-27f2-465c-9be2-4520f6643188",
+      "reminder_id": "009ef6f0-eb21-4113-9ab7-8e0829e1a93c",
+      "task_id": "1f266932-7e7d-40ff-b59d-7b1cdd53bb57",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "RECORD_QC",
+    "main_name": "病历质控主 Agent",
+    "agent_code": "WRITING_QC_REVIEWER",
+    "name": "书写中质控医助",
+    "stage": "WRITING",
+    "run_id": "fa45930a-f598-434b-b116-1cb36d429e5f",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "269373e0-059a-46b4-a78c-5136bcba052c",
+    "source_count": 13,
+    "model_usage": {
+      "duration_ms": 10509,
+      "total_tokens": 8537,
+      "prompt_tokens": 7101,
+      "completion_tokens": 1436
+    },
+    "handoff": {
+      "agent_code": "WRITING_QC_REVIEWER",
+      "run_id": "fa45930a-f598-434b-b116-1cb36d429e5f",
+      "reminder_id": "3723f2dc-036e-47d5-bbe8-24ea90b3cf17",
+      "task_id": "7c10ee4f-56ef-409c-b515-24e07a9bf7e5",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "RESEARCH_FOLLOWUP",
+    "main_name": "科研随访主 Agent",
+    "agent_code": "COHORT_ENROLLMENT_ASSISTANT",
+    "name": "队列入组协助",
+    "stage": "COHORT",
+    "run_id": "33d0909b-ae5f-46eb-bc84-d1ac0e3acec4",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "e7e6a8ed-2b42-4f4e-ba5a-403f31589994",
+    "source_count": 18,
+    "model_usage": {
+      "duration_ms": 11479,
+      "total_tokens": 4827,
+      "prompt_tokens": 3096,
+      "completion_tokens": 1731
+    },
+    "handoff": {
+      "agent_code": "COHORT_ENROLLMENT_ASSISTANT",
+      "run_id": "33d0909b-ae5f-46eb-bc84-d1ac0e3acec4",
+      "reminder_id": "d4861747-9c1f-4b69-ba35-992a5545c48b",
+      "task_id": "a49b8f43-2a4e-4c0d-9d68-be1b90bbf17f",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "RESEARCH_FOLLOWUP",
+    "main_name": "科研随访主 Agent",
+    "agent_code": "OUTCOME_COLLECTION_ASSISTANT",
+    "name": "结局采集协助",
+    "stage": "OUTCOME",
+    "run_id": "df6745a1-93ea-41e0-b7ee-9c1a9c77b0b7",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "33691179-5108-4696-b757-637986cefe43",
+    "source_count": 18,
+    "model_usage": {
+      "duration_ms": 5998,
+      "total_tokens": 3919,
+      "prompt_tokens": 3084,
+      "completion_tokens": 835
+    },
+    "handoff": {
+      "agent_code": "OUTCOME_COLLECTION_ASSISTANT",
+      "run_id": "df6745a1-93ea-41e0-b7ee-9c1a9c77b0b7",
+      "reminder_id": "f10344d9-37c6-4ca6-9b30-cd2e03b8be43",
+      "task_id": "29036fe5-7adc-4e7a-9626-532eae9505fb",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "RESULT_FOLLOWUP_COORDINATOR",
+    "main_name": "结果闭环主 Agent",
+    "agent_code": "CORRECTED_RESULT_RECONCILER",
+    "name": "更正结果对账医助",
+    "stage": "CORRECTED_RESULT",
+    "run_id": "f81aad9b-3441-4a21-8b9c-bc0d45479b6a",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "f32e06f7-c985-4f2a-adcf-9bae9d829d9c",
+    "source_count": 11,
+    "model_usage": {
+      "duration_ms": 11379,
+      "total_tokens": 3739,
+      "prompt_tokens": 2522,
+      "completion_tokens": 1217
+    },
+    "handoff": {
+      "agent_code": "CORRECTED_RESULT_RECONCILER",
+      "run_id": "f81aad9b-3441-4a21-8b9c-bc0d45479b6a",
+      "reminder_id": "11dc3cf7-2e38-4f9a-a75d-a4ac4b9ff840",
+      "task_id": "c4afc4be-68b2-48b8-91d8-a677be95aded",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "RESULT_FOLLOWUP_COORDINATOR",
+    "main_name": "结果闭环主 Agent",
+    "agent_code": "CRITICAL_RESULT_CONTEXT_AGENT",
+    "name": "危急值上下文医助",
+    "stage": "CRITICAL_RESULT",
+    "run_id": "acc02e3c-28f3-4b9f-844f-2d2fa585110f",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "68952455-4d8a-4e7c-b008-c373217d4acc",
+    "source_count": 13,
+    "model_usage": {
+      "duration_ms": 9658,
+      "total_tokens": 7066,
+      "prompt_tokens": 5971,
+      "completion_tokens": 1095
+    },
+    "handoff": {
+      "agent_code": "CRITICAL_RESULT_CONTEXT_AGENT",
+      "run_id": "acc02e3c-28f3-4b9f-844f-2d2fa585110f",
+      "reminder_id": "945e8b9a-d24a-4427-9c02-ac3ab18c26b4",
+      "task_id": "2bdc43a5-285b-49b5-8877-d77c5af03f6d",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "RESULT_FOLLOWUP_COORDINATOR",
+    "main_name": "结果闭环主 Agent",
+    "agent_code": "FOLLOWUP_TASK_PLANNER",
+    "name": "随访任务规划医助",
+    "stage": "FOLLOWUP_TASK",
+    "run_id": "5e721970-0931-43af-935d-a5c6abf4e918",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "ed30af9a-0e08-4a97-9218-53640a4a8621",
+    "source_count": 12,
+    "model_usage": {
+      "duration_ms": 6974,
+      "total_tokens": 3532,
+      "prompt_tokens": 2670,
+      "completion_tokens": 862
+    },
+    "handoff": {
+      "agent_code": "FOLLOWUP_TASK_PLANNER",
+      "run_id": "5e721970-0931-43af-935d-a5c6abf4e918",
+      "reminder_id": "0e5b52c6-eff6-4a79-a1f3-6d265ebfcbdc",
+      "task_id": "7fb0712d-b3f2-4ba7-88b7-1b781f152e19",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "RESULT_FOLLOWUP_COORDINATOR",
+    "main_name": "结果闭环主 Agent",
+    "agent_code": "NEW_RESULT_INTAKE_AGENT",
+    "name": "新结果接收医助",
+    "stage": "NEW_RESULT",
+    "run_id": "c15224cd-b633-442b-9860-7db79622ed1b",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "91010ab1-2964-4214-889b-ff6a04dced7e",
+    "source_count": 11,
+    "model_usage": {
+      "duration_ms": 7158,
+      "total_tokens": 3504,
+      "prompt_tokens": 2519,
+      "completion_tokens": 985
+    },
+    "handoff": {
+      "agent_code": "NEW_RESULT_INTAKE_AGENT",
+      "run_id": "c15224cd-b633-442b-9860-7db79622ed1b",
+      "reminder_id": "bfb898f1-8f23-487f-9d97-ae0e3849827b",
+      "task_id": "80a287df-f9f1-46da-a6e0-4b1ef015398a",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "RESULT_FOLLOWUP_COORDINATOR",
+    "main_name": "结果闭环主 Agent",
+    "agent_code": "PENDING_RESULT_TRACKER",
+    "name": "待回结果跟踪医助",
+    "stage": "PENDING_RESULT",
+    "run_id": "53654477-809c-40f7-b4ef-1cdb1e1e2a95",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "d883567d-2a0c-479a-ae15-c31e8235af0a",
+    "source_count": 11,
+    "model_usage": {
+      "duration_ms": 6575,
+      "total_tokens": 3294,
+      "prompt_tokens": 2515,
+      "completion_tokens": 779
+    },
+    "handoff": {
+      "agent_code": "PENDING_RESULT_TRACKER",
+      "run_id": "53654477-809c-40f7-b4ef-1cdb1e1e2a95",
+      "reminder_id": "8fc620ea-32d7-4a9c-980b-1fb7e3e8d8a7",
+      "task_id": "03c14dc8-5f7a-4b9e-a9fb-94fbdd16719f",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "RESULT_FOLLOWUP_COORDINATOR",
+    "main_name": "结果闭环主 Agent",
+    "agent_code": "RESULT_TREND_REVIEWER",
+    "name": "结果趋势医助",
+    "stage": "RESULT_TREND",
+    "run_id": "e6e7ba15-b2a8-43d9-9fbb-1a9fac5a0966",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "45665574-a952-4235-9550-03c09cca97ed",
+    "source_count": 11,
+    "model_usage": {
+      "duration_ms": 8107,
+      "total_tokens": 3554,
+      "prompt_tokens": 2509,
+      "completion_tokens": 1045
+    },
+    "handoff": {
+      "agent_code": "RESULT_TREND_REVIEWER",
+      "run_id": "e6e7ba15-b2a8-43d9-9fbb-1a9fac5a0966",
+      "reminder_id": "d195d1a1-e83a-4532-8eb2-5e03e48cc53e",
+      "task_id": "eef7d0a8-cb80-4129-a2d0-baced8a130f0",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "TCM_SYNDROME_REVIEW",
+    "main_name": "中医辨证审方主 Agent",
+    "agent_code": "DECOCTION_GUIDE",
+    "name": "煎服指导",
+    "stage": "DECOCTION",
+    "run_id": "ba91da93-5934-4ac0-a5dc-fdffcb11df2a",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "123bb5a3-48d7-4847-8c05-c7ace4e7eb1f",
+    "source_count": 33,
+    "model_usage": {
+      "duration_ms": 10902,
+      "total_tokens": 8381,
+      "prompt_tokens": 6727,
+      "completion_tokens": 1654
+    },
+    "handoff": {
+      "agent_code": "DECOCTION_GUIDE",
+      "run_id": "ba91da93-5934-4ac0-a5dc-fdffcb11df2a",
+      "reminder_id": "21c8eda1-f5e4-4d20-b7d2-dfbcd70216b1",
+      "task_id": "977988b5-bfcc-473c-9445-fcdc097cc6cd",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "TCM_SYNDROME_REVIEW",
+    "main_name": "中医辨证审方主 Agent",
+    "agent_code": "HERBAL_FORMULA_ADVISOR",
+    "name": "方药思路",
+    "stage": "HERBAL_FORMULA",
+    "run_id": "86c96543-9733-4c60-befa-90ec0a20c703",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "5cdf9627-9da8-4f65-a646-fb8130a54824",
+    "source_count": 33,
+    "model_usage": {
+      "duration_ms": 8964,
+      "total_tokens": 7941,
+      "prompt_tokens": 6733,
+      "completion_tokens": 1208
+    },
+    "handoff": {
+      "agent_code": "HERBAL_FORMULA_ADVISOR",
+      "run_id": "86c96543-9733-4c60-befa-90ec0a20c703",
+      "reminder_id": "fed37861-f387-4318-a6b6-ab499b05f5e7",
+      "task_id": "a4c656ab-173d-423b-8375-956ab565885a",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "TCM_SYNDROME_REVIEW",
+    "main_name": "中医辨证审方主 Agent",
+    "agent_code": "HERB_INTERACTION_GUARD",
+    "name": "配伍禁忌",
+    "stage": "HERB_SAFETY",
+    "run_id": "a2ab0cf9-ba83-42de-9c29-2e30bc2f3544",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "fc2994bd-a4ac-4e54-ae59-093a9f1ce837",
+    "source_count": 33,
+    "model_usage": {
+      "duration_ms": 8209,
+      "total_tokens": 7761,
+      "prompt_tokens": 6724,
+      "completion_tokens": 1037
+    },
+    "handoff": {
+      "agent_code": "HERB_INTERACTION_GUARD",
+      "run_id": "a2ab0cf9-ba83-42de-9c29-2e30bc2f3544",
+      "reminder_id": "e36d5e58-7a87-4e1a-88bb-bcd2a9ad3f82",
+      "task_id": "8ed34782-008d-4bb1-bbed-9ded40eb013a",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  },
+  {
+    "main_agent_code": "TCM_SYNDROME_REVIEW",
+    "main_name": "中医辨证审方主 Agent",
+    "agent_code": "SYNDROME_DIFFERENTIATION",
+    "name": "辨证草稿",
+    "stage": "SYNDROME",
+    "run_id": "649395c9-dbff-4f69-9a6f-7c63177f5840",
+    "state": "WAITING_FOR_REVIEW",
+    "execution_mode": "LIVE_MODEL",
+    "model_request_id": "775530d3-468d-412d-b4df-5c0423422293",
+    "source_count": 33,
+    "model_usage": {
+      "duration_ms": 13365,
+      "total_tokens": 8868,
+      "prompt_tokens": 6768,
+      "completion_tokens": 2100
+    },
+    "handoff": {
+      "agent_code": "SYNDROME_DIFFERENTIATION",
+      "run_id": "649395c9-dbff-4f69-9a6f-7c63177f5840",
+      "reminder_id": "c8025762-f778-4d6d-b01b-b8ef8c63a945",
+      "task_id": "ec2f12cc-2076-40ce-9221-769bfba8af42",
+      "state": "COMPLETED",
+      "pass": true
+    },
+    "document_adoption": null
+  }
+]

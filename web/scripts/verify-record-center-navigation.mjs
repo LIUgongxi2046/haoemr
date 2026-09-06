@@ -6,9 +6,9 @@ import { chromium } from 'playwright';
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
 const outputDir = resolve(projectDir, 'output/playwright/record-center-navigation');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
-const username = process.env.OPENEMR2026_DEV_LOGIN_USERNAME || 'linwei';
-const password = process.env.OPENEMR2026_DEV_LOGIN_PASSWORD || 'OpenEMR2026-dev!';
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const username = process.env.HAOEMR_DEV_LOGIN_USERNAME || 'linwei';
+const password = process.env.HAOEMR_DEV_LOGIN_PASSWORD || 'HaoEMR-dev!';
 const routes = [
   ['record', '病历工作台'], ['record-editor', '专注编辑'], ['record-sources', '来源证据'],
   ['record-qc', '质控审签'], ['record-versions', '版本证据'],

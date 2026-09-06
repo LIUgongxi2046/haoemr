@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
 import {
-  ClinicalApiError, clinicalServiceError, filterOperationalClinicalTaskPayload,
+  ClinicalApiError, clinicalServiceError,
   filterOperationalTeamQueuePayload,
 } from './clinical-api';
 import { parseClinicalRequest, parseClinicalResponse } from './clinical-contract';
@@ -39,15 +39,6 @@ describe('clinical contract boundary', () => {
     const error = clinicalServiceError({ detail: '委托截止时间必须晚于当前时间' }, 400);
     expect(error).toMatchObject({ code: 'HTTP_400', status: 400 });
     expect(error.message).toBe('委托截止时间必须晚于当前时间');
-  });
-
-  it('removes retired terminal tasks before validating active worklist identities', () => {
-    expect(filterOperationalClinicalTaskPayload([
-      { task_id: 'not-a-public-uuid', state: 'WITHDRAWN' },
-      { task_id: '018f0000-0000-7000-8000-000000000001', state: 'PENDING' },
-    ])).toEqual([
-      { task_id: '018f0000-0000-7000-8000-000000000001', state: 'PENDING' },
-    ]);
   });
 
   it('removes withdrawn legacy queue rows before validating queue identities', () => {

@@ -15,3 +15,5 @@ release/
 !web/.env.acceptance
 artifacts/test-runs/*/
 output/playwright/**/*-failure.png
+output/*-build/
+output/*-gradle-cache/

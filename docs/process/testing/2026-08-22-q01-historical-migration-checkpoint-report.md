@@ -39,7 +39,7 @@ scripts/verify.sh → VERIFY_EXIT=0
 
 - **迁移 V129**：`historical_migration_checkpoint`（租户/检查点/批次/已处理记录数/最后源键/记录人/记录时间/row_version）；进度非负约束、不可变触发器、批次索引。
 - **契约**：新增 `HistoricalMigrationCheckpoint`、`HistoricalMigrationCheckpointRecordRequest` 两 Schema 与 3 端点（list/record/latest）。
-- **模块**：`org.openemr2026.archive` 下 `HistoricalMigrationCheckpointService`（记录检查点 + 可续迁批次/进度单调硬门 + 幂等 + 审计/Outbox + latest 断点）、`Controller`、`Exception`、`ExceptionHandler`。
+- **模块**：`org.haoemr.archive` 下 `HistoricalMigrationCheckpointService`（记录检查点 + 可续迁批次/进度单调硬门 + 幂等 + 审计/Outbox + latest 断点）、`Controller`、`Exception`、`ExceptionHandler`。
 - **测试**：`HistoricalMigrationCheckpointApiTest` 6 用例覆盖记录、进度推进、倒退拒绝、已切换拒绝、无检查点 404、篡改拒绝。
 
 ## 5. 未关闭风险

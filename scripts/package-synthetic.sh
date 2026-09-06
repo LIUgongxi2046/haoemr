@@ -4,8 +4,8 @@ set -euo pipefail
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 project_dir=$(cd "$script_dir/.." && pwd)
 version="0.1.0-SNAPSHOT"
-release_dir="$project_dir/release/openemr2026-$version-synthetic"
-archive="$project_dir/release/openemr2026-$version-synthetic.tar.gz"
+release_dir="$project_dir/release/haoemr-$version-synthetic"
+archive="$project_dir/release/haoemr-$version-synthetic.tar.gz"
 
 cd "$project_dir"
 "$script_dir/with-java21.sh" ./gradlew bootJar --no-daemon --no-configuration-cache
@@ -14,7 +14,7 @@ npm --prefix web run build
 
 rm -rf "$release_dir"
 mkdir -p "$release_dir/backend" "$release_dir/web" "$release_dir/deploy" "$release_dir/samples/data"
-cp build/libs/openemr2026-*.jar "$release_dir/backend/openemr2026.jar"
+cp build/libs/haoemr-*.jar "$release_dir/backend/haoemr.jar"
 cp -R web/dist/. "$release_dir/web/"
 cp deploy/compose.synthetic.yml deploy/backend.Dockerfile deploy/web-synthetic.Dockerfile deploy/README.md "$release_dir/deploy/"
 cp samples/data/synthetic-clinical-golden-v1.json "$release_dir/samples/data/"

@@ -1,2 +1,2 @@
 org.springframework.boot.EnvironmentPostProcessor=\
-org.openemr2026.configuration.ProductionEnvironmentPostProcessor
+org.haoemr.configuration.ProductionEnvironmentPostProcessor

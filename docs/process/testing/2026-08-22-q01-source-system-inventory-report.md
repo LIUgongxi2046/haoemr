@@ -39,7 +39,7 @@ scripts/verify.sh → VERIFY_EXIT=0
 
 - **迁移 V126**：`source_system_inventory`（租户/源系统/编码/名称/类型/连接状态/注册人/注册时间/row_version）；类型与状态枚举、编码唯一、身份不可变触发器、状态索引。
 - **契约**：新增 `SourceSystemInventory`、`SourceSystemInventoryRegisterRequest`、`SourceSystemInventoryTransitionRequest` 三 Schema 与 5 端点（list/register/configure/activate/retire）。
-- **模块**：`org.openemr2026.archive` 下 `SourceSystemInventoryService`（注册 + 配置/激活/退休状态机 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
+- **模块**：`org.haoemr.archive` 下 `SourceSystemInventoryService`（注册 + 配置/激活/退休状态机 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
 - **测试**：`SourceSystemInventoryApiTest` 7 用例覆盖注册、配置、激活、退休、非法越级、退休后拒绝、篡改拒绝。
 - **附修**：`OutboxDispatcherTest` 的到期租约回收用例在全量并发下受 outbox 积压 + 批量领取排序干扰而抖动，已将该用例事件置为最旧 `available_at` 使其确定被优先领取。
 

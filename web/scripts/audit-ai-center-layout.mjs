@@ -6,16 +6,16 @@ import { chromium } from 'playwright';
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
 const outputDir = resolve(projectDir, 'output/playwright/ai-center-layout');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4178/app/index.html').replace(/#.*$/, '');
-const loginPassword = process.env.OPENEMR2026_DEV_LOGIN_PASSWORD;
-const routes = ['ai-center', 'ai-assistant', 'ai-assistant-policy', 'models', 'agent-catalog', 'skill-catalog', 'tool-catalog', 'agent-evals', 'aiops'];
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4178/app/index.html').replace(/#.*$/, '');
+const loginPassword = process.env.HAOEMR_DEV_LOGIN_PASSWORD;
+const routes = ['ai-center', 'ai-assistant', 'models', 'agent-catalog', 'skill-catalog', 'tool-catalog', 'agent-evals', 'aiops'];
 const viewports = [
   { name: 'desktop', width: 1440, height: 1000 },
   { name: 'compact', width: 1280, height: 900 },
   { name: 'mobile', width: 390, height: 844 },
 ];
 
-if (!loginPassword) throw new Error('OPENEMR2026_DEV_LOGIN_PASSWORD is required');
+if (!loginPassword) throw new Error('HAOEMR_DEV_LOGIN_PASSWORD is required');
 await mkdir(outputDir, { recursive: true });
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: viewports[0] });

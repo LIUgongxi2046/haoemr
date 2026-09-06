@@ -14,12 +14,15 @@ import {
   actionExecutionTransitionRequestWireSchema,
   actionExecutionWireSchema,
   clinicalReminderAcknowledgeRequestWireSchema,
+  clinicalReminderConversionCreateRequestWireSchema,
+  clinicalReminderConversionWireSchema,
   clinicalReminderCreateRequestWireSchema,
   clinicalReminderSilenceRequestWireSchema,
   clinicalReminderWireSchema,
   type ActionApprovalWire,
   type ActionExecutionWire,
   type ClinicalReminderWire,
+  type ClinicalReminderConversionWire,
   type ContextLeaseWire,
 } from '../generated/contracts';
 
@@ -112,6 +115,27 @@ export async function createClinicalReminder(
     method: 'POST',
     headers: { ...scopedHeaders(lease), 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
     body: JSON.stringify(clinicalReminderCreateRequestWireSchema.parse({ ...scoped(), ...input })),
+  }));
+}
+export async function listClinicalReminderConversions(
+  lease: ContextLeaseWire,
+  reminderId: string,
+): Promise<ClinicalReminderConversionWire[]> {
+  return clinicalReminderConversionWireSchema.array().parse(await request(
+    `/clinical-reminder-conversions?reminder_id=${encodeURIComponent(reminderId)}`,
+    { headers: scopedHeaders(lease) },
+  ));
+}
+export async function convertClinicalReminderToTask(
+  lease: ContextLeaseWire,
+  reminder: ClinicalReminderWire,
+): Promise<ClinicalReminderConversionWire> {
+  return clinicalReminderConversionWireSchema.parse(await request('/clinical-reminder-conversions', {
+    method: 'POST',
+    headers: { ...scopedHeaders(lease), 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
+    body: JSON.stringify(clinicalReminderConversionCreateRequestWireSchema.parse({
+      ...scoped(), reminder_id: reminder.reminder_id, converted_at: new Date().toISOString(),
+    })),
   }));
 }
 export async function acknowledgeClinicalReminder(lease: ContextLeaseWire, reminder: ClinicalReminderWire): Promise<ClinicalReminderWire> {

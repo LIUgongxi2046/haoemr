@@ -1,4 +1,4 @@
-# openemr2026 S009 全量接口与 UI 复测报告
+# HaoEMR S009 全量接口与 UI 复测报告
 
 ## 1. 结论
 
@@ -13,7 +13,7 @@
 |---|---|
 | 候选 commit | S009 修复基线 `709ea86`；顶栏按钮补充修复尚未 commit/push |
 | 后端 | Java 21.0.12.1、Spring Boot 4.1.0 |
-| 数据库 | PostgreSQL 18.4；首轮审计 `127.0.0.1:55433/openemr2026_s009`，修复后回归 `127.0.0.1:55432/openemr2026_dev`；Flyway V1–V166，全部合成数据 |
+| 数据库 | PostgreSQL 18.4；首轮审计 `127.0.0.1:55433/haoemr_s009`，修复后回归 `127.0.0.1:55432/haoemr_dev`；Flyway V1–V166，全部合成数据 |
 | 前端 | Node 24.13.0、Vue 3、Vite 8.2.1 |
 | 浏览器 | Playwright 1.61.1 Chromium；1280×800 与 390×844 |
 | 数据集 | `s009-comprehensive-v1`，seed `20260824`，CC0-1.0，全部合成 |
@@ -39,18 +39,18 @@
 | OpenAPI 契约 | `npm --prefix contracts test` + `check` | **4/4 PASS**；452 schemas / 460 outputs |
 | Web 单元 | `npm --prefix web test` | **23/23 PASS**；8 files |
 | API 全表面静态 | `node scripts/audit-api-surface.mjs` | **430/430 PASS** |
-| API 在线失败关闭 | `OPENEMR2026_API_BASE_URL=http://127.0.0.1:8081/api/v1 OPENEMR2026_API_SECURITY_MODE=dev-synthetic node scripts/audit-api-surface.mjs` | **430/430 PASS**；`streamAiRunEvents` 未认证实测 401；0 failure |
+| API 在线失败关闭 | `HAOEMR_API_BASE_URL=http://127.0.0.1:8081/api/v1 HAOEMR_API_SECURITY_MODE=dev-synthetic node scripts/audit-api-surface.mjs` | **430/430 PASS**；`streamAiRunEvents` 未认证实测 401；0 failure |
 | 路由功能桌面 | 1280×800 `test:routes:browser` | **194/194 PASS**；0 semantic/console/HTTP/overflow failure |
 | 路由功能移动 | 390×844 `test:routes:browser` | **194/194 PASS**；0 semantic/console/HTTP/overflow failure |
 | 严格 UI 门禁 | `test:ui:comprehensive` | **388/388 route-viewports VERIFIED**；0 findings；两视口 AI 打开/发送/SSE 回复/URL 保持/Esc/焦点还原通过 |
 | AI 合成集 | `node evals/check-golden.mjs` | **100/100 PASS**，仅 `DETERMINISTIC_FAKE` |
 | 红队载荷 | `node security/check-red-team.mjs` | **15/15 PASS**，12 surfaces |
-| DeepSeek adapter 定向 | `./gradlew test --tests org.openemr2026.agent.DeepSeekClinicalModelProviderTest` | **4/4 PASS**；JSON object 契约、非法回复失败关闭、file secret ref、HTTP/内联密钥拒绝 |
+| DeepSeek adapter 定向 | `./gradlew test --tests org.haoemr.agent.DeepSeekClinicalModelProviderTest` | **4/4 PASS**；JSON object 契约、非法回复失败关闭、file secret ref、HTTP/内联密钥拒绝 |
 | DeepSeek harness | `node evals/check-deepseek-harness.mjs` + `run-harness.mjs` | adapter/harness 结构无缺失；**INTEGRATED_BLOCKED / INSUFFICIENT_EVIDENCE / NO_GO**，0 真实模型用例 |
 | 语义/追溯 | semantic contract + traceability + route map | **PASS**；194/194 routes，138/138 FR/AC |
 | 安全扫描 | `scripts/security-scan.sh` | **PASS** |
 | 生产构建 | `npm --prefix web run build` | **PASS**；577 modules；全局 AI 对话已异步分块；主 chunk 538.99 kB 警告 |
-| 顶栏按钮专项 | `npm --prefix web run test:ui:topbar` | **19/19 PASS**；OpenEMR2026 品牌、医院、角色、搜索、AI、指引快捷动作、通知状态与跳转、账户/登录、专科菜单隐藏，覆盖桌面与移动 |
+| 顶栏按钮专项 | `npm --prefix web run test:ui:topbar` | **19/19 PASS**；HaoEMR 品牌、医院、角色、搜索、AI、指引快捷动作、通知状态与跳转、账户/登录、专科菜单隐藏，覆盖桌面与移动 |
 
 ## 5. 缺陷清单
 
@@ -130,13 +130,13 @@ SHA-256：
 
 ## 9. 顶栏按钮补充复测
 
-后续发现医院、角色、帮助、通知和用户入口为静态或无事件控件，品牌仍显示旧标记。上述问题已修复；产品名保持 `OpenEMR2026`，消息中心支持筛选/单条已读/业务跳转，操作指引支持快捷动作，核心专科工作台菜单暂时隐藏。最终专项 19/19、全量 UI 388/388、两视口路由 194/194 均通过。完整证据见 `docs/process/testing/2026-08-24-topbar-button-retest-report.md`。
+后续发现医院、角色、帮助、通知和用户入口为静态或无事件控件，品牌仍显示旧标记。上述问题已修复；产品名保持 `HaoEMR`，消息中心支持筛选/单条已读/业务跳转，操作指引支持快捷动作，核心专科工作台菜单暂时隐藏。最终专项 19/19、全量 UI 388/388、两视口路由 194/194 均通过。完整证据见 `docs/process/testing/2026-08-24-topbar-button-retest-report.md`。
 
 ## 10. 全页面数据与功能补充修复（2026-08-24）
 
 ### 10.1 本批次实现
 
-- 顶部副标题由“临床核心系统”改为主题深蓝色“电子病历系统”；产品名仍为 `OpenEMR2026`。
+- 顶部副标题由“临床核心系统”改为主题深蓝色“电子病历系统”；产品名仍为 `HaoEMR`。
 - 全局的“AI医助小南”展示 6 个受支持 Agent、各自介入时机、能力边界和可执行任务；用户可点击任务直接执行，也可选择 Agent 后提交自定义任务。所有请求显式携带 Agent code、name、version 与 boundary，不自动写入临床事实。
 - `dev-synthetic` 幂等注入 2 条诊断、3 条医嘱、1 条异常检验结果和 2 条会诊/转诊记录；门诊首页、诊断、医嘱处方、检查检验、会诊转诊形成可复测的数据闭环。
 - 门诊诊断、医嘱处方、检查检验页面新增主题化统计卡、检索与状态/类别筛选；会诊转诊页已有统计、表格、表单和状态动作，复用并纳入回归。

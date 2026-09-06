@@ -1,0 +1,46 @@
+{
+  "manifest_version": 1,
+  "captured_at": "2026-09-04",
+  "git": {
+    "head": "754fed9",
+    "branch": "main",
+    "commit_message": "Fix patient drill-through: correct synthetic patient names and set inpatient context"
+  },
+  "coverage": {
+    "route_contract_records": 199,
+    "route_semantic_contract_records": 198,
+    "route_contract_only": [
+      "clinical-specialty-ai"
+    ],
+    "vue_view_files": 201,
+    "java_migration_files": 250,
+    "java_test_source_files": 188,
+    "vue_source_files": 279
+  },
+  "coverage_rule": {
+    "contract_route_source": "contracts/generated/route-contract.generated.json",
+    "semantic_route_source": "docs/process/testing/route-semantic-contract.json",
+    "view_source": "web/src/vue/views",
+    "decision": "199 is the current contract-route denominator. The semantic contract must add clinical-specialty-ai before any full-route browser result can be accepted as current."
+  },
+  "fixture": {
+    "version": "UNASSIGNED",
+    "status": "BASE-002_PENDING",
+    "constraint": "No business workflow verification may silently reuse an unversioned or first-row development record."
+  },
+  "historical_evidence": {
+    "ui_consistency": "output/playwright/ui-consistency-audit.json is historical until rerun against this manifest.",
+    "button_coverage": "output/playwright/button-level-coverage.json is historical until rerun against this manifest.",
+    "comprehensive_ui": "output/playwright/comprehensive-ui-audit.json is not full-route evidence until rerun against this manifest."
+  },
+  "working_tree": {
+    "business_code_changes_at_capture": false,
+    "untracked_process_documents": [
+      "docs/process/planning/2026-09-04-handover-v4.md",
+      "docs/process/planning/2026-09-04-menu-gap-remediation-plan.md",
+      "docs/process/planning/2026-09-04-haoemr-integrated-closure-iteration-plan.md",
+      "docs/process/testing/2026-09-04-menu-demo-closure-self-audit.md"
+    ],
+    "note": "This manifest is intentionally uncommitted until the user separately authorizes a commit."
+  }
+}

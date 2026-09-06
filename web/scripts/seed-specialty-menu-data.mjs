@@ -5,7 +5,7 @@ import { chromium } from 'playwright';
 
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
 const allRoutes = [
   'obgyn-record', 'reproductive-record', 'pediatrics-record', 'neonatal-record', 'mental-record',
   'ophthalmology-record', 'ent-record', 'dental-record', 'dermatology-record', 'tcm-record',
@@ -20,7 +20,7 @@ const allRoutes = [
   'dermatology-treatment', 'dermatology-followup', 'dermatology-qc', 'dermatology-care', 'dermatology-evidence',
   'tcm-treatment', 'tcm-evidence', 'tcm-qc', 'tcm-followup', 'tcm-care',
 ];
-const requestedRoutes = new Set((process.env.OPENEMR2026_SPECIALTY_ROUTES || '').split(',').filter(Boolean));
+const requestedRoutes = new Set((process.env.HAOEMR_SPECIALTY_ROUTES || '').split(',').filter(Boolean));
 const routes = requestedRoutes.size ? allRoutes.filter((route) => requestedRoutes.has(route)) : allRoutes;
 
 const clinicalText = {

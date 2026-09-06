@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const projectDir = resolve(import.meta.dirname, '../..');
-const configPath = resolve(projectDir, process.env.OPENEMR2026_DEEPSEEK_HARNESS_CONFIG || 'evals/deepseek/harness.config.json');
+const configPath = resolve(projectDir, process.env.HAOEMR_DEEPSEEK_HARNESS_CONFIG || 'evals/deepseek/harness.config.json');
 const config = JSON.parse(await readFile(configPath, 'utf8'));
 const blockers = validateConfiguration(config);
 
@@ -22,7 +22,7 @@ if (!endpoint || !model || !apiKey) {
   finish('INSUFFICIENT_EVIDENCE', 'NO_GO', ['MANAGED_REMOTE_CONFIGURATION_UNAVAILABLE'], []);
 }
 
-const requestedMaxCases = process.env.OPENEMR2026_EVAL_MAX_CASES ?? config.max_cases ?? dataset.cases.length;
+const requestedMaxCases = process.env.HAOEMR_EVAL_MAX_CASES ?? config.max_cases ?? dataset.cases.length;
 const cases = dataset.cases.slice(0, Math.max(1, Number(requestedMaxCases)));
 const results = [];
 for (let repeat = 1; repeat <= Number(config.repeats); repeat += 1) {
@@ -59,7 +59,7 @@ if (failures.length) process.exitCode = 2;
 function validateConfiguration(value) {
   const next = [];
   if (value.execution_mode !== 'MANAGED_REMOTE' && value.execution_mode !== 'LOCAL_ARTIFACT') next.push('EXECUTION_MODE_INVALID');
-  if (value.provisioned !== true && process.env.OPENEMR2026_EVAL_GOVERNANCE_APPROVED !== 'true') {
+  if (value.provisioned !== true && process.env.HAOEMR_EVAL_GOVERNANCE_APPROVED !== 'true') {
     next.push('HARNESS_NOT_PROVISIONED');
   }
   if (!value.threshold_source || value.threshold_source === 'UNAPPROVED') next.push('EVALUATION_THRESHOLDS_UNAPPROVED');

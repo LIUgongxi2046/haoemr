@@ -71,8 +71,11 @@ const archiveConfirmOpen = ref(false);
 const showAdministrationAnalysis = ref(false);
 const administrationAnalysisMode = ref<'PRIMARY' | 'CHANNELS'>('PRIMARY');
 const isAdministrationView = computed(() => ['admin-master-data', 'admin-parameters', 'admin-jobs'].includes(props.definition.routeId));
-const isMedicalAiView = computed(() => ['agent-compose', 'agent-context', 'agent-evals', 'ai-assistant-policy'].includes(props.definition.routeId));
-const isAiCenterConfiguration = computed(() => ['agent-evals', 'ai-assistant-policy'].includes(props.definition.routeId));
+const isMedicalAiView = computed(() => ['agent-compose', 'agent-context', 'agent-evals'].includes(props.definition.routeId));
+const isManagedLedger = computed(() => ['agent-compose', 'agent-context', 'config-release', 'config-upgrade']
+  .includes(props.definition.routeId));
+const isReleaseUpgradeLedger = computed(() => ['config-release', 'config-upgrade'].includes(props.definition.routeId));
+const isAiCenterConfiguration = computed(() => ['agent-evals'].includes(props.definition.routeId));
 const isModalEditor = computed(() => isAdministrationView.value || isAiCenterConfiguration.value);
 const adminVariant = computed(() => props.definition.routeId.replace('admin-', ''));
 const currentItem = computed(() => selected.value && displayItems.value.some((item) => item.config_id === selected.value?.config_id)
@@ -289,7 +292,7 @@ function downloadJobDifference() {
     </div>
 
     <div v-if="!isModalEditor || showEditor" class="inline-notice config-safety" role="note">
-      <strong>{{ isMedicalAiView ? '发布校验' : '安全契约' }}</strong><span>{{ definition.safetyNote }}</span>
+      <strong>{{ isManagedLedger ? '受管台账' : isMedicalAiView ? '发布校验' : '安全契约' }}</strong><span>{{ definition.safetyNote }}</span>
     </div>
     <div v-if="leaseQuery.isPending.value || itemsQuery.isPending.value" class="card"><div class="card-body">正在读取配置版本…</div></div>
     <div v-else-if="issue" class="card"><div class="card-body">加载失败：{{ issue.code }} {{ issue.message }}</div></div>
@@ -310,12 +313,12 @@ function downloadJobDifference() {
           <section class="card">
             <div class="toolbar">
               <input v-model="adminKeyword" class="search" :placeholder="adminVariant === 'parameters' ? '参数编码或名称' : '任务编码或名称'" />
-              <select v-model="adminScopeStatus" class="select">
+              <select v-model="adminScopeStatus" class="select" :aria-label="adminVariant === 'parameters' ? '参数作用域' : '任务状态'">
                 <option value="ALL">{{ adminVariant === 'parameters' ? '全部作用域' : '全部状态' }}</option>
                 <template v-if="adminVariant === 'parameters'"><option value="GLOBAL">全局</option><option value="ORGANIZATION">机构</option><option value="FACILITY">院区</option></template>
                 <template v-else><option value="DRAFT">草稿</option><option value="PENDING_APPROVAL">待审批</option><option value="APPROVED">已批准</option><option value="ACTIVE">已发布</option></template>
               </select>
-              <select v-model="adminSort" class="select"><option value="RISK">风险优先</option><option value="RECENT">最近更新</option><option value="NAME">名称排序</option></select>
+              <select v-model="adminSort" class="select" aria-label="列表排序"><option value="RISK">风险优先</option><option value="RECENT">最近更新</option><option value="NAME">名称排序</option></select>
             </div>
             <table v-if="adminVariant === 'parameters'" class="table"><thead><tr><th>参数</th><th>数据类型</th><th>当前生效值</th><th>适用范围</th><th>风险</th><th>状态</th></tr></thead><tbody><tr v-for="item in displayItems" :key="item.config_id" :class="{ selected: currentItem?.config_id === item.config_id }" @click="selectItem(item)"><td><b>{{ item.display_name }}</b><br><span class="meta">技术编码：{{ item.config_key }}</span></td><td>{{ payloadDisplay(item, 'value_type') }}</td><td>{{ payloadDisplay(item, 'configured_value', payloadDisplay(item, 'scope')) }}</td><td>{{ payloadDisplay(item, 'scope') }}</td><td>{{ parameterRisk(item) }}</td><td><span class="status" :class="item.status === 'ACTIVE' ? 'green' : item.validation_state === 'INVALID' ? 'red' : 'amber'">{{ statusLabel[item.status] }}</span></td></tr></tbody></table>
             <table v-else class="table"><thead><tr><th>任务</th><th>进度/批次</th><th>状态</th><th>结果/异常</th><th>责任人</th></tr></thead><tbody><tr v-for="item in displayItems" :key="item.config_id" :class="{ selected: currentItem?.config_id === item.config_id }" @click="selectItem(item)"><td><b>{{ item.display_name }}</b><br><span class="meta">{{ item.config_key }}</span></td><td>{{ payloadText(item, 'batch_size') }} 条/批</td><td><span class="status" :class="item.status === 'ACTIVE' ? 'green' : item.validation_state === 'INVALID' ? 'red' : 'amber'">{{ statusLabel[item.status] }}</span></td><td>{{ payloadText(item, 'reconciliation_rule') }}</td><td>{{ payloadText(item, 'channel_owner', '未指定') }}</td></tr></tbody></table>
@@ -323,7 +326,7 @@ function downloadJobDifference() {
           <aside v-if="currentItem" class="card"><div class="card-head">{{ currentItem.display_name }} · 生效解析</div><div class="card-body"><div class="inherit-chain"><div v-for="field in definition.fields" :key="field.key"><span>{{ field.label }}</span><b>{{ payloadDisplay(currentItem, field.key) }}</b><em class="status blue">→</em></div></div><div class="notice rule"><div class="notice-title">{{ validationLabel[currentItem.validation_state] }}</div>{{ definition.safetyNote }}</div><button v-if="adminVariant === 'parameters'" class="btn" type="button" style="width:100%" :disabled="currentItem.status !== 'ACTIVE' || Boolean(busy)" @click="lifecycle('ROLLBACK')">回滚到上一已发布版本</button><button v-else class="btn primary" type="button" style="width:100%" @click="downloadJobDifference">下载差异与修正清单</button><button class="btn primary" type="button" style="width:100%" @click="showEditor = true">打开版本与生命周期</button></div></aside>
         </div>
       </template>
-      <AdminEditorSurface :modal="isModalEditor" :open="!isModalEditor || showEditor" :title="selected ? `编辑${selected.display_name}` : (isAdministrationView ? adminCreateLabel : '新建配置草稿')" description="配置保存为版本化草案，通过校验、独立审批和发布后才影响业务流程。" :busy="Boolean(busy)" @update:open="showEditor = $event">
+      <AdminEditorSurface :modal="isModalEditor" :open="!isModalEditor || showEditor" :title="selected ? `编辑${selected.display_name}` : (isAdministrationView ? adminCreateLabel : '新建配置草稿')" :description="isReleaseUpgradeLedger ? '本页保存发布或升级的受管记录；其生命周期状态不触发自动下发、迁移或覆盖。' : isManagedLedger ? '本页保存治理审阅记录；实际运行时由对应专用的已发布配置和上下文机制决定。' : '配置保存为版本化草案，通过校验、独立审批和发布后才影响业务流程。'" :busy="Boolean(busy)" @update:open="showEditor = $event">
       <div class="config-studio-layout" :class="{ 'admin-modal-layout': isModalEditor }">
         <section v-if="!isModalEditor" class="card config-list-panel">
           <div class="card-head"><div><h2>版本台账</h2><p>{{ isMedicalAiView ? `${definition.title} · 版本留痕与操作记录` : `${adminCodeLabel(definition.configType)} · 全程审计与事务事件记录` }}</p></div><span class="status">{{ displayItems.length }} 项</span></div>
@@ -354,8 +357,9 @@ function downloadJobDifference() {
               <label v-for="field in definition.fields" :key="field.key">
                 <span>{{ field.label }} <code>技术字段：{{ field.key }}</code></span>
                 <select v-if="field.kind === 'boolean'" v-model="values[field.key]" :disabled="Boolean(selected && selected.status !== 'DRAFT')"><option value="true">是</option><option value="false">否</option></select>
+                <select v-else-if="field.kind === 'select'" v-model="values[field.key]" :disabled="Boolean(selected && selected.status !== 'DRAFT')"><option v-for="option in field.options ?? []" :key="option.value" :value="option.value">{{ option.label }}</option></select>
                 <textarea v-else-if="field.kind === 'textarea' || field.kind === 'list'" v-model="values[field.key]" rows="3" :placeholder="field.placeholder" :disabled="Boolean(selected && selected.status !== 'DRAFT')" />
-                <input v-else v-model="values[field.key]" :type="field.kind === 'number' ? 'number' : 'text'" :min="field.minimum" :max="field.maximum" :placeholder="field.placeholder" :disabled="Boolean(selected && selected.status !== 'DRAFT')" />
+                <input v-else v-model="values[field.key]" :type="field.kind === 'number' ? 'number' : 'text'" :min="field.minimum" :max="field.maximum" :step="field.kind === 'number' && field.minimum === 0 && field.maximum === 1 ? '0.01' : undefined" :placeholder="field.placeholder" :disabled="Boolean(selected && selected.status !== 'DRAFT')" />
               </label>
             </div>
             <button class="button primary full" :disabled="Boolean(busy) || Boolean(selected && selected.status !== 'DRAFT')">{{ busy === 'save' ? '保存中…' : selected ? '保存新版本' : '创建版本化草稿' }}</button>

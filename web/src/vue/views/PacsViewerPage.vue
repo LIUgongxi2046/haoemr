@@ -60,3 +60,49 @@ function formatDate(value: string) { return new Intl.DateTimeFormat('zh-CN', { d
     <BusinessActionDialog :open="Boolean(selectedResult)" title="引用 PACS 报告到病历" description="将报告版本、患者就诊归属和目标字段作为可追溯证据固化；当前不包含未授权的影像帧。" eyebrow="病历 / PACS 来源" confirm-label="确认并固化报告引用" :busy="busy" @cancel="selectedResult = null" @confirm="confirmReference"><p class="dialog-warning">{{ selectedResult?.conclusion }}</p><label>引用到病历字段<select v-model="referenceTarget"><option value="sections.assessment">诊断与评估</option><option value="sections.treatment_plan">治疗计划</option><option value="sections.present_illness">现病史</option></select></label></BusinessActionDialog>
   </section>
 </template>
+
+<style scoped>
+/* 中央影像区始终占满三栏工作台，空状态不再被压成顶部的固定高度块。 */
+.record-real-pacs {
+  align-items: stretch;
+  min-height: clamp(520px, calc(100dvh - 320px), 680px);
+}
+
+.record-real-pacs > * {
+  min-height: 100%;
+}
+
+.record-real-pacs .image-viewer {
+  display: flex;
+  flex-direction: column;
+}
+
+.record-real-pacs .viewer-toolbar {
+  flex: 0 0 42px;
+}
+
+.record-real-pacs .result-empty {
+  align-content: center;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 32px clamp(18px, 4vw, 48px);
+}
+
+.record-real-pacs .study-list {
+  overflow-y: auto;
+}
+
+@media (max-width: 600px) {
+  .record-real-pacs {
+    min-height: 0;
+  }
+
+  .record-real-pacs > * {
+    min-height: 0;
+  }
+
+  .record-real-pacs .image-viewer {
+    min-height: 420px;
+  }
+}
+</style>

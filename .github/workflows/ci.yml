@@ -15,24 +15,24 @@ jobs:
       postgres:
         image: postgres:18.0-bookworm
         env:
-          POSTGRES_DB: openemr2026_dev
+          POSTGRES_DB: haoemr_dev
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports:
           - 55432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres -d openemr2026_dev"
+          --health-cmd "pg_isready -U postgres -d haoemr_dev"
           --health-interval 5s
           --health-timeout 3s
           --health-retries 20
     env:
-      OPENEMR2026_DB_URL: jdbc:postgresql://127.0.0.1:55432/openemr2026_dev
-      OPENEMR2026_DB_USER: postgres
-      OPENEMR2026_DB_PASSWORD: postgres
-      OPENEMR2026_PG_BIN: /usr/lib/postgresql/18/bin
-      OPENEMR2026_PG_SOCKET: 127.0.0.1
-      OPENEMR2026_PG_PORT: 55432
-      OPENEMR2026_PG_DATABASE: openemr2026_dev
+      HAOEMR_DB_URL: jdbc:postgresql://127.0.0.1:55432/haoemr_dev
+      HAOEMR_DB_USER: postgres
+      HAOEMR_DB_PASSWORD: postgres
+      HAOEMR_PG_BIN: /usr/lib/postgresql/18/bin
+      HAOEMR_PG_SOCKET: 127.0.0.1
+      HAOEMR_PG_PORT: 55432
+      HAOEMR_PG_DATABASE: haoemr_dev
       PGPASSWORD: postgres
     steps:
       - uses: actions/checkout@v4
@@ -63,16 +63,16 @@ jobs:
       - run: scripts/verify.sh
       - name: Start synthetic backend and Vue app
         run: |
-          nohup ./gradlew bootRun --args='--spring.profiles.active=dev-synthetic' > /tmp/openemr2026-backend.log 2>&1 &
-          nohup npm --prefix web run dev > /tmp/openemr2026-web.log 2>&1 &
+          nohup ./gradlew bootRun --args='--spring.profiles.active=dev-synthetic' > /tmp/haoemr-backend.log 2>&1 &
+          nohup npm --prefix web run dev > /tmp/haoemr-web.log 2>&1 &
           for attempt in $(seq 1 60); do
             if curl --fail --silent http://127.0.0.1:4177/ >/dev/null && curl --silent http://127.0.0.1:8080/ >/dev/null; then
               exit 0
             fi
             sleep 1
           done
-          tail -n 100 /tmp/openemr2026-backend.log
-          tail -n 100 /tmp/openemr2026-web.log
+          tail -n 100 /tmp/haoemr-backend.log
+          tail -n 100 /tmp/haoemr-web.log
           exit 1
       - name: Audit all 194 production routes in Chromium
         run: npm --prefix web run test:routes:browser
@@ -86,5 +86,5 @@ jobs:
             build/reports/tests/test/
             web/dist/
             artifacts/playwright-ci/
-            docs/process/quality/2026-08-14-openemr2026-s009-test-report.md
-            docs/process/security/2026-08-14-openemr2026-s010-security-assessment.md
+            docs/process/quality/2026-08-14-haoemr-s009-test-report.md
+            docs/process/security/2026-08-14-haoemr-s010-security-assessment.md

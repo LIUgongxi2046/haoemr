@@ -41,7 +41,7 @@ scripts/verify.sh → VERIFY_EXIT=0
 
 - **迁移 V121**：`capability_pack_release`（租户/发布 id/能力包/版本/生命周期/灰度开始时间/提升时间/退休时间/回退原因/发布人/发布时间/row_version）；`version`、`canary`、`promote`、`retire`、`rollback` 五条显式命名约束；`capability_pack_release_one_active_idx` 部分唯一索引；身份不可变触发器；能力包索引。
 - **契约**：新增 `CapabilityPackRelease`、`CapabilityPackReleaseCreateRequest`、`CapabilityPackReleaseTransitionRequest`、`CapabilityPackReleaseRollbackRequest` 四 Schema 与 6 端点（list/create/start-canary/promote/retire/rollback）。
-- **模块**：`org.openemr2026.platform` 下 `CapabilityPackReleaseService`（create + 状态机迁移 + promote 同事务退休旧 ACTIVE + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
+- **模块**：`org.haoemr.platform` 下 `CapabilityPackReleaseService`（create + 状态机迁移 + promote 同事务退休旧 ACTIVE + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
 - **测试**：`CapabilityPackReleaseApiTest` 8 用例覆盖 DRAFT 创建、启动灰度、提升全量、回退、非法迁移拒绝、过期版本冲突、双发布单 ACTIVE、篡改拒绝。
 
 ## 5. 未关闭风险

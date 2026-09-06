@@ -1,0 +1,263 @@
+{
+  "tools": [
+    {
+      "code": "CLINICAL_DOCUMENT_READ",
+      "name": "当前就诊文书版本读取"
+    },
+    {
+      "code": "CLINICAL_ORDER_READ",
+      "name": "当前就诊医嘱读取"
+    },
+    {
+      "code": "CLINICAL_RESULT_READ",
+      "name": "当前就诊结果读取"
+    },
+    {
+      "code": "CLINICAL_TASK_READ",
+      "name": "当前就诊任务读取"
+    },
+    {
+      "code": "CLINICAL_ATTACHMENT_READ",
+      "name": "当前就诊附件元数据读取"
+    },
+    {
+      "code": "BUSINESS_CONFIGURATION_READ",
+      "name": "已发布业务配置与运行时证据读取"
+    },
+    {
+      "code": "PATIENT_CONTEXT_READ",
+      "name": "患者基本信息与当前诊断读取"
+    },
+    {
+      "code": "BILLING_CONTEXT_READ",
+      "name": "当前就诊收费明细读取"
+    },
+    {
+      "code": "SCHEDULING_CONTEXT_READ",
+      "name": "当前就诊医技安排读取"
+    },
+    {
+      "code": "RESEARCH_CONTEXT_READ",
+      "name": "研究纳排条件读取"
+    },
+    {
+      "code": "TCM_CONTEXT_READ",
+      "name": "四诊与方药处方读取"
+    },
+    {
+      "code": "VITAL_SIGN_READ",
+      "name": "生命体征趋势读取"
+    },
+    {
+      "code": "ALLERGY_READ",
+      "name": "患者过敏史读取"
+    },
+    {
+      "code": "CARE_PLAN_READ",
+      "name": "护理诊疗计划读取"
+    },
+    {
+      "code": "BLOOD_TRANSFUSION_READ",
+      "name": "输血记录读取"
+    },
+    {
+      "code": "AGENT_EVIDENCE_APPEND",
+      "name": "医助运行证据追加"
+    },
+    {
+      "code": "LAB_TREND_READ",
+      "name": "检验结果趋势读取"
+    },
+    {
+      "code": "SURGERY_SCHEDULE_READ",
+      "name": "手术安排读取"
+    },
+    {
+      "code": "ANESTHESIA_RECORD_READ",
+      "name": "麻醉记录读取"
+    },
+    {
+      "code": "INFECTION_EVENT_READ",
+      "name": "院感事件读取"
+    },
+    {
+      "code": "NURSING_RECORD_READ",
+      "name": "护理记录读取"
+    },
+    {
+      "code": "PATHOLOGY_REPORT_READ",
+      "name": "病理报告读取"
+    },
+    {
+      "code": "IMAGING_REPORT_READ",
+      "name": "影像报告读取"
+    },
+    {
+      "code": "MDT_RECORD_READ",
+      "name": "多学科会诊记录读取"
+    },
+    {
+      "code": "MEDICATION_ADMIN_READ",
+      "name": "用药执行记录读取"
+    },
+    {
+      "code": "ENCOUNTER_TIMELINE_READ",
+      "name": "当前就诊时间线读取"
+    },
+    {
+      "code": "DOCUMENT_TEMPLATE_READ",
+      "name": "已发布文书模板读取"
+    },
+    {
+      "code": "CLINICAL_RULE_EVALUATE",
+      "name": "临床规则结果读取"
+    },
+    {
+      "code": "CRITICAL_VALUE_READ",
+      "name": "危急值闭环读取"
+    },
+    {
+      "code": "CONSULTATION_READ",
+      "name": "会诊协同读取"
+    },
+    {
+      "code": "KNOWLEDGE_SEARCH",
+      "name": "知识库混合检索"
+    },
+    {
+      "code": "KNOWLEDGE_LOOKUP",
+      "name": "知识精确查询"
+    },
+    {
+      "code": "KNOWLEDGE_GRAPH",
+      "name": "知识图谱邻接读取"
+    },
+    {
+      "code": "PATHWAY_KNOWLEDGE_SEARCH",
+      "name": "临床路径知识检索"
+    }
+  ],
+  "dependencies": {
+    "ENCOUNTER_SUMMARIZER": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "ENCOUNTER_TIMELINE_READ",
+      "CARE_PLAN_READ",
+      "CONSULTATION_READ"
+    ],
+    "DOCUMENT_DRAFTER": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "DOCUMENT_TEMPLATE_READ",
+      "CONSULTATION_READ",
+      "SURGERY_SCHEDULE_READ",
+      "ANESTHESIA_RECORD_READ",
+      "NURSING_RECORD_READ"
+    ],
+    "RECORD_QC": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "CLINICAL_RULE_EVALUATE",
+      "MEDICATION_ADMIN_READ"
+    ],
+    "RESULT_FOLLOWUP_COORDINATOR": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "LAB_TREND_READ",
+      "CRITICAL_VALUE_READ",
+      "PATHOLOGY_REPORT_READ",
+      "IMAGING_REPORT_READ"
+    ],
+    "CARE_COORDINATOR": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "CARE_PLAN_READ",
+      "CONSULTATION_READ",
+      "NURSING_RECORD_READ",
+      "MEDICATION_ADMIN_READ"
+    ],
+    "INFECTION_SURVEILLANCE": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "INFECTION_EVENT_READ",
+      "LAB_TREND_READ"
+    ],
+    "INSURANCE_COMPLIANCE": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "BILLING_CONTEXT_READ",
+      "CLINICAL_RULE_EVALUATE"
+    ],
+    "MEDICAL_TECH_SCHEDULING": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "SCHEDULING_CONTEXT_READ",
+      "IMAGING_REPORT_READ"
+    ],
+    "RESEARCH_FOLLOWUP": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "RESEARCH_CONTEXT_READ"
+    ],
+    "PATIENT_EDUCATION": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "CARE_PLAN_READ"
+    ],
+    "GLYCEMIC_MANAGEMENT": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "LAB_TREND_READ",
+      "MEDICATION_ADMIN_READ",
+      "CARE_PLAN_READ"
+    ],
+    "CARDIOVASCULAR_CARE": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "LAB_TREND_READ",
+      "MEDICATION_ADMIN_READ",
+      "IMAGING_REPORT_READ"
+    ],
+    "TCM_SYNDROME_REVIEW": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "TCM_CONTEXT_READ"
+    ],
+    "ICU_RISK_ASSESSMENT": [
+      "PATIENT_CONTEXT_READ",
+      "KNOWLEDGE_SEARCH",
+      "VITAL_SIGN_READ",
+      "ALLERGY_READ",
+      "LAB_TREND_READ",
+      "MEDICATION_ADMIN_READ",
+      "INFECTION_EVENT_READ",
+      "CARE_PLAN_READ"
+    ]
+  }
+}

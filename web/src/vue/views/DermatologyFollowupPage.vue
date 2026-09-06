@@ -81,7 +81,7 @@ async function createRecord() {
       <div>
         <p class="eyebrow">专科其余层 / 皮肤 · 随访</p>
         <h1>生物制剂随访</h1>
-        <p>生物制剂名称、随访日期、PASI 评分与不良事件登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记生物制剂名称、随访日期、PASI 评分与不良事件。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>

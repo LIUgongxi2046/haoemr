@@ -38,7 +38,7 @@ scripts/verify.sh → VERIFY_EXIT=0
 
 - **迁移 V123**：`release_download_event`（租户/渠道/来源 IP/UA/指纹哈希/机器人标记/下载时间）；渠道枚举、指纹 64 位小写哈希约束、非机器人去重部分唯一索引、渠道索引。
 - **契约**：新增 `ReleaseDownloadEvent`、`ReleaseDownloadEventCreateRequest`、`ReleaseDownloadValidCount` 三 Schema 与 3 端点（list/record/valid-count）。
-- **模块**：`org.openemr2026.research` 下 `ReleaseDownloadEventService`（记录 + 服务端机器人判定 + 有效计数 + 幂等）、`Controller`、`Exception`、`ExceptionHandler`。
+- **模块**：`org.haoemr.research` 下 `ReleaseDownloadEventService`（记录 + 服务端机器人判定 + 有效计数 + 幂等）、`Controller`、`Exception`、`ExceptionHandler`。
 - **测试**：`ReleaseDownloadEventApiTest` 6 用例覆盖真人/机器人/空 UA 判定、重复去重拒绝、非法指纹拒绝、有效计数排除机器人。
 
 ## 5. 未关闭风险

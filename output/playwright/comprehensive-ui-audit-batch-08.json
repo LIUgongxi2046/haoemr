@@ -1,0 +1,291 @@
+{
+  "run_at": "2026-09-05T04:53:02.364Z",
+  "routes": 15,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 30,
+  "verified_route_viewports": 30,
+  "findings": [],
+  "observations": [
+    {
+      "route": "mental-record",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "精神心理健康记录",
+      "routeId": "mental-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 465
+    },
+    {
+      "route": "mental-treatment",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "精神心理治疗执行",
+      "routeId": "mental-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 494
+    },
+    {
+      "route": "mental-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "精神心理工作台",
+      "routeId": "mental-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 538
+    },
+    {
+      "route": "migration",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "历史数据迁移与上线切换",
+      "routeId": "migration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2000
+    },
+    {
+      "route": "model-connection",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "模型连接与凭据状态",
+      "routeId": "model-connection",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1683
+    },
+    {
+      "route": "model-evaluation",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "模型评估",
+      "routeId": "model-evaluation",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 860
+    },
+    {
+      "route": "model-routing",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医助模型候选与数据边界",
+      "routeId": "model-routing",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1797
+    },
+    {
+      "route": "models",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "模型服务与 API 配置",
+      "routeId": "models",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1047
+    },
+    {
+      "route": "neonatal-care",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "腕带核对",
+      "routeId": "neonatal-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 414
+    },
+    {
+      "route": "neonatal-evidence",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "新生儿筛查记录",
+      "routeId": "neonatal-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 444
+    },
+    {
+      "route": "neonatal-followup",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "neonatal-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 417
+    },
+    {
+      "route": "neonatal-qc",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "neonatal-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 461
+    },
+    {
+      "route": "neonatal-record",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "新生儿记录",
+      "routeId": "neonatal-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 485
+    },
+    {
+      "route": "neonatal-treatment",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "新生儿治疗执行",
+      "routeId": "neonatal-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 492
+    },
+    {
+      "route": "neonatal-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "新生儿工作台",
+      "routeId": "neonatal-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 542
+    },
+    {
+      "route": "mental-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "精神心理健康记录",
+      "routeId": "mental-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 232
+    },
+    {
+      "route": "mental-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "精神心理治疗执行",
+      "routeId": "mental-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 261
+    },
+    {
+      "route": "mental-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "精神心理工作台",
+      "routeId": "mental-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 305
+    },
+    {
+      "route": "migration",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "历史数据迁移与上线切换",
+      "routeId": "migration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1767
+    },
+    {
+      "route": "model-connection",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "模型连接与凭据状态",
+      "routeId": "model-connection",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1450
+    },
+    {
+      "route": "model-evaluation",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "模型评估",
+      "routeId": "model-evaluation",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 627
+    },
+    {
+      "route": "model-routing",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助模型候选与数据边界",
+      "routeId": "model-routing",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1564
+    },
+    {
+      "route": "models",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "模型服务与 API 配置",
+      "routeId": "models",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 814
+    },
+    {
+      "route": "neonatal-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "腕带核对",
+      "routeId": "neonatal-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 181
+    },
+    {
+      "route": "neonatal-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "新生儿筛查记录",
+      "routeId": "neonatal-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 211
+    },
+    {
+      "route": "neonatal-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "neonatal-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 184
+    },
+    {
+      "route": "neonatal-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "neonatal-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 228
+    },
+    {
+      "route": "neonatal-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "新生儿记录",
+      "routeId": "neonatal-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 252
+    },
+    {
+      "route": "neonatal-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "新生儿治疗执行",
+      "routeId": "neonatal-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 259
+    },
+    {
+      "route": "neonatal-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "新生儿工作台",
+      "routeId": "neonatal-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 309
+    }
+  ]
+}

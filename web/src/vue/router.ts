@@ -92,7 +92,6 @@ const nativeComponents: Record<string, () => Promise<unknown>> = {
   'quality-rating': () => import('./views/QualityRatingOverviewPage.vue'),
   credentials: () => import('./views/CredentialsOverviewPage.vue'),
   'specialty-center': () => import('./views/SpecialtyCenterPage.vue'),
-  'clinical-specialty-ai': () => import('./views/SpecialtyAiPage.vue'),
   'obgyn-record': () => import('./views/ObstetricRecordPage.vue'),
   'reproductive-record': () => import('./views/ReproductiveRecordPage.vue'),
   'pediatrics-record': () => import('./views/PediatricRecordPage.vue'),
@@ -163,7 +162,6 @@ const nativeComponents: Record<string, () => Promise<unknown>> = {
   'neonatal-treatment': () => import('./views/NeonatalTreatmentPage.vue'),
   'mental-treatment': () => import('./views/MentalHealthTreatmentPage.vue'),
   'ent-treatment': () => import('./views/EntTreatmentPage.vue'),
-  'ai-action-review': () => import('./views/AiActionReviewPage.vue'),
   'ai-reminder-detail': () => import('./views/AiReminderDetailPage.vue'),
   'ai-assistant': () => import('./views/AiAssistantPage.vue'),
   'integration-mapping': () => import('./views/IntegrationMappingPage.vue'),
@@ -173,11 +171,12 @@ const nativeComponents: Record<string, () => Promise<unknown>> = {
   'admin-jobs': () => import('./views/AdminJobsPage.vue'),
   'admin-master-data': () => import('./views/AdminMasterDataPage.vue'),
   'admin-parameters': () => import('./views/AdminParametersPage.vue'),
-  'agent': () => import('./views/AgentRunPage.vue'),
+  // Historical “agent” URL now shows the maintained medical-agent evidence ledger.
+  // Keep the route stable, but do not maintain a second, legacy AIRunSnapshot table.
+  'agent': () => import('./views/AiCapturePage.vue'),
   'agent-compose': () => import('./views/AgentComposePage.vue'),
   'agent-context': () => import('./views/AgentContextPage.vue'),
   'agent-evals': () => import('./views/AgentEvalsPage.vue'),
-  'ai-assistant-policy': () => import('./views/AiAssistantPolicyPage.vue'),
   'ai-capture': () => import('./views/AiCapturePage.vue'),
   'anesthesia-workbench': () => import('./views/AnesthesiaWorkbenchPage.vue'),
   'archive-preservation': () => import('./views/ArchivePreservationPage.vue'),
@@ -272,6 +271,24 @@ const qualityDepthRoutes: RouteRecordRaw[] = [
   meta: { contractId, primaryDomain: 'QUALITY', guards: ['SESSION', 'ROLE', 'SCOPE'], implementation: 'VUE_NATIVE' },
 })));
 
+const emergencyDepthRoutes: RouteRecordRaw[] = [
+  { path: '/er-patient-overview', name: 'er-patient-overview' },
+  { path: '/er-clinical-timeline', name: 'er-clinical-timeline' },
+  { path: '/er-safety-gates', name: 'er-safety-gates' },
+  { path: '/er-transfer-readiness', name: 'er-transfer-readiness' },
+  { path: '/er-evidence-ledger', name: 'er-evidence-ledger' },
+].map((definition): RouteRecordRaw => ({
+  path: definition.path,
+  name: definition.name,
+  component: () => import('./views/EmergencyJourneyDepthPage.vue'),
+  meta: {
+    contractId: String(definition.name),
+    primaryDomain: 'CLINICAL',
+    guards: ['SESSION', 'ROLE', 'PATIENT_CONTEXT'],
+    implementation: 'VUE_NATIVE',
+  },
+}));
+
 const recordDepthRoutes: RouteRecordRaw[] = [
   { path: '/record/documents/:documentId', name: 'record-document-depth-3', level: 3 },
   { path: '/record/documents/:documentId/versions/:versionId', name: 'record-version-depth-4', level: 4 },
@@ -289,12 +306,13 @@ const recordDepthRoutes: RouteRecordRaw[] = [
   },
 }));
 
-export function createOpenEmrRouter(history: RouterHistory = defaultHistory()) {
+export function createHaoEmrRouter(history: RouterHistory = defaultHistory()) {
   return createRouter({
     history,
     routes: [
       { path: '/', redirect: '/clinical' },
       ...buildContractRoutes(),
+      ...emergencyDepthRoutes,
       ...recordDepthRoutes,
       {
         path: '/integration-messages/:messageId', name: 'integration-message-detail', component: () => import('./views/IntegrationMessageDetailPage.vue'),
@@ -395,6 +413,16 @@ export function createOpenEmrRouter(history: RouterHistory = defaultHistory()) {
         path: '/mock-interfaces/:workbenchId',
         name: 'mock-interface-workbench',
         component: () => import('./views/MockInterfaceWorkbenchPage.vue'),
+        beforeEnter: (to) => {
+          // Preserve the historical mock-menu URLs, but send retired AI simulations
+          // to their maintained real pages instead of creating a parallel workbench.
+          const liveRoute = ({
+            'ai-capture': '/ai-capture',
+            'model-connection': '/model-connection',
+            'model-routing': '/model-routing',
+          } as Record<string, string>)[String(to.params.workbenchId ?? '')];
+          return liveRoute || true;
+        },
         meta: { contractId: 'mock-interface-workbench', primaryDomain: 'ADMIN', guards: ['SESSION', 'ROLE'], implementation: 'VUE_NATIVE' },
       },
       {
@@ -416,7 +444,7 @@ export function createOpenEmrRouter(history: RouterHistory = defaultHistory()) {
   });
 }
 
-export const router = createOpenEmrRouter();
+export const router = createHaoEmrRouter();
 
 router.beforeEach((to) => {
   if (to.meta.publicRoute) {

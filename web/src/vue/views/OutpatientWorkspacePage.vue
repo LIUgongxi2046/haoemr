@@ -73,7 +73,7 @@ function selectPatient(entry: WaitingQueueEntryWire) {
   });
   selectedPatientId.value = entry.patient_id;
   selectedEncounterId.value = entry.encounter_id;
-  notice.value = `已切换至候诊 #${entry.sequence_no}；旧上下文租约已从客户端状态移除，新数据按新租约加载。`;
+  notice.value = `已切换至候诊 #${entry.sequence_no}，正在加载该患者的信息。`;
 }
 
 async function callPatient(entry: WaitingQueueEntryWire) {
@@ -153,7 +153,7 @@ function printWorkspace() {
         </section>
         <aside class="patient-context admin-panel scroll-card"><header><div><h2>患者上下文</h2><p>服务端当前快照</p></div></header><div class="context-body"><h3>待办与风险</h3><article v-if="criticalValues.length" class="context-alert danger"><strong>! 未闭环危急值 {{ criticalValues.length }} 项</strong><p>开立新处方前请先完成复读、评估和处置。</p><RouterLink to="/opd-results">立即处置</RouterLink></article><article v-if="provisionalDiagnoses.length" class="context-alert warning"><strong>待确认诊断 {{ provisionalDiagnoses.length }} 条</strong><p>初步诊断仍会阻止部分签署与终诊流程。</p><RouterLink to="/opd-diagnosis">核对诊断</RouterLink></article><article class="context-alert ai"><strong>✦ AI 用药提示</strong><p>{{ activeOrders.some((order) => order.items.some((item) => item.item_type === 'MEDICATION')) ? '已检测到药品医嘱，签署前必须通过服务端确定性用药安全规则。' : '当前无药品医嘱；AI 不会自动开立处方。' }}</p></article><div v-if="!criticalValues.length && !provisionalDiagnoses.length" class="context-clear">当前无未闭环确定性风险。</div><h3>近期时间线</h3><ol class="context-timeline"><li v-for="item in timeline.slice(0, 6)" :key="`${item.item_type}-${item.resource_id}`"><time>{{ date(item.occurred_at) }}</time><div><strong>{{ item.title }}</strong><p>{{ item.summary || clinicalCodeLabel(item.status) }}</p></div></li></ol><div v-if="!timeline.length" class="admin-empty">当前没有授权时间线资料。</div><RouterLink class="button secondary full" to="/patient-timeline">查看完整时间线</RouterLink></div></aside>
       </div>
-      <BusinessActionDialog :open="Boolean(callTarget)" title="叫号并切换患者" description="确认后将更新服务端候诊队列状态，并为该患者重新签发上下文租约。" eyebrow="门诊工作台" confirm-label="确认叫号" :busy="Boolean(busy)" @cancel="callTarget = null" @confirm="callTarget && callPatient(callTarget)"><p v-if="callTarget" class="dialog-warning">#{{ callTarget.sequence_no }} · {{ callTarget.patient_display_name }} · {{ sexLabel(callTarget.patient_sex_code) }} {{ age(callTarget.patient_birth_date) }}</p></BusinessActionDialog>
+      <BusinessActionDialog :open="Boolean(callTarget)" title="叫号并切换患者" description="确认后将更新候诊状态，并载入该患者的信息。" eyebrow="门诊工作台" confirm-label="确认叫号" :busy="Boolean(busy)" @cancel="callTarget = null" @confirm="callTarget && callPatient(callTarget)"><p v-if="callTarget" class="dialog-warning">#{{ callTarget.sequence_no }} · {{ callTarget.patient_display_name }} · {{ sexLabel(callTarget.patient_sex_code) }} {{ age(callTarget.patient_birth_date) }}</p></BusinessActionDialog>
     </template>
   </section>
 </template>

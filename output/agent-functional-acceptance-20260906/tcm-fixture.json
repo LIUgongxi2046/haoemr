@@ -1,0 +1,41 @@
+{
+  "record": {
+    "tcm_record_id": "108c21ce-f3e6-4d01-8a87-e232577f34d3",
+    "patient_id": "720085ca-d308-3051-9f1a-46d32f8e2f23",
+    "encounter_id": "c792397f-eed3-30f8-a7c9-4f7c28b12526",
+    "facility_id": "018f0000-0000-7000-8000-00000000aa03",
+    "syndrome_pattern": "气虚证（纯合成验收记录）",
+    "treatment_principle": "仅用于软件验证，核对既有四诊证据及处方信息",
+    "formula_name": "合成验收方A，不属于临床可用方剂",
+    "contains_toxic_herb": false,
+    "toxic_herb_precautions": null,
+    "status": "ACTIVE",
+    "row_version": 1
+  },
+  "exam": {
+    "exam_id": "a8da7d42-2fc9-4b58-8a6b-9526e91a9057",
+    "patient_id": "720085ca-d308-3051-9f1a-46d32f8e2f23",
+    "encounter_id": "c792397f-eed3-30f8-a7c9-4f7c28b12526",
+    "facility_id": "018f0000-0000-7000-8000-00000000aa03",
+    "inspection": "纯合成：面色淡，舌淡、苔薄白。",
+    "auscultation": "纯合成：语声低，无异常气味。",
+    "inquiry": "纯合成：乏力，食欲减少；无发热。",
+    "palpation": "纯合成：脉细弱；未记录其他查体信息。",
+    "examined_at": "2026-09-06T07:25:17.999Z",
+    "recorded_by": "018f0000-0000-7000-8000-00000000aa04",
+    "row_version": 1
+  },
+  "prescription": {
+    "prescription_id": "5d71ecf4-f01e-4615-897e-6cef0e5550d6",
+    "patient_id": "720085ca-d308-3051-9f1a-46d32f8e2f23",
+    "encounter_id": "c792397f-eed3-30f8-a7c9-4f7c28b12526",
+    "facility_id": "018f0000-0000-7000-8000-00000000aa03",
+    "formula_name": "合成验收方A，不属于临床可用方剂",
+    "herbs": "合成药材A一份、合成药材B一份。处方标签：仅测试读取及复述，不可供真实患者使用；煎服要求缺失，应联系开方人员补充。",
+    "contains_toxic_herb": false,
+    "toxic_herb_precautions": null,
+    "prescribed_at": "2026-09-06T07:25:18.065Z",
+    "prescribed_by": "018f0000-0000-7000-8000-00000000aa04",
+    "row_version": 1
+  }
+}

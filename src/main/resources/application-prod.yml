@@ -1,74 +1,74 @@
 spring:
   datasource:
-    url: ${OPENEMR2026_DB_URL:}
-    username: ${OPENEMR2026_DB_USER:}
-    password: ${OPENEMR2026_DB_PASSWORD:}
+    url: ${HAOEMR_DB_URL:}
+    username: ${HAOEMR_DB_USER:}
+    password: ${HAOEMR_DB_PASSWORD:}
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${OPENEMR2026_OIDC_ISSUER_URI:}
-          audiences: ${OPENEMR2026_OIDC_AUDIENCE:}
+          issuer-uri: ${HAOEMR_OIDC_ISSUER_URI:}
+          audiences: ${HAOEMR_OIDC_AUDIENCE:}
 
 server:
   forward-headers-strategy: framework
   shutdown: graceful
 
-openemr2026:
+haoemr:
   synthetic-dataset-enabled: false
   security:
     require-published-authorization: true
     require-clinical-operation-roles: true
   archive:
-    storage-root: ${OPENEMR2026_ARCHIVE_STORAGE_ROOT:}
-    ocr-endpoint: ${OPENEMR2026_ARCHIVE_OCR_ENDPOINT:}
-    cda-validation-endpoint: ${OPENEMR2026_ARCHIVE_CDA_VALIDATION_ENDPOINT:}
+    storage-root: ${HAOEMR_ARCHIVE_STORAGE_ROOT:}
+    ocr-endpoint: ${HAOEMR_ARCHIVE_OCR_ENDPOINT:}
+    cda-validation-endpoint: ${HAOEMR_ARCHIVE_CDA_VALIDATION_ENDPOINT:}
     malware-scanner:
-      host: ${OPENEMR2026_ARCHIVE_MALWARE_SCANNER_HOST:}
-      port: ${OPENEMR2026_ARCHIVE_MALWARE_SCANNER_PORT:3310}
-      timeout-millis: ${OPENEMR2026_ARCHIVE_MALWARE_SCANNER_TIMEOUT_MILLIS:10000}
+      host: ${HAOEMR_ARCHIVE_MALWARE_SCANNER_HOST:}
+      port: ${HAOEMR_ARCHIVE_MALWARE_SCANNER_PORT:3310}
+      timeout-millis: ${HAOEMR_ARCHIVE_MALWARE_SCANNER_TIMEOUT_MILLIS:10000}
   medical-agent:
-    external-models-enabled: ${OPENEMR2026_MEDICAL_AGENT_EXTERNAL_MODELS_ENABLED:false}
+    external-models-enabled: ${HAOEMR_MEDICAL_AGENT_EXTERNAL_MODELS_ENABLED:false}
   production:
-    deployment-id: ${OPENEMR2026_DEPLOYMENT_ID:}
+    deployment-id: ${HAOEMR_DEPLOYMENT_ID:}
     allow-development-identity: false
-    data-residency: ${OPENEMR2026_DATA_RESIDENCY:ON_PREM_ONLY}
+    data-residency: ${HAOEMR_DATA_RESIDENCY:ON_PREM_ONLY}
     database:
-      password-ref: ${OPENEMR2026_DB_PASSWORD_REF:}
+      password-ref: ${HAOEMR_DB_PASSWORD_REF:}
     identity:
-      issuer-uri: ${OPENEMR2026_OIDC_ISSUER_URI:}
-      audience: ${OPENEMR2026_OIDC_AUDIENCE:}
-      required-acr: ${OPENEMR2026_OIDC_REQUIRED_ACR:urn:openemr2026:acr:mfa}
-      mfa-required: ${OPENEMR2026_OIDC_MFA_REQUIRED:true}
+      issuer-uri: ${HAOEMR_OIDC_ISSUER_URI:}
+      audience: ${HAOEMR_OIDC_AUDIENCE:}
+      required-acr: ${HAOEMR_OIDC_REQUIRED_ACR:urn:haoemr:acr:mfa}
+      mfa-required: ${HAOEMR_OIDC_MFA_REQUIRED:true}
     signing:
-      ca-base-uri: ${OPENEMR2026_CA_BASE_URI:}
-      timestamp-uri: ${OPENEMR2026_TIMESTAMP_URI:}
-      client-certificate-ref: ${OPENEMR2026_CA_CLIENT_CERTIFICATE_REF:}
-      private-key-ref: ${OPENEMR2026_CA_PRIVATE_KEY_REF:}
-      trust-anchor-ref: ${OPENEMR2026_CA_TRUST_ANCHOR_REF:}
+      ca-base-uri: ${HAOEMR_CA_BASE_URI:}
+      timestamp-uri: ${HAOEMR_TIMESTAMP_URI:}
+      client-certificate-ref: ${HAOEMR_CA_CLIENT_CERTIFICATE_REF:}
+      private-key-ref: ${HAOEMR_CA_PRIVATE_KEY_REF:}
+      trust-anchor-ref: ${HAOEMR_CA_TRUST_ANCHOR_REF:}
     encryption:
-      kms-key-uri: ${OPENEMR2026_KMS_KEY_URI:}
-      database-key-ref: ${OPENEMR2026_DATABASE_ENCRYPTION_KEY_REF:}
-      object-key-ref: ${OPENEMR2026_OBJECT_ENCRYPTION_KEY_REF:}
+      kms-key-uri: ${HAOEMR_KMS_KEY_URI:}
+      database-key-ref: ${HAOEMR_DATABASE_ENCRYPTION_KEY_REF:}
+      object-key-ref: ${HAOEMR_OBJECT_ENCRYPTION_KEY_REF:}
     storage:
-      endpoint: ${OPENEMR2026_OBJECT_STORAGE_ENDPOINT:}
-      bucket: ${OPENEMR2026_OBJECT_STORAGE_BUCKET:}
-      region: ${OPENEMR2026_OBJECT_STORAGE_REGION:cn-north-1}
-      access-key-ref: ${OPENEMR2026_OBJECT_STORAGE_ACCESS_KEY_REF:}
-      secret-key-ref: ${OPENEMR2026_OBJECT_STORAGE_SECRET_KEY_REF:}
-      object-lock-required: ${OPENEMR2026_OBJECT_STORAGE_LOCK_REQUIRED:true}
+      endpoint: ${HAOEMR_OBJECT_STORAGE_ENDPOINT:}
+      bucket: ${HAOEMR_OBJECT_STORAGE_BUCKET:}
+      region: ${HAOEMR_OBJECT_STORAGE_REGION:cn-north-1}
+      access-key-ref: ${HAOEMR_OBJECT_STORAGE_ACCESS_KEY_REF:}
+      secret-key-ref: ${HAOEMR_OBJECT_STORAGE_SECRET_KEY_REF:}
+      object-lock-required: ${HAOEMR_OBJECT_STORAGE_LOCK_REQUIRED:true}
     integration:
-      truststore-ref: ${OPENEMR2026_INTEGRATION_TRUSTSTORE_REF:}
-      client-certificate-ref: ${OPENEMR2026_INTEGRATION_CLIENT_CERTIFICATE_REF:}
+      truststore-ref: ${HAOEMR_INTEGRATION_TRUSTSTORE_REF:}
+      client-certificate-ref: ${HAOEMR_INTEGRATION_CLIENT_CERTIFICATE_REF:}
     ai:
-      enabled: ${OPENEMR2026_AI_ENABLED:false}
-      base-uri: ${OPENEMR2026_AI_BASE_URI:}
-      model-id: ${OPENEMR2026_AI_MODEL_ID:}
-      api-key-ref: ${OPENEMR2026_AI_API_KEY_REF:}
-      residency: ${OPENEMR2026_AI_RESIDENCY:ON_PREM_ONLY}
+      enabled: ${HAOEMR_AI_ENABLED:false}
+      base-uri: ${HAOEMR_AI_BASE_URI:}
+      model-id: ${HAOEMR_AI_MODEL_ID:}
+      api-key-ref: ${HAOEMR_AI_API_KEY_REF:}
+      residency: ${HAOEMR_AI_RESIDENCY:ON_PREM_ONLY}
   outbox:
-    enabled: true
-    batch-size: ${OPENEMR2026_OUTBOX_BATCH_SIZE:100}
-    lease-seconds: ${OPENEMR2026_OUTBOX_LEASE_SECONDS:30}
-    max-attempts: ${OPENEMR2026_OUTBOX_MAX_ATTEMPTS:8}
-    poll-delay-ms: ${OPENEMR2026_OUTBOX_POLL_DELAY_MS:500}
+    enabled: false
+    batch-size: ${HAOEMR_OUTBOX_BATCH_SIZE:100}
+    lease-seconds: ${HAOEMR_OUTBOX_LEASE_SECONDS:30}
+    max-attempts: ${HAOEMR_OUTBOX_MAX_ATTEMPTS:8}
+    poll-delay-ms: ${HAOEMR_OUTBOX_POLL_DELAY_MS:500}

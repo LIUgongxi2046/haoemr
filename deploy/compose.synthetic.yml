@@ -1,14 +1,14 @@
-name: openemr2026-synthetic
+name: haoemr-synthetic
 
 services:
   postgres:
     image: postgres:18.0-bookworm
     environment:
-      POSTGRES_DB: openemr2026
-      POSTGRES_USER: openemr2026_synthetic
+      POSTGRES_DB: haoemr
+      POSTGRES_USER: haoemr_synthetic
       POSTGRES_PASSWORD: synthetic-only-not-for-production
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U openemr2026_synthetic -d openemr2026"]
+      test: ["CMD-SHELL", "pg_isready -U haoemr_synthetic -d haoemr"]
       interval: 5s
       timeout: 3s
       retries: 20
@@ -23,9 +23,9 @@ services:
       dockerfile: deploy/backend.Dockerfile
     environment:
       SPRING_PROFILES_ACTIVE: dev-synthetic
-      OPENEMR2026_DB_URL: jdbc:postgresql://postgres:5432/openemr2026
-      OPENEMR2026_DB_USER: openemr2026_synthetic
-      OPENEMR2026_DB_PASSWORD: synthetic-only-not-for-production
+      HAOEMR_DB_URL: jdbc:postgresql://postgres:5432/haoemr
+      HAOEMR_DB_USER: haoemr_synthetic
+      HAOEMR_DB_PASSWORD: synthetic-only-not-for-production
     depends_on:
       postgres:
         condition: service_healthy

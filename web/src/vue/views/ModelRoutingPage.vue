@@ -21,7 +21,10 @@ const issue = computed(() => leaseQuery.error.value ?? routingQuery.error.value
 const activeApproval = (id: string) => routingQuery.data.value?.approvals.get(id)?.some((approval) =>
   approval.status === 'ACTIVE' && new Date(approval.expires_at).getTime() > Date.now()) ?? false;
 const readiness = (model: (typeof models.value)[number]) => {
+  if (model.provider_code === 'SYNTHETIC' || model.endpoint_url?.includes('.example/') === true)
+    return { ready: false, label: '开发验收配置已退役', reason: '保留示例地址不会进入生产医助模型候选集' };
   if (model.status !== 'ACTIVE') return { ready: false, label: '服务已停用', reason: '不会进入医助模型候选集' };
+  if (!model.release_evidence_ready) return { ready: false, label: '缺少通过评测证据', reason: '运行时拒绝仅凭遗留“已批准”状态进入医助模型候选集' };
   if (model.evaluation_status !== 'APPROVED') return { ready: false, label: '评测未通过', reason: '必须先完成真实模型评测' };
   if (model.connection_status !== 'READY') return { ready: false, label: '连接不可用', reason: '需要通过真实连接检测' };
   if (model.residency_policy === 'CLOUD_ALLOWED' && !activeApproval(model.model_deployment_id))
@@ -36,7 +39,7 @@ function residencyLabel(value: string) {
 
 <template>
   <section data-page-root class="content admin-content vue-native-page">
-    <div class="page-heading admin-heading"><div><p class="eyebrow">AI 中心 / 模型服务 / 医助模型路由</p><h1>医助模型候选与数据边界</h1><p>按运行时真实门禁核对模型：启用、评测通过、连接可用，并在云端处理时具备有效合规授权。</p></div></div>
+    <div class="page-heading admin-heading"><div><p class="eyebrow">AI中心 / 模型服务 / 医助模型路由</p><h1>医助模型候选与数据边界</h1><p>按运行时真实门禁核对模型：启用、评测通过、连接可用，并在云端处理时具备有效合规授权。</p></div></div>
     <ClinicalPageState v-if="leaseQuery.isPending.value || routingQuery.isPending.value" kind="loading" message="正在核对模型路由门禁" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="routingQuery.refetch()" />
     <template v-else>
@@ -46,20 +49,20 @@ function residencyLabel(value: string) {
         <article><span>被门禁阻断</span><strong>{{ models.length - eligibleCount }}</strong><small>不会静默降级为成功</small></article>
       </section>
       <section class="admin-panel">
-        <header><div><h2>运行时模型候选集</h2><p>医生在 Eva 中明确选择模型时使用该模型；未选择时，服务端只从真实可用且非示例地址的候选中选取。</p></div><button class="button secondary" @click="routingQuery.refetch()">重新核对</button></header>
+        <header><div><h2>运行时模型候选集</h2><p>医生在 AI医助 EVA 中明确选择模型时使用该模型；未选择时，服务端只从真实可用且非示例地址的候选中选取。</p></div><button class="button secondary" @click="routingQuery.refetch()">重新核对</button></header>
         <div v-if="models.length === 0" class="admin-empty">暂无模型服务，医助任务会被明确阻断。</div>
         <div v-else class="admin-table-wrap"><table class="admin-table">
           <thead><tr><th>模型</th><th>部署边界</th><th>评测 / 连接</th><th>云端处理授权</th><th>路由结论</th></tr></thead>
           <tbody><tr v-for="model in models" :key="model.model_deployment_id">
             <td><strong>{{ model.display_name }}</strong><small>{{ model.provider_code }} · {{ model.model_code }}</small></td>
             <td>{{ residencyLabel(model.residency_policy) }}<small><code>{{ model.endpoint_url ?? '院内部署地址未公开' }}</code></small></td>
-            <td>{{ model.evaluation_status === 'APPROVED' ? '评测通过' : model.evaluation_status === 'REJECTED' ? '评测拒绝' : '评测中' }} · {{ model.connection_status === 'READY' ? '连接可用' : '连接不可用' }}</td>
+            <td>{{ model.release_evidence_ready ? (model.evaluation_status === 'APPROVED' ? '评测通过' : model.evaluation_status === 'REJECTED' ? '评测拒绝' : '评测中') : '缺少通过评测证据' }} · {{ model.connection_status === 'READY' ? '连接可用' : '连接不可用' }}</td>
             <td>{{ model.residency_policy !== 'CLOUD_ALLOWED' ? '不适用' : activeApproval(model.model_deployment_id) ? '有效' : '缺失或已过期' }}</td>
             <td><span class="admin-status" :class="readiness(model).ready ? 'active' : 'inactive'">{{ readiness(model).label }}</span><small>{{ readiness(model).reason }}</small></td>
           </tr></tbody>
         </table></div>
       </section>
-      <aside class="admin-panel"><header><div><h2>中国医疗生产约束</h2><p>云模型并非“配置 Key 即可使用”。真实医助任务还会校验当前患者租约的数据驻留策略、允许的数据范围、个人信息保护影响评估、委托处理依据、保存期限和授权有效期。</p></div><span class="admin-status active">服务端强制</span></header></aside>
+      <aside class="admin-panel"><header><div><h2>医疗数据使用要求</h2><p>云模型不能只靠配置密钥启用。使用前还需确认可处理的数据范围、合规授权、保存期限和授权有效期。</p></div><span class="admin-status active">系统检查</span></header></aside>
     </template>
   </section>
 </template>

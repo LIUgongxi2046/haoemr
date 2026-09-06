@@ -1,0 +1,33 @@
+{
+  "run_at": "2026-09-05T11:34:29.082Z",
+  "config_key": "e2e-agent-eval-1788608069082",
+  "target_agent": "E2E_AGENT_EVAL_1788608069082",
+  "checks": [
+    {
+      "name": "author-creates-valid-evaluation-submits-it-and-cannot-self-approve",
+      "status": "PASS",
+      "detail": "作者创建并提交 e2e-agent-eval-1788608069082；目标为未登记的 E2E_AGENT_EVAL_1788608069082，不会影响现有医助运行"
+    },
+    {
+      "name": "independent-approver-approves-and-publishes-the-passed-evaluation",
+      "status": "PASS",
+      "detail": "独立审批后发布为 ACTIVE（v5）；仅写入隔离配置台账，未触发模型请求"
+    }
+  ],
+  "findings": [],
+  "evidence": {
+    "config_id": "04fcc59f-4461-4152-b4de-0ec0691fea2a",
+    "author_draft": {
+      "status": "DRAFT",
+      "validation_state": "VALID",
+      "pending_status": "PENDING_APPROVAL"
+    },
+    "published": {
+      "status": "ACTIVE",
+      "approval_state": "APPROVED",
+      "row_version": 5
+    }
+  },
+  "passed": 2,
+  "failed": 0
+}

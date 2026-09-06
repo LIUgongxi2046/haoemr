@@ -1,0 +1,33 @@
+{
+  "run_at": "2026-09-05T09:35:27.593Z",
+  "checks": [
+    {
+      "name": "pathology-binds-received-tissue-and-requires-independent-completion",
+      "status": "PASS",
+      "detail": "页面新建病例绑定已接收组织标本；创建人无法自行完成病理复核"
+    },
+    {
+      "name": "independent-user-completes-pathology-and-keeps-auditable-terminal-state",
+      "status": "PASS",
+      "detail": "第二名用户完成病理复核，病例进入 COMPLETED 终态"
+    },
+    {
+      "name": "anesthesia-binds-timeout-completed-procedure-and-requires-independent-completion",
+      "status": "PASS",
+      "detail": "页面新建麻醉病例绑定已完成 Time-Out 的真实手术并进入待独立复核"
+    },
+    {
+      "name": "independent-user-completes-anesthesia-and-writes-back-surgical-terminal-state",
+      "status": "PASS",
+      "detail": "第二名用户完成麻醉记录，服务端同步完成关联手术并保留终态事件"
+    },
+    {
+      "name": "therapy-order-signing-creates-bindable-task-and-completion-writes-back-once",
+      "status": "PASS",
+      "detail": "页面签署治疗医嘱生成唯一执行任务；治疗病例完成后回写任务 COMPLETED，终态不再允许重复完成"
+    }
+  ],
+  "findings": [],
+  "passed": 5,
+  "failed": 0
+}

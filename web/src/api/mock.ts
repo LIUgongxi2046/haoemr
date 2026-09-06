@@ -19,7 +19,7 @@ export async function invokeMockInterface(
   lease: ContextLeaseWire,
   code: string,
   payload: Record<string, unknown> = {},
-  idempotencyKey = crypto.randomUUID(),
+  idempotencyKey: string = crypto.randomUUID(),
 ): Promise<MockInvocationResultWire> {
   return mockInvocationResultWireSchema.parse(await request(`/mock-interfaces/${encodeURIComponent(code)}/invoke`, {
     method: 'POST',

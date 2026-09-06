@@ -256,12 +256,11 @@ function submitBedside() {
   <section data-page-root class="content vue-native-page">
     <div class="page-heading care-overview-heading">
       <div><p class="eyebrow">诊疗执行</p><h1>诊疗执行中心</h1><p>收费、药学、医技、治疗、手麻、输血与设备执行的统一入口。</p></div>
-      <div class="toolbar-actions"><RouterLink class="button secondary" to="/clinical">角色工作台</RouterLink><RouterLink class="button primary" to="/clinical-tasks">查看全部待办</RouterLink></div>
+      <div class="toolbar-actions"><RouterLink class="button secondary" to="/clinical">角色工作台</RouterLink></div>
     </div>
     <ExecutionPatientContextBar />
     <section class="hub-hero care-overview-hero">
       <div><span>诊疗执行中心</span><h2>让医嘱从开立到执行、结果与费用形成同一条可对账证据链</h2><p>每个专业工作台保留自身资质、核查与状态机；中心聚合任务和风险，不使用统一“完成”绕过专业核验。</p></div>
-      <div class="hub-score"><b>—</b><span>高风险待办</span></div>
     </section>
     <nav class="hub-module-grid care-module-grid" aria-label="诊疗执行专业工作台">
       <RouterLink v-for="module in collaborationModules" :key="module.id" class="hub-module" :to="`/${module.id}`">

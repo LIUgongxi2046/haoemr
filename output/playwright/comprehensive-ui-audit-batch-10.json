@@ -1,0 +1,291 @@
+{
+  "run_at": "2026-09-05T04:54:15.762Z",
+  "routes": 15,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 30,
+  "verified_route_viewports": 30,
+  "findings": [],
+  "observations": [
+    {
+      "route": "ophthalmology-care",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "眼科护理与术后观察",
+      "routeId": "ophthalmology-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 488
+    },
+    {
+      "route": "ophthalmology-evidence",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "眼科诊疗证据",
+      "routeId": "ophthalmology-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 496
+    },
+    {
+      "route": "ophthalmology-followup",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "术后随访",
+      "routeId": "ophthalmology-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 449
+    },
+    {
+      "route": "ophthalmology-qc",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "ophthalmology-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 461
+    },
+    {
+      "route": "ophthalmology-record",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "眼科记录",
+      "routeId": "ophthalmology-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 436
+    },
+    {
+      "route": "ophthalmology-treatment",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "术前核对",
+      "routeId": "ophthalmology-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 407
+    },
+    {
+      "route": "ophthalmology-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "眼科工作台",
+      "routeId": "ophthalmology-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 576
+    },
+    {
+      "route": "outpatient",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "门诊医生工作台",
+      "routeId": "outpatient",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1950
+    },
+    {
+      "route": "outpatient-pharmacy",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "门诊药房",
+      "routeId": "outpatient-pharmacy",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 8484
+    },
+    {
+      "route": "pacs-viewer",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "PACS 影像调阅",
+      "routeId": "pacs-viewer",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 993
+    },
+    {
+      "route": "pathology-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "病理",
+      "routeId": "pathology-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 667
+    },
+    {
+      "route": "pathway-graph",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "知识图谱",
+      "routeId": "pathway-graph",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 460
+    },
+    {
+      "route": "pathway-review",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "审核队列",
+      "routeId": "pathway-review",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 57649
+    },
+    {
+      "route": "pathway-versions",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "版本历史",
+      "routeId": "pathway-versions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 11208
+    },
+    {
+      "route": "patient-merge",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "患者合并与可逆撤销",
+      "routeId": "patient-merge",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 607
+    },
+    {
+      "route": "ophthalmology-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "眼科护理与术后观察",
+      "routeId": "ophthalmology-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 255
+    },
+    {
+      "route": "ophthalmology-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "眼科诊疗证据",
+      "routeId": "ophthalmology-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 263
+    },
+    {
+      "route": "ophthalmology-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "术后随访",
+      "routeId": "ophthalmology-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 216
+    },
+    {
+      "route": "ophthalmology-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "ophthalmology-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 228
+    },
+    {
+      "route": "ophthalmology-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "眼科记录",
+      "routeId": "ophthalmology-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 203
+    },
+    {
+      "route": "ophthalmology-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "术前核对",
+      "routeId": "ophthalmology-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 174
+    },
+    {
+      "route": "ophthalmology-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "眼科工作台",
+      "routeId": "ophthalmology-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 343
+    },
+    {
+      "route": "outpatient",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊医生工作台",
+      "routeId": "outpatient",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1672
+    },
+    {
+      "route": "outpatient-pharmacy",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊药房",
+      "routeId": "outpatient-pharmacy",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 8251
+    },
+    {
+      "route": "pacs-viewer",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "PACS 影像调阅",
+      "routeId": "pacs-viewer",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 760
+    },
+    {
+      "route": "pathology-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病理",
+      "routeId": "pathology-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 434
+    },
+    {
+      "route": "pathway-graph",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "知识图谱",
+      "routeId": "pathway-graph",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 227
+    },
+    {
+      "route": "pathway-review",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "审核队列",
+      "routeId": "pathway-review",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 57416
+    },
+    {
+      "route": "pathway-versions",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "版本历史",
+      "routeId": "pathway-versions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 10975
+    },
+    {
+      "route": "patient-merge",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "患者合并与可逆撤销",
+      "routeId": "patient-merge",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 374
+    }
+  ]
+}

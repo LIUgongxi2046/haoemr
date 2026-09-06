@@ -5,6 +5,7 @@ import type { TcmHerbalPrescriptionWire } from '../../generated/contracts';
 import { createTcmHerbalPrescription, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listTcmHerbalPrescriptions } from '../../api/specialty-layers';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { localDateTimeInputValue } from '../date-input';
 
 const patientLeaseQuery = useQuery({
   queryKey: ['specialty-layers', 'tcm-treatment', 'patient-lease'],
@@ -37,7 +38,7 @@ const form = reactive({
   herbs: '',
   containsToxicHerb: false,
   toxicHerbPrecautions: '',
-  prescribedAt: new Date().toISOString(),
+  prescribedAt: localDateTimeInputValue(),
 });
 const busy = ref('');
 const notice = ref('');
@@ -79,7 +80,7 @@ async function createRecord() {
       <div>
         <p class="eyebrow">专科其余层 / 中医 · 治疗</p>
         <h1>草药处方</h1>
-        <p>方名、药味、毒性标识与注意事项登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记方名、药味、毒性标识与注意事项。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>

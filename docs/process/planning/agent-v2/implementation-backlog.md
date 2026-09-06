@@ -1,10 +1,10 @@
-# openEMR2026 Medical Agent Harness 实施 Backlog
+# HaoEMR Medical Agent Harness 实施 Backlog
 
 > 模式：`BACKLOG`  
 > 计划日期：2026-08-25  
 > 计划状态：本目录所有任务均为 `PLANNED`  
-> 产品输入：`docs/product/prd/2026-08-25-openemr2026-agent-optimization-prd.md`  
-> 架构输入：`docs/design/architecture/2026-08-25-openemr2026-medical-agent-harness-lld.md`  
+> 产品输入：`docs/product/prd/2026-08-25-haoemr-agent-optimization-prd.md`
+> 架构输入：`docs/design/architecture/2026-08-25-haoemr-medical-agent-harness-lld.md`
 > UI 输入：`docs/design/ui-delivery/ai-medical-assistant-v2/`
 
 ## 1. 交付结论
@@ -134,7 +134,7 @@ PLT-001 契约基线
 - 目标价值：运行可精确回放到 Agent/Skill/Tool/Prompt/Composition 版本。
 - 来源：AOPT-FR-012–17/027/028；LLD §2.1、§11。状态：`PLANNED`。
 - 硬依赖：`PLT-001`。可并行：`PLT-003`、`PLT-004`。
-- 允许修改：`src/main/resources/db/migration/`、`src/test/resources/schema/`、`src/main/java/org/openemr2026/agent/`、相关测试。
+- 允许修改：`src/main/resources/db/migration/`、`src/test/resources/schema/`、`src/main/java/org/haoemr/agent/`、相关测试。
 - 禁止项：不就地修改已发布 Release；不让 display name 代替 stable code/version。
 - 实施动作：设计增量 Flyway；实现 release CRUD/发布状态机；保留 legacy registry 解析；补不可变/唯一 ACTIVE/依赖 pin 数据库硬门；加 API 与 schema tests。
 - 测试：`scripts/test-schema.sh`；定向 Agent/Skill/Tool Registry tests；契约生成检查。
@@ -169,7 +169,7 @@ PLT-001 契约基线
 - 来源：LLD §1.3、§4.1、Phase 0；NFR-011/013。状态：`PLANNED`。
 - 硬依赖：`PLT-002..004`。
 - 实施动作：定义 SPI 接口；将现有 model call 适配为 `LegacySingleShotLoop`；按 release 选择 loop；生成标准 trajectory；用 feature flag 支持新旧路径切换。
-- 允许修改：`src/main/java/org/openemr2026/agent/`及 tests。禁止：不把 Harness 拆为微服务；不顺手重写临床域服务。
+- 允许修改：`src/main/java/org/haoemr/agent/`及 tests。禁止：不把 Harness 拆为微服务；不顺手重写临床域服务。
 - 验证：现有 AgentRun/DeepSeek/OutputGuard tests 全通过；同一 fixture 新旧路径结果语义等价。
 - 回滚：关闭 Harness flag 立即回 legacy service；无数据破坏。
 - DoD：现有 API 不变；新轨迹可观测；不需 child/tool 也能完成旧运行。
@@ -449,4 +449,3 @@ node docs/design/ui-delivery/generate-route-map.mjs --audit
 - [x] 任务包含允许修改、禁止项、测试、安全、回滚和可观测 DoD。
 - [x] commit、push/PR、DB migration、灰度和生产扩面已分离为需单独授权的任务。
 - [x] 没有估算未证实时间，没有将未执行测试写成已通过。
-

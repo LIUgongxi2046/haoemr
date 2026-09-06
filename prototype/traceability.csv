@@ -121,8 +121,6 @@ FR-119,AC-119,SCR-102,#admin-audit,系统管理,VERIFIED
 FR-120,AC-120,GLOBAL-AI,#ai-assistant,AI中心,VERIFIED
 FR-121,AC-121,GLOBAL-AI/#ai-reminder-detail,#ai-reminder-detail,AI中心,VERIFIED
 FR-122,AC-122,GLOBAL-AI/#ai-capture,#ai-capture,AI中心,VERIFIED
-FR-123,AC-123,#ai-action-review,#ai-action-review,AI中心,VERIFIED
-FR-124,AC-124,#ai-assistant-policy,#ai-assistant-policy,AI中心,VERIFIED
 FR-125,AC-125,SCR-103,#specialty-coverage,业务配置,VERIFIED
 FR-126,AC-126,SCR-104,#pathology-workbench,医疗协同中心,VERIFIED
 FR-127,AC-127,GLOBAL-ROUTE-RULE,#clinical,全局,VERIFIED

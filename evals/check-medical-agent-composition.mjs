@@ -11,7 +11,7 @@ const migration = await readFile(
   'utf8',
 );
 const service = await readFile(
-  resolve(projectDir, 'src/main/java/org/openemr2026/agent/MedicalAgentHarnessService.java'),
+  resolve(projectDir, 'src/main/java/org/haoemr/agent/MedicalAgentHarnessService.java'),
   'utf8',
 );
 

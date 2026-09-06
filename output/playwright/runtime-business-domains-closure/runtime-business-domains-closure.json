@@ -1,0 +1,39 @@
+{
+  "run_at": "2026-09-05T11:10:58.563Z",
+  "stamp": "1788606658563",
+  "checks": [
+    {
+      "name": "published-form-is-bound-to-template-draft-and-author-cannot-self-publish",
+      "status": "PASS",
+      "detail": "模板草案 fc06d325-af85-46fd-9a97-b16f6d0558db 已绑定已发布 form-outpatient-record-v1，且创建人发布按钮被禁用"
+    },
+    {
+      "name": "document-draft-issues-a-context-lease-through-the-published-minimum-necessary-scope",
+      "status": "PASS",
+      "detail": "文书草稿 c4f0b100-e8e4-4b83-9333-fe1265439784 已在真实业务入口创建，范围配置执行台账将在服务端留存"
+    },
+    {
+      "name": "medication-safety-runs-before-signing-and-keeps-server-evidence",
+      "status": "PASS",
+      "detail": "医嘱 195ae029-fdd9-4899-a8d2-5474adb95280 被确定性重复用药规则阻断，证据来自 CONFIG_RUNTIME:c296de32-28fd-4d85-97a3-0b03e5f9865a"
+    },
+    {
+      "name": "critical-result-workflow-uses-separated-author-receiver-and-disposer-actions",
+      "status": "PASS",
+      "detail": "检验签发人、临床接收人和处置人分离；危急值 835e08f0-f34a-4e67-b53c-ce4f7f12c97c 已处置"
+    }
+  ],
+  "findings": [],
+  "evidence": {
+    "template_id": "fc06d325-af85-46fd-9a97-b16f6d0558db",
+    "template_version_id": "40dde030-611c-47c8-9d74-853f484b2f65",
+    "scope_document_id": "c4f0b100-e8e4-4b83-9333-fe1265439784",
+    "medication_order_id": "195ae029-fdd9-4899-a8d2-5474adb95280",
+    "medication_evaluation_id": "c7d636f8-b2dc-4efc-82c9-3ba32269893d",
+    "critical_result_id": "f5a6cbbb-6c35-46ab-a172-69177b605de6",
+    "critical_value_id": "835e08f0-f34a-4e67-b53c-ce4f7f12c97c",
+    "critical_order_id": "a690a1d9-6559-43a7-b1e0-41f24226f445"
+  },
+  "passed": 4,
+  "failed": 0
+}

@@ -7,7 +7,7 @@ import { toClinicalIssue, type ClinicalIssue } from '../clinical-error';
 
 const sourceOptions = [
   ['ENCOUNTER', '就诊'], ['DOCUMENT', '文书'], ['DIAGNOSIS', '诊断'],
-  ['ORDER', '医嘱'], ['RESULT', '结果'], ['TASK', '任务'],
+  ['ORDER', '医嘱'], ['RESULT', '结果'], ['TASK', '任务'], ['DEVICE', '设备'],
 ] as const;
 const filters = reactive({
   patientId: clinicalContext.patientId,
@@ -72,7 +72,7 @@ onMounted(refresh);
 
 <template>
   <section data-page-root class="content vue-native-page patient-timeline-page">
-    <div class="page-heading timeline-heading"><div><p class="eyebrow">病历中心 / 患者全景</p><h1>授权患者纵向时间线</h1><p>联合规范患者及合并前别名，对每条资料独立鉴权；数据源异常会显式标记，不会伪装成空病史。</p></div><div class="toolbar-actions"><RouterLink class="button secondary" to="/patient-registry">患者主索引</RouterLink><button class="button primary" :disabled="loading" @click="refresh">{{ loading ? '正在聚合…' : '重新加载' }}</button></div></div>
+    <div class="page-heading timeline-heading"><div><p class="eyebrow">病历中心 / 患者全景</p><h1>授权患者纵向时间线</h1><p>汇总该患者及合并前档案的资料；数据暂时无法加载时会明确提示。</p></div><div class="toolbar-actions"><RouterLink class="button secondary" to="/patient-registry">患者查询</RouterLink><button class="button primary" :disabled="loading" @click="refresh">{{ loading ? '正在加载…' : '重新加载' }}</button></div></div>
 
     <section class="timeline-filter-card" aria-label="时间线筛选"><label><span>患者 ID</span><input v-model="filters.patientId" /></label><label><span>开始日期</span><input v-model="filters.from" type="date" /></label><label><span>结束日期</span><input v-model="filters.to" type="date" /></label><label><span>状态（逗号分隔）</span><input v-model="filters.statuses" placeholder="SIGNED,ACTIVE" /></label><button class="button secondary" @click="refresh">应用筛选</button></section>
     <section class="timeline-source-picker" aria-label="资料类型"><button v-for="([source,label]) in sourceOptions" :key="source" :class="{ active: filters.types.includes(source) }" @click="toggleType(source)"><span>{{ label }}</span><small>{{ source }}</small></button></section>
@@ -84,7 +84,7 @@ onMounted(refresh);
       <section class="timeline-source-status"><article v-for="entry in sourceSummary" :key="entry.source" :class="entry.state?.state.toLowerCase()"><div><span>{{ entry.label }}</span><small>{{ entry.source }}</small></div><strong v-if="!entry.selected">未选择</strong><strong v-else-if="entry.state?.state === 'PARTIAL'">加载失败</strong><strong v-else-if="entry.visible === 0">已加载 · 无资料</strong><strong v-else>已加载 {{ entry.visible }} 条</strong></article></section>
       <section class="timeline-integrity-strip"><span :class="snapshot.completeness.toLowerCase()">{{ snapshot.completeness === 'COMPLETE' ? '完整快照' : '部分快照' }}</span><code>水位 {{ snapshot.data_watermark.slice(0, 16) }}</code><span>别名档案 {{ snapshot.patient_alias_ids.length }} 份</span><span>生成于 {{ date(snapshot.generated_at) }}</span></section>
       <div class="timeline-layout"><section class="timeline-stream"><article v-for="item in items" :key="`${item.item_type}-${item.resource_id}`"><div class="timeline-marker" :data-type="item.item_type">{{ sourceLabel[item.item_type]?.slice(0,1) }}</div><div class="timeline-item-body"><header><div><span>{{ sourceLabel[item.item_type] }} · {{ item.status }}</span><strong>{{ item.title }}</strong></div><time>{{ date(item.occurred_at) }}</time></header><p v-if="item.summary">{{ item.summary }}</p><footer><code>资源 {{ shortId(item.resource_id) }}</code><code>患者 {{ shortId(item.patient_id) }}</code><span>{{ item.source_system || '本系统' }} · row v{{ item.row_version }}<template v-if="item.version_no"> · 业务 v{{ item.version_no }}</template></span><RouterLink v-if="item.source_route" :to="item.source_route">打开原记录 →</RouterLink></footer></div></article><div v-if="!items.length" class="timeline-empty"><strong>当前筛选范围内没有已授权资料</strong><span v-if="snapshot.completeness === 'COMPLETE'">所选数据源均已成功查询，这是可确认的空状态。</span><span v-else>仍有失败数据源，不能将此视为完整空病史。</span></div><button v-if="snapshot.next_cursor" class="button secondary timeline-more" :disabled="loadingMore" @click="loadMore">{{ loadingMore ? '加载中…' : '加载更早记录' }}</button></section>
-        <aside class="timeline-evidence"><h2>访问与证据</h2><dl><div><dt>规范患者</dt><dd><code>{{ snapshot.patient_id }}</code></dd></div><div><dt>联合档案</dt><dd><code v-for="alias in snapshot.patient_alias_ids" :key="alias">{{ alias }}</code></dd></div><div><dt>授权规则</dt><dd>上下文租约 + 每条资源策略</dd></div><div><dt>访问审计</dt><dd>PATIENT_TIMELINE_VIEWED</dd></div></dl><p>页面不呈现无权正文，也不会用“0 条”暗示被拒绝的资源不存在。</p></aside></div>
+        <aside class="timeline-evidence"><h2>当前查看范围</h2><dl><div><dt>患者档案</dt><dd><code>{{ snapshot.patient_id }}</code></dd></div><div><dt>合并前档案</dt><dd><code v-for="alias in snapshot.patient_alias_ids" :key="alias">{{ alias }}</code></dd></div><div><dt>查看权限</dt><dd>按当前岗位确认</dd></div></dl><p>这里只显示您有权查看的资料。</p></aside></div>
     </template>
   </section>
 </template>

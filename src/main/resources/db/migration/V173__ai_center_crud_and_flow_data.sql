@@ -38,7 +38,7 @@ begin
   if (new.budget_name is distinct from old.budget_name
       or new.max_tokens is distinct from old.max_tokens
       or new.max_duration_seconds is distinct from old.max_duration_seconds)
-     and coalesce(current_setting('openemr2026.budget_update_authorized', true), 'false') <> 'true' then
+     and coalesce(current_setting('haoemr.budget_update_authorized', true), 'false') <> 'true' then
     raise exception 'agent run budget limits can only change through the audited budget service';
   end if;
   return new;

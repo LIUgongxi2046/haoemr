@@ -1,4 +1,4 @@
-# openemr2026 剩余开发工作清单 v4
+# HaoEMR 剩余开发工作清单 v4
 
 > 日期：2026-08-24  
 > 模式：`BACKLOG + REPLAN`  
@@ -208,7 +208,7 @@ UI-194-01,194 页视觉状态响应式与候选发布收口,PROTO-194;STATE-MATR
 - 当前状态：`VERIFIED`。
 - 硬依赖：R0-BASE-01。
 - 可并行项：R0-CONTRACT-01、R0-AC-01。
-- 允许修改：`org.openemr2026.outbox`、Outbox 测试夹具、必要的配置；若需 Schema 变化必须先追加独立迁移并评审。
+- 允许修改：`org.haoemr.outbox`、Outbox 测试夹具、必要的配置；若需 Schema 变化必须先追加独立迁移并评审。
 - 禁止项：用 sleep 延长掩盖竞争、降低投递语义、移除幂等 receipt/fencing/dead-letter 断言。
 - 实施动作：复现失败；区分调度线程竞争与 SQL 领取条件；冻结测试时钟/worker 所有权；修正事务边界；增加重复执行压力回归。
 - 测试与验证：OutboxDispatcherTest 连续运行；全量 Java 测试；验证顺序、去重、过期租约回收、dead-letter replay。
@@ -338,7 +338,7 @@ UI-194-01,194 页视觉状态响应式与候选发布收口,PROTO-194;STATE-MATR
 
 - 当前状态：全部 `VERIFIED`。
 - 公共硬依赖：R0-AC-01；模型路由依赖模型连接，设备监控依赖设备目录，消息 Trace 依赖连接器，长期保存依赖扫描资产。
-- 允许修改：对应页面、`web/src/api/mock.ts`、`org.openemr2026.mock`、Mock OpenAPI 和测试；必要时增加纯合成 fixture。
+- 允许修改：对应页面、`web/src/api/mock.ts`、`org.haoemr.mock`、Mock OpenAPI 和测试；必要时增加纯合成 fixture。
 - 禁止项：访问真实外部端点、保存真实凭据、把模拟结果写成真实临床事实、隐藏“模拟”来源、删除标准接口/schema/integration_doc。
 - 公共实施要求：每页保留标准接口和对接文档入口；提供页面专属请求/响应、状态机、错误/降级/重试；所有模拟结果可由固定 seed 复现并带 `synthetic=true` 和来源标记。
 - 公共回滚：按页面 handler 和 UI commit 回滚；模拟数据可重建，不迁移真实数据。

@@ -47,7 +47,7 @@ describe('门诊活动患者与就诊上下文', () => {
   });
 
   it('拒绝损坏或非 UUID 上下文并清理会话副本', () => {
-    sessionStorage.setItem('openemr2026.active-outpatient-context.v1', JSON.stringify({
+    sessionStorage.setItem('haoemr.active-outpatient-context.v1', JSON.stringify({
       ...context,
       patientId: '../../wrong-patient',
     }));

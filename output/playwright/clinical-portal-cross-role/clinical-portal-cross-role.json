@@ -1,0 +1,78 @@
+{
+  "run_at": "2026-09-05T15:12:14.226Z",
+  "checks": [
+    {
+      "name": "clinician-portal-metrics-are-server-facts",
+      "status": "PASS",
+      "detail": "临床医生读取门诊、急诊、住院三域的服务端指标，未使用静态或加载回退值"
+    },
+    {
+      "name": "pharmacist-portal-labels-denied-inpatient-scope",
+      "status": "PASS",
+      "detail": "药师保留可授权门诊事实；无病区范围时以拒绝码和未回退说明代替零值或历史值"
+    }
+  ],
+  "findings": [],
+  "evidence": {
+    "clinician": {
+      "role": "临床医生 · CLINICIAN ⌄",
+      "outpatient": [
+        "23",
+        "15",
+        "8",
+        "7",
+        "7",
+        "3"
+      ],
+      "emergency": [
+        "Ⅰ(A)",
+        "1",
+        "8",
+        "1",
+        "0",
+        "1"
+      ],
+      "inpatient": [
+        "16",
+        "4",
+        "4",
+        "19",
+        "0",
+        "4"
+      ],
+      "inpatientAlert": "病区逾期文书 19 病区待完成任务 19 当前住院实例 ADMITTED",
+      "inpatientScope": "当前上下文 住院患者 …00000002 · 就诊 …00000102 数据范围 当前病区工作列表 + 当前住院实例"
+    },
+    "pharmacist": {
+      "role": "药师 · PHARMACIST ⌄",
+      "outpatient": [
+        "23",
+        "15",
+        "8",
+        "7",
+        "7",
+        "3"
+      ],
+      "emergency": [
+        "Ⅰ(A)",
+        "1",
+        "8",
+        "1",
+        "0",
+        "1"
+      ],
+      "inpatient": [
+        "—",
+        "—",
+        "—",
+        "—",
+        "—",
+        "—"
+      ],
+      "inpatientAlert": "住院数据 不可用（WARD_SCOPE_DENIED）",
+      "inpatientScope": "当前上下文 住院患者 …00000002 · 就诊 …00000102 数据范围 当前岗位无法读取病区工作列表（WARD_SCOPE_DENIED），未使用旧值或 0 回退"
+    }
+  },
+  "passed": 2,
+  "failed": 0
+}

@@ -1,0 +1,291 @@
+{
+  "run_at": "2026-09-05T04:51:24.807Z",
+  "routes": 15,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 30,
+  "verified_route_viewports": 30,
+  "findings": [],
+  "observations": [
+    {
+      "route": "dermatology-treatment",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "生物制剂筛查",
+      "routeId": "dermatology-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 443
+    },
+    {
+      "route": "dermatology-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "皮肤工作台",
+      "routeId": "dermatology-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 562
+    },
+    {
+      "route": "device-monitoring",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "设备监护",
+      "routeId": "device-monitoring",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3061
+    },
+    {
+      "route": "devices",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医疗设备目录与接入状态",
+      "routeId": "devices",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 878
+    },
+    {
+      "route": "emergency",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "急诊工作台",
+      "routeId": "emergency",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2229
+    },
+    {
+      "route": "emergency-access",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "紧急访问",
+      "routeId": "emergency-access",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 588
+    },
+    {
+      "route": "ent-care",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "气道风险交接",
+      "routeId": "ent-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 437
+    },
+    {
+      "route": "ent-evidence",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "耳鼻喉诊疗证据",
+      "routeId": "ent-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 496
+    },
+    {
+      "route": "ent-followup",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "ent-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 443
+    },
+    {
+      "route": "ent-qc",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "ent-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 467
+    },
+    {
+      "route": "ent-record",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "耳鼻喉记录",
+      "routeId": "ent-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 438
+    },
+    {
+      "route": "ent-treatment",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "耳鼻喉治疗执行",
+      "routeId": "ent-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 494
+    },
+    {
+      "route": "ent-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "耳鼻喉工作台",
+      "routeId": "ent-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 507
+    },
+    {
+      "route": "er-handoff",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "急诊会诊、交接与转运",
+      "routeId": "er-handoff",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 706
+    },
+    {
+      "route": "er-nursing",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "急诊护理、输液与执行",
+      "routeId": "er-nursing",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1082
+    },
+    {
+      "route": "dermatology-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生物制剂筛查",
+      "routeId": "dermatology-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 210
+    },
+    {
+      "route": "dermatology-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "皮肤工作台",
+      "routeId": "dermatology-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 329
+    },
+    {
+      "route": "device-monitoring",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "设备监护",
+      "routeId": "device-monitoring",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2828
+    },
+    {
+      "route": "devices",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医疗设备目录与接入状态",
+      "routeId": "devices",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 645
+    },
+    {
+      "route": "emergency",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "急诊工作台",
+      "routeId": "emergency",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1996
+    },
+    {
+      "route": "emergency-access",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "紧急访问",
+      "routeId": "emergency-access",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 355
+    },
+    {
+      "route": "ent-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "气道风险交接",
+      "routeId": "ent-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 204
+    },
+    {
+      "route": "ent-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "耳鼻喉诊疗证据",
+      "routeId": "ent-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 263
+    },
+    {
+      "route": "ent-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "ent-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 210
+    },
+    {
+      "route": "ent-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "ent-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 234
+    },
+    {
+      "route": "ent-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "耳鼻喉记录",
+      "routeId": "ent-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 205
+    },
+    {
+      "route": "ent-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "耳鼻喉治疗执行",
+      "routeId": "ent-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 261
+    },
+    {
+      "route": "ent-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "耳鼻喉工作台",
+      "routeId": "ent-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 274
+    },
+    {
+      "route": "er-handoff",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "急诊会诊、交接与转运",
+      "routeId": "er-handoff",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 473
+    },
+    {
+      "route": "er-nursing",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "急诊护理、输液与执行",
+      "routeId": "er-nursing",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 849
+    }
+  ]
+}

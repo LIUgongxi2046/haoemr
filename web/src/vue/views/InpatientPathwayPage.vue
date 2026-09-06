@@ -7,7 +7,7 @@ import {
   getInpatientSyntheticActor, inpatientSyntheticActors, issueInpatientLease,
   loadInpatientOverview, loadInpatientPathwayWorkspace, refreshInpatientPathway,
   requestInpatientPathwayVariance, reviewInpatientPathwayVariance,
-  setInpatientSyntheticActor, type InpatientSyntheticActorKey,
+  type InpatientSyntheticActorKey,
 } from '../../clinical-api';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import BusinessActionDialog from '../components/BusinessActionDialog.vue';
@@ -59,17 +59,6 @@ async function refetch(next?: InpatientPathwayInstanceWire) {
   await workspace.refetch();
 }
 
-async function switchActor(key: InpatientSyntheticActorKey) {
-  if (busy.value || key === selectedActorKey.value) return;
-  busy.value = true; notice.value = '';
-  try {
-    setInpatientSyntheticActor(key); selectedActorKey.value = key;
-    await refetch();
-    notice.value = `已切换为${activeActor.value?.roleLabel ?? key}，并重新校验病区范围。`;
-  } catch (error) {
-    const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`;
-  } finally { busy.value = false; }
-}
 
 async function enroll() {
   if (!workspace.data.value || busy.value) return;
@@ -168,8 +157,7 @@ function formatDate(value?: string | null) {
 <template>
   <section data-page-root class="content vue-native-page pathway-page">
     <div class="page-heading"><div><p class="eyebrow">住院 / 标准诊疗</p><h1>住院临床路径执行中心</h1><p>入径版本固定；任务由真实文书和医嘱状态驱动；变异实行提出与独立审核分离。</p></div><div class="toolbar-actions"><button v-if="instance?.status === 'ACTIVE'" class="button" :disabled="busy" @click="execute('refresh')">核验业务来源</button><button v-if="instance?.status === 'ACTIVE'" class="button primary" :disabled="busy" @click="openVariance()">记录路径变异</button></div></div>
-    <details v-if="inpatientSyntheticActors.length" class="development-acceptance-tools"><summary>开发角色模拟</summary><section class="inpatient-role-simulator" aria-label="开发环境路径审核岗位身份"><div><strong>路径审核岗位模拟</strong><span>变异申请人与审核人必须分离；生产身份由 OIDC 和岗位任期确定</span></div><div role="group"><button v-for="actor in inpatientSyntheticActors" :key="actor.key" type="button" :class="{ active: actor.key === selectedActorKey }" :disabled="busy" @click="switchActor(actor.key)"><b>{{ actor.roleLabel }}</b><small>{{ actor.displayName }}</small></button></div></section></details>
-    <ClinicalPageState v-if="workspace.isPending.value" kind="loading" message="正在校验住院租约、路径目录与执行证据" />
+    <ClinicalPageState v-if="workspace.isPending.value" kind="loading" message="正在加载住院路径和处理记录" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="workspace.refetch()" />
     <template v-else-if="workspace.data.value">
       <section class="patient-strip" aria-label="住院患者上下文"><div class="patient-avatar">{{ workspace.data.value.overview.patient_display_name.slice(0, 1) }}</div><div><strong>{{ workspace.data.value.overview.patient_display_name }}</strong><span>{{ workspace.data.value.overview.ward_display_name }} · {{ workspace.data.value.overview.bed_label }}床</span></div><dl><div><dt>住院状态</dt><dd>{{ workspace.data.value.overview.admission.status }}</dd></div><div><dt>当前身份</dt><dd>{{ activeActor?.displayName ?? '当前登录人' }}</dd></div><div><dt>路径事实</dt><dd>{{ instance ? `${instance.pathway_code} · v${instance.version_no}` : '尚未入径' }}</dd></div></dl><span class="lease-badge">…{{ workspace.data.value.overview.admission.admission_id.slice(-8) }}</span></section>

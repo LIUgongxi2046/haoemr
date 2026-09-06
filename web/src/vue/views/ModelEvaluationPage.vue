@@ -68,8 +68,8 @@ async function record() {
     });
     form.evalName = '';
     notice.value = form.score >= form.threshold
-      ? '评估记录已通过阈值：该记录仅作为评测证据，模型保持“评测中”，不会自动进入 Eva 路由。'
-      : '评估未通过：模型已退出 Eva 路由，请整改后重新评估。';
+      ? '评估记录已通过阈值：该记录仅作为评测证据，模型保持“评测中”，不会自动进入 AI医助 EVA 路由。'
+      : '评估未通过：模型已退出 AI医助 EVA 路由，请整改后重新评估。';
     await Promise.all([modelsQuery.refetch(), evaluationsQuery.refetch()]);
   } catch (error) {
     const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`;
@@ -83,7 +83,7 @@ async function record() {
       <div>
         <p class="eyebrow">AI 平台 / 模型评估、影子、灰度与隔离</p>
         <h1>模型评估</h1>
-        <p>按模型部署记录不可变评估证据；手工分值不能直接发布模型，未通过会立即退出 Eva 路由。</p>
+        <p>按模型部署记录不可变评估证据；手工分值不能直接发布模型，未通过会立即退出 AI医助 EVA 路由。</p>
       </div>
       <div class="admin-inline-tools">
         <label class="admin-code-input"><span>模型部署</span>

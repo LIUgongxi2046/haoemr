@@ -1,0 +1,24 @@
+{
+  "run_at": "2026-09-05T07:01:49.845Z",
+  "reminder_message": "REMINDER-TASK-E2E-1788591709845：请人工核查提醒来源和后续处置。",
+  "checks": [
+    {
+      "name": "create-pending-reminder-through-ui",
+      "status": "PASS",
+      "detail": "通过真实提醒页面创建 PENDING 的 OTHER/WARNING 提醒"
+    },
+    {
+      "name": "convert-reminder-to-single-traceable-task",
+      "status": "PASS",
+      "detail": "提醒转换为一条可追溯任务，页面不再提供重复转换入口"
+    },
+    {
+      "name": "task-center-filters-and-shows-reminder-source",
+      "status": "PASS",
+      "detail": "任务中心按 REMINDER 来源筛选并展示同一提醒消息，临床终态未被页面伪造"
+    }
+  ],
+  "findings": [],
+  "passed": 3,
+  "failed": 0
+}

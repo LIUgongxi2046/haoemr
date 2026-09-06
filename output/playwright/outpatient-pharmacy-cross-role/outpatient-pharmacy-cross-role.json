@@ -1,0 +1,24 @@
+{
+  "run_at": "2026-09-05T06:17:04.974Z",
+  "batch_number": "OP-PHARM-E2E-1788589024974",
+  "checks": [
+    {
+      "name": "first-pharmacist-can-prepare-from-signed-prescription",
+      "status": "PASS",
+      "detail": "已从当前患者的已签署处方项创建 PREPARED 调剂记录"
+    },
+    {
+      "name": "same-pharmacist-cannot-verify-own-dispensing",
+      "status": "PASS",
+      "detail": "服务端拒绝调配人与核验人为同一用户"
+    },
+    {
+      "name": "second-pharmacist-verifies-and-dispenses",
+      "status": "PASS",
+      "detail": "第二名药师完成 VERIFY → DISPENSE；前端台账显示 DISPENSED"
+    }
+  ],
+  "findings": [],
+  "passed": 3,
+  "failed": 0
+}

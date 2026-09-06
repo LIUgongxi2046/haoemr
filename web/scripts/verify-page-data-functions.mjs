@@ -8,9 +8,9 @@ const projectDir = resolve(webDir, '..');
 const contract = JSON.parse(await readFile(resolve(projectDir, 'contracts/generated/route-contract.generated.json'), 'utf8'));
 const semantics = JSON.parse(await readFile(resolve(projectDir, 'docs/process/testing/route-semantic-contract.json'), 'utf8'));
 const semanticById = new Map(semantics.routes.map((route) => [route.route_id, route]));
-const requested = new Set((process.env.OPENEMR2026_BROWSER_ROUTES || '').split(',').filter(Boolean));
+const requested = new Set((process.env.HAOEMR_BROWSER_ROUTES || '').split(',').filter(Boolean));
 const routes = contract.routes.filter((route) => requested.size === 0 || requested.has(route.route_id));
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
 const outputDir = resolve(projectDir, 'output/playwright');
 await mkdir(outputDir, { recursive: true });
 

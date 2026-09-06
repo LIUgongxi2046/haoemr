@@ -1,10 +1,20 @@
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
 import { computed, reactive, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import type { PatientDemographicVersionWire, PatientMatchCandidateWire } from '../../generated/contracts';
-import { clinicalContext, correctPatientDemographics, detectPatientMatchCandidate, loadPatientDemographicVersions, loadPatientMatchCandidates } from '../../clinical-api';
+import { clinicalContext, correctPatientDemographics, detectPatientMatchCandidate, loadPatientDemographicVersions, loadPatientMatchCandidates, issuePatientSearchLease, searchPatientsForAdmission } from '../../clinical-api';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+
+const route = useRoute();
+const patientSearchTerm = computed(() => typeof route.query.q === 'string' ? route.query.q.trim() : '');
+const patientSearch = useQuery({
+  queryKey: ['mpi', 'patient-search', patientSearchTerm, computed(() => clinicalContext.organizationId), computed(() => clinicalContext.facilityId)],
+  queryFn: async () => searchPatientsForAdmission(await issuePatientSearchLease(), patientSearchTerm.value),
+  enabled: () => Boolean(patientSearchTerm.value), retry: false, staleTime: 0, gcTime: 0,
+});
+const patientSearchIssue = computed(() => patientSearch.error.value ? toClinicalIssue(patientSearch.error.value) : null);
 
 const query = useQuery({ queryKey: ['mpi', 'candidates'], queryFn: () => loadPatientMatchCandidates('OPEN'), retry: false, staleTime: 0, gcTime: 0 });
 const issue = computed(() => query.error.value ? toClinicalIssue(query.error.value) : null);
@@ -47,6 +57,15 @@ async function correct() {
 <template>
   <section data-page-root class="content admin-content vue-native-page mpi-page">
     <div class="page-heading admin-heading"><div><p class="eyebrow">病历中心 / 患者主索引</p><h1>患者主索引与身份核验</h1><p>统一处理相似患者、待核验身份、人口学纠错和重复建档；任何候选都必须人工确认，不以算法分数直接合并患者。</p></div><div class="toolbar-actions"><RouterLink class="button secondary" to="/patient-merge">合并与撤销</RouterLink><RouterLink class="button secondary" to="/patient-timeline">纵向时间轴</RouterLink></div></div>
+    <section v-if="patientSearchTerm" class="admin-panel" aria-label="患者搜索结果">
+      <header><div><h2>患者搜索结果</h2><p>关键词：{{ patientSearchTerm }} · 最多显示 20 条授权范围内的匹配记录</p></div></header>
+      <ClinicalPageState v-if="patientSearch.isPending.value" kind="loading" message="正在搜索患者" />
+      <ClinicalPageState v-else-if="patientSearchIssue" kind="error" :code="patientSearchIssue.code" :message="patientSearchIssue.message" @retry="patientSearch.refetch()" />
+      <div v-else class="admin-table-wrap"><table class="admin-table mpi-table"><thead><tr><th>姓名</th><th>患者号</th><th>出生日期</th><th>操作</th></tr></thead><tbody>
+        <tr v-for="patient in patientSearch.data.value ?? []" :key="patient.patient_id"><td><strong>{{ patient.display_name }}</strong></td><td>…{{ patient.patient_id.slice(-8) }}</td><td>{{ patient.birth_date }}</td><td><button class="button secondary" :disabled="Boolean(busy)" @click="openHistory(patient.patient_id)">核验身份</button></td></tr>
+        <tr v-if="!patientSearch.data.value?.length"><td colspan="4" class="mpi-empty">未找到匹配患者，请核对姓名或标识后重试。</td></tr>
+      </tbody></table></div>
+    </section>
     <ClinicalPageState v-if="query.isPending.value" kind="loading" message="正在读取 MPI 人工复核队列" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="query.refetch()" />
     <template v-else>

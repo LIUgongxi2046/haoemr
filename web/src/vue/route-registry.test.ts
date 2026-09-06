@@ -1,13 +1,13 @@
 import { createMemoryHistory } from 'vue-router';
 import { describe, expect, it } from 'vitest';
 
-import { createOpenEmrRouter } from './router';
+import { createHaoEmrRouter } from './router';
 import { nativeVueRouteIds, primaryNavigationId, routeRegistry, specialtyGuardRouteIds, specialtyScopeForRoute } from './route-registry';
 
 describe('Vue route registry', () => {
-  it('registers the exact 199-route contract with one primary domain per route', () => {
-    expect(routeRegistry).toHaveLength(199);
-    expect(new Set(routeRegistry.map((route) => route.route_id)).size).toBe(199);
+  it('registers the exact 196-route contract with one primary domain per route', () => {
+    expect(routeRegistry).toHaveLength(196);
+    expect(new Set(routeRegistry.map((route) => route.route_id)).size).toBe(196);
     expect(routeRegistry.every((route) => Boolean(route.primary_domain))).toBe(true);
   });
 
@@ -17,13 +17,30 @@ describe('Vue route registry', () => {
   });
 
   it('resolves registered deep links and fails closed for unknown paths', () => {
-    const router = createOpenEmrRouter(createMemoryHistory());
+    const router = createHaoEmrRouter(createMemoryHistory());
     expect(router.resolve('/record-diff/document/from/to').name).toBe('record-diff');
     expect(router.resolve('/route-that-does-not-exist').name).toBe('safe-not-found');
   });
 
+  it.each(['ai-action-review', 'ai-assistant-policy', 'clinical-specialty-ai'])(
+    'removes retired AI page %s from the registry and router', (routeId) => {
+      const router = createHaoEmrRouter(createMemoryHistory());
+      expect(routeRegistry.some((route) => route.route_id === routeId)).toBe(false);
+      expect(nativeVueRouteIds.has(routeId)).toBe(false);
+      expect(router.resolve(`/${routeId}`).name).toBe('safe-not-found');
+    },
+  );
+
+  it('resolves every emergency journey depth link to its native page', () => {
+    const router = createHaoEmrRouter(createMemoryHistory());
+    for (const routeId of ['er-patient-overview', 'er-clinical-timeline', 'er-safety-gates', 'er-transfer-readiness', 'er-evidence-ledger']) {
+      expect(router.resolve(`/${routeId}`).name).toBe(routeId);
+      expect(router.resolve(`/${routeId}`).meta).toMatchObject({ contractId: routeId, primaryDomain: 'CLINICAL', implementation: 'VUE_NATIVE' });
+    }
+  });
+
   it('exposes system login as a public standalone layout with a legacy alias', () => {
-    const router = createOpenEmrRouter(createMemoryHistory());
+    const router = createHaoEmrRouter(createMemoryHistory());
     const login = router.resolve('/login');
     expect(login.name).toBe('login-context');
     expect(login.meta).toMatchObject({ layout: 'SYSTEM_AUTH', publicRoute: true, primaryDomain: 'SYSTEM' });

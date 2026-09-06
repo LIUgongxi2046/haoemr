@@ -1,0 +1,291 @@
+{
+  "run_at": "2026-09-05T04:49:14.179Z",
+  "routes": 15,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 30,
+  "verified_route_viewports": 30,
+  "findings": [],
+  "observations": [
+    {
+      "route": "admin",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "系统管理工作台",
+      "routeId": "admin",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 479
+    },
+    {
+      "route": "admin-audit",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "管理审计与权限复核",
+      "routeId": "admin-audit",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3112
+    },
+    {
+      "route": "admin-auth",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "认证与账户安全策略",
+      "routeId": "admin-auth",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1123
+    },
+    {
+      "route": "admin-dictionaries",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "字典、术语与值集中心",
+      "routeId": "admin-dictionaries",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1326
+    },
+    {
+      "route": "admin-jobs",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "通知任务与治理执行中心",
+      "routeId": "admin-jobs",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1305
+    },
+    {
+      "route": "admin-master-data",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医院主数据与标准编码",
+      "routeId": "admin-master-data",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2415
+    },
+    {
+      "route": "admin-org",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "组织机构与工作单元",
+      "routeId": "admin-org",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1390
+    },
+    {
+      "route": "admin-parameters",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "系统参数与功能开关",
+      "routeId": "admin-parameters",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1116
+    },
+    {
+      "route": "admin-permissions",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "权限策略与访问模拟",
+      "routeId": "admin-permissions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2912
+    },
+    {
+      "route": "admin-roles",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "角色、工作组与职责分离",
+      "routeId": "admin-roles",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2864
+    },
+    {
+      "route": "admin-templates",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "模板、编号与输出管理",
+      "routeId": "admin-templates",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1977
+    },
+    {
+      "route": "admin-users",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "用户、人员与账户管理",
+      "routeId": "admin-users",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1840
+    },
+    {
+      "route": "admission-bed",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "入院、病区与床位管理",
+      "routeId": "admission-bed",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1776
+    },
+    {
+      "route": "agent",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医助运行证据采集",
+      "routeId": "agent",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1791
+    },
+    {
+      "route": "agent-catalog",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医助团队设计与编排",
+      "routeId": "agent-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2128
+    },
+    {
+      "route": "admin",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "系统管理工作台",
+      "routeId": "admin",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 778
+    },
+    {
+      "route": "admin-audit",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "管理审计与权限复核",
+      "routeId": "admin-audit",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2860
+    },
+    {
+      "route": "admin-auth",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "认证与账户安全策略",
+      "routeId": "admin-auth",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 945
+    },
+    {
+      "route": "admin-dictionaries",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "字典、术语与值集中心",
+      "routeId": "admin-dictionaries",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1069
+    },
+    {
+      "route": "admin-jobs",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "通知任务与治理执行中心",
+      "routeId": "admin-jobs",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1048
+    },
+    {
+      "route": "admin-master-data",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医院主数据与标准编码",
+      "routeId": "admin-master-data",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2158
+    },
+    {
+      "route": "admin-org",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "组织机构与工作单元",
+      "routeId": "admin-org",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1133
+    },
+    {
+      "route": "admin-parameters",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "系统参数与功能开关",
+      "routeId": "admin-parameters",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 859
+    },
+    {
+      "route": "admin-permissions",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "权限策略与访问模拟",
+      "routeId": "admin-permissions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2655
+    },
+    {
+      "route": "admin-roles",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "角色、工作组与职责分离",
+      "routeId": "admin-roles",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2607
+    },
+    {
+      "route": "admin-templates",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "模板、编号与输出管理",
+      "routeId": "admin-templates",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1720
+    },
+    {
+      "route": "admin-users",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "用户、人员与账户管理",
+      "routeId": "admin-users",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1583
+    },
+    {
+      "route": "admission-bed",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "入院、病区与床位管理",
+      "routeId": "admission-bed",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1543
+    },
+    {
+      "route": "agent",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助运行证据采集",
+      "routeId": "agent",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1558
+    },
+    {
+      "route": "agent-catalog",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助团队设计与编排",
+      "routeId": "agent-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1895
+    }
+  ]
+}

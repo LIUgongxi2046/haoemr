@@ -1,0 +1,18 @@
+{
+  "run_at": "2026-09-05T10:24:24.893Z",
+  "checks": [],
+  "findings": [
+    {
+      "name": "aiops-renders-the-real-run-ledger-and-tool-invocation-detail",
+      "detail": "真实医助运行台账为空，无法验证工具调用投影",
+      "url": "http://127.0.0.1:4178/#/aiops"
+    },
+    {
+      "name": "active-budgets-use-the-canonical-code-and-show-server-summary",
+      "detail": "处理额度台账为空",
+      "url": "http://127.0.0.1:4178/#/aiops"
+    }
+  ],
+  "passed": 0,
+  "failed": 2
+}

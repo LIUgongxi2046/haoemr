@@ -1,4 +1,4 @@
-export type ConfigurationFieldKind = 'text' | 'textarea' | 'list' | 'number' | 'boolean';
+export type ConfigurationFieldKind = 'text' | 'textarea' | 'list' | 'number' | 'boolean' | 'select';
 
 export interface ConfigurationFieldDefinition {
   key: string;
@@ -8,6 +8,7 @@ export interface ConfigurationFieldDefinition {
   defaultValue: string;
   minimum?: number;
   maximum?: number;
+  options?: Array<{ label: string; value: string }>;
 }
 
 export interface ConfigurationStudioDefinition {
@@ -27,7 +28,7 @@ const field = (
   kind: ConfigurationFieldKind,
   defaultValue: string,
   placeholder = defaultValue,
-  limits: Pick<ConfigurationFieldDefinition, 'minimum' | 'maximum'> = {},
+  limits: Pick<ConfigurationFieldDefinition, 'minimum' | 'maximum' | 'options'> = {},
 ): ConfigurationFieldDefinition => ({ key, label, kind, defaultValue, placeholder, ...limits });
 
 export const configurationStudios: Readonly<Record<string, ConfigurationStudioDefinition>> = Object.freeze({
@@ -50,36 +51,32 @@ export const configurationStudios: Readonly<Record<string, ConfigurationStudioDe
     fields: [field('roles', '角色', 'list', '作者,审批人,跨科医生'), field('data_scopes', '数据范围', 'list', '本科就诊,授权患者,脱敏汇总'), field('separation_of_duties', '职责分离', 'textarea', '作者!=审批人；跨科医生只读'), field('temporary_grant_hours', '临时授权小时', 'number', '4', '1-24', { minimum: 1, maximum: 24 })],
   },
   'agent-compose': {
-    routeId: 'agent-compose', configType: 'AGENT_COMPOSITION', title: '医助团队与能力工具编排', subtitle: '统一配置医助分工、能力工具、处理上限、停止条件和异常处置', keyPlaceholder: 'clinical-summary-agent-v1', previewTitle: '医助协作关系图', safetyNote: '医助不直接写入临床结果；能力停用或权限范围扩大时禁止发布。',
+    routeId: 'agent-compose', configType: 'AGENT_COMPOSITION', title: '医助团队与能力工具编排', subtitle: '配置治理台账：运行时实际读取已发布的医助 release 与 composition，不会自动消费本页草稿或发布项', keyPlaceholder: 'clinical-summary-agent-v1', previewTitle: '医助协作关系图', safetyNote: '本页用于治理审阅，不直接改变 AI医助 EVA 运行编排；医助不直接写入临床结果。',
     fields: [field('agents', '医助团队', 'list', 'clinical-summary-agent@1'), field('skills', '医助能力', 'list', 'summarize-record@3,retrieve-evidence@2'), field('tools', '医助工具', 'list', 'record.read@2,timeline.read@1'), field('budget_tokens', '生成额度', 'number', '6000', '100-20000', { minimum: 100, maximum: 20000 }), field('stop_conditions', '停止条件', 'textarea', '缺少授权来源；超过处理上限；患者或就诊发生变化'), field('compensation', '异常处置', 'textarea', '取消未执行操作，转交人工复核并完成对账')],
   },
   'agent-context': {
-    routeId: 'agent-context', configType: 'AGENT_CONTEXT', title: '医助诊疗范围策略', subtitle: '配置最小必要数据、有效时间、脱敏规则、来源和失效条件', keyPlaceholder: 'opd-context-v1', previewTitle: '诊疗范围预览', safetyNote: '患者或就诊发生变化时，原诊疗范围授权立即失效。',
+    routeId: 'agent-context', configType: 'AGENT_CONTEXT', title: '医助诊疗范围策略', subtitle: '配置治理台账：AI医助 EVA 运行时以上下文租约、已发布医助 release 与 AI 工作策略为准，不会自动消费本页条目', keyPlaceholder: 'opd-context-v1', previewTitle: '诊疗范围预览', safetyNote: '本页用于治理审阅；患者或就诊发生变化时，运行中的上下文租约仍会立即失效。',
     fields: [field('data_sources', '数据源', 'list', 'DOCUMENT_VERSION,OBSERVATION,ORDER,RULE'), field('allowed_fields', '允许字段', 'list', '主诉,现病史,诊断,医嘱,结果'), field('time_window_hours', '时间窗小时', 'number', '72', '1-720', { minimum: 1, maximum: 720 }), field('redaction_policy', '脱敏策略', 'textarea', '隐藏身份证号、电话和住址；仅保留最小必要字段'), field('freshness_minutes', '新鲜度分钟', 'number', '5', '1-60', { minimum: 1, maximum: 60 })],
   },
   'agent-evals': {
     routeId: 'agent-evals', configType: 'AGENT_EVAL', title: '医助评测与发布审核', subtitle: '通过临床用例、质量指标、对抗测试和版本差异决定是否发布', keyPlaceholder: 'clinical-agent-eval-v1', previewTitle: '发布审核', safetyNote: '临床用例未达标、对抗测试失败或版本无法追溯时禁止发布。',
-    fields: [field('dataset_version', '临床用例集版本', 'text', 'clinical-ai-golden-v1'), field('case_count', '用例数', 'number', '100', '1-10000', { minimum: 1, maximum: 10000 }), field('pass_threshold', '通过标准', 'number', '0.95', '0-1', { minimum: 0, maximum: 1 }), field('red_team_profile', '对抗测试方案', 'textarea', '越权诱导、指令注入、未经医生确认的临床操作、敏感数据泄露')],
-  },
-  'ai-assistant-policy': {
-    routeId: 'ai-assistant-policy', configType: 'AI_ASSISTANT_POLICY', title: 'AI医助 Eva 工作策略', subtitle: '配置主动提醒、可用数据来源、模型选择、使用频率和医生确认', keyPlaceholder: 'opd-assistant-policy-v1', previewTitle: '策略模拟', safetyNote: '没有可靠来源的回答不得进入临床使用；临床写入必须由医生确认。',
-    fields: [field('proactive_level', '主动提醒级别', 'text', 'REMIND_ONLY'), field('allowed_sources', '可用数据来源', 'list', 'DOCUMENT_VERSION,OBSERVATION,ORDER,RULE'), field('model_policy', '模型选择策略', 'text', 'ON_PREM_FIRST_WITH_MANUAL_FALLBACK'), field('rate_limit', '每分钟调用上限', 'number', '10', '1-60', { minimum: 1, maximum: 60 }), field('approval_required', '临床写入需医生确认', 'boolean', 'true')],
+    fields: [field('target_agent', '目标医助编码', 'text', 'CLINICAL_ASSISTANT'), field('dataset_version', '临床用例集版本', 'text', 'clinical-ai-golden-v1'), field('case_count', '用例数', 'number', '100', '1-10000', { minimum: 1, maximum: 10000 }), field('pass_threshold', '通过标准', 'number', '0.95', '0-1', { minimum: 0, maximum: 1 }), field('measured_score', '实测分值', 'number', '0.00', '0-1', { minimum: 0, maximum: 1 }), field('release_gate', '发布门禁', 'select', 'BLOCKED', undefined, { options: [{ label: '阻断', value: 'BLOCKED' }, { label: '通过', value: 'PASSED' }] }), field('red_team_profile', '对抗测试方案', 'textarea', '越权诱导、指令注入、未经医生确认的临床操作、敏感数据泄露')],
   },
   'config-release': {
-    routeId: 'config-release', configType: 'CONFIG_RELEASE', title: '配置差异、审批与灰度发布', subtitle: '验证证据、职责分离、灰度范围、失败补偿和回退', keyPlaceholder: 'release-2026-08-v1', previewTitle: '发布管道', safetyNote: '作者不能批准自己，失败版本不得进入 ACTIVE。',
+    routeId: 'config-release', configType: 'CONFIG_RELEASE', title: '配置差异、审批与灰度发布', subtitle: '受管发布台账：留存验证证据、职责分离、灰度范围、失败补偿和回退；不会自动下发配置或制品', keyPlaceholder: 'release-2026-08-v1', previewTitle: '发布记录预览', safetyNote: '本页不执行发布。作者不能批准自己，失败版本不得进入 ACTIVE；实际变更须由对应业务配置或交付流程执行。',
     fields: [field('diff_summary', '差异摘要', 'textarea', '新增门诊会诊超时升级节点'), field('validation_evidence', '验证证据', 'list', 'schema-pass,simulation-pass,security-pass'), field('rollout_scope', '灰度范围', 'list', '总院门诊,心内科'), field('rollback_plan', '回退计划', 'textarea', '恢复上一 ACTIVE 版本并保留审计证据')],
   },
   'config-upgrade': {
-    routeId: 'config-upgrade', configType: 'CONFIG_UPGRADE', title: '配置包升级与冲突处理', subtitle: '兼容检查、冲突决议、迁移预演与恢复点', keyPlaceholder: 'package-upgrade-v1', previewTitle: '升级预演', safetyNote: '破坏性字段删除必须阻断，预演与实际 checksum 必须一致。',
+    routeId: 'config-upgrade', configType: 'CONFIG_UPGRADE', title: '配置包升级与冲突处理', subtitle: '受管升级台账：留存兼容检查、冲突决议、迁移预演与恢复点；不会自动执行迁移或覆盖生效配置', keyPlaceholder: 'package-upgrade-v1', previewTitle: '升级记录预览', safetyNote: '本页不执行升级。破坏性字段删除必须阻断，预演与实际 checksum 必须一致；实际迁移须走专用交付与恢复流程。',
     fields: [field('package_version', '配置包版本', 'text', '2026.08.1'), field('compatibility', '兼容结论', 'textarea', '兼容 V166；不允许删除已引用字段'), field('conflicts', '冲突决议', 'list', '保留本地科室范围,接受产品新规则'), field('recovery_point', '恢复点', 'text', 'config-checkpoint-before-2026.08.1')],
   },
   'admin-master-data': {
     routeId: 'admin-master-data', configType: 'MASTER_DATA', title: '医院主数据管理', subtitle: '药品、耗材、项目、检验检查、设备和床位使用专用数据结构与权威来源', keyPlaceholder: 'department-codes-v1', previewTitle: '主数据树', safetyNote: '已被临床事实引用的值只能停用，不得物理删除。',
-    fields: [field('code_system', '编码体系', 'text', 'OPENEMR2026-DEPARTMENT'), field('hierarchy', '层级', 'list', '医院>院区>科室>病区'), field('effective_period', '有效期', 'text', '2026-01-01/2099-12-31'), field('import_policy', '导入策略', 'textarea', '重复编码阻断；逐项回传结果；已引用值仅停用')],
+    fields: [field('code_system', '编码体系', 'text', 'HAOEMR-DEPARTMENT'), field('hierarchy', '层级', 'list', '医院>院区>科室>病区'), field('effective_period', '有效期', 'text', '2026-01-01/2099-12-31'), field('import_policy', '导入策略', 'textarea', '重复编码阻断；逐项回传结果；已引用值仅停用')],
   },
   'admin-parameters': {
     routeId: 'admin-parameters', configType: 'PARAMETER', title: '系统参数与功能开关', subtitle: '带数据类型、适用范围、继承关系、依赖、风险和版本的受控配置，不允许随意覆盖', keyPlaceholder: 'clinical-ai-enabled-v1', previewTitle: '参数继承', safetyNote: '密码、密钥等敏感值只能引用受保护的环境变量或配置文件，高风险参数需双人审批。',
-    fields: [field('value_type', '数据类型', 'text', 'INTEGER'), field('configured_value', '实际生效值', 'text', '15'), field('scope', '适用范围', 'text', 'ORGANIZATION'), field('inheritance', '范围继承顺序', 'textarea', 'FACILITY -> ORGANIZATION -> GLOBAL'), field('secret_reference', '敏感值引用（非敏感参数填写受控占位引用）', 'text', 'env://OPENEMR2026_PARAMETER_NOT_SECRET'), field('effective_at', '计划生效时间', 'text', '2026-08-25T00:00:00+08:00')],
+    fields: [field('value_type', '数据类型', 'text', 'INTEGER'), field('configured_value', '实际生效值', 'text', '15'), field('scope', '适用范围', 'text', 'ORGANIZATION'), field('inheritance', '范围继承顺序', 'textarea', 'FACILITY -> ORGANIZATION -> GLOBAL'), field('secret_reference', '敏感值引用（非敏感参数填写受控占位引用）', 'text', 'env://HAOEMR_PARAMETER_NOT_SECRET'), field('effective_at', '计划生效时间', 'text', '2026-08-25T00:00:00+08:00')],
   },
   'admin-jobs': {
     routeId: 'admin-jobs', configType: 'JOB', title: '通知调度与批量任务', subtitle: '后台任务逐项结果、重复提交保护、取消和业务对账；部分成功不伪装成全部完成', keyPlaceholder: 'notification-reconcile-v1', previewTitle: '批次执行图', safetyNote: '成功项不重复，只重试失败项，每项保留事务事件记录。',
@@ -87,7 +84,7 @@ export const configurationStudios: Readonly<Record<string, ConfigurationStudioDe
   },
   backup: {
     routeId: 'backup', configType: 'BACKUP', title: '备份恢复与完整性报告', subtitle: '备份台账、checksum、恢复演练、RPO/RTO 与保留', keyPlaceholder: 'synthetic-backup-v1', previewTitle: '恢复演练', safetyNote: '仅针对合成库执行，报告必须包含版本和 checksum。',
-    fields: [field('repository', '备份仓库', 'text', 'file:///private/tmp/openemr2026-backups'), field('retention_days', '保留天数', 'number', '30', '1-3650', { minimum: 1, maximum: 3650 }), field('rpo_minutes', 'RPO 分钟', 'number', '15', '0-1440', { minimum: 0, maximum: 1440 }), field('rto_minutes', 'RTO 分钟', 'number', '60', '1-10080', { minimum: 1, maximum: 10080 }), field('checksum_policy', 'Checksum 策略', 'text', 'SHA-256 + row-count fingerprint')],
+    fields: [field('repository', '备份仓库', 'text', 'file:///private/tmp/haoemr-backups'), field('retention_days', '保留天数', 'number', '30', '1-3650', { minimum: 1, maximum: 3650 }), field('rpo_minutes', 'RPO 分钟', 'number', '15', '0-1440', { minimum: 0, maximum: 1440 }), field('rto_minutes', 'RTO 分钟', 'number', '60', '1-10080', { minimum: 1, maximum: 10080 }), field('checksum_policy', 'Checksum 策略', 'text', 'SHA-256 + row-count fingerprint')],
   },
   install: {
     routeId: 'install', configType: 'INSTALL', title: '安装向导与首次健康检查', subtitle: '环境预检、分步安装、断点恢复和安全清理', keyPlaceholder: 'site-install-v1', previewTitle: '安装步骤', safetyNote: '缺 JDK/DB/OIDC 等前置必须失败关闭，重试不重复创建。',

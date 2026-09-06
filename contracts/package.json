@@ -1,6 +1,7 @@
 {
-  "name": "@openemr2026/contracts",
+  "name": "@haoemr/contracts",
   "version": "0.1.0",
+  "license": "AGPL-3.0-only",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,4 +10,3 @@
     "test": "node --test test/contracts.test.mjs"
   }
 }
-

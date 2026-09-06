@@ -1,0 +1,7 @@
+{
+  "model_deployment_id": "823ac596-7877-4499-b2b5-0227156f3d8c",
+  "model_code": "deepseek-v4-flash",
+  "connection_status": "READY",
+  "evaluation_status": "APPROVED",
+  "test_only": false
+}

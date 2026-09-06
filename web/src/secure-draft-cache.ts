@@ -14,9 +14,9 @@ interface StoredCiphertext {
   updatedAt: string;
 }
 
-const DATABASE_NAME = 'openemr2026-session-drafts';
+const DATABASE_NAME = 'haoemr-session-drafts';
 const STORE_NAME = 'encrypted-drafts';
-const KEY_NAME = 'openemr2026.session-draft-key.v1';
+const KEY_NAME = 'haoemr.session-draft-key.v1';
 
 export function clinicalJsonSnapshot(source: Record<string, unknown>): Record<string, unknown> {
   // Document sections are JSON by API contract. This also strips framework proxies

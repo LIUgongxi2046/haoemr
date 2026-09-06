@@ -1,0 +1,28 @@
+{
+  "run_at": "2026-09-05T12:34:03.468Z",
+  "checks": [
+    {
+      "name": "mental-treatment-is-restricted",
+      "status": "PASS",
+      "detail": "通过真实页面创建的精神心理治疗记录返回 RESTRICTED"
+    },
+    {
+      "name": "mental-evidence-is-restricted",
+      "status": "PASS",
+      "detail": "通过真实页面创建的精神心理诊疗证据返回 RESTRICTED"
+    },
+    {
+      "name": "mental-qc-review-is-restricted",
+      "status": "PASS",
+      "detail": "通过真实页面创建的精神心理质控复核返回 RESTRICTED，并绑定真实危机交接"
+    }
+  ],
+  "findings": [],
+  "evidence": {
+    "treatment_id": "02958448-6683-48a4-babd-9111606076a0",
+    "evidence_id": "60b8b353-3b28-4782-857e-18db4cfea484",
+    "qc_review_id": "2b499563-6e27-448e-acc9-a2bb12d09c64"
+  },
+  "passed": 3,
+  "failed": 0
+}

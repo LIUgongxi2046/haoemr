@@ -83,7 +83,7 @@ async function createRecord() {
       <div>
         <p class="eyebrow">专科记录 / 妇产</p>
         <h1>妇产记录</h1>
-        <p>孕产次、孕周、预产期、血型与高危因素登记；写入采用患者+就诊上下文租约并留痕审计链。</p>
+        <p>登记孕产次、孕周、预产期、血型与高危因素。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>

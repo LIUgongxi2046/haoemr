@@ -1,0 +1,26 @@
+{
+  "run_at": "2026-09-05T08:00:10.296Z",
+  "device_code": "DEVICE-TIMELINE-E2E-1788595210296",
+  "patient_id": "018f0000-0000-7000-8000-000000000001",
+  "encounter_id": "018f0000-0000-7000-8000-000000000101",
+  "checks": [
+    {
+      "name": "register-isolated-active-device-through-ui",
+      "status": "PASS",
+      "detail": "通过设备目录页面登记了独立的活动测试设备"
+    },
+    {
+      "name": "bind-verified-encounter-and-project-post-bind-telemetry",
+      "status": "PASS",
+      "detail": "绑定后时间线显示本次设备的 12 条证据，并标明模拟网关来源"
+    },
+    {
+      "name": "unbind-preserves-history-and-stops-new-projection",
+      "status": "PASS",
+      "detail": "解绑保留 12 条历史设备证据，解绑后的新遥测未进入患者时间线"
+    }
+  ],
+  "findings": [],
+  "passed": 3,
+  "failed": 0
+}

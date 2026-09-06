@@ -1,0 +1,16 @@
+{
+  "base": "http://127.0.0.1:4177",
+  "menu": "AI中心",
+  "model_count": 7,
+  "test_only_present": true,
+  "models_page": "PASS",
+  "assistant_page": "PASS",
+  "renamed_catalog_pages": "PASS",
+  "retired_routes": [
+    "ai-action-review",
+    "ai-assistant-policy",
+    "clinical-specialty-ai"
+  ],
+  "retired_routes_unavailable": true,
+  "errors": []
+}

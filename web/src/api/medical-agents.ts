@@ -7,6 +7,8 @@ import {
 } from '../clinical-api';
 import { parseClinicalRequest, parseClinicalResponse } from '../clinical-contract';
 import {
+  clinicalReminderCreateRequestWireSchema,
+  clinicalReminderWireSchema,
   medicalAgentFamilyWireSchema,
   medicalAgentRoutingWireSchema,
   medicalAgentRunCancelRequestWireSchema,
@@ -56,7 +58,7 @@ export async function createMedicalAgentRun(
     objective: string;
     modelDeploymentId?: string | null;
     authorizationLevel?: 'READ_ONLY' | 'STANDARD' | 'EXTENDED';
-    contextScopes?: Array<'RECORDS' | 'ORDERS' | 'RESULTS' | 'TASKS' | 'ATTACHMENTS'>;
+    contextScopes?: Array<'RECORDS' | 'ORDERS' | 'RESULTS' | 'TASKS' | 'ATTACHMENTS' | 'CONFIGURATION'>;
   },
 ): Promise<MedicalAgentRunWire> {
   const command = parseClinicalRequest(medicalAgentRunCreateRequestWireSchema, {
@@ -73,7 +75,7 @@ export async function createMedicalAgentRun(
     objective: input.objective,
     model_deployment_id: input.modelDeploymentId ?? null,
     authorization_level: input.authorizationLevel ?? 'STANDARD',
-    context_scopes: input.contextScopes ?? ['RECORDS', 'ORDERS', 'RESULTS', 'TASKS'],
+    context_scopes: input.contextScopes ?? ['RECORDS', 'ORDERS', 'RESULTS', 'TASKS', 'CONFIGURATION'],
   });
   return parseClinicalResponse(medicalAgentRunWireSchema, await request('/medical-agents/runs', {
     method: 'POST',
@@ -158,4 +160,19 @@ export async function retryMedicalAgentRun(
       body: JSON.stringify(command),
     },
   ));
+}
+
+/** Explicit immutable run context avoids creating a reminder for a newly selected patient. */
+export async function createMedicalAgentReminder(run: MedicalAgentRunWire, message: string) {
+  if (!run.patient_id || !run.encounter_id) throw new Error('该候选没有患者就诊上下文');
+  const lease = await issueContextLease(run.patient_id, run.encounter_id, 'REMINDER_DETAIL');
+  return clinicalReminderWireSchema.parse(await request('/clinical-reminders', {
+    method: 'POST',
+    headers: { ...explicitContextHeaders(lease, run.patient_id, run.encounter_id), 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
+    body: JSON.stringify(clinicalReminderCreateRequestWireSchema.parse({
+      organization_id: clinicalContext.organizationId, facility_id: clinicalContext.facilityId,
+      patient_id: run.patient_id, encounter_id: run.encounter_id,
+      reminder_type: 'OTHER', severity: 'INFO', message, source_medical_agent_run_id: run.run_id,
+    })),
+  }));
 }

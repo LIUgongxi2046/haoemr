@@ -99,7 +99,7 @@ async function createRecord() {
       <div>
         <p class="eyebrow">专科其余层 / 生殖 · 随访</p>
         <h1>妊娠结局</h1>
-        <p>周期、妊娠结果、结局日期与活产数登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记周期、妊娠结果、结局日期与活产数。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>

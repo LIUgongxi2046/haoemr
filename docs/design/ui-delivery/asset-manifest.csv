@@ -1,4 +1,4 @@
 asset_id,file_path,usage,width,height,format,transparency,source,license_or_restriction
-"ICON-001","assets/master/medical-icon-sprite.svg","医疗功能与语义图标库","24","24","svg","true","icon-library","项目内使用；仅标准功能图标"
-"VISUAL-001","assets/generated/core-specialty-clinical-kernel.png","十个核心专科共享安全临床内核插图","1672","941","png","false","image_gen.imagegen","AI 生成；仅用于本项目设计交付"
-"VISUAL-002","assets/master/specialty-device-safe-degradation.png","专科设备与外部系统安全降级插图","1672","941","png","false","image_gen.imagegen","AI 生成；仅用于本项目设计交付"
+"ICON-001","assets/master/medical-icon-sprite.svg","医疗功能与语义图标库","24","24","svg","true","icon-library","来源与许可待复核；公开发行阻断项"
+"VISUAL-001","assets/generated/core-specialty-clinical-kernel.png","十个核心专科共享安全临床内核插图","1672","941","png","false","image_gen.imagegen","AI 生成；随 HaoEMR 按 AGPL-3.0-only 分发；品牌使用另见 TRADEMARKS.md"
+"VISUAL-002","assets/master/specialty-device-safe-degradation.png","专科设备与外部系统安全降级插图","1672","941","png","false","image_gen.imagegen","AI 生成；随 HaoEMR 按 AGPL-3.0-only 分发；品牌使用另见 TRADEMARKS.md"

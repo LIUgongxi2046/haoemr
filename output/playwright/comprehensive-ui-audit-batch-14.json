@@ -1,0 +1,75 @@
+{
+  "run_at": "2026-09-05T04:56:29.278Z",
+  "routes": 3,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 6,
+  "verified_route_viewports": 6,
+  "findings": [],
+  "observations": [
+    {
+      "route": "unified-home",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "统一首页与任务中心",
+      "routeId": "unified-home",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 832
+    },
+    {
+      "route": "ward",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "心内科一病区 · 护理工作台",
+      "routeId": "ward",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 464
+    },
+    {
+      "route": "workflow",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "流程与状态设计器",
+      "routeId": "workflow",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1892
+    },
+    {
+      "route": "unified-home",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "统一首页与任务中心",
+      "routeId": "unified-home",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 599
+    },
+    {
+      "route": "ward",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "心内科一病区 · 护理工作台",
+      "routeId": "ward",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 231
+    },
+    {
+      "route": "workflow",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "流程与状态设计器",
+      "routeId": "workflow",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1621
+    }
+  ]
+}

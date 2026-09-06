@@ -1,0 +1,19 @@
+{
+  "run_at": "2026-09-05T10:30:33.639Z",
+  "system": "E2E_GRAPH_1788604233639",
+  "checks": [
+    {
+      "name": "registered-source-imports-reviewed-dictionary-concepts-and-relation",
+      "status": "PASS",
+      "detail": "已从已登记来源导入 2 个 DICTIONARY 概念与 1 条关系，并回显服务端批次结果"
+    },
+    {
+      "name": "same-semantic-import-is-idempotent-and-extracted-content-is-refused-client-side",
+      "status": "PASS",
+      "detail": "相同语义重复导入新增数为 0；EXTRACTED 内容被前端阻断，未作为图谱事实写入"
+    }
+  ],
+  "findings": [],
+  "passed": 2,
+  "failed": 0
+}

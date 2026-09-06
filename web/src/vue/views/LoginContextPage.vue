@@ -3,6 +3,8 @@ import { reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { authSession, loginClinicalSession } from '../../auth-session';
 import { clinicalContext } from '../../clinical-api';
+import { brandConfig } from '../../brand-config';
+import { aiMedicalAssistantRoster, aiMedicalAssistantRosterSummary } from '../ai-medical-assistant-roster';
 
 const route = useRoute();
 const router = useRouter();
@@ -44,24 +46,25 @@ async function login() {
       <img
         class="system-login-brand"
         data-testid="system-login-logo"
-        src="/brand/haonan-medical-ai-logo.png"
-        alt="电子病历系统"
+        :src="brandConfig.logoUrl"
+        :alt="`${brandConfig.systemName} Logo`"
         width="54"
         height="54"
       />
-      <p class="system-login-kicker">OpenEMR2026</p>
-      <h1 id="system-name">电子病历系统</h1>
-      <p>连接门诊、急诊、住院、病历、医疗质量与 AI 医助的统一工作平台。</p>
+      <p class="system-login-kicker">CLINICAL WORKSPACE</p>
+      <h1 id="system-name">{{ brandConfig.systemName || 'HaoEMR' }}</h1>
+      <p>从一次接诊到出院归档，让临床信息连续、责任清楚、下一步可执行。</p>
       <ul>
-        <li><span>统一</span>全系统身份与岗位权限</li>
-        <li><span>安全</span>会话撤销、失败锁定与全程审计</li>
-        <li><span>连续</span>登录后返回原请求的业务页面</li>
-        <li><span>AI 协同</span>问答、摘要、风险提醒、任务草拟与专科医助协作</li>
+        <li><span>临床工作域</span><p>门诊、急诊、住院贯通，围绕当前患者和就诊处理每一步。</p></li>
+        <li><span>病历与质量</span><p>病历写得完整、签得清楚、查得到来源；质控问题可回到责任人。</p></li>
+        <li><span>业务协同</span><p>把危急值、会诊、审签、执行与随访放进同一责任清单。</p></li>
+        <li><span>平台中心</span><p>让数据与知识服务诊疗，AI医助 EVA 协助医生快速抓住重点。</p></li>
+        <li><span>管理与配置</span><p>用统一规则、岗位授权和审计记录守住每项操作的边界。</p></li>
       </ul>
-      <section class="system-login-ai-capabilities" aria-label="AI医助能力介绍">
-        <div><img src="/brand/ai-medical-assistant-eva.png" alt="" width="38" height="38" /><strong>AI医助 Eva</strong></div>
-        <p>结合当前患者、就诊和任务上下文提供辅助；生成结果标明来源，经医务人员确认后才能进入业务流程。</p>
-        <div class="system-login-ai-tags"><span>带上下文问答</span><span>主动风险提醒</span><span>医生确认与全程留痕</span></div>
+      <section class="system-login-ai-capabilities" aria-label="AI医助 EVA 能力介绍">
+        <div><img src="/brand/ai-medical-assistant-eva.png" alt="" width="38" height="38" /><strong>AI医助 EVA · {{ aiMedicalAssistantRosterSummary.teamCount }} 个团队</strong></div>
+        <p>当前由 {{ aiMedicalAssistantRosterSummary.specialistCount }} 个专科医助协作，覆盖从就诊摘要、文书起草到质控、结果闭环与专科诊疗支持；最终判断始终由医生完成。</p>
+        <div class="system-login-ai-tags" aria-label="AI医助 EVA 团队名录"><span v-for="team in aiMedicalAssistantRoster" :key="team">{{ team }}</span></div>
       </section>
       <small>仅限授权人员使用。所有访问和操作均可审计。</small>
     </section>
@@ -69,7 +72,7 @@ async function login() {
     <section class="system-login-panel" aria-labelledby="login-title">
       <div class="system-login-heading">
         <span>系统统一身份认证</span>
-        <h2 id="login-title">登录电子病历系统</h2>
+        <h2 id="login-title">登录{{ brandConfig.systemName || 'HaoEMR' }}</h2>
         <p>请使用您的系统账号继续</p>
       </div>
       <p v-if="message" class="system-login-message" role="alert">{{ message }}</p>
@@ -78,18 +81,7 @@ async function login() {
         <div class="system-login-control"><label for="system-login-password">密码</label><div class="system-password-field"><input id="system-login-password" v-model="form.password" name="password" :type="passwordVisible ? 'text' : 'password'" autocomplete="current-password" required minlength="8" placeholder="请输入密码" /><button type="button" :aria-label="passwordVisible ? '隐藏密码' : '显示密码'" @click="passwordVisible = !passwordVisible">{{ passwordVisible ? '隐藏' : '显示' }}</button></div></div>
         <button class="system-login-submit" :disabled="busy">{{ busy ? '正在安全验证…' : '登录系统' }}</button>
       </form>
-      <div class="system-login-environment">
-        <b>开发验收环境</b>
-        <dl>
-          <div><dt>体验账号</dt><dd><code>linwei</code></dd></div>
-          <div><dt>护士验收</dt><dd><code>jiahui.xu</code></dd></div>
-          <div><dt>药师验收</dt><dd><code>qinghua.deng</code></dd></div>
-          <div><dt>医技验收</dt><dd><code>ruifeng.cao</code> / <code>chenxi.peng</code> / <code>meiqi.zeng</code></dd></div>
-          <div><dt>体验密码</dt><dd><code>OpenEMR2026-dev!</code></dd></div>
-        </dl>
-        <small>以上账号只在 <code>dev-synthetic</code> 验收环境生成，岗位权限来自服务端角色分配。完整验收地址 <code>http://127.0.0.1:4177/</code>；需同时运行 <code>8080</code> 后端。部署环境必须接入统一身份认证，不生成这些账号。</small>
-      </div>
-      <footer><span>数据传输加密</span><span>会话服务端撤销</span><span>审计记录留痕</span></footer>
+      <footer><span>数据传输加密</span><span>会话服务端撤销</span><span>审计记录留痕</span><a href="https://github.com/LIUgongxi2046/haoemr" target="_blank" rel="noreferrer">AGPL-3.0 许可与源码</a></footer>
     </section>
   </main>
 </template>

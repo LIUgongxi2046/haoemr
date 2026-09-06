@@ -107,7 +107,7 @@ async function createNote() {
             <label><span>护理评估</span><textarea v-model="form.assessment" rows="3" required placeholder="记录专科症状、生命体征、疼痛和风险评估" /></label>
             <label><span>护理干预与观察</span><textarea v-model="form.intervention" rows="3" required placeholder="记录护理措施、用药执行、效果观察和交接计划" /></label>
             <label><span>记录时间</span><input v-model="form.recorded_at" type="datetime-local" required /></label>
-            <label class="risk-confirm"><input v-model="form.risk_flag" type="checkbox" /><span>存在危险信号（需交接与复核）</span></label>
+            <label class="risk-confirm"><input v-model="form.risk_flag" type="checkbox" /><span>存在危险信号（保存风险标记，后续交接或复核须由临床人员发起）</span></label>
             <button class="button primary full" :disabled="busy || !form.assessment.trim() || !form.intervention.trim()">{{ busy ? '正在保存…' : '保存护理记录' }}</button>
           </form>
         </section>

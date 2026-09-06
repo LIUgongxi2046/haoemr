@@ -15,17 +15,21 @@ import {
   dictionaryItemCreateRequestWireSchema,
   dictionaryItemDeactivateRequestWireSchema,
   dictionaryItemWireSchema,
+  historicalMigrationBatchArchiveRequestWireSchema,
+  historicalMigrationBatchObservationStartRequestWireSchema,
   historicalMigrationBatchReconcileRequestWireSchema,
   historicalMigrationBatchRollbackRequestWireSchema,
   historicalMigrationBatchStartRequestWireSchema,
   historicalMigrationBatchSwitchRequestWireSchema,
   historicalMigrationBatchWireSchema,
+  historicalMigrationSourceImportWireSchema,
   historicalMigrationCheckpointRecordRequestWireSchema,
   historicalMigrationCheckpointWireSchema,
   sourceFieldMappingDeactivateRequestWireSchema,
   sourceFieldMappingRegisterRequestWireSchema,
   sourceFieldMappingWireSchema,
   sourcePatientMatchCandidateRecordRequestWireSchema,
+  sourcePatientMatchCandidateCsvImportRequestWireSchema,
   sourcePatientMatchCandidateResolveRequestWireSchema,
   sourcePatientMatchCandidateWireSchema,
   sourceSystemInventoryRegisterRequestWireSchema,
@@ -37,6 +41,7 @@ import {
   type DictionaryItemCreateRequestWire,
   type DictionaryItemWire,
   type HistoricalMigrationBatchWire,
+  type HistoricalMigrationSourceImportWire,
   type HistoricalMigrationCheckpointWire,
   type SourceFieldMappingRegisterRequestWire,
   type SourceFieldMappingWire,
@@ -265,6 +270,27 @@ export async function listSourcePatientMatchCandidates(lease: ContextLeaseWire, 
   ));
 }
 
+export async function listSourcePatientMatchCandidateImports(
+  lease: ContextLeaseWire,
+  sourceSystemId: string,
+): Promise<HistoricalMigrationSourceImportWire[]> {
+  return historicalMigrationSourceImportWireSchema.array().parse(await request(
+    `/source-patient-match-candidate-imports?source_system_id=${encodeURIComponent(sourceSystemId)}`,
+    { headers: wardHeaders(lease) },
+  ));
+}
+
+export async function importSourcePatientMatchCandidatesCsv(
+  lease: ContextLeaseWire,
+  input: { source_system_id: string; file_name: string; csv_content: string },
+): Promise<HistoricalMigrationSourceImportWire> {
+  return historicalMigrationSourceImportWireSchema.parse(await request('/source-patient-match-candidate-imports', {
+    method: 'POST',
+    headers: { ...wardHeaders(lease), 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
+    body: JSON.stringify(sourcePatientMatchCandidateCsvImportRequestWireSchema.parse({ ...orgFacility(), ...input })),
+  }));
+}
+
 export async function recordSourcePatientMatchCandidate(
   lease: ContextLeaseWire,
   input: { source_system_id: string; source_patient_identifier: string; display_name: string; sex_code: string; birth_date: string },
@@ -299,7 +325,7 @@ export async function listHistoricalMigrationBatches(lease: ContextLeaseWire, so
 
 export async function startHistoricalMigrationBatch(
   lease: ContextLeaseWire,
-  input: { source_system: string; record_count: number; started_at: string },
+  input: { source_system: string; source_import_id?: string | null; record_count: number; started_at: string },
 ): Promise<HistoricalMigrationBatchWire> {
   return historicalMigrationBatchWireSchema.parse(await request('/historical-migration-batches', {
     method: 'POST',
@@ -346,6 +372,37 @@ export async function rollbackHistoricalMigrationBatch(
       method: 'POST',
       headers: { ...wardHeaders(lease), 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
       body: JSON.stringify(historicalMigrationBatchRollbackRequestWireSchema.parse({ ...orgFacility(), expected_row_version: batch.row_version })),
+    },
+  ));
+}
+
+export async function startHistoricalMigrationObservation(
+  lease: ContextLeaseWire,
+  batch: HistoricalMigrationBatchWire,
+): Promise<HistoricalMigrationBatchWire> {
+  return historicalMigrationBatchWireSchema.parse(await request(
+    `/historical-migration-batches/${batch.batch_id}/observations`, {
+      method: 'POST',
+      headers: { ...wardHeaders(lease), 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
+      body: JSON.stringify(historicalMigrationBatchObservationStartRequestWireSchema.parse({
+        ...orgFacility(), expected_row_version: batch.row_version,
+      })),
+    },
+  ));
+}
+
+export async function archiveHistoricalMigrationBatch(
+  lease: ContextLeaseWire,
+  batch: HistoricalMigrationBatchWire,
+  observationSummary: string,
+): Promise<HistoricalMigrationBatchWire> {
+  return historicalMigrationBatchWireSchema.parse(await request(
+    `/historical-migration-batches/${batch.batch_id}/archives`, {
+      method: 'POST',
+      headers: { ...wardHeaders(lease), 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
+      body: JSON.stringify(historicalMigrationBatchArchiveRequestWireSchema.parse({
+        ...orgFacility(), observation_summary: observationSummary, expected_row_version: batch.row_version,
+      })),
     },
   ));
 }

@@ -38,7 +38,7 @@ scripts/verify.sh → VERIFY_EXIT=0
 
 - **迁移 V128**：扩展 `clinical_task.source_type` 增加 `REMINDER`；建立 `clinical_reminder_conversion`（提醒/任务/转换人/转换时间、同提醒唯一约束、不可变触发器、任务索引）。
 - **契约**：新增 `ClinicalReminderConversion`、`ClinicalReminderConversionCreateRequest` 两 Schema 与 2 端点（list/convert）。
-- **模块**：`org.openemr2026.reminder` 下 `ClinicalReminderConversionService`（转任务 + 仅 PENDING 硬门 + 风险映射 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
+- **模块**：`org.haoemr.reminder` 下 `ClinicalReminderConversionService`（转任务 + 仅 PENDING 硬门 + 风险映射 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
 - **测试**：`ClinicalReminderConversionApiTest` 4 用例覆盖转换成功、重复拒绝、非待处理拒绝、篡改拒绝。
 
 ## 5. 未关闭风险

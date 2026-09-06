@@ -27,15 +27,21 @@ describe('数据中心六个二级页面契约', () => {
     expect(source).toContain('listResearchDatasetRequests');
     // 核心事实规模只读 DATA_CENTER 指标快照，页面不出现伪造的静态指标
     expect(source).toContain("listMetricSnapshots(metricLeaseQuery.data.value!, 'DATA_CENTER')");
+    expect(source).toContain('configLeaseQuery.refetch()');
+    expect(source).toContain('metricLeaseQuery.refetch()');
+    expect(source).toContain('if (error == null) return null;');
+    expect(source.match(/queryKey: computed\(\(\) => \[[^\n]+lease_id\]\)/g)?.length).toBe(11);
+    expect(source.match(/retry: \(\) => \{ void refreshAll\(\); \}/g)?.length).toBe(5);
     expect(source).not.toContain('99.93');
   });
 
-  it('集成交换提供连接测试和互操作处置入口', () => {
+  it('集成交换保留真实台账并将仿真测试引导至模拟工具', () => {
     const source = views['./views/IntegrationPage.vue'];
-    expect(source).toContain('invokeMockInterface');
+    expect(source).not.toContain('invokeMockInterface');
+    expect(source).toContain('/mock-interfaces/integration-connectors');
     expect(source).toContain("listConfigurations(configLeaseQuery.data.value!, 'INTEGRATION_CONNECTOR')");
     expect(source).toContain("listConfigurations(configLeaseQuery.data.value!, 'INTEGRATION_INCIDENT')");
-    expect(source).toContain('连接测试');
+    expect(source).toContain('前往模拟接口测试');
     expect(source).toContain('/integration-connectors');
     expect(source).toContain('/integration-messages');
     expect(source).not.toContain("const systemMeta");
@@ -46,14 +52,15 @@ describe('数据中心六个二级页面契约', () => {
     const source = views['./views/MigrationPage.vue'];
     for (const action of [
       'registerSourceSystem', 'registerSourceFieldMapping', 'recordSourcePatientMatchCandidate',
+      'importSourcePatientMatchCandidatesCsv', 'listSourcePatientMatchCandidateImports',
       'startHistoricalMigrationBatch', 'reconcileHistoricalMigrationBatch',
       'switchHistoricalMigrationBatch', 'rollbackHistoricalMigrationBatch',
       'recordHistoricalMigrationCheckpoint',
     ]) expect(source).toContain(action);
     expect(source).toContain("['源盘点', '字段映射', '患者匹配', '试迁', '对账', '切换', '观察', '归档']");
     expect(source).toContain('exportReconciliationReport');
-    expect(source).toContain('服务端暂存记录');
-    expect(source).toContain('record_count: candidates.value.length');
+    expect(source).toContain('固定导入记录');
+    expect(source).toContain('source_import_id: sourceImport.source_import_id');
     expect(source).not.toContain('batchForm.recordCount');
     expect(source.match(/<AdminActionDialog/g)?.length).toBeGreaterThanOrEqual(4);
     expect(source).toContain('<AdminConfirmDialog');

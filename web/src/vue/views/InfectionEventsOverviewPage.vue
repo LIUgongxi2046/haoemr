@@ -36,6 +36,6 @@ function exportItems() { downloadQualityCsv(`院感事件清单-${new Date().toI
 </script>
 
 <template>
-  <QualityGovernanceOverview title="院感、传染病与不良事件" description="智能线索、人工排除、上报时限、重试和整改闭环" :metrics="metrics" :rows="rows" :workflow="['选择业务对象','核验上下文','执行处理','复核结果','完成或恢复']" :warning="`发现 ${pending.length} 项需要人工核验的高风险差异`" safety-text="系统保留原对象与处理证据，不以页面操作直接覆盖临床事实。" export-label="导出清单" primary-label="审核高风险线索" detail-label="进入处理详情" :loading="leaseQuery.isPending.value || dataQuery.isPending.value" :error="issue" @export="exportItems" @primary="router.push('/infection-events/clues?review=1')" @detail="router.push('/infection-events/clues')" @retry="dataQuery.refetch()" />
+  <QualityGovernanceOverview title="院感、传染病与不良事件" description="智能线索、人工排除、上报时限、重试和整改闭环" :metrics="metrics" :rows="rows" :warning="`发现 ${pending.length} 项需要人工核验的高风险差异`" safety-text="系统保留原对象与处理证据，不以页面操作直接覆盖临床事实。" export-label="导出清单" primary-label="审核高风险线索" detail-label="进入处理详情" :loading="leaseQuery.isPending.value || dataQuery.isPending.value" :error="issue" @export="exportItems" @primary="router.push('/infection-events/clues?review=1')" @detail="router.push('/infection-events/clues')" @retry="dataQuery.refetch()" />
   <AgentInlineReview agent-code="INFECTION_SURVEILLANCE" stage-code="INFECTION_CASE" :objective="infectionCaseObjective" :patient-id="agentPatientId" :encounter-id="agentEncounterId" target-type="ENCOUNTER" :target-id="agentEncounterId" title="AI 院感监测候选" source-route="infection-events" />
 </template>

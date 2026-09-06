@@ -23,7 +23,7 @@
 
 - 生产安全链为无会话 OAuth2 Resource Server；只公开 `/api/v1/system/readiness`，`/api/**` 要求 JWT，其他路径默认拒绝。
 - `application-prod.yml` 配置 issuer 和 audiences；Spring Security 负责签名、issuer、audience、`exp/nbf` 等 JWT 验证。
-- 启动门禁强制 `spring.security.oauth2.resourceserver.jwt.*` 与 `openemr2026.production.identity.*` 一致，防止双配置源漂移。
+- 启动门禁强制 `spring.security.oauth2.resourceserver.jwt.*` 与 `haoemr.production.identity.*` 一致，防止双配置源漂移。
 - 验签后以 `sub + tenant_id` 查询活动租户与活动账户，并要求指定 `acr`；角色仅来自数据库当前 `ACTIVE` 且在有效期内的 `role_assignment`。
 - `dev-synthetic` 保持原有隔离身份流；`prod + dev-synthetic` 在上下文创建前被拒绝。
 

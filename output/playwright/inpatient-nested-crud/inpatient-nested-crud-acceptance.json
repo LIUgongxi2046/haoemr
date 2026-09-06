@@ -1,8 +1,8 @@
 {
-  "run_at": "2026-08-31T15:29:24.946Z",
-  "base_url": "http://127.0.0.1:4178",
-  "passed": 4,
-  "failed": 0,
+  "run_at": "2026-09-06T10:10:44.115Z",
+  "base_url": "http://127.0.0.1:4177",
+  "passed": 3,
+  "failed": 1,
   "checks": [
     {
       "name": "nested-routes-desktop-layout",
@@ -15,20 +15,17 @@
       "detail": "入院、文书版本保存与住院摆药的新建/编辑入口均打开统一业务弹窗"
     },
     {
-      "name": "pharmacy-create-edit-void-flow",
-      "status": "PASS",
-      "detail": "MED-FUROSEMIDE-IV-20 已完成新增、编辑、作废，且作废记录仍显示在台账"
-    },
-    {
       "name": "nested-routes-mobile-layout",
       "status": "PASS",
       "detail": "5/5 个入口在 390px 无横向溢出，业务弹窗未越界"
     }
   ],
-  "api_response_count": 57,
+  "api_response_count": 216,
   "api_statuses": [
     200,
     201
   ],
-  "failures": []
+  "failures": [
+    "pharmacy-create-edit-void-flow: 当前住院就诊缺少已签署有效药品医嘱，不能执行摆药闭环"
+  ]
 }

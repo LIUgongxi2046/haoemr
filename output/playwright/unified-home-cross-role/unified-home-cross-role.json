@@ -1,0 +1,60 @@
+{
+  "run_at": "2026-09-05T14:51:04.643Z",
+  "checks": [
+    {
+      "name": "clinician-gets-complete-authorized-home-aggregation",
+      "status": "PASS",
+      "detail": "临床医生读取到六项实际授权聚合，未发生页面错误或静态回退"
+    },
+    {
+      "name": "pharmacist-keeps-authorized-facts-and-labels-denied-sources",
+      "status": "PASS",
+      "detail": "药师保留可读候诊事实，团队与病区拒绝均明确为未计入汇总"
+    }
+  ],
+  "findings": [],
+  "evidence": {
+    "clinician": {
+      "status": "聚合数据已加载",
+      "errorCards": 0,
+      "values": [
+        "0",
+        "0",
+        "19",
+        "19",
+        "8",
+        "16"
+      ],
+      "details": [
+        "当前登录人员具备成员资格的团队队列",
+        "团队队列中已领取、尚未完成的临床协作项",
+        "当前岗位授权病区工作列表中的逾期任务",
+        "当前岗位授权病区的未终态文书任务",
+        "当前院区候诊队列的 WAITING 事实数量",
+        "当前岗位授权病区工作列表中的住院患者"
+      ]
+    },
+    "pharmacist": {
+      "status": "部分来源无读取范围（2）",
+      "errorCards": 0,
+      "values": [
+        "—",
+        "—",
+        "—",
+        "—",
+        "8",
+        "—"
+      ],
+      "details": [
+        "当前岗位无团队队列读取范围（TEAM_MEMBERSHIP_REQUIRED），未计入汇总",
+        "当前岗位无团队队列读取范围（TEAM_MEMBERSHIP_REQUIRED），未计入汇总",
+        "当前岗位无病区工作列表范围（WARD_SCOPE_DENIED），未计入汇总",
+        "当前岗位无病区工作列表范围（WARD_SCOPE_DENIED），未计入汇总",
+        "当前院区候诊队列的 WAITING 事实数量",
+        "当前岗位无病区工作列表范围（WARD_SCOPE_DENIED），未计入汇总"
+      ]
+    }
+  },
+  "passed": 2,
+  "failed": 0
+}

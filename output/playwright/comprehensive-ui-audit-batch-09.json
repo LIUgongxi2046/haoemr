@@ -1,0 +1,291 @@
+{
+  "run_at": "2026-09-05T04:53:35.570Z",
+  "routes": 15,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 30,
+  "verified_route_viewports": 30,
+  "findings": [],
+  "observations": [
+    {
+      "route": "obgyn-care",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "妇产护理与产后观察",
+      "routeId": "obgyn-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 477
+    },
+    {
+      "route": "obgyn-evidence",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "产前检查",
+      "routeId": "obgyn-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 441
+    },
+    {
+      "route": "obgyn-followup",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "产后随访",
+      "routeId": "obgyn-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 428
+    },
+    {
+      "route": "obgyn-qc",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "obgyn-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 459
+    },
+    {
+      "route": "obgyn-record",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "妇产记录",
+      "routeId": "obgyn-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 503
+    },
+    {
+      "route": "obgyn-treatment",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "分娩记录",
+      "routeId": "obgyn-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 449
+    },
+    {
+      "route": "obgyn-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "妇产工作台",
+      "routeId": "obgyn-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 520
+    },
+    {
+      "route": "opd-consult",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "门诊会诊、转诊与协同",
+      "routeId": "opd-consult",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 662
+    },
+    {
+      "route": "opd-diagnosis",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "门诊诊断与问题清单",
+      "routeId": "opd-diagnosis",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 894
+    },
+    {
+      "route": "opd-followup",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "门诊随访与终诊",
+      "routeId": "opd-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1013
+    },
+    {
+      "route": "opd-orders",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "门诊医嘱与处方",
+      "routeId": "opd-orders",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2350
+    },
+    {
+      "route": "opd-record",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "门诊病历工作台",
+      "routeId": "opd-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 868
+    },
+    {
+      "route": "opd-results",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "门诊检查检验与结果",
+      "routeId": "opd-results",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1020
+    },
+    {
+      "route": "opensource",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "开源发布指标",
+      "routeId": "opensource",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 585
+    },
+    {
+      "route": "operations",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "生产运行、灾备与停机续运",
+      "routeId": "operations",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 945
+    },
+    {
+      "route": "obgyn-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "妇产护理与产后观察",
+      "routeId": "obgyn-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 244
+    },
+    {
+      "route": "obgyn-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "产前检查",
+      "routeId": "obgyn-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 208
+    },
+    {
+      "route": "obgyn-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "产后随访",
+      "routeId": "obgyn-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 195
+    },
+    {
+      "route": "obgyn-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "obgyn-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 226
+    },
+    {
+      "route": "obgyn-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "妇产记录",
+      "routeId": "obgyn-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 270
+    },
+    {
+      "route": "obgyn-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "分娩记录",
+      "routeId": "obgyn-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 216
+    },
+    {
+      "route": "obgyn-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "妇产工作台",
+      "routeId": "obgyn-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 287
+    },
+    {
+      "route": "opd-consult",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊会诊、转诊与协同",
+      "routeId": "opd-consult",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 429
+    },
+    {
+      "route": "opd-diagnosis",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊诊断与问题清单",
+      "routeId": "opd-diagnosis",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 631
+    },
+    {
+      "route": "opd-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊随访与终诊",
+      "routeId": "opd-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 780
+    },
+    {
+      "route": "opd-orders",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊医嘱与处方",
+      "routeId": "opd-orders",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2075
+    },
+    {
+      "route": "opd-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊病历工作台",
+      "routeId": "opd-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 591
+    },
+    {
+      "route": "opd-results",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊检查检验与结果",
+      "routeId": "opd-results",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 752
+    },
+    {
+      "route": "opensource",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "开源发布指标",
+      "routeId": "opensource",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 352
+    },
+    {
+      "route": "operations",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生产运行、灾备与停机续运",
+      "routeId": "operations",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 712
+    }
+  ]
+}

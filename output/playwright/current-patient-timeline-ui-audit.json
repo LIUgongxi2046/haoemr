@@ -1,0 +1,39 @@
+{
+  "run_at": "2026-09-05T06:27:28.587Z",
+  "routes": 1,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 2,
+  "verified_route_viewports": 2,
+  "findings": [],
+  "observations": [
+    {
+      "route": "patient-timeline",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "授权患者纵向时间线",
+      "routeId": "patient-timeline",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 4113
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "授权患者纵向时间线",
+      "routeId": "patient-timeline",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3880
+    }
+  ]
+}

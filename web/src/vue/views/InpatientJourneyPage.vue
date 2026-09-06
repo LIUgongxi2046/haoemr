@@ -6,7 +6,7 @@ import type { InpatientDocumentTaskWire } from '../../generated/contracts';
 import {
   createInpatientDocumentTask, dischargeInpatient, getInpatientSyntheticActor, inpatientSyntheticActors,
   issueInpatientLease, issueWardLease, loadInpatientDocumentRules, loadInpatientDocumentVersions,
-  loadInpatientOverview, setInpatientSyntheticActor, startInpatientDocumentTask, type InpatientSyntheticActorKey,
+  loadInpatientOverview, startInpatientDocumentTask, type InpatientSyntheticActorKey,
 } from '../../clinical-api';
 import AgentInlineReview from '../components/AgentInlineReview.vue';
 import BusinessActionDialog from '../components/BusinessActionDialog.vue';
@@ -71,17 +71,6 @@ const versions = useQuery({
 });
 const versionsIssue = computed(() => versions.error.value ? toClinicalIssue(versions.error.value) : null);
 
-async function switchActor(key: InpatientSyntheticActorKey) {
-  if (busy.value || key === selectedActorKey.value) return;
-  busy.value = true; notice.value = '';
-  try {
-    setInpatientSyntheticActor(key); selectedActorKey.value = key;
-    await journey.refetch();
-    notice.value = `开发角色已切换为${activeActor.value?.roleLabel ?? key}。`;
-  } catch (error) {
-    const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`;
-  } finally { busy.value = false; }
-}
 
 async function submitDischarge() {
   if (!journey.data.value || !dischargeDiagnosis.value.trim() || busy.value) return;
@@ -141,9 +130,8 @@ function formatDate(value?: string | null) {
 
 <template>
   <section data-page-root class="content vue-native-page inpatient-journey-page">
-    <div class="page-heading"><div><p class="eyebrow">住院 / 患者全程</p><h1>{{ routeId === 'inpatient-overview' ? '住院患者总览' : routeId === 'inpatient-course' ? '住院病程与文书中心' : routeId === 'inpatient-doc-versions' ? '住院文书版本与查房证据' : '出院病历与病案归档闭环' }}</h1></div><RouterLink class="button secondary" to="/inpatient">返回住院工作站</RouterLink></div>
-    <details v-if="inpatientSyntheticActors.length" class="development-acceptance-tools"><summary>开发角色模拟</summary><section class="inpatient-role-simulator" aria-label="开发环境住院岗位身份"><div><strong>岗位与分级审签模拟</strong><span>仅开发合成环境 · 切换后重新签发患者租约</span></div><div role="group"><button v-for="actor in inpatientSyntheticActors" :key="actor.key" type="button" :class="{ active: actor.key === selectedActorKey }" :disabled="busy" @click="switchActor(actor.key)"><b>{{ actor.roleLabel }}</b><small>{{ actor.displayName }}</small></button></div></section></details>
-    <ClinicalPageState v-if="journey.isPending.value" kind="loading" message="正在校验患者租约与住院事实" />
+    <div class="page-heading"><div><p class="eyebrow">住院 / 患者全程</p><h1>{{ routeId === 'inpatient-overview' ? '住院患者总览' : routeId === 'inpatient-course' ? '住院病程与文书中心' : routeId === 'inpatient-doc-versions' ? '住院文书版本与查房证据' : '出院病历与病案归档闭环' }}</h1><p>{{ routeId === 'inpatient-overview' ? '查看患者当前住院情况和待处理事项。' : routeId === 'inpatient-course' ? '查看住院病程、文书和相关处理记录。' : routeId === 'inpatient-doc-versions' ? '查看文书版本变化和查房留痕。' : '核对出院病历，完成归档前检查。' }}</p></div><RouterLink class="button secondary" to="/inpatient">返回住院工作站</RouterLink></div>
+    <ClinicalPageState v-if="journey.isPending.value" kind="loading" message="正在加载患者住院信息" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="journey.refetch()" />
     <template v-else-if="overview && admission">
       <section class="patient-strip" aria-label="住院患者上下文"><div class="patient-avatar">{{ overview.patient_display_name.slice(0, 1) }}</div><div><strong>{{ overview.patient_display_name }}</strong><span>当前住院上下文 · 所有动作重新校验授权</span></div><dl><div><dt>状态</dt><dd>{{ admission.status }}</dd></div><div><dt>病区床位</dt><dd>{{ overview.ward_display_name }} · {{ overview.bed_label }}床</dd></div><div><dt>当前岗位</dt><dd>{{ activeActor?.roleLabel ?? '当前登录岗位' }}</dd></div></dl><span class="lease-badge">…{{ admission.admission_id.slice(-8) }}</span></section>

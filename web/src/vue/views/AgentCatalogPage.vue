@@ -126,18 +126,18 @@ async function deactivate(agent: AgentRegistryWire) {
   <section data-page-root class="content admin-content vue-native-page">
     <div class="page-heading admin-heading">
       <div>
-        <p class="eyebrow">AI 中心 / 医助团队配置</p>
-        <h1>医助团队设计与编排</h1>
-        <p>5 个医助团队统筹 33 位专科医助，覆盖诊前、接诊、文书、质控、结果闭环和诊疗协同；所有结果均需医生确认。</p>
+        <p class="eyebrow">AI中心 / 医助agent配置</p>
+        <h1>医助agent设计与编排</h1>
+        <p>5 个医助agent统筹 33 位专科医助，覆盖诊前、接诊、文书、质控、结果闭环和诊疗协同；所有结果均需医生确认。</p>
       </div>
     </div>
 
-    <ClinicalPageState v-if="leaseQuery.isPending.value || agentsQuery.isPending.value" kind="loading" message="正在读取医助团队" />
+    <ClinicalPageState v-if="leaseQuery.isPending.value || agentsQuery.isPending.value" kind="loading" message="正在读取医助agent" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="reload" />
 
     <template v-else>
-      <section class="admin-metrics" aria-label="医助团队统计">
-        <article><span>医助团队</span><strong>{{ families.length }}</strong><small>诊疗责任团队</small></article>
+      <section class="admin-metrics" aria-label="医助agent统计">
+        <article><span>医助agent</span><strong>{{ families.length }}</strong><small>诊疗责任团队</small></article>
         <article><span>专科医助</span><strong>{{ childAgentCount }}</strong><small>覆盖各诊疗环节</small></article>
         <article><span>已启用医助</span><strong>{{ activeCount }}</strong><small>当前可用</small></article>
         <article><span>临床使用方式</span><strong>医生确认</strong><small>结果写入前审核</small></article>
@@ -146,13 +146,13 @@ async function deactivate(agent: AgentRegistryWire) {
 
       <section class="admin-panel medical-agent-catalog">
         <header>
-          <div><h2>医助团队与诊疗环节</h2><p>选择医助团队，查看专科医助分工、当前任务、结果贡献和处理上限。</p></div>
+          <div><h2>医助agent与诊疗环节</h2><p>选择医助agent，查看专科医助分工、当前任务、结果贡献和处理上限。</p></div>
           <span class="admin-status active">医助协同引擎 1.0</span>
         </header>
-        <div v-if="medicalCatalogLeaseQuery.isPending.value || medicalCatalogQuery.isPending.value" class="admin-empty">正在读取医助团队发布目录…</div>
-        <div v-else-if="medicalCatalogLeaseQuery.error.value || medicalCatalogQuery.error.value" class="admin-empty">医助团队目录暂时不可用，可继续使用下方版本台账。</div>
+        <div v-if="medicalCatalogLeaseQuery.isPending.value || medicalCatalogQuery.isPending.value" class="admin-empty">正在读取医助agent发布目录…</div>
+        <div v-else-if="medicalCatalogLeaseQuery.error.value || medicalCatalogQuery.error.value" class="admin-empty">医助agent目录暂时不可用，可继续使用下方版本台账。</div>
         <template v-else-if="selectedFamily">
-          <div class="agent-family-tabs" role="tablist" aria-label="医助团队">
+          <div class="agent-family-tabs" role="tablist" aria-label="医助agent">
             <button v-for="family in families" :key="family.main_agent.agent_code" type="button" role="tab"
               :aria-selected="selectedFamilyCode === family.main_agent.agent_code"
               :class="{ active: selectedFamilyCode === family.main_agent.agent_code }"
@@ -183,9 +183,9 @@ async function deactivate(agent: AgentRegistryWire) {
         <section class="admin-panel">
           <header>
             <div><h2>智能医助版本台账</h2><p>编码与版本不可变；停用后保留历史记录。</p></div>
-            <div class="admin-row-actions"><button class="button secondary" @click="agentsQuery.refetch()">刷新</button><button class="button primary" @click="openCreate">新建医助团队</button></div>
+            <div class="admin-row-actions"><button class="button secondary" @click="agentsQuery.refetch()">刷新</button><button class="button primary" @click="openCreate">新建医助agent</button></div>
           </header>
-          <div v-if="agents.length === 0" class="admin-empty" role="status">暂无智能医助，请点击“新建医助团队”。</div>
+          <div v-if="agents.length === 0" class="admin-empty" role="status">暂无智能医助，请点击“新建医助agent”。</div>
           <div v-else class="admin-table-wrap">
             <table class="admin-table">
               <thead><tr><th>名称</th><th>编码</th><th>版本</th><th>状态</th><th>操作</th></tr></thead>
@@ -203,7 +203,7 @@ async function deactivate(agent: AgentRegistryWire) {
         </section>
       </div>
 
-      <AdminActionDialog v-model:open="editorOpen" :title="editingAgent ? '编辑并发布医助新版本' : '新建医助团队'" :description="editingAgent ? '编码保持不变；保存后旧版本自动停用，并继承原能力与工具依赖。' : '登记后立即进入医助团队版本台账。'" size="large" :busy="Boolean(busy)" @update:open="!$event && resetForm()">
+      <AdminActionDialog v-model:open="editorOpen" :title="editingAgent ? '编辑并发布医助新版本' : '新建医助agent'" :description="editingAgent ? '编码保持不变；保存后旧版本自动停用，并继承原能力与工具依赖。' : '登记后立即进入医助agent版本台账。'" size="large" :busy="Boolean(busy)" @update:open="!$event && resetForm()">
           <form class="admin-form ai-center-dialog-form" @submit.prevent="register">
             <label><span>医助编码</span><input v-model="form.agentCode" maxlength="128" required :disabled="Boolean(editingAgent)" placeholder="例：TRIAGE-ASSISTANT" /></label>
             <label><span>医助名称</span><input v-model="form.agentName" maxlength="256" required placeholder="例：门诊分诊医助" /></label>
@@ -211,7 +211,7 @@ async function deactivate(agent: AgentRegistryWire) {
             <div class="admin-form-actions"><button class="button secondary" type="button" :disabled="Boolean(busy)" @click="editorOpen = false">取消</button><button class="button primary" :disabled="Boolean(busy)">{{ busy === 'create' ? '正在保存…' : editingAgent ? '发布新版本' : '登记并生效' }}</button></div>
           </form>
       </AdminActionDialog>
-      <AdminConfirmDialog :open="Boolean(deactivateTarget)" :title="`删除医助团队 ${doctorFacingAiText(deactivateTarget?.agent_name ?? '')}`" description="删除将以安全停用方式执行；该团队不再接收新任务，历史版本、任务结果和审计记录继续保留。" confirm-label="确认删除并停用" :busy="Boolean(busy)" @update:open="!$event && (deactivateTarget = null)" @confirm="deactivateTarget && deactivate(deactivateTarget)"><div v-if="deactivateTarget" class="admin-impact-grid"><div><span>团队编码</span><b>{{ deactivateTarget.agent_code }}</b></div><div><span>当前版本</span><b>{{ deactivateTarget.agent_version }}</b></div><div><span>当前状态</span><b>有效</b></div><div><span>流程影响</span><b>停止接收新任务</b></div></div></AdminConfirmDialog>
+      <AdminConfirmDialog :open="Boolean(deactivateTarget)" :title="`删除医助agent ${doctorFacingAiText(deactivateTarget?.agent_name ?? '')}`" description="删除将以安全停用方式执行；该团队不再接收新任务，历史版本、任务结果和审计记录继续保留。" confirm-label="确认删除并停用" :busy="Boolean(busy)" @update:open="!$event && (deactivateTarget = null)" @confirm="deactivateTarget && deactivate(deactivateTarget)"><div v-if="deactivateTarget" class="admin-impact-grid"><div><span>团队编码</span><b>{{ deactivateTarget.agent_code }}</b></div><div><span>当前版本</span><b>{{ deactivateTarget.agent_version }}</b></div><div><span>当前状态</span><b>有效</b></div><div><span>流程影响</span><b>停止接收新任务</b></div></div></AdminConfirmDialog>
     </template>
   </section>
 </template>

@@ -8,7 +8,7 @@ import {
   getInpatientSyntheticActor, inpatientSyntheticActors,
   issueInpatientLease, issueWardLease, loadInpatientDocumentRules, loadInpatientOverview,
   loadInpatientWorklist, rejectInpatientDocumentReview, selectInpatientContext,
-  setInpatientSyntheticActor, startInpatientDocumentTask,
+  startInpatientDocumentTask,
   type InpatientSyntheticActorKey,
 } from '../../clinical-api';
 import { developmentCopy } from '../../development-copy';
@@ -65,17 +65,6 @@ async function execute(label: string, action: () => Promise<void>) {
   finally { busy.value = null; }
 }
 
-async function switchActor(key: InpatientSyntheticActorKey) {
-  if (busy.value || key === selectedActorKey.value) return;
-  busy.value = 'actor'; notice.value = '';
-  try {
-    setInpatientSyntheticActor(key); selectedActorKey.value = key;
-    await inpatient.refetch();
-    notice.value = `开发角色已切换为${activeActor.value?.roleLabel ?? key}；每次切换均重新签发上下文租约。`;
-  } catch (error) {
-    const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`;
-  } finally { busy.value = null; }
-}
 
 function createDailyCourse() {
   const data = inpatient.data.value; if (!data) return;
@@ -133,11 +122,10 @@ function formatDate(value: string) { return new Intl.DateTimeFormat('zh-CN', { m
 <template>
   <section data-page-root class="content vue-native-page">
     <div class="page-head">
-      <div class="page-title"><h1>住院医生工作站</h1><p>心内科一病区 · 在管患者实时刷新 · 四角色审签验收</p></div>
+      <div class="page-title"><h1>住院医生工作站</h1><p>心内科一病区 · 在管患者实时刷新</p></div>
       <div class="head-actions"><RouterLink class="btn" to="/admission-bed">入院与床位</RouterLink><RouterLink class="btn primary" to="/inpatient-overview">进入患者总览</RouterLink></div>
     </div>
-    <details v-if="inpatientSyntheticActors.length" class="development-acceptance-tools"><summary>开发角色模拟</summary><section class="inpatient-role-simulator" aria-label="开发环境四角色审签身份"><div><strong>四角色审签模拟</strong><span>仅开发合成环境 · 生产身份必须来自 OIDC，页面不可切换</span></div><div role="group" aria-label="当前审签身份"><button v-for="actor in inpatientSyntheticActors" :key="actor.key" type="button" :class="{ active: actor.key === selectedActorKey }" :disabled="Boolean(busy)" @click="switchActor(actor.key)"><b>{{ actor.roleLabel }}</b><small>{{ actor.displayName }}</small></button></div></section></details>
-    <ClinicalPageState v-if="inpatient.isPending.value" kind="loading" message="正在验证病区岗位、患者租约与床位水位" />
+    <ClinicalPageState v-if="inpatient.isPending.value" kind="loading" message="正在加载病区、患者和床位信息" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="inpatient.refetch()" />
     <template v-else-if="overview && admission && inpatient.data.value">
       <section class="patient-strip" aria-label="住院患者上下文"><div class="patient-avatar">{{ overview.patient_display_name.slice(0, 1) }}</div><div><strong>{{ overview.patient_display_name }}</strong><span>{{ developmentCopy.contextNotice }}</span></div><dl><div><dt>住院状态</dt><dd>{{ admission.status }}</dd></div><div><dt>病区床位</dt><dd>{{ overview.ward_display_name }} · {{ overview.bed_label }}床</dd></div><div><dt>当前岗位</dt><dd>{{ activeActor?.roleLabel ?? '住院医师' }} · {{ activeActor?.displayName ?? '当前登录用户' }}</dd></div></dl><span class="lease-badge">当前患者 / 当前住院</span></section>

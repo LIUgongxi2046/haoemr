@@ -1,8 +1,24 @@
-# openemr2026
+# HaoEMR
 
 > **开发前必读：[`DEVELOPMENT_PRINCIPLES.md`](DEVELOPMENT_PRINCIPLES.md)** —— 项目从复盘沉淀的硬原则（交付哲学 / 架构 / 中国市场选型 / 反模式），任何开发（人或 AI agent）开始前必须先读。
 
 面向诊所、基层及一二三级医院的自主开源 EMR。项目从零实现医疗业务内核，不以现有开源 EMR/HIS 为底座；机构和科室差异通过版本化能力包、流程、表单、规则、权限和集成配置处理，不分叉核心代码。
+
+HaoEMR 是独立项目，与 OpenEMR 项目及 OpenEMR Foundation 无隶属、授权或关联关系。
+
+## 开源许可与商业授权
+
+HaoEMR Community Edition 按 [GNU Affero General Public License v3.0 only](LICENSE)（`AGPL-3.0-only`）开放源代码。该许可证允许个人和机构使用、修改、部署和商业化，但必须遵守 AGPL；修改后的版本若通过网络向用户提供服务，还须按 AGPL 第 13 条向这些用户提供对应源码。
+
+需要在闭源产品中分发、运营闭源修改版网络服务或协商企业条款的机构，可以申请[独立商业授权](COMMERCIAL_LICENSE.md)。商业授权是 AGPL 之外的可选路径，不会减少任何人已经从 AGPL 获得的权利。
+
+- 品牌和 Logo 使用边界：[TRADEMARKS.md](TRADEMARKS.md)
+- 参与贡献及社区行为：[CONTRIBUTING.md](CONTRIBUTING.md)、[CLA.md](CLA.md)、[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- 安全漏洞报告：[SECURITY.md](SECURITY.md)
+- 第三方依赖与素材状态：[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+- 官方源码仓库：<https://github.com/LIUgongxi2046/haoemr>
+
+许可证不构成医疗器械认证、临床有效性保证或生产部署批准。使用真实患者数据前，部署方必须独立完成适用的临床、安全、隐私、数据合规及监管评估。
 
 ## 项目目录
 
@@ -45,7 +61,7 @@ scripts/verify.sh
 docker compose -f deploy/compose.synthetic.yml up --build
 ```
 
-该环境包含公开测试口令、固定合成身份和确定性假模型，只允许本机或隔离测试使用，严禁放入真实患者数据。详细部署边界与生产门禁见 `deploy/README.md` 和 `docs/process/operations/2026-08-14-openemr2026-s011-devops.md`。
+该环境包含公开测试口令、固定合成身份和确定性假模型，只允许本机或隔离测试使用，严禁放入真实患者数据。详细部署边界与生产门禁见 `deploy/README.md` 和 `docs/process/operations/2026-08-14-haoemr-s011-devops.md`。
 
 可生成带 SHA-256 清单的本机交付包：
 

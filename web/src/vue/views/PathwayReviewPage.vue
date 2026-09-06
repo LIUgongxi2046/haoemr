@@ -99,4 +99,5 @@ onMounted(() => { void refresh(); });
 .notice-banner { margin: 12px 0; padding: 10px 14px; border-radius: 8px; background: #eff6ff; color: #2563eb; }
 .btn { padding: 7px 12px; border-radius: 8px; border: 1px solid #cbd7e5; background: #fff; cursor: pointer; font-size: 12px; }
 .btn.primary { background: #2563eb; color: #fff; border-color: #2563eb; }
+@media (max-width: 600px) { .board { display: grid; grid-template-columns: 1fr; } .board-col { min-width: 0; max-height: none; } }
 </style>

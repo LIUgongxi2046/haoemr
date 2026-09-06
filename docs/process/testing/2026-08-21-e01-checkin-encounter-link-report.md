@@ -32,7 +32,7 @@ Security scan: credential / bundle-identity / inline-secret / profile-isolation 
 
 ## 本批实现
 
-- 新增公开 `EncounterGateway` 接口（`org.openemr2026.clinical`），`ClinicalLifecycleService` 实现之并公开 `createEncounter`。
+- 新增公开 `EncounterGateway` 接口（`org.haoemr.clinical`），`ClinicalLifecycleService` 实现之并公开 `createEncounter`。
 - 新增 `V42__appointment_encounter_link.sql`：`appointment.encounter_id` 列、外键与非空索引。
 - `AppointmentService.checkIn` 注入 `EncounterGateway`，报到时生成 `OUTPATIENT`/`ARRIVED` 就诊并回写 `encounter_id`；契约 `Appointment` 增加 `encounter_id`。
 

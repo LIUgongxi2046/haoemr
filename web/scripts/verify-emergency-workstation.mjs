@@ -5,14 +5,14 @@ import { chromium } from 'playwright';
 
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
-const outputDir = resolve(projectDir, process.env.OPENEMR2026_BROWSER_OUTPUT_DIR || 'output/playwright/emergency-workstation-20260830');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
-const prototypeUrl = (process.env.OPENEMR2026_PROTOTYPE_BASE_URL || 'http://127.0.0.1:4180').replace(/\/$/, '');
+const outputDir = resolve(projectDir, process.env.HAOEMR_BROWSER_OUTPUT_DIR || 'output/playwright/emergency-workstation-20260830');
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const prototypeUrl = (process.env.HAOEMR_PROTOTYPE_BASE_URL || 'http://127.0.0.1:4180').replace(/\/$/, '');
 const credentials = {
-  username: process.env.OPENEMR2026_BROWSER_USERNAME || 'linwei',
-  password: process.env.OPENEMR2026_BROWSER_PASSWORD || 'OpenEMR2026-dev!',
+  username: process.env.HAOEMR_BROWSER_USERNAME || 'linwei',
+  password: process.env.HAOEMR_BROWSER_PASSWORD || 'HaoEMR-dev!',
 };
-const mutationEnabled = process.env.OPENEMR2026_MUTATION_TEST === '1';
+const mutationEnabled = process.env.HAOEMR_MUTATION_TEST === '1';
 const routes = [
   { id: 'emergency', heading: '急诊工作台', dataText: '时间关键诊疗轴' },
   { id: 'er-triage', heading: '急诊预检分诊与分区', dataText: '急诊患者队列', dialogs: ['新增急诊患者'] },

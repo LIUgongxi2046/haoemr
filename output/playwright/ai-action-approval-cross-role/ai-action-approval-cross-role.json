@@ -1,0 +1,24 @@
+{
+  "run_at": "2026-09-05T10:20:31.525Z",
+  "summary": "E2E 动作核验台账 1788603631525：仅验证审批与核验闭环，不执行临床操作。",
+  "checks": [
+    {
+      "name": "proposer-creates-a-non-clinical-other-candidate-and-cannot-self-approve",
+      "status": "PASS",
+      "detail": "创建 OTHER 候选，提议人自批被服务端拒绝：ACTION_SELF_APPROVAL_FORBIDDEN：The same user cannot propose and approve an action"
+    },
+    {
+      "name": "independent-user-approves-the-same-candidate",
+      "status": "PASS",
+      "detail": "独立用户完成批准；已批准候选不再提供重复批准入口"
+    },
+    {
+      "name": "proposer-records-verification-only-after-approval-without-clinical-side-effect",
+      "status": "PASS",
+      "detail": "批准后才建立并完成执行核验；页面未把台账记录表述为自动开立医嘱或签署病历"
+    }
+  ],
+  "findings": [],
+  "passed": 3,
+  "failed": 0
+}

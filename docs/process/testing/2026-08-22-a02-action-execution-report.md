@@ -40,7 +40,7 @@ scripts/verify.sh → VERIFY_EXIT=0
 
 - **迁移 V124**：`action_execution`（租户/执行/动作提案/患者/状态/执行人/执行时间/结果说明/row_version）；状态枚举、执行状态一致性、失败必附原因、同提案唯一、身份不可变触发器、提案索引。
 - **契约**：新增 `ActionExecution`、`ActionExecutionCreateRequest`、`ActionExecutionTransitionRequest` 三 Schema 与 4 端点（list/create/succeed/fail）。
-- **模块**：`org.openemr2026.approval` 下 `ActionExecutionService`（创建 + 成功/失败状态机 + 仅已批准执行 + 患者一致 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
+- **模块**：`org.haoemr.approval` 下 `ActionExecutionService`（创建 + 成功/失败状态机 + 仅已批准执行 + 患者一致 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
 - **测试**：`ActionExecutionApiTest` 6 用例覆盖已批准创建、成功、失败、失败缺原因拒绝、未批准拒绝、篡改拒绝。
 
 ## 5. 未关闭风险

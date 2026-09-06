@@ -188,7 +188,7 @@ async function reload() {
             <div v-for="entry in queue" :key="entry.waiting_queue_entry_id" class="queue-item" :class="{ active: entry.patient_id === currentQueueEntry?.patient_id }">
               <div class="queue-title"><span class="dot" :class="queueTone(entry.status)"></span>{{ entry.patient_display_name }} · #{{ entry.sequence_no }}<span class="status" :class="queueTone(entry.status)">{{ queueStatusLabel(entry.status) }}</span></div>
               <div class="queue-meta">{{ sexLabel(entry.patient_sex_code) }} · {{ ageFromBirthDate(entry.patient_birth_date) }}<span>叫号 {{ formatTime(entry.called_at) }}</span></div>
-              <button class="btn sm" type="button" :disabled="entry.patient_id === currentQueueEntry?.patient_id" @click="switchEmergencyPatient(entry)">{{ entry.patient_id === currentQueueEntry?.patient_id ? '当前患者' : '切换并重签租约' }}</button>
+              <button class="btn sm" type="button" :disabled="entry.patient_id === currentQueueEntry?.patient_id" @click="switchEmergencyPatient(entry)">{{ entry.patient_id === currentQueueEntry?.patient_id ? '当前患者' : '切换患者' }}</button>
             </div>
           </div>
           <div class="notice info emergency-queue-notice"><div class="notice-title">预检分诊可追溯</div>保留分诊级别、判定依据和全部改级事实；当前另有 {{ unregistered.length }} 名先救治后补登患者。</div></section>

@@ -14,7 +14,7 @@
 - 输入上下文：PRD 该环节行、LLD 对应 child 契约行、相关领域 Service/API/DB 状态机、UI 子 Agent 中文 metadata、合成 fixture。
 - 允许修改：
   - `contracts/` 中该 child 输出 schema 和显示 metadata；
-  - `src/main/java/org/openemr2026/agent/` 中该 release/profile/prompt/tool adapter/verifier；
+  - `src/main/java/org/haoemr/agent/` 中该 release/profile/prompt/tool adapter/verifier；
   - 必要的相关领域只读适配层，但不改领域硬规则；
   - `src/test/`、`evals/`、`security/`和该 child 的 UI 契约/组件测试。
 - 禁止项：

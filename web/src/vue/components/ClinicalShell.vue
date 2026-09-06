@@ -4,27 +4,48 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { clinicalContext } from '../../clinical-api';
 import { authSession, logoutClinicalSession } from '../../auth-session';
+import { brandConfig } from '../../brand-config';
 import { specialtyGuardRouteIds } from '../route-registry';
 import { mockInterfaceSubmenus } from '../simulation-workbenches';
 import { evaReviewBridge } from '../eva-review-bridge';
+import { usePendingWork } from '../composables/use-pending-work';
+import { pendingDisplay, pendingTotal } from '../pending-work';
+
+import PendingWorkPopover from './PendingWorkPopover.vue';
 
 const GlobalAiAssistantDialog = defineAsyncComponent(() => import('./GlobalAiAssistantDialog.vue'));
 
 const route = useRoute();
 const router = useRouter();
 const routeId = computed(() => String(route.meta.contractId ?? 'safe-not-found'));
+const taskCountMode = computed(() => ['outpatient', 'emergency', 'inpatient'].includes(String(route.query.mode)) ? String(route.query.mode) : 'inpatient');
+const pendingWork = usePendingWork(taskCountMode);
+const pendingGroups = computed(() => navigation.filter(item => item.id !== 'clinical')
+  .map(item => ({ id: item.id, label: item.label, rows: pendingWork.forMenu(item.id) }))
+  .filter(group => group.rows.length));
+const pendingLauncher = ref<HTMLButtonElement | null>(null);
+async function closePendingWork() {
+  activeMenu.value = null;
+  await nextTick();
+  pendingLauncher.value?.focus();
+}
+function navCountTitle(id: string, label: string) {
+  const rows = pendingWork.forMenu(id);
+  if (!rows.length) return `${label} · 无独立业务待办队列`;
+  return `${label} · ${rows.map(row => `${row.label}：${row.state === 'error' ? '统计暂不可用' : row.count ?? '加载中'}（${row.scope}）`).join('；')}`;
+}
 const assistantOpen = ref(false);
+const sidebarCollapsed = ref(false);
+const sidebarCollapseStorageKey = 'openemr.sidebar-collapsed';
 type AssistantDisplayMode = 'center' | 'side';
 const assistantMode = ref<AssistantDisplayMode>('center');
 const assistantLauncher = ref<HTMLButtonElement | null>(null);
-type TopbarMenu = 'hospital' | 'role' | 'notifications' | 'account' | null;
+type TopbarMenu = 'role' | 'account' | 'pending' | null;
 const activeMenu = ref<TopbarMenu>(null);
-const hospitals = ['江城大学附属医院', '江城第二医院', '江城儿童医学中心'];
-const currentHospital = ref(hospitals[0]);
 const doctorName = computed(() => authSession.user?.display_name ?? '未登录');
 const doctorInitial = computed(() => doctorName.value === '未登录' ? '未' : doctorName.value.slice(0, 1));
 const shiftDisplay = computed(() => authSession.user?.shift_display ?? '请登录后加载班次');
-const hospitalDisplay = computed(() => authSession.user?.organization_name ?? currentHospital.value);
+const hospitalDisplay = computed(() => authSession.user?.organization_name ?? '未加载机构');
 const roleLabels: Record<string, string> = {
   CHIEF_PHYSICIAN: '主任医师', ATTENDING_PHYSICIAN: '主治医师', SURGEON: '外科医师',
   EMERGENCY_PHYSICIAN: '急诊医师', PEDIATRICIAN: '儿科医师', ICU_PHYSICIAN: '重症医师',
@@ -40,15 +61,6 @@ const roleOptions = computed(() => (authSession.user?.role_assignment_ids ?? [])
 }));
 const selectedRoleId = ref(clinicalContext.roleId || null);
 const searchText = ref('');
-interface TopbarNotification { id: string; title: string; description: string; category: 'critical' | 'task' | 'governance'; route: string; unread: boolean }
-const notifications = ref<TopbarNotification[]>([
-  { id: 'critical-result', title: '危急值待确认', description: '检验结果已进入医生工作队列', category: 'critical', route: '/opd-results', unread: true },
-  { id: 'consult-timeout', title: '会诊即将超时', description: '心内科会诊剩余 20 分钟', category: 'task', route: '/clinical-tasks', unread: true },
-  { id: 'model-gate', title: '模型治理提醒', description: 'DeepSeek 实模门禁仍未批准', category: 'governance', route: '/models', unread: true },
-]);
-const notificationFilter = ref<'all' | 'unread'>('all');
-const unreadNotifications = computed(() => notifications.value.filter((item) => item.unread).length);
-const filteredNotifications = computed(() => notificationFilter.value === 'unread' ? notifications.value.filter((item) => item.unread) : notifications.value);
 const guideOpen = ref(false);
 const guideDialog = ref<HTMLDialogElement | null>(null);
 const guideLauncher = ref<HTMLButtonElement | null>(null);
@@ -56,7 +68,7 @@ const guideCloseAction = ref<'focus' | 'assistant' | 'navigate'>('focus');
 const guideTarget = ref<string | null>(null);
 
 // 与高保真原型一致的侧栏导航（coverage.js + specialty 拼接）
-interface NavItem { id: string; label: string; icon: string; group: string; count?: string }
+interface NavItem { id: string; label: string; icon: string; group: string }
 const navigation: NavItem[] = [
   { id: 'clinical', label: '临床业务门户', icon: '⌂', group: '临床工作域' },
   { id: 'outpatient', label: '门诊工作台', icon: '◫', group: '临床工作域' },
@@ -68,7 +80,7 @@ const navigation: NavItem[] = [
   { id: 'care-operations', label: '诊疗执行中心', icon: '✚', group: '业务协同' },
   { id: 'clinical-tasks', label: '任务中心', icon: '☑', group: '业务协同' },
   { id: 'data-center', label: '数据中心', icon: '⌁', group: '平台中心' },
-  { id: 'ai-assistant', label: 'AI 中心', icon: '✦', group: '平台中心' },
+  { id: 'ai-assistant', label: 'AI中心', icon: '✦', group: '平台中心' },
   { id: 'knowledge-center', label: '知识中心', icon: '⬡', group: '平台中心' },
   { id: 'workflow', label: '业务配置', icon: '⌘', group: '管理与配置' },
   { id: 'admin', label: '系统管理', icon: '⚙', group: '管理与配置' },
@@ -102,17 +114,26 @@ const careOperationRoutes = ['care-operations', 'billing', 'outpatient-pharmacy'
 const qualityCenterRoutes = ['quality-center', 'department-qc', 'quality-rating', 'infection-events', 'credentials'];
 const dataCenterRoutes = ['data-center', 'integration', 'integration-connectors', 'integration-mapping', 'integration-messages', 'migration', 'data-quality', 'devices', 'research', 'cohort-builder', 'research-stats', 'research-dataset'];
 const knowledgeCenterRoutes = ['knowledge-center', 'pathway-graph', 'pathway-review', 'pathway-versions'];
-const aiPlatformRoutes = ['ai-assistant', 'ai-reminder-detail', 'ai-capture', 'ai-action-review', 'ai-assistant-policy', 'models', 'model-connection', 'model-routing', 'model-evaluation', 'agent-catalog', 'agent', 'agent-context', 'tool-catalog', 'skill-catalog', 'agent-compose', 'agent-evals', 'aiops', 'clinical-specialty-ai'];
+const aiPlatformRoutes = ['ai-assistant', 'ai-reminder-detail', 'ai-capture', 'models', 'model-connection', 'model-routing', 'model-evaluation', 'agent-catalog', 'agent', 'agent-context', 'tool-catalog', 'skill-catalog', 'agent-compose', 'agent-evals', 'aiops'];
 const configurationRoutes = ['workflow', 'capability-pack', 'specialty-coverage', 'form-designer', 'rule-center', 'scope-designer', 'config-release', 'config-upgrade'];
 const operationRoutes = ['install', 'backup', 'operations', 'release-gates', 'opensource'];
 const adminRoutes = ['admin', 'admin-org', 'admin-users', 'admin-roles', 'admin-permissions', 'admin-auth', 'admin-dictionaries', 'admin-master-data', 'admin-templates', 'admin-parameters', 'admin-jobs', 'admin-audit'];
-const adminNavigation: ReadonlyArray<readonly [string, string]> = [
-  ['admin', '管理工作台'], ['admin-org', '组织机构'], ['admin-users', '用户账户'],
-  ['admin-roles', '角色工作组'], ['admin-permissions', '权限策略'], ['admin-auth', '认证安全'],
-  ['admin-dictionaries', '字典术语'], ['admin-master-data', '主数据'], ['admin-templates', '模板输出'],
-  ['admin-parameters', '参数开关'], ['admin-jobs', '通知任务'], ['admin-audit', '管理审计'],
+const adminNavigation: ReadonlyArray<{ href: string; routeId: string; label: string }> = [
+  { href: '/admin', routeId: 'admin', label: '管理工作台' }, { href: '/admin-org', routeId: 'admin-org', label: '组织机构' }, { href: '/admin-users', routeId: 'admin-users', label: '用户账户' },
+  { href: '/admin-roles', routeId: 'admin-roles', label: '角色工作组' }, { href: '/admin-permissions', routeId: 'admin-permissions', label: '权限策略' }, { href: '/admin-auth', routeId: 'admin-auth', label: '认证安全' },
+  { href: '/admin-dictionaries', routeId: 'admin-dictionaries', label: '字典术语' }, { href: '/admin-master-data', routeId: 'admin-master-data', label: '主数据' }, { href: '/admin-templates', routeId: 'admin-templates', label: '模板输出' },
+  { href: '/admin-parameters', routeId: 'admin-parameters', label: '参数开关' }, { href: '/admin-parameters?view=branding', routeId: 'admin-parameters', label: '品牌与名称' }, { href: '/admin-jobs', routeId: 'admin-jobs', label: '通知任务' }, { href: '/admin-audit', routeId: 'admin-audit', label: '管理审计' },
 ];
 const isAdminDomain = computed(() => adminRoutes.includes(routeId.value));
+
+function isAdminNavigationActive(item: { href: string; routeId: string }) {
+  if (item.routeId !== routeId.value) return false;
+  const branding = route.query.view === 'branding';
+  return item.href.includes('view=branding') ? branding : !branding;
+}
+
+const isTaskConfigurationView = computed(() => routeId.value === 'clinical-tasks'
+  && (route.query.view === 'pathway' || route.query.view === 'rules'));
 
 function isActive(navId: string): boolean {
   const c = routeId.value;
@@ -124,11 +145,11 @@ function isActive(navId: string): boolean {
     case 'quality-center': return qualityCenterRoutes.includes(c);
     case 'archive-assets': return archiveRoutes.includes(c);
     case 'care-operations': return careOperationRoutes.includes(c);
-    case 'clinical-tasks': return c === 'clinical-tasks';
+    case 'clinical-tasks': return c === 'clinical-tasks' && !isTaskConfigurationView.value;
     case 'data-center': return dataCenterRoutes.includes(c);
     case 'ai-assistant': return aiPlatformRoutes.includes(c);
     case 'knowledge-center': return knowledgeCenterRoutes.includes(c);
-    case 'workflow': return configurationRoutes.includes(c);
+    case 'workflow': return configurationRoutes.includes(c) || isTaskConfigurationView.value;
     case 'admin': return adminRoutes.includes(c) || operationRoutes.includes(c);
     case 'clinical': return clinicalFoundationRoutes.includes(c) || specialtyGuardRouteIds.has(c);
     case 'mock-interfaces': return c === 'mock-interfaces' || c === 'mock-interface-workbench';
@@ -164,17 +185,17 @@ const subNav = computed<SubNav | null>(() => {
     };
   }
   if (outpatientRoutes.includes(c) && !recordRoutes.includes(c)) {
-    return { kind: 'domain', title: '临床业务门户', active: c, items: [['outpatient', '门诊工作台'], ['opd-record', '门诊病历'], ['opd-diagnosis', '诊断'], ['opd-orders', '医嘱处方'], ['opd-results', '检查检验'], ['opd-consult', '会诊转诊'], ['opd-followup', '随访终诊']] };
+    return { kind: 'domain', title: '门诊工作台', active: c, items: [['outpatient', '门诊工作台'], ['opd-record', '门诊病历'], ['opd-diagnosis', '诊断'], ['opd-orders', '医嘱处方'], ['opd-results', '检查检验'], ['opd-consult', '会诊转诊'], ['opd-followup', '随访终诊']] };
   }
   if (emergencyRoutes.includes(c)) {
-    return { kind: 'domain', title: '临床业务门户', active: c, items: [['emergency', '急诊工作台'], ['er-triage', '预检分诊'], ['er-record', '急诊病历'], ['er-observation', '抢救留观'], ['er-nursing', '急诊护理'], ['er-handoff', '急会诊与交接'], ['er-patient-overview', '患者纵深']] };
+    return { kind: 'domain', title: '急诊工作台', active: c, items: [['emergency', '急诊工作台'], ['er-triage', '预检分诊'], ['er-record', '急诊病历'], ['er-observation', '抢救留观'], ['er-nursing', '急诊护理'], ['er-handoff', '急会诊与交接']] };
   }
   if (inpatientRoutes.includes(c)) {
-    return { kind: 'domain', title: '临床业务门户', active: c.startsWith('inpatient-doc') ? 'inpatient-course' : c, items: [['inpatient', '患者列表'], ['inpatient-overview', '患者总览'], ['inpatient-course', '病历文书'], ['ip-orders', '医嘱与用药'], ['ip-results', '检查检验'], ['ip-consult', '查房会诊'], ['ip-pathway', '临床路径'], ['ward', '护理摘要'], ['inpatient-discharge', '出院病案']] };
+    return { kind: 'domain', title: '住院工作站', active: c.startsWith('inpatient-doc') ? 'inpatient-course' : c, items: [['inpatient', '患者列表'], ['inpatient-overview', '患者总览'], ['inpatient-course', '病历文书'], ['ip-orders', '医嘱与用药'], ['ip-results', '检查检验'], ['ip-consult', '查房会诊'], ['ip-pathway', '临床路径'], ['ward', '护理摘要'], ['inpatient-discharge', '出院病案']] };
   }
-  if (c === 'clinical-tasks') {
+  if (c === 'clinical-tasks' && !isTaskConfigurationView.value) {
     const requestedView = typeof route.query.view === 'string' ? route.query.view : 'overview';
-    const activeView = ['overview', 'team', 'collaboration', 'notifications', 'pathway', 'rules'].includes(requestedView)
+    const activeView = ['overview', 'team', 'collaboration', 'notifications'].includes(requestedView)
       ? requestedView
       : 'overview';
     return {
@@ -184,14 +205,13 @@ const subNav = computed<SubNav | null>(() => {
       items: [
         ['clinical-tasks?view=overview', '任务总览'], ['clinical-tasks?view=team', '团队队列'],
         ['clinical-tasks?view=collaboration', '委托协作'], ['clinical-tasks?view=notifications', '消息通知'],
-        ['clinical-tasks?view=pathway', '临床路径配置'], ['clinical-tasks?view=rules', '任务规则'],
       ],
     };
   }
   if (careOperationRoutes.includes(c)) {
     return {
       kind: 'center',
-      title: '诊疗执行',
+      title: '诊疗执行中心',
       active: c,
       items: [
         ['care-operations', '执行总览'], ['billing', '费用结算'],
@@ -208,7 +228,7 @@ const subNav = computed<SubNav | null>(() => {
   }
   if (archiveRoutes.includes(c)) {
     return {
-      kind: 'center', title: '病案资产', active: c === 'asset-detail' ? 'archive-integrity' : c,
+      kind: 'center', title: '病案资产中心', active: c === 'asset-detail' ? 'archive-integrity' : c,
       items: [['archive-assets', '总览'], ['archive-catalog', '病案目录'], ['archive-scan', '扫描编目'], ['archive-integrity', '完整性与验真'], ['archive-borrow', '借阅复制'], ['archive-preservation', '长期保存']],
     };
   }
@@ -216,16 +236,16 @@ const subNav = computed<SubNav | null>(() => {
     return { kind: 'center', title: '数据中心', active: c, items: [['data-center', '数据总览'], ['integration', '集成交换'], ['migration', '历史迁移'], ['data-quality', '数据质量'], ['devices', '设备接入'], ['research', '科研统计']] };
   }
   if (aiPlatformRoutes.includes(c)) {
-    return { kind: 'center', title: 'AI 中心', active: c, items: [['ai-assistant', 'AI医助 Eva'], ['ai-assistant-policy', 'Eva工作策略'], ['clinical-specialty-ai', '专科医助复核'], ['models', '模型服务'], ['agent-catalog', '医助团队'], ['skill-catalog', '医助能力'], ['tool-catalog', '医助工具'], ['agent-evals', '评测发布'], ['aiops', '运行监测']] };
+    return { kind: 'center', title: 'AI中心', active: c, items: [['ai-assistant', 'AI医助 EVA'], ['models', '模型服务'], ['agent-catalog', '医助agent'], ['skill-catalog', '医助skill'], ['tool-catalog', '医助tool'], ['agent-evals', '评测发布'], ['aiops', '运行监测']] };
   }
   if (knowledgeCenterRoutes.includes(c)) {
     return { kind: 'center', title: '知识中心', active: c, items: [['knowledge-center', '临床路径知识库'], ['pathway-graph', '知识图谱'], ['pathway-review', '审核队列'], ['pathway-versions', '版本历史']] };
   }
-  if (configurationRoutes.includes(c)) {
-    return { kind: 'center', title: '业务配置', active: c, items: [['workflow', '流程设计'], ['capability-pack', '能力包'], ['specialty-coverage', '科室适配'], ['form-designer', '表单模板'], ['rule-center', '规则时限'], ['scope-designer', '职责范围']] };
+  if (configurationRoutes.includes(c) || isTaskConfigurationView.value) {
+    return { kind: 'center', title: '业务配置', active: isTaskConfigurationView.value ? `clinical-tasks?view=${route.query.view}` : c, items: [['workflow', '流程设计'], ['capability-pack', '能力包'], ['specialty-coverage', '科室适配'], ['form-designer', '表单模板'], ['rule-center', '规则时限'], ['scope-designer', '职责范围'], ['clinical-tasks?view=pathway', '临床路径配置'], ['clinical-tasks?view=rules', '任务规则']] };
   }
   if (clinicalFoundationRoutes.includes(c)) {
-    return { kind: 'center', title: '临床通用', active: c, items: [['clinical', '业务门户'], ['appointment-registration', '预约挂号'], ['admission-bed', '入院床位'], ['emergency-access', '紧急访问']] };
+    return { kind: 'center', title: '临床业务门户', active: c, items: [['clinical', '业务门户'], ['appointment-registration', '预约挂号'], ['admission-bed', '入院床位'], ['emergency-access', '紧急访问']] };
   }
   return null;
 });
@@ -236,7 +256,7 @@ const routeRoleContext = computed(() => {
   if (id === 'inpatient-pharmacy') return '住院药师 · 住院药房';
   if (inpatientRoutes.includes(id)) return '住院医生 · 心内科一病区';
   if (emergencyRoutes.includes(id)) return '急诊医生 · 抢救区';
-  if (id === 'clinical-tasks') return '任务中心';
+  if (id === 'clinical-tasks') return isTaskConfigurationView.value ? '业务配置' : '任务中心';
   if (archiveRoutes.includes(id)) return '病案资产与长期保存';
   if (recordRoutes.includes(id)) return '全院病历中心 · 当前门诊就诊';
   if (outpatientRoutes.includes(id)) return '病历中心 · 当前门诊就诊';
@@ -293,11 +313,6 @@ function toggleMenu(menu: Exclude<TopbarMenu, null>) {
   activeMenu.value = activeMenu.value === menu ? null : menu;
 }
 
-function selectHospital(hospital: string) {
-  currentHospital.value = hospital;
-  activeMenu.value = null;
-}
-
 function selectRole(roleId: string) {
   if (!roleOptions.value.some((role) => role.id === roleId)) return;
   selectedRoleId.value = roleId;
@@ -338,20 +353,6 @@ async function onGuideClosed() {
   guideTarget.value = null;
 }
 
-function markNotificationsRead() {
-  notifications.value = notifications.value.map((item) => ({ ...item, unread: false }));
-}
-
-function markNotificationRead(id: string) {
-  notifications.value = notifications.value.map((item) => item.id === id ? { ...item, unread: false } : item);
-}
-
-async function openNotification(item: TopbarNotification) {
-  markNotificationRead(item.id);
-  activeMenu.value = null;
-  await router.push(item.route);
-}
-
 function navigateFromGuide(path: string) {
   guideTarget.value = path;
   closeGuide('navigate');
@@ -373,10 +374,28 @@ function onDocumentPointerDown(event: PointerEvent) {
 }
 
 function onDocumentKeyDown(event: KeyboardEvent) {
-  if (event.key === 'Escape' && activeMenu.value) activeMenu.value = null;
+  if (event.key === 'Escape' && activeMenu.value === 'pending') void closePendingWork();
+  else if (event.key === 'Escape' && activeMenu.value) activeMenu.value = null;
 }
 
+function toggleSidebar() {
+  sidebarCollapsed.value = !sidebarCollapsed.value;
+}
+
+watch(sidebarCollapsed, (collapsed) => {
+  try {
+    window.localStorage.setItem(sidebarCollapseStorageKey, collapsed ? '1' : '0');
+  } catch {
+    // 本地存储不可用时仍保留当前会话内的折叠状态。
+  }
+});
+
 onMounted(() => {
+  try {
+    sidebarCollapsed.value = window.localStorage.getItem(sidebarCollapseStorageKey) === '1';
+  } catch {
+    // 隐私模式或禁用存储时使用默认展开状态。
+  }
   document.addEventListener('pointerdown', onDocumentPointerDown);
   document.addEventListener('keydown', onDocumentKeyDown);
 });
@@ -394,55 +413,44 @@ async function closeAssistant() {
 </script>
 
 <template>
-  <div class="shell" :class="{ 'assistant-side-open': assistantOpen && assistantMode === 'side', 'mock-interface-shell': routeId === 'mock-interfaces' || routeId === 'mock-interface-workbench' }">
+  <div class="shell" :class="{ 'sidebar-collapsed': sidebarCollapsed, 'assistant-side-open': assistantOpen && assistantMode === 'side', 'mock-interface-shell': routeId === 'mock-interfaces' || routeId === 'mock-interface-workbench' }">
     <a class="skip-link" href="#main-content">跳到主要内容</a>
     <header class="topbar">
-      <RouterLink class="brand" to="/clinical" aria-label="OpenEMR2026 首页">
-        <img class="brand-logo" data-testid="brand-logo" src="/brand/haonan-medical-ai-logo.png" alt="" width="38" height="38" />
-        <span class="brand-copy"><strong>OpenEMR2026</strong><small>电子病历系统</small></span>
+      <RouterLink class="brand" to="/clinical" aria-label="HaoEMR 首页">
+        <img class="brand-logo" data-testid="brand-logo" :src="brandConfig.logoUrl" :alt="`${brandConfig.systemName} Logo`" width="38" height="38" />
+        <span class="brand-copy"><strong>{{ brandConfig.systemName }}</strong><small>电子病历系统</small></span>
       </RouterLink>
-      <div class="topbar-menu-control context-control">
-        <button class="context-pill" type="button" aria-label="选择医院" aria-haspopup="menu" :aria-expanded="activeMenu === 'hospital'" @click.stop="toggleMenu('hospital')">{{ hospitalDisplay }}<small aria-hidden="true">⌄</small></button>
-        <div v-if="activeMenu === 'hospital'" class="topbar-popover context-menu" role="menu" aria-label="医院列表">
-          <strong>切换工作医院</strong>
-          <button v-for="hospital in hospitals" :key="hospital" type="button" role="menuitemradio" :aria-checked="currentHospital === hospital" @click="selectHospital(hospital)"><span>{{ hospital }}</span><b aria-hidden="true">{{ currentHospital === hospital ? '✓' : '' }}</b></button>
-          <small>仅切换当前演示会话，不改变生产授权。</small>
-        </div>
-      </div>
+      <div class="context-pill" aria-label="当前医院">{{ hospitalDisplay }}</div>
       <div class="topbar-menu-control context-control role-control">
         <button class="context-pill domain-context" type="button" aria-label="选择角色" aria-haspopup="menu" :aria-expanded="activeMenu === 'role'" @click.stop="toggleMenu('role')">{{ roleContext }}<small aria-hidden="true">⌄</small></button>
         <div v-if="activeMenu === 'role'" class="topbar-popover context-menu" role="menu" aria-label="角色列表">
           <strong>当前授权岗位</strong>
           <button v-for="role in roleOptions" :key="role.id" type="button" role="menuitemradio" :aria-checked="selectedRoleId === role.id" @click="selectRole(role.id)"><span>{{ role.label }}</span><b aria-hidden="true">{{ selectedRoleId === role.id ? '✓' : '' }}</b></button>
-          <small>这里只显示当前账号在服务端有效的岗位；切换后重新签发上下文授权。</small>
+          <small>这里只显示您当前可用的岗位。</small>
         </div>
       </div>
       <form class="top-search" role="search" @submit.prevent="submitSearch">
-        <input v-model="searchText" type="search" placeholder="搜索患者、病历、医嘱、任务…" aria-label="全局搜索" />
-        <button type="submit" aria-label="提交全局搜索">搜索</button>
+        <input v-model="searchText" type="search" placeholder="搜索患者…" aria-label="搜索患者" />
+        <button type="submit" aria-label="提交患者搜索">搜索</button>
       </form>
       <div class="top-actions">
-        <button ref="assistantLauncher" class="topbar-ai-assistant" type="button" aria-label="打开AI医助Eva" :aria-expanded="assistantOpen" @click="assistantOpen = true"><img src="/brand/ai-medical-assistant-eva.png" alt="" width="28" height="28" /><small>AI医助 Eva</small></button>
-        <button ref="guideLauncher" class="icon-btn" type="button" aria-label="打开操作指引" @click="openGuide"><svg class="topbar-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.35 2.35 0 0 1 4.55.8c0 1.8-2.35 2.05-2.35 3.55"/><path d="M12 17.2h.01"/></svg></button>
+        <button ref="assistantLauncher" class="topbar-ai-assistant" type="button" aria-label="打开 AI医助 EVA" :aria-expanded="assistantOpen" @click="assistantOpen = true"><img class="eva-avatar-motion" src="/brand/ai-medical-assistant-eva.png" alt="" width="28" height="28" /><small>AI医助 EVA</small></button>
         <div class="topbar-menu-control">
-          <button class="icon-btn notification-trigger" type="button" :aria-label="unreadNotifications ? `通知，${unreadNotifications} 条未读` : '通知，无未读'" aria-haspopup="true" :aria-expanded="activeMenu === 'notifications'" @click.stop="toggleMenu('notifications')"><svg class="topbar-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg><span v-if="unreadNotifications" aria-hidden="true">{{ unreadNotifications }}</span></button>
-          <section v-if="activeMenu === 'notifications'" class="topbar-popover notification-panel" role="region" aria-label="通知中心">
-            <header><div><strong>通知中心</strong><small>{{ unreadNotifications ? `${unreadNotifications} 条未读` : '已全部阅读' }}</small></div><button type="button" :disabled="!unreadNotifications" @click="markNotificationsRead">全部标为已读</button></header>
-            <div class="notification-tabs" role="tablist" aria-label="通知筛选"><button type="button" role="tab" :aria-selected="notificationFilter === 'all'" @click="notificationFilter = 'all'">全部</button><button type="button" role="tab" :aria-selected="notificationFilter === 'unread'" @click="notificationFilter = 'unread'">未读 <b>{{ unreadNotifications }}</b></button></div>
-            <ul v-if="filteredNotifications.length"><li v-for="item in filteredNotifications" :key="item.id" :class="{ unread: item.unread }"><button class="notification-main" type="button" @click="openNotification(item)"><i class="notification-item-icon" :class="item.category" aria-hidden="true">{{ item.category === 'critical' ? '!' : item.category === 'task' ? '✓' : '◇' }}</i><span><b>{{ item.title }}</b><small>{{ item.description }}</small></span><em aria-hidden="true">›</em></button><button v-if="item.unread" class="notification-read" type="button" :aria-label="`标记${item.title}为已读`" @click="markNotificationRead(item.id)">✓</button></li></ul>
-            <div v-else class="notification-empty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18"/><path d="m8 12 2.2 2.2L16 8.5"/></svg><strong>没有未读通知</strong><span>新的临床与治理提醒会显示在这里。</span></div>
-            <footer><RouterLink to="/clinical-tasks" @click="activeMenu = null">进入任务中心 <span aria-hidden="true">→</span></RouterLink></footer>
-          </section>
+          <button ref="pendingLauncher" class="icon-btn topbar-pending-button" title="待办" type="button" aria-label="统一待办" aria-controls="topbar-pending-work" :aria-expanded="activeMenu === 'pending'" @click.stop="toggleMenu('pending')"><svg class="topbar-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="m7 9 1 1 2-2M13 9h4M7 14h3M13 14h4M7 18h3M13 18h4"/></svg></button>
+          <PendingWorkPopover v-if="activeMenu === 'pending'" :groups="pendingGroups" @close="closePendingWork" @refresh="pendingWork.refresh()" />
         </div>
+        <button ref="guideLauncher" class="icon-btn" type="button" aria-label="打开操作指引" @click="openGuide"><svg class="topbar-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.35 2.35 0 0 1 4.55.8c0 1.8-2.35 2.05-2.35 3.55"/><path d="M12 17.2h.01"/></svg></button>
+
         <div class="topbar-menu-control">
           <button class="avatar" type="button" aria-label="用户登录与账户" aria-haspopup="dialog" :aria-expanded="activeMenu === 'account'" @click.stop="toggleMenu('account')">{{ doctorInitial }}</button>
           <section v-if="activeMenu === 'account'" class="topbar-popover account-menu" role="region" aria-label="用户账户">
             <header><span class="avatar large" aria-hidden="true">{{ doctorInitial }}</span><div><strong>{{ doctorName }}</strong><small>{{ authSession.user ? '数据库会话有效' : '尚未登录' }}</small></div></header>
             <div class="account-context-summary">
-              <label><span>工作医院</span><select v-model="currentHospital" aria-label="账户菜单选择医院"><option v-for="hospital in hospitals" :key="hospital" :value="hospital">{{ hospital }}</option></select></label>
+              <div><span>工作医院</span><strong>{{ hospitalDisplay }}</strong></div>
               <label><span>工作角色</span><select :value="selectedRoleId" aria-label="账户菜单选择角色" @change="selectRoleFromEvent"><option v-for="role in roleOptions" :key="role.id" :value="role.id">{{ role.label }}</option></select></label>
             </div>
             <RouterLink to="/admin-users" @click="activeMenu = null">账号与权限</RouterLink>
+            <a href="https://github.com/LIUgongxi2046/haoemr" target="_blank" rel="noreferrer">开源许可与源码</a>
             <button type="button" @click="openLoginContext">退出系统</button>
           </section>
         </div>
@@ -450,6 +458,17 @@ async function closeAssistant() {
       </div>
     </header>
     <aside class="sidebar" aria-label="一级导航">
+      <div class="sidebar-header">
+        <span class="sidebar-header-label">主菜单</span>
+        <button
+          class="sidebar-collapse-toggle"
+          type="button"
+          :aria-label="sidebarCollapsed ? '展开一级导航' : '折叠一级导航'"
+          :aria-expanded="!sidebarCollapsed"
+          :title="sidebarCollapsed ? '展开一级导航' : '折叠一级导航'"
+          @click="toggleSidebar"
+        >{{ sidebarCollapsed ? '›' : '‹' }}</button>
+      </div>
       <template v-for="group in groups" :key="group.group">
         <p class="nav-group">{{ group.group }}</p>
         <RouterLink
@@ -459,10 +478,13 @@ async function closeAssistant() {
           class="nav-item"
           :class="{ active: isActive(item.id) }"
           :aria-current="isActive(item.id) ? 'page' : undefined"
-        ><span class="nav-icon" aria-hidden="true">{{ item.icon }}</span><span class="nav-label">{{ item.label }}</span></RouterLink>
+          :title="navCountTitle(item.id, item.label)"
+          :aria-label="item.label"
+          :aria-description="navCountTitle(item.id, item.label)"
+        ><span class="nav-icon" aria-hidden="true">{{ item.icon }}</span><span class="nav-label">{{ item.label }}</span><span v-if="pendingWork.forMenu(item.id).length" class="nav-count" :class="{ 'nav-count-unavailable': pendingTotal(pendingWork.forMenu(item.id)) === null, 'nav-count-zero': pendingTotal(pendingWork.forMenu(item.id)) === 0 }" :aria-label="navCountTitle(item.id, item.label)">{{ pendingDisplay(pendingWork.forMenu(item.id)) }}</span></RouterLink>
       </template>
     </aside>
-    <main id="main-content" class="main">
+    <main id="main-content" class="main" :class="{ 'has-secondary-nav': Boolean(subNav), 'has-admin-secondary-nav': isAdminDomain }">
       <nav v-if="subNav" class="center-nav" :class="[subNav.kind, { 'task-center-subnav': routeId === 'clinical-tasks', 'archive-subpage-nav': archiveRoutes.includes(routeId) }]" :aria-label="`${subNav.title}二级导航`">
         <b>{{ subNav.title }}</b>
         <RouterLink v-for="[id, label] in subNav.items" :key="id" :to="`/${id}`" :class="{ active: id === subNav.active }" :aria-current="id === subNav.active ? 'page' : undefined">{{ label }}</RouterLink>
@@ -471,13 +493,13 @@ async function closeAssistant() {
         <aside class="admin-domain-nav card" aria-label="系统管理二级导航">
           <div class="admin-nav-title"><b>系统管理</b><span>身份 · 主数据 · 安全 · 运行</span></div>
           <RouterLink
-            v-for="[id, label] in adminNavigation"
-            :key="id"
-            :to="`/${id}`"
+            v-for="item in adminNavigation"
+            :key="item.href"
+            :to="item.href"
             class="admin-domain-link"
-            :class="{ active: id === routeId }"
-            :aria-current="id === routeId ? 'page' : undefined"
-          >{{ label }}</RouterLink>
+            :class="{ active: isAdminNavigationActive(item) }"
+            :aria-current="isAdminNavigationActive(item) ? 'page' : undefined"
+          >{{ item.label }}</RouterLink>
           <div class="admin-nav-divider"></div>
           <RouterLink class="admin-domain-external" to="/workflow">业务流程配置 →</RouterLink>
           <RouterLink class="admin-domain-external" to="/integration">接口集成管理 →</RouterLink>
@@ -499,10 +521,19 @@ async function closeAssistant() {
       @close="closeAssistant"
     />
     <dialog v-if="guideOpen" ref="guideDialog" class="operation-guide-dialog" aria-labelledby="operation-guide-title" @close="onGuideClosed">
-      <header><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5a2.5 2.5 0 0 1 2.5 2.5z"/></svg></i><div><span>快速开始</span><h2 id="operation-guide-title">操作指引</h2><p>从工作上下文到临床任务的四步入口</p></div><button type="button" aria-label="关闭操作指引" @click="closeGuide()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></header>
-      <ol><li><b>1</b><div><strong>选择医院与角色</strong><span>顶栏切换当前工作上下文，服务端仍会独立校验授权。</span></div></li><li><b>2</b><div><strong>搜索患者或任务</strong><span>输入关键词后进入患者主索引，继续查看授权资料。</span></div></li><li><b>3</b><div><strong>进入业务工作台</strong><span>通过左侧一级导航和页面内子导航处理门诊、急诊或住院任务。</span></div></li><li><b>4</b><div><strong>调用AI医助 Eva</strong><span>Eva 保留当前页面上下文，生成内容需要人工审核后才能进入业务流程。</span></div></li></ol>
-      <section class="guide-quick-actions" aria-label="快捷入口"><strong>立即开始</strong><div><button type="button" @click="navigateFromGuide('/patient-registry')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M19 8v6M16 11h6"/></svg><span>患者主索引<small>搜索与登记患者</small></span></button><button type="button" @click="navigateFromGuide('/admin-users')"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>账号与权限<small>查看用户与岗位授权</small></span></button><button type="button" @click="openAssistantFromGuide"><img src="/brand/ai-medical-assistant-eva.png" alt="" width="24" height="24"/><span>AI医助 Eva<small>带上下文开始任务</small></span></button></div></section>
+      <header><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5a2.5 2.5 0 0 1 2.5 2.5z"/></svg></i><div><span>快速开始</span><h2 id="operation-guide-title">操作指引</h2><p>四步开始处理临床工作</p></div><button type="button" aria-label="关闭操作指引" @click="closeGuide()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></header>
+      <ol><li><b>1</b><div><strong>确认医院与角色</strong><span>查看当前医院，并选择工作岗位。</span></div></li><li><b>2</b><div><strong>搜索患者</strong><span>输入姓名或标识，查找要处理的患者。</span></div></li><li><b>3</b><div><strong>进入业务工作台</strong><span>通过左侧导航处理门诊、急诊或住院任务。</span></div></li><li><b>4</b><div><strong>使用 AI医助 EVA</strong><span>AI医助可根据当前页面提供建议，最终由您确认。</span></div></li></ol>
+      <section class="guide-quick-actions" aria-label="快捷入口"><strong>立即开始</strong><div><button type="button" @click="navigateFromGuide('/patient-registry')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M19 8v6M16 11h6"/></svg><span>患者查询<small>搜索与登记患者</small></span></button><button type="button" @click="navigateFromGuide('/admin-users')"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 0 16 0"/></svg><span>账号与权限<small>查看用户与岗位授权</small></span></button><button type="button" @click="openAssistantFromGuide"><img src="/brand/ai-medical-assistant-eva.png" alt="" width="24" height="24"/><span>AI医助 EVA<small>根据当前页面提供建议</small></span></button></div></section>
       <footer><span>按 Esc 可随时关闭</span><button class="button secondary" type="button" @click="closeGuide()">稍后再看</button></footer>
     </dialog>
   </div>
 </template>
+
+<style scoped>
+.sidebar .nav-item .nav-count { display: inline-flex; flex-shrink: 0; }
+.nav-count-zero { background: #33485d; color: #dbe6ef; }
+.nav-count-unavailable { background: #edf1f5; color: #576675; }
+.topbar-pending-button[aria-expanded="true"] { color: #1769aa; background: #edf5ff; }
+.sidebar-collapsed .nav-item { position: relative; }
+.sidebar-collapsed .nav-count { position: absolute; right: 0; top: 0; font-size: 9px; padding: 1px 3px; }
+</style>

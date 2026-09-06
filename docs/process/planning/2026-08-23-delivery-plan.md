@@ -1,8 +1,8 @@
-# openemr2026 下一阶段交付级开发计划
+# HaoEMR 下一阶段交付级开发计划
 
 > 日期：2026-08-23
 > S007 模式：`BACKLOG`（交付批次 DAG）+ `REPLAN`（方向纠偏后的里程碑重排）
-> 依据（已通读）：`DEVELOPMENT_PRINCIPLES.md`（19 条硬原则）、`docs/process/planning/2026-08-22-handover.md`、`docs/process/planning/2026-08-22-ui-replan.md`、`docs/process/planning/2026-08-14-openemr2026-v1.0-implementation-backlog.md`，并对 `web/src/vue/route-registry.ts`、`router.ts`、`web/src/clinical-api.ts`、`contracts/generated/route-contract.generated.json` 做了实测核对。
+> 依据（已通读）：`DEVELOPMENT_PRINCIPLES.md`（19 条硬原则）、`docs/process/planning/2026-08-22-handover.md`、`docs/process/planning/2026-08-22-ui-replan.md`、`docs/process/planning/2026-08-14-haoemr-v1.0-implementation-backlog.md`，并对 `web/src/vue/route-registry.ts`、`router.ts`、`web/src/clinical-api.ts`、`contracts/generated/route-contract.generated.json` 做了实测核对。
 > 状态：所有任务 `PLANNED`；只有被 S008 实际执行并通过门禁后，才把对应项标 `VERIFIED`。
 
 ---

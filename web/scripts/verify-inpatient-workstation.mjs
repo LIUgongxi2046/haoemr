@@ -6,10 +6,10 @@ import { chromium } from 'playwright';
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
 const outputDir = resolve(projectDir, 'output/playwright/inpatient-workstation');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
 const credentials = {
-  username: process.env.OPENEMR2026_BROWSER_USERNAME || 'linwei',
-  password: process.env.OPENEMR2026_BROWSER_PASSWORD || 'OpenEMR2026-dev!',
+  username: process.env.HAOEMR_BROWSER_USERNAME || 'linwei',
+  password: process.env.HAOEMR_BROWSER_PASSWORD || 'HaoEMR-dev!',
 };
 const routes = [
   { id: 'inpatient', heading: '住院医生工作站', open: '新增病程', minimumText: '病区患者' },

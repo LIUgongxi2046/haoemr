@@ -42,7 +42,7 @@ scripts/verify.sh → VERIFY_EXIT=0
 
 - **迁移 V131**：`source_patient_match_candidate`（源系统/源标识/姓名/性别/出生日期/匹配患者/匹配分/复核状态/决议人/决议时间/row_version）；评分 0–1、复核状态一致性、同源同标识唯一、身份不可变触发器、源系统索引。
 - **契约**：新增 `SourcePatientMatchCandidate`、`SourcePatientMatchCandidateRecordRequest`、`SourcePatientMatchCandidateResolveRequest` 三 Schema 与 3 端点（list/record/resolve）。
-- **模块**：`org.openemr2026.archive` 下 `SourcePatientMatchCandidateService`（候选登记 + 确定性匹配 + 复核决议 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
+- **模块**：`org.haoemr.archive` 下 `SourcePatientMatchCandidateService`（候选登记 + 确定性匹配 + 复核决议 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
 - **测试**：`SourcePatientMatchCandidateApiTest` 6 用例覆盖命中、未命中、决议、决议到非活动患者拒绝、非活动源拒绝、篡改拒绝。
 
 ## 5. 未关闭风险

@@ -12,11 +12,11 @@ USER gradle
 RUN ./gradlew bootJar --no-daemon --no-configuration-cache
 
 FROM eclipse-temurin:21.0.8_9-jre-jammy
-RUN groupadd --system --gid 10001 openemr2026 \
-    && useradd --system --uid 10001 --gid openemr2026 --home-dir /opt/openemr2026 openemr2026
-WORKDIR /opt/openemr2026
+RUN groupadd --system --gid 10001 haoemr \
+    && useradd --system --uid 10001 --gid haoemr --home-dir /opt/haoemr haoemr
+WORKDIR /opt/haoemr
 COPY --from=builder /workspace/build/libs/*.jar app.jar
-COPY --chown=openemr2026:openemr2026 samples/data/ samples/data/
+COPY --chown=haoemr:haoemr samples/data/ samples/data/
 USER 10001:10001
 EXPOSE 8080
 ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75", "-Djava.security.egd=file:/dev/urandom", "-jar", "app.jar"]

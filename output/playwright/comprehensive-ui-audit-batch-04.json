@@ -1,0 +1,291 @@
+{
+  "run_at": "2026-09-05T04:50:50.610Z",
+  "routes": 15,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 30,
+  "verified_route_viewports": 30,
+  "findings": [],
+  "observations": [
+    {
+      "route": "data-center",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "数据总览",
+      "routeId": "data-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 977
+    },
+    {
+      "route": "data-quality",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "全院数据质量与问题工单",
+      "routeId": "data-quality",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1470
+    },
+    {
+      "route": "dental-care",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "口腔护理与术后观察",
+      "routeId": "dental-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 488
+    },
+    {
+      "route": "dental-evidence",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "口腔诊疗证据",
+      "routeId": "dental-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 495
+    },
+    {
+      "route": "dental-followup",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "dental-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 416
+    },
+    {
+      "route": "dental-qc",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "dental-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 459
+    },
+    {
+      "route": "dental-record",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "口腔记录",
+      "routeId": "dental-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 390
+    },
+    {
+      "route": "dental-treatment",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "口腔治疗记录",
+      "routeId": "dental-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 429
+    },
+    {
+      "route": "dental-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "口腔工作台",
+      "routeId": "dental-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 527
+    },
+    {
+      "route": "department-qc",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "院科病历质控与整改",
+      "routeId": "department-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 737
+    },
+    {
+      "route": "dermatology-care",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "皮肤护理与创面观察",
+      "routeId": "dermatology-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 475
+    },
+    {
+      "route": "dermatology-evidence",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "皮肤诊疗证据",
+      "routeId": "dermatology-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 497
+    },
+    {
+      "route": "dermatology-followup",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "生物制剂随访",
+      "routeId": "dermatology-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 451
+    },
+    {
+      "route": "dermatology-qc",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "dermatology-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 465
+    },
+    {
+      "route": "dermatology-record",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "皮肤科记录",
+      "routeId": "dermatology-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 459
+    },
+    {
+      "route": "data-center",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "数据总览",
+      "routeId": "data-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 744
+    },
+    {
+      "route": "data-quality",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "全院数据质量与问题工单",
+      "routeId": "data-quality",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1237
+    },
+    {
+      "route": "dental-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "口腔护理与术后观察",
+      "routeId": "dental-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 255
+    },
+    {
+      "route": "dental-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "口腔诊疗证据",
+      "routeId": "dental-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 262
+    },
+    {
+      "route": "dental-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "dental-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 183
+    },
+    {
+      "route": "dental-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "dental-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 226
+    },
+    {
+      "route": "dental-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "口腔记录",
+      "routeId": "dental-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 157
+    },
+    {
+      "route": "dental-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "口腔治疗记录",
+      "routeId": "dental-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 196
+    },
+    {
+      "route": "dental-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "口腔工作台",
+      "routeId": "dental-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 294
+    },
+    {
+      "route": "department-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "院科病历质控与整改",
+      "routeId": "department-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 504
+    },
+    {
+      "route": "dermatology-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "皮肤护理与创面观察",
+      "routeId": "dermatology-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 242
+    },
+    {
+      "route": "dermatology-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "皮肤诊疗证据",
+      "routeId": "dermatology-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 264
+    },
+    {
+      "route": "dermatology-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生物制剂随访",
+      "routeId": "dermatology-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 218
+    },
+    {
+      "route": "dermatology-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "dermatology-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 232
+    },
+    {
+      "route": "dermatology-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "皮肤科记录",
+      "routeId": "dermatology-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 226
+    }
+  ]
+}

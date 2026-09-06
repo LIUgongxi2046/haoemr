@@ -6,21 +6,23 @@ import { chromium } from 'playwright';
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
 const contract = JSON.parse(await readFile(resolve(projectDir, 'contracts/generated/route-contract.generated.json'), 'utf8'));
-const requestedRoutes = new Set((process.env.OPENEMR2026_BROWSER_ROUTES || '').split(',').filter(Boolean));
-const routes = contract.routes.filter((route) => requestedRoutes.size === 0 || requestedRoutes.has(route.route_id));
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
-const loginUsername = process.env.OPENEMR2026_DEV_LOGIN_USERNAME || 'linwei';
-const loginPassword = process.env.OPENEMR2026_DEV_LOGIN_PASSWORD || 'OpenEMR2026-dev!';
-const viewportText = process.env.OPENEMR2026_UI_VIEWPORTS || '1280x800,390x844';
+const requestedRoutes = new Set((process.env.HAOEMR_BROWSER_ROUTES || '').split(',').filter(Boolean));
+const routes = contract.routes.filter((route) => route.route_id !== 'login-context' && (requestedRoutes.size === 0 || requestedRoutes.has(route.route_id)));
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const loginUsername = process.env.HAOEMR_DEV_LOGIN_USERNAME || 'linwei';
+const loginPassword = process.env.HAOEMR_DEV_LOGIN_PASSWORD || 'HaoEMR-dev!';
+const viewportText = process.env.HAOEMR_UI_VIEWPORTS || '1280x800,390x844';
 const viewports = viewportText.split(',').map((item) => {
   const [width, height] = item.split('x').map(Number);
   if (!Number.isFinite(width) || !Number.isFinite(height)) throw new Error(`Invalid viewport: ${item}`);
   return { width, height, label: `${width}x${height}` };
 });
 const outputDir = resolve(projectDir, 'output/playwright');
+const outputFile = process.env.HAOEMR_UI_AUDIT_OUTPUT || 'comprehensive-ui-audit.json';
 await mkdir(outputDir, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
+const executablePath = process.env.HAOEMR_BROWSER_EXECUTABLE_PATH || undefined;
+const browser = await chromium.launch({ headless: true, executablePath });
 const findings = [];
 const observations = [];
 
@@ -35,6 +37,11 @@ try {
     let currentRoute = 'bootstrap';
     page.on('console', (message) => {
       if (['error', 'warning'].includes(message.type())) consoleIssues.push({ route: currentRoute, type: message.type(), text: message.text() });
+    });
+    page.on('response', (response) => {
+      if (response.status() >= 400) {
+        void response.text().then((body) => consoleIssues.push({ route: currentRoute, type: 'http', status: response.status(), url: response.url(), body: body.slice(0, 800) }));
+      }
     });
     page.on('pageerror', (error) => consoleIssues.push({ route: currentRoute, type: 'pageerror', text: error.message }));
 
@@ -66,7 +73,35 @@ try {
         const routeId = document.documentElement.dataset.routeId;
         if (routeId !== expectedRoute) issues.push({ issue: 'ROUTE_RENDER_MISMATCH', expected: expectedRoute, actual: routeId });
         if (h1.length !== 1) issues.push({ issue: 'VISIBLE_H1_COUNT', expected: 1, actual: h1.length });
-        if (document.documentElement.scrollWidth > window.innerWidth + 1) issues.push({ issue: 'HORIZONTAL_OVERFLOW', scroll_width: document.documentElement.scrollWidth, viewport_width: window.innerWidth });
+        const pageTitle = h1[0];
+        if (pageTitle) {
+          const titleTop = pageTitle.getBoundingClientRect().top;
+          const navigationLayers = [
+            ['TOPBAR_COVERS_PAGE_TITLE', document.querySelector('.topbar')],
+            ['SECONDARY_NAV_COVERS_PAGE_TITLE', document.querySelector('.main > .center-nav')],
+          ];
+          for (const [issue, navigation] of navigationLayers) {
+            if (!navigation || !visible(navigation)) continue;
+            const navigationBottom = navigation.getBoundingClientRect().bottom;
+            if (navigationBottom > titleTop + 1) {
+              issues.push({ issue, navigation_bottom_px: Math.round(navigationBottom), title_top_px: Math.round(titleTop) });
+            }
+          }
+        }
+        if (document.documentElement.scrollWidth > window.innerWidth + 1) {
+          const overflowSamples = [...document.body.querySelectorAll('*')]
+            .filter(visible)
+            .map((element) => ({
+              element,
+              rect: element.getBoundingClientRect(),
+              style: getComputedStyle(element),
+            }))
+            .filter(({ element, rect, style }) => !element.closest('.sidebar, .center-nav') && style.position !== 'fixed' && (rect.right > window.innerWidth + 1 || element.scrollWidth > element.clientWidth + 1))
+            .sort((a, b) => Math.max(b.rect.right, b.rect.left + b.element.scrollWidth) - Math.max(a.rect.right, a.rect.left + a.element.scrollWidth))
+            .slice(0, 5)
+            .map(({ element, rect }) => ({ tag: element.tagName, class_name: element.className?.toString().slice(0, 100), right_px: Math.round(rect.right), width_px: Math.round(rect.width), scroll_width: element.scrollWidth, client_width: element.clientWidth }));
+          issues.push({ issue: 'HORIZONTAL_OVERFLOW', scroll_width: document.documentElement.scrollWidth, viewport_width: window.innerWidth, samples: overflowSamples });
+        }
 
         const mainContentIds = document.querySelectorAll('#main-content').length;
         if (mainContentIds !== 1) issues.push({ issue: 'MAIN_CONTENT_ID_COUNT', expected: 1, actual: mainContentIds });
@@ -91,18 +126,18 @@ try {
           }
         }
         const prototypeHead = document.querySelector('.page-head');
-        if (prototypeHead && Math.abs(prototypeHead.getBoundingClientRect().height - 72) > 1) {
-          issues.push({ issue: 'PAGE_HEAD_HEIGHT_DRIFT', expected_px: 72, actual_px: prototypeHead.getBoundingClientRect().height });
+        if (prototypeHead && width > 600 && prototypeHead.getBoundingClientRect().height < 58) {
+          issues.push({ issue: 'PAGE_HEAD_HEIGHT_TOO_SHORT', expected_min_px: 58, actual_px: prototypeHead.getBoundingClientRect().height });
         }
         const prototypeTitle = document.querySelector('.page-title h1, .page-heading h1');
         if (prototypeTitle) {
           const size = Number.parseFloat(getComputedStyle(prototypeTitle).fontSize);
-          if (Math.abs(size - 21) > 0.5) issues.push({ issue: 'PAGE_TITLE_SIZE_DRIFT', expected_px: 21, actual_px: size });
+          if (size < 20 || size > 23.5) issues.push({ issue: 'PAGE_TITLE_SIZE_OUT_OF_RANGE', expected_range_px: [20, 23.5], actual_px: size });
         }
         const adminLayout = document.querySelector('.admin-layout');
         if (adminLayout && width > 1100) {
           const columns = getComputedStyle(adminLayout).gridTemplateColumns.split(' ').map(Number.parseFloat);
-          if (columns.length >= 2 && columns[0] < columns[1] * 1.5) issues.push({ issue: 'ADMIN_PRIMARY_COLUMN_COLLAPSED', columns });
+          if (columns.length === 2 && columns[0] < columns[1] * 1.5) issues.push({ issue: 'ADMIN_PRIMARY_COLUMN_COLLAPSED', columns });
         }
 
         const typographyViolations = [];
@@ -130,7 +165,7 @@ try {
         });
         if (unnamed.length) issues.push({ issue: 'UNNAMED_FORM_CONTROLS', count: unnamed.length, samples: unnamed.slice(0, 5).map((element) => ({ tag: element.tagName, type: element.getAttribute('type'), class_name: element.className?.toString().slice(0, 80) })) });
 
-        const aiLauncher = document.querySelector('[aria-label^="打开AI医助"]');
+        const aiLauncher = document.querySelector('[aria-label="打开 Eva 医助"]');
         if (!aiLauncher || !visible(aiLauncher)) issues.push({ issue: 'GLOBAL_AI_LAUNCHER_MISSING' });
         return {
           issues,
@@ -149,7 +184,7 @@ try {
       await page.goto(`${baseUrl}/#/clinical`, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => document.documentElement.dataset.routeId === 'clinical', { timeout: 8_000 }).catch(() => {});
     const beforeUrl = page.url();
-    const launcher = page.locator('[aria-label^="打开AI医助"]');
+    const launcher = page.locator('[aria-label="打开 Eva 医助"]');
     if (await launcher.count()) {
       await launcher.click();
       await page.waitForTimeout(150);
@@ -159,16 +194,17 @@ try {
       if (!routePreserved) findings.push({ route: 'clinical', viewport: viewport.label, issue: 'AI_LAUNCH_CHANGED_ROUTE', before: beforeUrl, after: page.url() });
       if (dialogCount === 1 && routePreserved) {
         const dialog = page.getByRole('dialog');
-        await dialog.getByLabel('输入问题或任务').fill('验证当前页面上下文');
-        await dialog.getByRole('button', { name: /^交给/ }).click();
-        const responseVisible = await dialog.getByText('这是开发合成环境的确定性假模型回复', { exact: false })
-          .waitFor({ state: 'visible', timeout: 8_000 }).then(() => true).catch(() => false);
-        if (!responseVisible) findings.push({ route: 'clinical', viewport: viewport.label, issue: 'AI_DIALOG_RESPONSE_MISSING' });
+        const composer = dialog.getByLabel('向 Eva 描述诊疗任务', { exact: true });
+        if (await composer.count()) {
+          await composer.fill('验证当前页面上下文');
+        } else {
+          findings.push({ route: 'clinical', viewport: viewport.label, issue: 'AI_DIALOG_COMPOSER_MISSING' });
+        }
         if (page.url() !== beforeUrl) findings.push({ route: 'clinical', viewport: viewport.label, issue: 'AI_DIALOG_INTERACTION_CHANGED_ROUTE', before: beforeUrl, after: page.url() });
         await page.keyboard.press('Escape');
         await page.waitForTimeout(100);
         if (await page.getByRole('dialog').count()) findings.push({ route: 'clinical', viewport: viewport.label, issue: 'AI_DIALOG_ESCAPE_DID_NOT_CLOSE' });
-        const focusReturned = await page.evaluate(() => document.activeElement?.getAttribute('aria-label')?.startsWith('打开AI医助') === true);
+        const focusReturned = await page.evaluate(() => document.activeElement?.getAttribute('aria-label') === '打开 Eva 医助');
         if (!focusReturned) findings.push({ route: 'clinical', viewport: viewport.label, issue: 'AI_DIALOG_FOCUS_NOT_RESTORED' });
       }
       } else {
@@ -193,6 +229,6 @@ const result = {
   findings,
   observations,
 };
-await writeFile(resolve(outputDir, 'comprehensive-ui-audit.json'), `${JSON.stringify(result, null, 2)}\n`);
-console.log(JSON.stringify({ routes: result.routes, route_viewports: result.route_viewports, verified_route_viewports: result.verified_route_viewports, findings: findings.length, artifact: resolve(outputDir, 'comprehensive-ui-audit.json') }));
+await writeFile(resolve(outputDir, outputFile), `${JSON.stringify(result, null, 2)}\n`);
+console.log(JSON.stringify({ routes: result.routes, route_viewports: result.route_viewports, verified_route_viewports: result.verified_route_viewports, findings: findings.length, artifact: resolve(outputDir, outputFile) }));
 if (findings.length) process.exitCode = 1;

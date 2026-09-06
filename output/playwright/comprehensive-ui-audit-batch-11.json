@@ -1,0 +1,324 @@
+{
+  "run_at": "2026-09-05T04:54:50.367Z",
+  "routes": 15,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 30,
+  "verified_route_viewports": 28,
+  "findings": [
+    {
+      "route": "patient-timeline",
+      "viewport": "1280x800",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "1280x800",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 400,
+      "url": "http://127.0.0.1:4177/api/v1/patients/018f0000-0000-7000-8000-000000000001/timeline?types=ENCOUNTER%2CDOCUMENT%2CDIAGNOSIS%2CORDER%2CRESULT%2CTASK%2CDEVICE&limit=50",
+      "body": "{\"error\":{\"violations\":[],\"category\":\"VALIDATION\",\"message\":\"Timeline resource type filter is not valid\",\"code\":\"PATIENT_TIMELINE_REQUEST_INVALID\",\"trace_id\":\"dfc1a316-a61e-4b22-934b-83914508591e\",\"retryable\":false}}"
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 400,
+      "url": "http://127.0.0.1:4177/api/v1/patients/018f0000-0000-7000-8000-000000000001/timeline?types=ENCOUNTER%2CDOCUMENT%2CDIAGNOSIS%2CORDER%2CRESULT%2CTASK%2CDEVICE&limit=50",
+      "body": "{\"error\":{\"violations\":[],\"category\":\"VALIDATION\",\"message\":\"Timeline resource type filter is not valid\",\"code\":\"PATIENT_TIMELINE_REQUEST_INVALID\",\"trace_id\":\"ff6f182e-1c43-41a2-a507-f81526633f30\",\"retryable\":false}}"
+    }
+  ],
+  "observations": [
+    {
+      "route": "patient-registry",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "患者主索引与身份核验",
+      "routeId": "patient-registry",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 586
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "授权患者纵向时间线",
+      "routeId": "patient-timeline",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 569
+    },
+    {
+      "route": "pediatrics-care",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "生长发育记录",
+      "routeId": "pediatrics-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 417
+    },
+    {
+      "route": "pediatrics-evidence",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "儿科诊疗证据",
+      "routeId": "pediatrics-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 497
+    },
+    {
+      "route": "pediatrics-followup",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "pediatrics-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 416
+    },
+    {
+      "route": "pediatrics-qc",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "pediatrics-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 459
+    },
+    {
+      "route": "pediatrics-record",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "儿科记录",
+      "routeId": "pediatrics-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 447
+    },
+    {
+      "route": "pediatrics-treatment",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "儿科治疗执行",
+      "routeId": "pediatrics-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 505
+    },
+    {
+      "route": "pediatrics-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "儿科工作台",
+      "routeId": "pediatrics-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 557
+    },
+    {
+      "route": "quality-center",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医疗质量中心",
+      "routeId": "quality-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 935
+    },
+    {
+      "route": "quality-rating",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医疗质量与电子病历评级看板",
+      "routeId": "quality-rating",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 713
+    },
+    {
+      "route": "record",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "全院病历中心",
+      "routeId": "record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1987
+    },
+    {
+      "route": "record-diff",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "病历版本差异",
+      "routeId": "record-diff",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 404
+    },
+    {
+      "route": "record-editor",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "病历 · 专注编辑",
+      "routeId": "record-editor",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 847
+    },
+    {
+      "route": "record-qc",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "病历质控与审签中心",
+      "routeId": "record-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 706
+    },
+    {
+      "route": "patient-registry",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "患者主索引与身份核验",
+      "routeId": "patient-registry",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 353
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "授权患者纵向时间线",
+      "routeId": "patient-timeline",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 336
+    },
+    {
+      "route": "pediatrics-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生长发育记录",
+      "routeId": "pediatrics-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 184
+    },
+    {
+      "route": "pediatrics-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "儿科诊疗证据",
+      "routeId": "pediatrics-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 264
+    },
+    {
+      "route": "pediatrics-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "pediatrics-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 183
+    },
+    {
+      "route": "pediatrics-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "pediatrics-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 226
+    },
+    {
+      "route": "pediatrics-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "儿科记录",
+      "routeId": "pediatrics-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 214
+    },
+    {
+      "route": "pediatrics-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "儿科治疗执行",
+      "routeId": "pediatrics-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 272
+    },
+    {
+      "route": "pediatrics-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "儿科工作台",
+      "routeId": "pediatrics-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 324
+    },
+    {
+      "route": "quality-center",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医疗质量中心",
+      "routeId": "quality-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 702
+    },
+    {
+      "route": "quality-rating",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医疗质量与电子病历评级看板",
+      "routeId": "quality-rating",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 480
+    },
+    {
+      "route": "record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "全院病历中心",
+      "routeId": "record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1754
+    },
+    {
+      "route": "record-diff",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病历版本差异",
+      "routeId": "record-diff",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 171
+    },
+    {
+      "route": "record-editor",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病历 · 专注编辑",
+      "routeId": "record-editor",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 614
+    },
+    {
+      "route": "record-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病历质控与审签中心",
+      "routeId": "record-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 473
+    }
+  ]
+}

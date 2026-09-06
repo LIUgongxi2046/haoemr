@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import type { ResearchDatasetRequestWire } from '../../generated/contracts';
 import {
   approveResearchDatasetRequest,
   createResearchDatasetRequest,
   destroyResearchDatasetRequest,
+  downloadResearchDatasetExport,
   exportResearchDatasetRequest,
   issueDataLease,
+  listResearchCohorts,
+  listResearchCohortSnapshots,
   listResearchDatasetRequests,
 } from '../../api/data';
 import AdminActionDialog from '../components/AdminActionDialog.vue';
@@ -31,8 +34,19 @@ const requestsQuery = useQuery({
   enabled: () => Boolean(leaseQuery.data.value),
   retry: false,
 });
-const issue = computed(() => (leaseQuery.error.value ?? requestsQuery.error.value)
-  ? toClinicalIssue(leaseQuery.error.value ?? requestsQuery.error.value) : null);
+const cohortsQuery = useQuery({
+  queryKey: ['data', 'research-dataset', 'cohorts'],
+  queryFn: () => listResearchCohorts(leaseQuery.data.value!, 'ACTIVE'),
+  enabled: () => Boolean(leaseQuery.data.value), retry: false,
+});
+const selectedCohortId = ref('');
+const snapshotsQuery = useQuery({
+  queryKey: ['data', 'research-dataset', 'snapshots', selectedCohortId],
+  queryFn: () => listResearchCohortSnapshots(leaseQuery.data.value!, selectedCohortId.value),
+  enabled: () => Boolean(leaseQuery.data.value && selectedCohortId.value), retry: false,
+});
+const issue = computed(() => (leaseQuery.error.value ?? requestsQuery.error.value ?? cohortsQuery.error.value ?? snapshotsQuery.error.value)
+  ? toClinicalIssue(leaseQuery.error.value ?? requestsQuery.error.value ?? cohortsQuery.error.value ?? snapshotsQuery.error.value) : null);
 const showHistory = ref(false);
 const allRequests = computed(() => requestsQuery.data.value ?? []);
 const requests = computed(() => allRequests.value.filter((request) => showHistory.value
@@ -40,7 +54,10 @@ const requests = computed(() => allRequests.value.filter((request) => showHistor
 const requestedCount = computed(() => requests.value.filter((request) => request.status === 'REQUESTED').length);
 const exportedCount = computed(() => requests.value.filter((request) => request.status === 'EXPORTED').length);
 
-const form = reactive({ purpose: '', scopeDescription: '' });
+const form = reactive({ purpose: '', scopeDescription: '', snapshotId: '' });
+const cohorts = computed(() => cohortsQuery.data.value ?? []);
+const eligibleSnapshots = computed(() => (snapshotsQuery.data.value ?? [])
+  .filter((snapshot) => snapshot.member_snapshot_materialized));
 const busy = ref('');
 const notice = ref('');
 const createOpen = ref(false);
@@ -59,16 +76,22 @@ async function reload() {
   await requestsQuery.refetch();
 }
 
+watch(selectedCohortId, async (cohortId) => {
+  form.snapshotId = '';
+  if (cohortId) await snapshotsQuery.refetch();
+});
+
 async function createRequest() {
   const lease = leaseQuery.data.value;
-  if (!lease || busy.value || !form.purpose.trim() || !form.scopeDescription.trim()) return;
+  if (!lease || busy.value || !form.purpose.trim() || !form.scopeDescription.trim() || !form.snapshotId) return;
   busy.value = 'create'; notice.value = '';
   try {
     await createResearchDatasetRequest(lease, {
       purpose: form.purpose.trim(),
       scope_description: form.scopeDescription.trim(),
+      research_cohort_snapshot_id: form.snapshotId,
     });
-    form.purpose = ''; form.scopeDescription = '';
+    form.purpose = ''; form.scopeDescription = ''; form.snapshotId = '';
     notice.value = '研究数据集请求已创建，进入待审批队列。';
     createOpen.value = false;
     await requestsQuery.refetch();
@@ -119,6 +142,20 @@ async function destroy(request: ResearchDatasetRequestWire) {
   } finally { busy.value = ''; }
 }
 
+async function downloadExport(request: ResearchDatasetRequestWire) {
+  const lease = leaseQuery.data.value;
+  if (!lease || busy.value || request.status !== 'EXPORTED') return;
+  busy.value = request.request_id; notice.value = '';
+  try {
+    const file = await downloadResearchDatasetExport(lease, request.request_id);
+    const url = URL.createObjectURL(file.blob);
+    const anchor = document.createElement('a'); anchor.href = url; anchor.download = file.filename; anchor.click();
+    URL.revokeObjectURL(url);
+    notice.value = `已下载受控去标识数据集：${file.filename}。`;
+  } catch (error) { const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`; }
+  finally { busy.value = ''; }
+}
+
 function requestApprove(request: ResearchDatasetRequestWire) { selectedRequest.value = request; approveOpen.value = true; }
 function requestExport(request: ResearchDatasetRequestWire) {
   selectedRequest.value = request;
@@ -162,17 +199,19 @@ async function destroySelected() { if (selectedRequest.value) await destroy(sele
           <div v-if="requests.length === 0" class="admin-empty" role="status">暂无研究数据集请求，可在右侧创建。</div>
           <div v-else class="admin-table-wrap">
             <table class="admin-table">
-              <thead><tr><th>目的</th><th>范围描述</th><th>状态</th><th>水印</th><th>更新时间</th><th>操作</th></tr></thead>
+              <thead><tr><th>目的</th><th>范围描述</th><th>成员快照</th><th>状态</th><th>水印</th><th>更新时间</th><th>操作</th></tr></thead>
               <tbody>
                 <tr v-for="request in requests" :key="request.request_id">
                   <td><strong>{{ request.purpose }}</strong><small>…{{ request.request_id.slice(-8) }} · v{{ request.row_version }}</small></td>
                   <td>{{ request.scope_description }}</td>
+                  <td><code v-if="request.research_cohort_snapshot_id">…{{ request.research_cohort_snapshot_id.slice(-8) }}</code><small v-else>旧请求未绑定</small></td>
                   <td><span class="admin-status" :class="request.status.toLowerCase()">{{ statusLabels[request.status] }}</span></td>
                   <td><code v-if="request.export_watermark">{{ request.export_watermark }}</code><small v-else>—</small></td>
                   <td>{{ formatDate(request.exported_at ?? request.approved_at) }}</td>
                   <td class="admin-actions">
                     <button class="task-action" :disabled="request.status !== 'REQUESTED' || Boolean(busy)" @click="requestApprove(request)">{{ busy === request.request_id && request.status === 'REQUESTED' ? '处理中…' : '批准' }}</button>
                     <button class="task-action" :disabled="request.status !== 'APPROVED' || Boolean(busy)" @click="requestExport(request)">导出</button>
+                    <button class="task-action" :disabled="request.status !== 'EXPORTED' || Boolean(busy)" @click="downloadExport(request)">下载 CSV</button>
                     <button class="task-action" :disabled="request.status !== 'EXPORTED' || Boolean(busy)" @click="requestDestroy(request)">销毁</button>
                   </td>
                 </tr>
@@ -182,9 +221,9 @@ async function destroySelected() { if (selectedRequest.value) await destroy(sele
       </section>
     </template>
 
-    <AdminActionDialog v-model:open="createOpen" title="新建科研数据申请" description="申请将绑定研究目的、字段范围和审批证据；创建后进入 REQUESTED 状态，不会自动导出任何患者级数据。" :busy="busy === 'create'">
-      <form class="admin-form" @submit.prevent="createRequest"><label><span>研究目的</span><input v-model="form.purpose" maxlength="256" required placeholder="例：糖尿病并发症风险建模" /></label><label><span>范围描述</span><textarea v-model="form.scopeDescription" required placeholder="例：2024–2026 年确诊 2 型糖尿病的去标识化就诊与检验记录" /></label></form>
-      <template #footer="{ close }"><button class="button secondary" :disabled="busy === 'create'" @click="close">取消</button><button class="button primary" :disabled="busy === 'create'" @click="createRequest">{{ busy === 'create' ? '正在创建…' : '创建请求' }}</button></template>
+    <AdminActionDialog v-model:open="createOpen" title="新建科研数据申请" description="申请必须绑定已物化的队列成员快照；创建后进入 REQUESTED 状态，不会自动导出任何患者级数据。" :busy="busy === 'create'">
+      <form class="admin-form" @submit.prevent="createRequest"><label><span>研究目的</span><input v-model="form.purpose" maxlength="256" required placeholder="例：糖尿病并发症风险建模" /></label><label><span>范围描述</span><textarea v-model="form.scopeDescription" required placeholder="例：2024–2026 年确诊 2 型糖尿病的去标识化就诊与检验记录" /></label><label><span>研究队列</span><select v-model="selectedCohortId"><option value="">请选择活动队列</option><option v-for="cohort in cohorts" :key="cohort.research_cohort_id" :value="cohort.research_cohort_id">{{ cohort.cohort_code }} · {{ cohort.cohort_name }}</option></select></label><label><span>成员快照</span><select v-model="form.snapshotId" :disabled="!selectedCohortId"><option value="">{{ selectedCohortId ? '请选择已物化的成员快照' : '请先选择队列' }}</option><option v-for="snapshot in eligibleSnapshots" :key="snapshot.research_cohort_snapshot_id" :value="snapshot.research_cohort_snapshot_id">{{ new Date(snapshot.computed_at).toLocaleString('zh-CN') }} · {{ snapshot.member_count }} 人</option></select><small v-if="selectedCohortId && !eligibleSnapshots.length">暂无可用成员快照，请先在队列构建器执行“全库重算”。</small></label></form>
+      <template #footer="{ close }"><button class="button secondary" :disabled="busy === 'create'" @click="close">取消</button><button class="button primary" :disabled="busy === 'create' || !form.snapshotId" @click="createRequest">{{ busy === 'create' ? '正在创建…' : '创建请求' }}</button></template>
     </AdminActionDialog>
     <AdminActionDialog v-model:open="exportOpen" :title="`受控导出 · ${selectedRequest?.purpose ?? ''}`" description="水印会随数据集落盘，用于泄露追踪；导出后状态进入 EXPORTED，并启动到期销毁计时。" :busy="Boolean(busy)">
       <form class="admin-form" @submit.prevent="exportSelected"><label><span>导出水印</span><input v-model="exportWatermark" required maxlength="256" /></label><div class="notice hard"><div class="notice-title">仅允许院内科研安全区</div>默认禁止外带；自由文本和原始影像需要额外审查。</div></form>

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-pg_bin="${OPENEMR2026_PG_BIN:-/usr/local/opt/postgresql@18/bin}"
-pg_socket="${OPENEMR2026_PG_SOCKET:-/private/tmp}"
-pg_port="${OPENEMR2026_PG_PORT:-55432}"
-source_database="${OPENEMR2026_PG_DATABASE:-openemr2026_dev}"
-restore_database="openemr2026_restore_verify"
-backup_file="/private/tmp/openemr2026-restore-verify.dump"
+pg_bin="${HAOEMR_PG_BIN:-/usr/local/opt/postgresql@18/bin}"
+pg_socket="${HAOEMR_PG_SOCKET:-/private/tmp}"
+pg_port="${HAOEMR_PG_PORT:-55432}"
+source_database="${HAOEMR_PG_DATABASE:-haoemr_dev}"
+restore_database="haoemr_restore_verify"
+backup_file="/private/tmp/haoemr-restore-verify.dump"
 
 cleanup() {
   "$pg_bin/dropdb" -h "$pg_socket" -p "$pg_port" --if-exists "$restore_database" >/dev/null 2>&1 || true

@@ -1,0 +1,111 @@
+{
+  "run_at": "2026-09-05T17:49:25.835Z",
+  "routes": 5,
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 960,
+      "label": "1440x960"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 10,
+  "verified_route_viewports": 10,
+  "findings": [],
+  "observations": [
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "主动提醒详情",
+      "routeId": "ai-reminder-detail",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1303
+    },
+    {
+      "route": "data-center",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "数据总览",
+      "routeId": "data-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 976
+    },
+    {
+      "route": "integration",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "外部系统集成与互操作中心",
+      "routeId": "integration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 379
+    },
+    {
+      "route": "migration",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "历史数据迁移与上线切换",
+      "routeId": "migration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2354
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "授权患者纵向时间线",
+      "routeId": "patient-timeline",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 8055
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "主动提醒详情",
+      "routeId": "ai-reminder-detail",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1071
+    },
+    {
+      "route": "data-center",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "数据总览",
+      "routeId": "data-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 744
+    },
+    {
+      "route": "integration",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "外部系统集成与互操作中心",
+      "routeId": "integration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2172
+    },
+    {
+      "route": "migration",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "历史数据迁移与上线切换",
+      "routeId": "migration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2122
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "授权患者纵向时间线",
+      "routeId": "patient-timeline",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 7823
+    }
+  ]
+}

@@ -3,7 +3,7 @@ plugins {
     id("org.springframework.boot") version "4.1.0"
 }
 
-group = "org.openemr2026"
+group = "org.haoemr"
 version = "0.1.0-SNAPSHOT"
 
 java {

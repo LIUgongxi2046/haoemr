@@ -37,6 +37,9 @@ import {
   pharmacyDispensingWireSchema,
   priceCatalogVersionRequestWireSchema,
   priceCatalogVersionWireSchema,
+  encounterSettlementWireSchema,
+  settlementReceiptCreateRequestWireSchema,
+  settlementReceiptWireSchema,
   shiftHandoverCompleteRequestWireSchema,
   shiftHandoverCreateRequestWireSchema,
   shiftHandoverPatientCreateRequestWireSchema,
@@ -44,6 +47,7 @@ import {
   shiftHandoverVoidRequestWireSchema,
   shiftHandoverWireSchema,
   surgicalProcedureScheduleRequestWireSchema,
+  surgicalTimeOutVerificationRequestWireSchema,
   surgicalProcedureTransitionRequestWireSchema,
   surgicalProcedureWireSchema,
   vitalSignRecordRequestWireSchema,
@@ -59,6 +63,8 @@ import {
   type NursingDischargeClosureWire,
   type PharmacyDispensingWire,
   type PriceCatalogVersionWire,
+  type EncounterSettlementWire,
+  type SettlementReceiptWire,
   type ShiftHandoverPatientWire,
   type ShiftHandoverWire,
   type SurgicalProcedureWire,
@@ -191,6 +197,21 @@ export async function createPriceCatalogVersion(
       organization_id: clinicalContext.organizationId, facility_id: clinicalContext.facilityId, ...input,
     })),
   }));
+}
+
+export async function getEncounterSettlement(lease: ContextLeaseWire): Promise<EncounterSettlementWire> {
+  return encounterSettlementWireSchema.parse(await request(
+    `/settlements?encounter_id=${encodeURIComponent(clinicalContext.encounterId)}`,
+    { headers: scopedHeaders(lease) },
+  ));
+}
+
+export async function recordSettlementReceipt(
+  lease: ContextLeaseWire,
+  input: Omit<import('../generated/contracts').SettlementReceiptCreateRequestWire, 'organization_id' | 'facility_id' | 'patient_id' | 'encounter_id'>,
+): Promise<SettlementReceiptWire> {
+  return settlementReceiptWireSchema.parse(await request('/settlements/receipts',
+    json('POST', lease, settlementReceiptCreateRequestWireSchema.parse({ ...scoped(), ...input }))));
 }
 
 // ── 检验工作台（标本闭环） ───────────────────────────────────
@@ -389,6 +410,19 @@ export async function transitionSurgicalProcedure(
   return surgicalProcedureWireSchema.parse(await request(
     `/surgical-procedures/${procedure.surgical_procedure_id}/transitions`,
     json('POST', lease, surgicalProcedureTransitionRequestWireSchema.parse({ ...scoped(), expected_row_version: procedure.row_version, transition })),
+  ));
+}
+
+export async function verifySurgicalProcedureTimeOut(
+  lease: ContextLeaseWire,
+  procedure: SurgicalProcedureWire,
+  verificationNote: string,
+): Promise<SurgicalProcedureWire> {
+  return surgicalProcedureWireSchema.parse(await request(
+    `/surgical-procedures/${procedure.surgical_procedure_id}/time-out-verifications`,
+    json('POST', lease, surgicalTimeOutVerificationRequestWireSchema.parse({
+      ...scoped(), expected_procedure_row_version: procedure.row_version, verification_note: verificationNote,
+    })),
   ));
 }
 

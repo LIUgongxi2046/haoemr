@@ -2,6 +2,7 @@
 import { computed, onMounted, reactive, ref } from 'vue';
 import {
   approvePathwayKnowledge,
+  createPathwayKnowledge,
   createPathwayKnowledgeVersion,
   issuePathwayKnowledgeLease,
   listPathwayKnowledge,
@@ -19,9 +20,10 @@ const search = ref('');
 const pathways = ref<PathwayKnowledgeWire[]>([]);
 const versions = ref<PathwayKnowledgeVersionWire[]>([]);
 const selectedId = ref<string | null>(null);
-const showCreate = ref(false);
-const rightTab = ref<'outline' | 'backlinks'>('outline');
+const showCreateVersion = ref(false);
+const showCreatePath = ref(false);
 const versionForm = reactive({ stage_name: '第1天', task_content: '' });
+const pathwayForm = reactive({ pathway_code: '', display_name: '', specialty_code: '', diagnosis_code: '', inclusion_criteria: '', exclusion_criteria: '', avg_los_days: 7 });
 
 const selected = computed(() => pathways.value.find((p) => p.pathway_knowledge_id === selectedId.value) ?? null);
 const activeVersion = computed(() => versions.value.find((v) => v.status === 'ACTIVE')
@@ -31,19 +33,6 @@ const activeVersion = computed(() => versions.value.find((v) => v.status === 'AC
   ?? null);
 
 const outline = computed(() => activeVersion.value?.stages?.map((s, i) => ({ id: `stage-${i}`, name: s.stage_name })) ?? []);
-const backlinks = computed(() => {
-  const links = new Set<string>();
-  if (selected.value) {
-    links.add(`诊断 ${selected.value.diagnosis_code}`);
-    links.add(`专科 ${selected.value.specialty_code}`);
-  }
-  for (const s of activeVersion.value?.stages ?? []) {
-    for (const t of s.tasks ?? []) {
-      if (t.code_ref) links.add(`检查 ${t.code_ref}`);
-    }
-  }
-  return [...links];
-});
 
 async function ensureLease(): Promise<ContextLeaseWire> {
   if (!lease.value) lease.value = await issuePathwayKnowledgeLease();
@@ -51,11 +40,13 @@ async function ensureLease(): Promise<ContextLeaseWire> {
 }
 
 async function refresh() {
-  const l = await ensureLease();
-  pathways.value = await listPathwayKnowledge(l);
-  if (!selectedId.value && pathways.value.length) {
-    await selectPath(pathways.value[0].pathway_knowledge_id);
-  }
+  await run(async () => {
+    const l = await ensureLease();
+    pathways.value = await listPathwayKnowledge(l);
+    if (!selectedId.value && pathways.value.length) {
+      await selectPath(pathways.value[0].pathway_knowledge_id);
+    }
+  });
 }
 
 async function selectPath(id: string) {
@@ -87,8 +78,26 @@ async function doCreateVersion() {
   if (created) {
     notice.value = `版本 v${created.version_no} 已创建（草稿）`;
     versionForm.task_content = '';
-    showCreate.value = false;
+    showCreateVersion.value = false;
     await selectPath(selectedId.value);
+  }
+}
+
+async function doCreatePathway() {
+  const l = await ensureLease();
+  const created = await run(() => createPathwayKnowledge(l, {
+    pathway_code: pathwayForm.pathway_code.trim(), display_name: pathwayForm.display_name.trim(),
+    specialty_code: pathwayForm.specialty_code.trim(), diagnosis_code: pathwayForm.diagnosis_code.trim(),
+    inclusion_criteria: pathwayForm.inclusion_criteria.trim() || null,
+    exclusion_criteria: pathwayForm.exclusion_criteria.trim() || null,
+    avg_los_days: Number.isInteger(pathwayForm.avg_los_days) ? pathwayForm.avg_los_days : null,
+  }));
+  if (created) {
+    notice.value = `路径“${created.display_name}”已创建，请新增版本后提交独立审核。`;
+    Object.assign(pathwayForm, { pathway_code: '', display_name: '', specialty_code: '', diagnosis_code: '', inclusion_criteria: '', exclusion_criteria: '', avg_los_days: 7 });
+    showCreatePath.value = false;
+    await refresh();
+    await selectPath(created.pathway_knowledge_id);
   }
 }
 
@@ -119,7 +128,7 @@ onMounted(() => { void refresh(); });
       <aside class="ob-pane ob-left">
         <div class="ob-pane-head">
           <span class="ob-pane-title">路径库</span>
-          <button class="ob-btn" title="新建路径" @click="notice='新建路径入口在右上角'">＋</button>
+          <button class="ob-btn" title="新建路径" @click="showCreatePath = !showCreatePath">＋</button>
         </div>
         <input v-model="search" class="ob-search" placeholder="搜索路径…" />
         <div class="ob-tree">
@@ -138,13 +147,25 @@ onMounted(() => { void refresh(); });
       </aside>
 
       <!-- 中栏：Markdown 编辑器/查看 -->
-      <main class="ob-pane ob-mid">
+      <section class="ob-pane ob-mid">
         <div class="ob-tabbar">
-          <span class="ob-tab active">{{ selected?.display_name ?? '未选择路径' }}</span>
-          <button class="ob-btn" @click="showCreate = !showCreate">{{ showCreate ? '收起' : '＋ 新建版本' }}</button>
+          <h1 class="ob-tab active">{{ selected?.display_name ?? '知识中心' }}</h1>
+          <button class="ob-btn" @click="showCreateVersion = !showCreateVersion">{{ showCreateVersion ? '收起' : '＋ 新建版本' }}</button>
         </div>
 
-        <div v-if="showCreate" class="ob-create">
+        <form v-if="showCreatePath" class="ob-pathway-create" @submit.prevent="doCreatePathway">
+          <strong>新建临床路径知识</strong>
+          <label>路径编码<input v-model="pathwayForm.pathway_code" required maxlength="128" placeholder="例：E2E-NEPHROPATHY" /></label>
+          <label>路径名称<input v-model="pathwayForm.display_name" required maxlength="256" placeholder="例：肾病综合征住院路径" /></label>
+          <label>专科编码<input v-model="pathwayForm.specialty_code" required maxlength="128" placeholder="例：NEPHROLOGY" /></label>
+          <label>诊断编码<input v-model="pathwayForm.diagnosis_code" required maxlength="128" placeholder="例：N04" /></label>
+          <label>纳入标准<textarea v-model="pathwayForm.inclusion_criteria" rows="2" /></label>
+          <label>排除标准<textarea v-model="pathwayForm.exclusion_criteria" rows="2" /></label>
+          <label>平均住院日<input v-model.number="pathwayForm.avg_los_days" type="number" min="1" max="365" /></label>
+          <div><button type="button" class="btn" @click="showCreatePath = false">取消</button><button class="btn primary" :disabled="busy">创建路径知识</button></div>
+        </form>
+
+        <div v-if="showCreateVersion" class="ob-create">
           <input v-model="versionForm.stage_name" placeholder="阶段名" />
           <input v-model="versionForm.task_content" placeholder="任务内容" />
           <button class="btn primary" :disabled="busy" @click="doCreateVersion">创建</button>
@@ -195,27 +216,18 @@ onMounted(() => { void refresh(); });
           </template>
           <div v-else class="ob-empty">该路径暂无版本内容</div>
         </article>
-        <div v-else class="ob-empty ob-empty-big">从左侧选择一条临床路径查看其知识内容</div>
-      </main>
-
-      <!-- 右栏：大纲/反链 -->
-      <aside class="ob-pane ob-right">
-        <div class="ob-pane-head">
-          <button class="ob-tab" :class="{ active: rightTab === 'outline' }" @click="rightTab = 'outline'">大纲</button>
-          <button class="ob-tab" :class="{ active: rightTab === 'backlinks' }" @click="rightTab = 'backlinks'">反链</button>
+        <div v-else class="ob-empty ob-empty-big">
+          {{ pathways.length ? '从左侧选择一条临床路径查看其知识内容' : '当前知识库为空，请检查数据库导入或运行环境配置' }}
         </div>
+      </section>
 
-        <div v-if="rightTab === 'outline'">
+      <!-- 路径大纲与版本操作 -->
+      <aside class="ob-pane ob-right">
+        <div class="ob-pane-head"><span class="ob-pane-title">大纲</span></div>
+        <div>
           <button v-for="o in outline" :key="o.id" class="ob-outline-item" @click="scrollToStage(o.id)">{{ o.name }}</button>
           <div v-if="!outline.length" class="ob-empty">无大纲</div>
         </div>
-
-        <div v-else>
-          <div class="ob-backlink-head">引用本路径</div>
-          <button v-for="b in backlinks" :key="b" class="ob-backlink" @click="notice = `跳转 ${b}`">{{ b }}</button>
-          <div v-if="!backlinks.length" class="ob-empty">无引用</div>
-        </div>
-
         <div class="ob-actions">
           <div class="ob-backlink-head">版本 · {{ versions.length }}</div>
           <div v-for="(v, i) in versions" :key="v.pathway_version_id" class="ob-tl" :class="{ old: i > 0 }">v{{ v.version_no }} · {{ statusBadge(v.status) }}</div>
@@ -256,6 +268,10 @@ onMounted(() => { void refresh(); });
 .ob-tab.active { background: #eff6ff; color: #2563eb; font-weight: 600; }
 .ob-create { display: flex; gap: 8px; padding: 10px 0; }
 .ob-create input { flex: 1; min-width: 0; padding: 7px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px; }
+.ob-pathway-create { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 10px 0; padding: 12px; border: 1px solid #bfdbfe; border-radius: 8px; background: #f8fbff; }
+.ob-pathway-create strong, .ob-pathway-create label:nth-child(5), .ob-pathway-create label:nth-child(6), .ob-pathway-create label:nth-child(7), .ob-pathway-create > div { grid-column: 1 / -1; }
+.ob-pathway-create label { display: grid; gap: 4px; font-size: 12px; color: #475569; }
+.ob-pathway-create input, .ob-pathway-create textarea { box-sizing: border-box; width: 100%; padding: 7px 10px; border: 1px solid #cbd7e5; border-radius: 6px; font: inherit; }
 .ob-doc { padding: 6px 0 20px; }
 .ob-frontmatter { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #475569; margin-bottom: 16px; white-space: pre-wrap; font-family: inherit; }
 .ob-h2 { font-size: 17px; margin: 18px 0 8px; padding-bottom: 4px; border-bottom: 1px solid #f1f5f9; }
@@ -279,4 +295,5 @@ onMounted(() => { void refresh(); });
 .btn.primary { background: #2563eb; color: #fff; border-color: #2563eb; }
 .btn.danger { background: #fee2e2; color: #dc2626; border-color: #fecaca; }
 .notice-banner { margin: 12px; padding: 10px 14px; border-radius: 8px; background: #eff6ff; color: #2563eb; }
+@media (max-width: 600px) { .ob-workspace { height: auto; flex-direction: column; } .ob-left, .ob-right { width: auto; max-height: 180px; border: 1px solid #e2e8f0; border-radius: 10px; } .ob-mid { min-width: 0; padding: 0; } .ob-pathway-create { grid-template-columns: minmax(0, 1fr); } .ob-pathway-create strong, .ob-pathway-create label:nth-child(5), .ob-pathway-create label:nth-child(6), .ob-pathway-create label:nth-child(7), .ob-pathway-create > div { grid-column: auto; } }
 </style>

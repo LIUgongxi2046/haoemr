@@ -1,0 +1,30 @@
+{
+  "run_at": "2026-09-05T13:23:08.074Z",
+  "checks": [
+    {
+      "name": "budget-editor-rejects-an-unregistered-medical-agent-code",
+      "status": "PASS",
+      "detail": "页面提交未登记医助额度被服务端拒绝；没有生成自由额度配置"
+    },
+    {
+      "name": "active-agent-budget-can-be-versioned-and-restored-through-the-page",
+      "status": "PASS",
+      "detail": "有效医助额度完成页面变更并恢复原值；服务端版本递增至 5"
+    }
+  ],
+  "findings": [],
+  "evidence": {
+    "unregistered_error": "AGENT_RUN_BUDGET_REQUEST_INVALID",
+    "versioned_budget": {
+      "code": "BUDGET_ENCOUNTER_SUMMARIZER",
+      "original": {
+        "name": "就诊摘要医助单次处理上限",
+        "tokens": "16000",
+        "duration": "90"
+      },
+      "restored_row_version": 5
+    }
+  },
+  "passed": 2,
+  "failed": 0
+}

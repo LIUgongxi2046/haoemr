@@ -60,7 +60,7 @@ function stateLabel(state: string) {
 <template>
   <section data-page-root class="content admin-content vue-native-page ai-evidence-capture">
     <div class="page-heading admin-heading">
-      <div><p class="eyebrow">AI 中心 / 运行证据</p><h1>医助运行证据采集</h1><p>从真实医助任务、模型请求、工具调用和防篡改审计链持续采集运行证据；不生成前端模拟记录。</p></div>
+      <div><p class="eyebrow">AI中心 / 运行证据</p><h1>医助运行证据采集</h1><p>从真实医助任务、模型请求、工具调用和防篡改审计链持续采集运行证据；不生成前端模拟记录。</p></div>
       <button class="button secondary" type="button" @click="runsQuery.refetch(); auditQuery.refetch()">刷新证据</button>
     </div>
 
@@ -113,5 +113,5 @@ function stateLabel(state: string) {
 </template>
 
 <style scoped>
-.ai-evidence-grid{grid-template-columns:minmax(0,2fr) minmax(260px,.8fr)}.ai-audit-panel{min-width:0}.ai-audit-list{display:grid;gap:8px;max-height:620px;overflow:auto}.ai-audit-list article{display:grid;gap:3px;padding:9px;border:1px solid #dce5ec;border-radius:8px;min-width:0}.ai-audit-list b,.ai-audit-list span,.ai-audit-list small{overflow-wrap:anywhere}.ai-audit-list b{font-size:11px}.ai-audit-list span,.ai-audit-list small{color:#607489;font-size:9px}.ai-evidence-modal{position:fixed;z-index:1200;inset:0;display:grid;place-items:center;padding:24px;background:rgb(16 30 45 / 45%)}.ai-evidence-modal>.admin-panel{width:min(900px,100%);max-height:calc(100vh - 48px);overflow:auto}.admin-table td small{display:block;margin-top:3px;color:#68798b;overflow-wrap:anywhere}@media(max-width:980px){.ai-evidence-grid{grid-template-columns:1fr}}@media(max-width:640px){.ai-evidence-modal{padding:10px}.page-heading{align-items:flex-start;flex-direction:column}}
+.ai-evidence-grid{grid-template-columns:minmax(0,2fr) minmax(260px,.8fr)}.ai-audit-panel{min-width:0}.ai-audit-list{display:grid;gap:8px;max-height:620px;padding:14px 16px;overflow:auto}.ai-audit-list article{display:grid;gap:3px;padding:9px;border:1px solid #dce5ec;border-radius:8px;min-width:0}.ai-audit-list b,.ai-audit-list span,.ai-audit-list small{overflow-wrap:anywhere}.ai-audit-list b{font-size:11px}.ai-audit-list span,.ai-audit-list small{color:#607489;font-size:9px}.ai-evidence-modal{position:fixed;z-index:1200;inset:0;display:grid;place-items:center;padding:24px;background:rgb(16 30 45 / 45%)}.ai-evidence-modal>.admin-panel{width:min(900px,100%);max-height:calc(100vh - 48px);overflow:auto}.admin-table td small{display:block;margin-top:3px;color:#68798b;overflow-wrap:anywhere}@media(max-width:980px){.ai-evidence-grid{grid-template-columns:1fr}}@media(max-width:640px){.ai-evidence-modal{padding:10px}.page-heading{align-items:flex-start;flex-direction:column}}
 </style>

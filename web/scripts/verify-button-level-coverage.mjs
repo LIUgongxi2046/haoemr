@@ -6,9 +6,9 @@ import { chromium } from 'playwright';
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
 const contract = JSON.parse(await readFile(resolve(projectDir, 'contracts/generated/route-contract.generated.json'), 'utf8'));
-const requested = new Set((process.env.OPENEMR2026_BROWSER_ROUTES || '').split(',').filter(Boolean));
+const requested = new Set((process.env.HAOEMR_BROWSER_ROUTES || '').split(',').filter(Boolean));
 const routes = contract.routes.filter((route) => !requested.size || requested.has(route.route_id));
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
 const outputDir = resolve(projectDir, 'output/playwright');
 await mkdir(outputDir, { recursive: true });
 

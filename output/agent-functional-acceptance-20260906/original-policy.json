@@ -1,0 +1,41 @@
+{
+  "config_id": "018f0000-0000-7000-8000-00000000c108",
+  "config_type": "AI_ASSISTANT_POLICY",
+  "config_key": "xiaonan-clinical-policy-v1",
+  "display_name": "AI医助 Eva·三级甲等医院临床工作策略",
+  "payload": {
+    "campuses": [
+      "本部院区",
+      "东院区",
+      "感染病院区"
+    ],
+    "rate_limit": 10,
+    "description": "覆盖门诊、急诊与住院场景的统一 Eva 工作策略。",
+    "environment": "tertiary-hospital-simulation",
+    "model_policy": "TENANT_ACTIVE_MODEL_WITH_LOCAL_FALLBACK",
+    "facility_name": "江城大学附属医院（仿真）",
+    "hospital_level": "三级甲等",
+    "schema_version": 1,
+    "allowed_sources": [
+      "DOCUMENT_VERSION",
+      "OBSERVATION",
+      "ORDER",
+      "RESULT",
+      "RULE"
+    ],
+    "proactive_level": "REMIND_ONLY",
+    "main_agent_count": 14,
+    "approval_required": true,
+    "child_agent_count": 58
+  },
+  "status": "ACTIVE",
+  "schema_version": 1,
+  "validation_state": "VALID",
+  "validation_errors": [],
+  "approval_state": "APPROVED",
+  "approved_by": "018f0000-0000-7000-8000-00000000aa06",
+  "published_at": "2026-09-06T06:40:21.453423Z",
+  "row_version": 1,
+  "created_at": "2026-09-06T06:40:21.453423Z",
+  "updated_at": "2026-09-06T06:49:40.448373Z"
+}

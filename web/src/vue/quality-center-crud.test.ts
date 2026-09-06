@@ -62,7 +62,7 @@ describe('medical quality center full secondary-menu CRUD', () => {
     expect(department).toContain('listConfigurations');
     expect(department).toContain('创建质控抽查');
     expect(rating).toContain('loadSpecialtySupportAssessments');
-    expect(rating).toContain('生成本期证据快照');
+    expect(rating).toContain('新建评级评估');
     expect(infection).toContain('listInfectionMonitoringEvents');
     expect(infection).toContain('审核高风险线索');
     expect(credentials).toContain('listPractitionerCredentials');

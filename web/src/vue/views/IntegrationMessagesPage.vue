@@ -26,7 +26,7 @@ const connectorFilter = ref('');
 const collectOpen = ref(false);
 const collectConnector = ref('');
 const collectDirection = ref<'INBOUND' | 'OUTBOUND'>('OUTBOUND');
-const collectScenario = ref<'SUCCESS' | 'DEGRADED'>('SUCCESS');
+const collectScenario = ref<'SUCCESS' | 'DEGRADED' | 'UNAVAILABLE'>('SUCCESS');
 const collectCount = ref(36);
 const busy = ref('');
 const notice = ref('');
@@ -63,6 +63,7 @@ const messages = computed(() => messagesQuery.data.value ?? []);
 const reconciliations = computed(() => reconciliationsQuery.data.value ?? []);
 const pendingCount = computed(() => messages.value.filter((item) => item.message_status === 'PENDING').length);
 const deliveredCount = computed(() => messages.value.filter((item) => item.message_status === 'DELIVERED').length);
+const failedCount = computed(() => messages.value.filter((item) => item.message_status === 'FAILED').length);
 const issue = computed(() => {
   const error = configLeaseQuery.error.value ?? connectorsQuery.error.value
     ?? leaseQuery.error.value ?? messagesQuery.error.value ?? reconciliationsQuery.error.value;
@@ -122,7 +123,7 @@ async function reconcile(message: IntegrationMessageWire) {
       <div>
         <p class="eyebrow">数据中心 / 集成平台</p>
         <h1>集成消息追踪与业务对账</h1>
-        <p>消息采集自确定性模拟接口并持久化为可对账台账；消息成功、业务入账与对账清零是三种不同状态。</p>
+        <p>这是受控仿真对账台：消息、失败和对账均留痕，但不创建或修改临床事实；字段映射仍由历史迁移转换器消费。</p>
       </div>
       <div class="toolbar-actions">
         <button class="button secondary" @click="messagesQuery.refetch()">刷新</button>
@@ -139,6 +140,7 @@ async function reconcile(message: IntegrationMessageWire) {
         <article><span>当前消息</span><strong>{{ messages.length }}</strong><small>按筛选条件</small></article>
         <article><span>待对账</span><strong>{{ pendingCount }}</strong><small>需业务确认后清零</small></article>
         <article><span>已送达</span><strong>{{ deliveredCount }}</strong><small>消息通道成功</small></article>
+        <article><span>失败留痕</span><strong>{{ failedCount }}</strong><small>不可人工改写为已对账</small></article>
         <article><span>对账窗口</span><strong>{{ reconciliations.length }}</strong><small>按连接器 + 自然日</small></article>
       </section>
 
@@ -208,7 +210,7 @@ async function reconcile(message: IntegrationMessageWire) {
           <select v-model="collectDirection"><option value="OUTBOUND">院外发送</option><option value="INBOUND">院外回传</option></select>
         </label>
         <label><span>场景</span>
-          <select v-model="collectScenario"><option value="SUCCESS">成功</option><option value="DEGRADED">降级（部分结果）</option></select>
+          <select v-model="collectScenario"><option value="SUCCESS">成功</option><option value="DEGRADED">降级（部分结果）</option><option value="UNAVAILABLE">不可用（写失败证据）</option></select>
         </label>
         <label><span>消息条数</span><input v-model.number="collectCount" type="number" min="12" max="200" /></label>
       </form>

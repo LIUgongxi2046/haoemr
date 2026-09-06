@@ -90,7 +90,7 @@ async function createRecord() {
       <div>
         <p class="eyebrow">专科其余层 / 新生儿 · 证据</p>
         <h1>新生儿筛查记录</h1>
-        <p>听力/代谢病/先心病筛查类型与结果登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记听力、代谢病和先心病的筛查类型与结果。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>

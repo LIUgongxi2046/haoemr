@@ -3,10 +3,10 @@ set -euo pipefail
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 project_dir=$(cd "$script_dir/.." && pwd)
-pg_bin="${OPENEMR2026_PG_BIN:-/usr/local/opt/postgresql@18/bin}"
-pg_socket="${OPENEMR2026_PG_SOCKET:-/private/tmp}"
-pg_port="${OPENEMR2026_PG_PORT:-55432}"
-pg_database="${OPENEMR2026_PG_DATABASE:-openemr2026_dev}"
+pg_bin="${HAOEMR_PG_BIN:-/usr/local/opt/postgresql@18/bin}"
+pg_socket="${HAOEMR_PG_SOCKET:-/private/tmp}"
+pg_port="${HAOEMR_PG_PORT:-55432}"
+pg_database="${HAOEMR_PG_DATABASE:-haoemr_dev}"
 migration_v1="$project_dir/src/main/resources/db/migration/V1__clinical_core.sql"
 migration_v2="$project_dir/src/main/resources/db/migration/V2__context_lease.sql"
 migration_v3="$project_dir/src/main/resources/db/migration/V3__signed_document_integrity.sql"
@@ -378,8 +378,8 @@ done
 
 "$pg_bin/psql" -X -v ON_ERROR_STOP=1 -h "$pg_socket" -p "$pg_port" -d "$pg_database" \
   -c 'begin' \
-  -c 'create schema openemr2026_schema_contract_test' \
-  -c 'set local search_path to openemr2026_schema_contract_test' \
+  -c 'create schema haoemr_schema_contract_test' \
+  -c 'set local search_path to haoemr_schema_contract_test' \
   -f "$migration_v1" -f "$assertions_v1" \
   -f "$migration_v2" -f "$assertions_v2" \
   -f "$migration_v3" -f "$assertions_v3" \

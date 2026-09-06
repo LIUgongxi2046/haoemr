@@ -1,0 +1,3955 @@
+{
+  "run_at": "2026-09-05T17:18:01.211Z",
+  "routes": 198,
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 960,
+      "label": "1440x960"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 396,
+  "verified_route_viewports": 387,
+  "findings": [
+    {
+      "route": "data-center",
+      "viewport": "1440x960",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "route": "data-center",
+      "viewport": "1440x960",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 400,
+      "url": "http://127.0.0.1:4177/api/v1/historical-migration-batches",
+      "body": "{\"error\":{\"code\":\"INVALID_CONTEXT_LEASE_REQUEST\",\"category\":\"VALIDATION\",\"message\":\"No enum constant org.openemr2026.contracts.HistoricalMigrationBatchWire.BatchStatusValue.ARCHIVED\",\"trace_id\":\"be8f8b8b-b842-4176-aaec-a1efc29b9726\",\"retryable\":false,\"recovery\":null,\"violations\":[]}}"
+    },
+    {
+      "route": "integration",
+      "viewport": "1440x960",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "route": "integration",
+      "viewport": "1440x960",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 404,
+      "url": "http://127.0.0.1:4177/api/v1/outbox/reconciliation",
+      "body": "{\"timestamp\":\"2026-09-05T17:16:45.523Z\",\"status\":404,\"error\":\"Not Found\",\"path\":\"/api/v1/outbox/reconciliation\"}"
+    },
+    {
+      "route": "migration",
+      "viewport": "1440x960",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "route": "migration",
+      "viewport": "1440x960",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 400,
+      "url": "http://127.0.0.1:4177/api/v1/historical-migration-batches",
+      "body": "{\"error\":{\"code\":\"INVALID_CONTEXT_LEASE_REQUEST\",\"category\":\"VALIDATION\",\"message\":\"No enum constant org.openemr2026.contracts.HistoricalMigrationBatchWire.BatchStatusValue.ARCHIVED\",\"trace_id\":\"e4408a17-b75d-4da1-b31d-19af0e1a4fc1\",\"retryable\":false,\"recovery\":null,\"violations\":[]}}"
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "1440x960",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "1440x960",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 400,
+      "url": "http://127.0.0.1:4177/api/v1/patients/018f0000-0000-7000-8000-000000000001/timeline?types=ENCOUNTER%2CDOCUMENT%2CDIAGNOSIS%2CORDER%2CRESULT%2CTASK%2CDEVICE&limit=50",
+      "body": "{\"error\":{\"violations\":[],\"category\":\"VALIDATION\",\"message\":\"Timeline resource type filter is not valid\",\"code\":\"PATIENT_TIMELINE_REQUEST_INVALID\",\"trace_id\":\"ed273d89-b439-4939-9342-59bce3ec678d\",\"retryable\":false}}"
+    },
+    {
+      "route": "migration",
+      "viewport": "390x844",
+      "issue": "HORIZONTAL_OVERFLOW",
+      "scroll_width": 576,
+      "viewport_width": 390,
+      "samples": [
+        {
+          "tag": "DIV",
+          "class_name": "",
+          "right_px": 390,
+          "width_px": 390,
+          "scroll_width": 576,
+          "client_width": 390
+        },
+        {
+          "tag": "DIV",
+          "class_name": "shell",
+          "right_px": 390,
+          "width_px": 390,
+          "scroll_width": 576,
+          "client_width": 390
+        },
+        {
+          "tag": "MAIN",
+          "class_name": "main",
+          "right_px": 390,
+          "width_px": 390,
+          "scroll_width": 576,
+          "client_width": 390
+        },
+        {
+          "tag": "SECTION",
+          "class_name": "content admin-content vue-native-page migration-page",
+          "right_px": 378,
+          "width_px": 366,
+          "scroll_width": 564,
+          "client_width": 366
+        },
+        {
+          "tag": "DIV",
+          "class_name": "page-heading admin-heading",
+          "right_px": 576,
+          "width_px": 564,
+          "scroll_width": 564,
+          "client_width": 564
+        }
+      ]
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 403,
+      "url": "http://127.0.0.1:4177/api/v1/clinical-reminder-conversions?reminder_id=67e7674d-66d3-4768-b3be-3ed3e62702c4",
+      "body": "{\"error\":{\"code\":\"CONTEXT_NOT_PERMITTED\",\"category\":\"AUTHORIZATION\",\"message\":\"The requested clinical context is not permitted\",\"trace_id\":\"dc8a3f43-b5d4-4ae8-b5e2-dc442ee61571\",\"retryable\":false,\"recovery\":{\"action\":\"REAUTHENTICATE\",\"token\":null},\"violations\":[]}}"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 403,
+      "url": "http://127.0.0.1:4177/api/v1/clinical-reminder-conversions?reminder_id=355dc22d-521f-4e08-9e4c-e7b4a9eababb",
+      "body": "{\"error\":{\"code\":\"CONTEXT_NOT_PERMITTED\",\"category\":\"AUTHORIZATION\",\"message\":\"The requested clinical context is not permitted\",\"trace_id\":\"02816e12-6f67-4362-af0d-f8050e452f4d\",\"retryable\":false,\"recovery\":{\"action\":\"REAUTHENTICATE\",\"token\":null},\"violations\":[]}}"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 403,
+      "url": "http://127.0.0.1:4177/api/v1/clinical-reminder-conversions?reminder_id=9062de44-f2e6-4d3f-84c5-ffcc16d88dc0",
+      "body": "{\"error\":{\"code\":\"CONTEXT_NOT_PERMITTED\",\"category\":\"AUTHORIZATION\",\"message\":\"The requested clinical context is not permitted\",\"trace_id\":\"779a1472-d8c0-4d9f-90f2-5aee66ae9890\",\"retryable\":false,\"recovery\":{\"action\":\"REAUTHENTICATE\",\"token\":null},\"violations\":[]}}"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 403,
+      "url": "http://127.0.0.1:4177/api/v1/clinical-reminder-conversions?reminder_id=46d82d73-3f22-4097-95fc-0beeb3fb4afb",
+      "body": "{\"error\":{\"code\":\"CONTEXT_NOT_PERMITTED\",\"category\":\"AUTHORIZATION\",\"message\":\"The requested clinical context is not permitted\",\"trace_id\":\"2298c5b3-4d68-4087-b709-9e29603d0b36\",\"retryable\":false,\"recovery\":{\"action\":\"REAUTHENTICATE\",\"token\":null},\"violations\":[]}}"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 403,
+      "url": "http://127.0.0.1:4177/api/v1/clinical-reminder-conversions?reminder_id=97a5cbc3-c89d-435e-b82c-ec82acd71663",
+      "body": "{\"error\":{\"code\":\"CONTEXT_NOT_PERMITTED\",\"category\":\"AUTHORIZATION\",\"message\":\"The requested clinical context is not permitted\",\"trace_id\":\"d1db3429-b4ae-484e-a9b7-611f1210e786\",\"retryable\":false,\"recovery\":{\"action\":\"REAUTHENTICATE\",\"token\":null},\"violations\":[]}}"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 403,
+      "url": "http://127.0.0.1:4177/api/v1/clinical-reminder-conversions?reminder_id=7da1eb91-7ae0-4538-820b-89aa175338b2",
+      "body": "{\"error\":{\"code\":\"CONTEXT_NOT_PERMITTED\",\"category\":\"AUTHORIZATION\",\"message\":\"The requested clinical context is not permitted\",\"trace_id\":\"f1e834df-7585-4d71-8c7a-e6ef2aeefb34\",\"retryable\":false,\"recovery\":{\"action\":\"REAUTHENTICATE\",\"token\":null},\"violations\":[]}}"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 403,
+      "url": "http://127.0.0.1:4177/api/v1/clinical-reminder-conversions?reminder_id=d2662b55-88bb-4d88-a996-7585eed54f8a",
+      "body": "{\"error\":{\"code\":\"CONTEXT_NOT_PERMITTED\",\"category\":\"AUTHORIZATION\",\"message\":\"The requested clinical context is not permitted\",\"trace_id\":\"e323136e-74fe-453d-bc20-cb45883bdf3d\",\"retryable\":false,\"recovery\":{\"action\":\"REAUTHENTICATE\",\"token\":null},\"violations\":[]}}"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 403,
+      "url": "http://127.0.0.1:4177/api/v1/clinical-reminder-conversions?reminder_id=60e5fcc8-c5b1-4622-ad82-fc275c970a63",
+      "body": "{\"error\":{\"code\":\"CONTEXT_NOT_PERMITTED\",\"category\":\"AUTHORIZATION\",\"message\":\"The requested clinical context is not permitted\",\"trace_id\":\"63cf1a28-072f-40ee-8fc4-7ac8ceb0e4fa\",\"retryable\":false,\"recovery\":{\"action\":\"REAUTHENTICATE\",\"token\":null},\"violations\":[]}}"
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 403,
+      "url": "http://127.0.0.1:4177/api/v1/clinical-reminder-conversions?reminder_id=6e25f811-07a6-4336-b5a6-7e575f1ff518",
+      "body": "{\"error\":{\"code\":\"CONTEXT_NOT_PERMITTED\",\"category\":\"AUTHORIZATION\",\"message\":\"The requested clinical context is not permitted\",\"trace_id\":\"de7e87e2-720c-463a-aad5-952c56803502\",\"retryable\":false,\"recovery\":{\"action\":\"REAUTHENTICATE\",\"token\":null},\"violations\":[]}}"
+    },
+    {
+      "route": "data-center",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "route": "data-center",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 400,
+      "url": "http://127.0.0.1:4177/api/v1/historical-migration-batches",
+      "body": "{\"error\":{\"code\":\"INVALID_CONTEXT_LEASE_REQUEST\",\"category\":\"VALIDATION\",\"message\":\"No enum constant org.openemr2026.contracts.HistoricalMigrationBatchWire.BatchStatusValue.ARCHIVED\",\"trace_id\":\"6102acf2-e5ae-410c-b901-92220acc602e\",\"retryable\":false,\"recovery\":null,\"violations\":[]}}"
+    },
+    {
+      "route": "integration",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "route": "integration",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 404,
+      "url": "http://127.0.0.1:4177/api/v1/outbox/reconciliation",
+      "body": "{\"timestamp\":\"2026-09-05T17:17:34.859Z\",\"status\":404,\"error\":\"Not Found\",\"path\":\"/api/v1/outbox/reconciliation\"}"
+    },
+    {
+      "route": "migration",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "route": "migration",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 400,
+      "url": "http://127.0.0.1:4177/api/v1/historical-migration-batches",
+      "body": "{\"error\":{\"code\":\"INVALID_CONTEXT_LEASE_REQUEST\",\"category\":\"VALIDATION\",\"message\":\"No enum constant org.openemr2026.contracts.HistoricalMigrationBatchWire.BatchStatusValue.ARCHIVED\",\"trace_id\":\"2c33d7d0-e627-4281-b7bc-3a07f75277cf\",\"retryable\":false,\"recovery\":null,\"violations\":[]}}"
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "390x844",
+      "issue": "CONSOLE_ISSUE",
+      "type": "http",
+      "status": 400,
+      "url": "http://127.0.0.1:4177/api/v1/patients/018f0000-0000-7000-8000-000000000001/timeline?types=ENCOUNTER%2CDOCUMENT%2CDIAGNOSIS%2CORDER%2CRESULT%2CTASK%2CDEVICE&limit=50",
+      "body": "{\"error\":{\"violations\":[],\"category\":\"VALIDATION\",\"message\":\"Timeline resource type filter is not valid\",\"code\":\"PATIENT_TIMELINE_REQUEST_INVALID\",\"trace_id\":\"eb9aa993-5876-4937-81bf-dfe5826aeebf\",\"retryable\":false}}"
+    }
+  ],
+  "observations": [
+    {
+      "route": "admin",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "系统管理工作台",
+      "routeId": "admin",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 478
+    },
+    {
+      "route": "admin-audit",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "管理审计与权限复核",
+      "routeId": "admin-audit",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3131
+    },
+    {
+      "route": "admin-auth",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "认证与账户安全策略",
+      "routeId": "admin-auth",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2548
+    },
+    {
+      "route": "admin-dictionaries",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "字典、术语与值集中心",
+      "routeId": "admin-dictionaries",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1325
+    },
+    {
+      "route": "admin-jobs",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "通知任务与治理执行中心",
+      "routeId": "admin-jobs",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1304
+    },
+    {
+      "route": "admin-master-data",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医院主数据与标准编码",
+      "routeId": "admin-master-data",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2414
+    },
+    {
+      "route": "admin-org",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "组织机构与工作单元",
+      "routeId": "admin-org",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1389
+    },
+    {
+      "route": "admin-parameters",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "系统参数与功能开关",
+      "routeId": "admin-parameters",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1115
+    },
+    {
+      "route": "admin-permissions",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "权限策略与访问模拟",
+      "routeId": "admin-permissions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2930
+    },
+    {
+      "route": "admin-roles",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "角色、工作组与职责分离",
+      "routeId": "admin-roles",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2863
+    },
+    {
+      "route": "admin-templates",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "模板、编号与输出管理",
+      "routeId": "admin-templates",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2196
+    },
+    {
+      "route": "admin-users",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "用户、人员与账户管理",
+      "routeId": "admin-users",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1841
+    },
+    {
+      "route": "admission-bed",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "入院、病区与床位管理",
+      "routeId": "admission-bed",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1775
+    },
+    {
+      "route": "agent",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医助运行证据采集",
+      "routeId": "agent",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 4824
+    },
+    {
+      "route": "agent-catalog",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医助团队设计与编排",
+      "routeId": "agent-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2127
+    },
+    {
+      "route": "agent-compose",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医助团队与能力工具编排",
+      "routeId": "agent-compose",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1565
+    },
+    {
+      "route": "agent-context",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医助诊疗范围策略",
+      "routeId": "agent-context",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1041
+    },
+    {
+      "route": "agent-evals",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医助评测与发布审核",
+      "routeId": "agent-evals",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2443
+    },
+    {
+      "route": "ai-action-review",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "临床操作确认与执行核验",
+      "routeId": "ai-action-review",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 612
+    },
+    {
+      "route": "ai-assistant",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "AI医助 Eva",
+      "routeId": "ai-assistant",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 487
+    },
+    {
+      "route": "ai-assistant-policy",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "AI医助 Eva 工作策略",
+      "routeId": "ai-assistant-policy",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 553
+    },
+    {
+      "route": "ai-capture",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医助运行证据采集",
+      "routeId": "ai-capture",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 4824
+    },
+    {
+      "route": "ai-center",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "ai-center",
+      "routeId": "ai-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 641
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "主动提醒详情",
+      "routeId": "ai-reminder-detail",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 430
+    },
+    {
+      "route": "aiops",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医助运行监测",
+      "routeId": "aiops",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 446
+    },
+    {
+      "route": "anesthesia-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "麻醉",
+      "routeId": "anesthesia-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 404
+    },
+    {
+      "route": "appointment-registration",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "预约挂号与就诊队列",
+      "routeId": "appointment-registration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 400
+    },
+    {
+      "route": "archive-assets",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "病案资产与共享文档中心",
+      "routeId": "archive-assets",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 719
+    },
+    {
+      "route": "archive-borrow",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "病案借阅、复制与对外提供",
+      "routeId": "archive-borrow",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 595
+    },
+    {
+      "route": "archive-catalog",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "病案目录与完整性",
+      "routeId": "archive-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 524
+    },
+    {
+      "route": "archive-integrity",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "病案完整性、签名与长期验真",
+      "routeId": "archive-integrity",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 737
+    },
+    {
+      "route": "archive-preservation",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "病案长期保存与恢复验证",
+      "routeId": "archive-preservation",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 629
+    },
+    {
+      "route": "archive-scan",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "纸质病历扫描与智能编目",
+      "routeId": "archive-scan",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 666
+    },
+    {
+      "route": "asset-detail",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "病案资产证据详情",
+      "routeId": "asset-detail",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 500
+    },
+    {
+      "route": "backup",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "备份恢复与完整性报告",
+      "routeId": "backup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 951
+    },
+    {
+      "route": "billing",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "费用结算",
+      "routeId": "billing",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 8861
+    },
+    {
+      "route": "capability-pack",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "能力包与灰度发布",
+      "routeId": "capability-pack",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2172
+    },
+    {
+      "route": "care-operations",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "执行总览",
+      "routeId": "care-operations",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 10265
+    },
+    {
+      "route": "clinical",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "临床业务门户",
+      "routeId": "clinical",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1847
+    },
+    {
+      "route": "clinical-specialty-ai",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "专科医助复核",
+      "routeId": "clinical-specialty-ai",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 665
+    },
+    {
+      "route": "clinical-tasks",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "任务中心",
+      "routeId": "clinical-tasks",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1309
+    },
+    {
+      "route": "cohort-builder",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "研究队列构建器",
+      "routeId": "cohort-builder",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2031
+    },
+    {
+      "route": "config-release",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "配置差异、审批与灰度发布",
+      "routeId": "config-release",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 997
+    },
+    {
+      "route": "config-upgrade",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "配置包升级与冲突处理",
+      "routeId": "config-upgrade",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 986
+    },
+    {
+      "route": "credentials",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "临床资质与医疗授权中心",
+      "routeId": "credentials",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1674
+    },
+    {
+      "route": "data-center",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "数据总览",
+      "routeId": "data-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1067
+    },
+    {
+      "route": "data-quality",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "全院数据质量与问题工单",
+      "routeId": "data-quality",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1469
+    },
+    {
+      "route": "dental-care",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "口腔护理与术后观察",
+      "routeId": "dental-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 487
+    },
+    {
+      "route": "dental-evidence",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "口腔诊疗证据",
+      "routeId": "dental-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 494
+    },
+    {
+      "route": "dental-followup",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "dental-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 415
+    },
+    {
+      "route": "dental-qc",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "dental-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 830
+    },
+    {
+      "route": "dental-record",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "口腔记录",
+      "routeId": "dental-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 432
+    },
+    {
+      "route": "dental-treatment",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "口腔治疗记录",
+      "routeId": "dental-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 844
+    },
+    {
+      "route": "dental-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "口腔工作台",
+      "routeId": "dental-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 526
+    },
+    {
+      "route": "department-qc",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "院科病历质控与整改",
+      "routeId": "department-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 736
+    },
+    {
+      "route": "dermatology-care",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "皮肤护理与创面观察",
+      "routeId": "dermatology-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 474
+    },
+    {
+      "route": "dermatology-evidence",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "皮肤诊疗证据",
+      "routeId": "dermatology-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 496
+    },
+    {
+      "route": "dermatology-followup",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "生物制剂随访",
+      "routeId": "dermatology-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 450
+    },
+    {
+      "route": "dermatology-qc",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "dermatology-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 837
+    },
+    {
+      "route": "dermatology-record",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "皮肤科记录",
+      "routeId": "dermatology-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 458
+    },
+    {
+      "route": "dermatology-treatment",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "生物制剂筛查",
+      "routeId": "dermatology-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 602
+    },
+    {
+      "route": "dermatology-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "皮肤工作台",
+      "routeId": "dermatology-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 561
+    },
+    {
+      "route": "device-monitoring",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "设备监护",
+      "routeId": "device-monitoring",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3060
+    },
+    {
+      "route": "devices",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医疗设备目录与接入状态",
+      "routeId": "devices",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1610
+    },
+    {
+      "route": "emergency",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "急诊工作台",
+      "routeId": "emergency",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2225
+    },
+    {
+      "route": "emergency-access",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "紧急访问",
+      "routeId": "emergency-access",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 587
+    },
+    {
+      "route": "ent-care",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "气道风险交接",
+      "routeId": "ent-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1253
+    },
+    {
+      "route": "ent-evidence",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "耳鼻喉诊疗证据",
+      "routeId": "ent-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 495
+    },
+    {
+      "route": "ent-followup",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "ent-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 398
+    },
+    {
+      "route": "ent-qc",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "ent-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1167
+    },
+    {
+      "route": "ent-record",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "耳鼻喉记录",
+      "routeId": "ent-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 437
+    },
+    {
+      "route": "ent-treatment",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "耳鼻喉治疗执行",
+      "routeId": "ent-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 493
+    },
+    {
+      "route": "ent-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "耳鼻喉工作台",
+      "routeId": "ent-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 506
+    },
+    {
+      "route": "er-handoff",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "急诊会诊、交接与转运",
+      "routeId": "er-handoff",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 705
+    },
+    {
+      "route": "er-nursing",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "急诊护理、输液与执行",
+      "routeId": "er-nursing",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1081
+    },
+    {
+      "route": "er-observation",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "急诊抢救留观与去向",
+      "routeId": "er-observation",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 740
+    },
+    {
+      "route": "er-record",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "急诊病历与抢救记录",
+      "routeId": "er-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1070
+    },
+    {
+      "route": "er-triage",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "急诊预检分诊与分区",
+      "routeId": "er-triage",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1410
+    },
+    {
+      "route": "form-designer",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "表单与病历模板设计器",
+      "routeId": "form-designer",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2213
+    },
+    {
+      "route": "imaging-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "检查影像",
+      "routeId": "imaging-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 7436
+    },
+    {
+      "route": "infection-events",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "院感、传染病与不良事件",
+      "routeId": "infection-events",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 772
+    },
+    {
+      "route": "inpatient",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "住院医生工作站",
+      "routeId": "inpatient",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1703
+    },
+    {
+      "route": "inpatient-course",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "住院病程与文书中心",
+      "routeId": "inpatient-course",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1206
+    },
+    {
+      "route": "inpatient-discharge",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "出院病历与病案归档闭环",
+      "routeId": "inpatient-discharge",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 749
+    },
+    {
+      "route": "inpatient-doc-editor",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "住院病历 · 专注编辑",
+      "routeId": "inpatient-doc-editor",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 405
+    },
+    {
+      "route": "inpatient-doc-qc",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "住院病历 · 质控与审签",
+      "routeId": "inpatient-doc-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 406
+    },
+    {
+      "route": "inpatient-doc-versions",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "住院文书版本与查房证据",
+      "routeId": "inpatient-doc-versions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 486
+    },
+    {
+      "route": "inpatient-overview",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "住院患者总览",
+      "routeId": "inpatient-overview",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1070
+    },
+    {
+      "route": "inpatient-pharmacy",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "住院药房",
+      "routeId": "inpatient-pharmacy",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 4209
+    },
+    {
+      "route": "install",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "安装向导与首次健康检查",
+      "routeId": "install",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 930
+    },
+    {
+      "route": "integration",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "外部系统集成与互操作中心",
+      "routeId": "integration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 387
+    },
+    {
+      "route": "integration-connectors",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "连接器目录与能力卡",
+      "routeId": "integration-connectors",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3846
+    },
+    {
+      "route": "integration-mapping",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "字段映射与历史迁移转换",
+      "routeId": "integration-mapping",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1603
+    },
+    {
+      "route": "integration-messages",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "集成消息追踪与业务对账",
+      "routeId": "integration-messages",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 859
+    },
+    {
+      "route": "ip-consult",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "住院查房、会诊与协同",
+      "routeId": "ip-consult",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1018
+    },
+    {
+      "route": "ip-orders",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "住院医嘱与用药中心",
+      "routeId": "ip-orders",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3250
+    },
+    {
+      "route": "ip-pathway",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "住院临床路径执行中心",
+      "routeId": "ip-pathway",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 985
+    },
+    {
+      "route": "ip-results",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "住院检查检验与危急值",
+      "routeId": "ip-results",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1248
+    },
+    {
+      "route": "knowledge-center",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "1型糖尿病临床路径(2009年版)",
+      "routeId": "knowledge-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 14372
+    },
+    {
+      "route": "lab-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "检验",
+      "routeId": "lab-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 5667
+    },
+    {
+      "route": "lis-report",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "LIS 检验报告调阅",
+      "routeId": "lis-report",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1161
+    },
+    {
+      "route": "mental-care",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "心理危机交接",
+      "routeId": "mental-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1129
+    },
+    {
+      "route": "mental-evidence",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "精神心理诊疗证据",
+      "routeId": "mental-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 412
+    },
+    {
+      "route": "mental-followup",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "危机随访",
+      "routeId": "mental-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 398
+    },
+    {
+      "route": "mental-qc",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "mental-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 398
+    },
+    {
+      "route": "mental-record",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "精神心理健康记录",
+      "routeId": "mental-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 464
+    },
+    {
+      "route": "mental-treatment",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "精神心理治疗执行",
+      "routeId": "mental-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 397
+    },
+    {
+      "route": "mental-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "精神心理工作台",
+      "routeId": "mental-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 537
+    },
+    {
+      "route": "migration",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "历史数据迁移与上线切换",
+      "routeId": "migration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 522
+    },
+    {
+      "route": "model-connection",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "模型连接与凭据状态",
+      "routeId": "model-connection",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 499
+    },
+    {
+      "route": "model-evaluation",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "模型评估",
+      "routeId": "model-evaluation",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 438
+    },
+    {
+      "route": "model-routing",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医助模型候选与数据边界",
+      "routeId": "model-routing",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 478
+    },
+    {
+      "route": "models",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "模型服务与 API 配置",
+      "routeId": "models",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 478
+    },
+    {
+      "route": "neonatal-care",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "腕带核对",
+      "routeId": "neonatal-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 595
+    },
+    {
+      "route": "neonatal-evidence",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "新生儿筛查记录",
+      "routeId": "neonatal-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 443
+    },
+    {
+      "route": "neonatal-followup",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "neonatal-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 416
+    },
+    {
+      "route": "neonatal-qc",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "neonatal-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 585
+    },
+    {
+      "route": "neonatal-record",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "新生儿记录",
+      "routeId": "neonatal-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 484
+    },
+    {
+      "route": "neonatal-treatment",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "新生儿治疗执行",
+      "routeId": "neonatal-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 491
+    },
+    {
+      "route": "neonatal-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "新生儿工作台",
+      "routeId": "neonatal-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 541
+    },
+    {
+      "route": "obgyn-care",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "妇产护理与产后观察",
+      "routeId": "obgyn-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 476
+    },
+    {
+      "route": "obgyn-evidence",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "产前检查",
+      "routeId": "obgyn-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 565
+    },
+    {
+      "route": "obgyn-followup",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "产后随访",
+      "routeId": "obgyn-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 427
+    },
+    {
+      "route": "obgyn-qc",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "obgyn-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 693
+    },
+    {
+      "route": "obgyn-record",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "妇产记录",
+      "routeId": "obgyn-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 502
+    },
+    {
+      "route": "obgyn-treatment",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "分娩记录",
+      "routeId": "obgyn-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 448
+    },
+    {
+      "route": "obgyn-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "妇产工作台",
+      "routeId": "obgyn-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 519
+    },
+    {
+      "route": "opd-consult",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "门诊会诊、转诊与协同",
+      "routeId": "opd-consult",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 658
+    },
+    {
+      "route": "opd-diagnosis",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "门诊诊断与问题清单",
+      "routeId": "opd-diagnosis",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 893
+    },
+    {
+      "route": "opd-followup",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "门诊随访与终诊",
+      "routeId": "opd-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1009
+    },
+    {
+      "route": "opd-orders",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "门诊医嘱与处方",
+      "routeId": "opd-orders",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 5138
+    },
+    {
+      "route": "opd-record",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "门诊病历工作台",
+      "routeId": "opd-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 880
+    },
+    {
+      "route": "opd-results",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "门诊检查检验与结果",
+      "routeId": "opd-results",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2026
+    },
+    {
+      "route": "opensource",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "开源发布指标",
+      "routeId": "opensource",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 584
+    },
+    {
+      "route": "operations",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "生产运行、灾备与停机续运",
+      "routeId": "operations",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 944
+    },
+    {
+      "route": "ophthalmology-care",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "眼科护理与术后观察",
+      "routeId": "ophthalmology-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 487
+    },
+    {
+      "route": "ophthalmology-evidence",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "眼科诊疗证据",
+      "routeId": "ophthalmology-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 495
+    },
+    {
+      "route": "ophthalmology-followup",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "术后随访",
+      "routeId": "ophthalmology-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 400
+    },
+    {
+      "route": "ophthalmology-qc",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "ophthalmology-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 402
+    },
+    {
+      "route": "ophthalmology-record",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "眼科记录",
+      "routeId": "ophthalmology-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 435
+    },
+    {
+      "route": "ophthalmology-treatment",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "术前核对",
+      "routeId": "ophthalmology-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1622
+    },
+    {
+      "route": "ophthalmology-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "眼科工作台",
+      "routeId": "ophthalmology-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 575
+    },
+    {
+      "route": "outpatient",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "门诊医生工作台",
+      "routeId": "outpatient",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2046
+    },
+    {
+      "route": "outpatient-pharmacy",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "门诊药房",
+      "routeId": "outpatient-pharmacy",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 9837
+    },
+    {
+      "route": "pacs-viewer",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "PACS 影像调阅",
+      "routeId": "pacs-viewer",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 992
+    },
+    {
+      "route": "pathology-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "病理",
+      "routeId": "pathology-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 816
+    },
+    {
+      "route": "pathway-graph",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "知识图谱",
+      "routeId": "pathway-graph",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 464
+    },
+    {
+      "route": "pathway-review",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "审核队列",
+      "routeId": "pathway-review",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 57648
+    },
+    {
+      "route": "pathway-versions",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "版本历史",
+      "routeId": "pathway-versions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 11215
+    },
+    {
+      "route": "patient-merge",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "患者合并与可逆撤销",
+      "routeId": "patient-merge",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 606
+    },
+    {
+      "route": "patient-registry",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "患者主索引与身份核验",
+      "routeId": "patient-registry",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 585
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "授权患者纵向时间线",
+      "routeId": "patient-timeline",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 568
+    },
+    {
+      "route": "pediatrics-care",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "生长发育记录",
+      "routeId": "pediatrics-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 512
+    },
+    {
+      "route": "pediatrics-evidence",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "儿科诊疗证据",
+      "routeId": "pediatrics-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 496
+    },
+    {
+      "route": "pediatrics-followup",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "pediatrics-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 415
+    },
+    {
+      "route": "pediatrics-qc",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "pediatrics-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 810
+    },
+    {
+      "route": "pediatrics-record",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "儿科记录",
+      "routeId": "pediatrics-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 446
+    },
+    {
+      "route": "pediatrics-treatment",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "儿科治疗执行",
+      "routeId": "pediatrics-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 504
+    },
+    {
+      "route": "pediatrics-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "儿科工作台",
+      "routeId": "pediatrics-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 556
+    },
+    {
+      "route": "quality-center",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医疗质量中心",
+      "routeId": "quality-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 934
+    },
+    {
+      "route": "quality-rating",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医疗质量与电子病历评级看板",
+      "routeId": "quality-rating",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 712
+    },
+    {
+      "route": "record",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "全院病历中心",
+      "routeId": "record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1988
+    },
+    {
+      "route": "record-diff",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "病历版本差异",
+      "routeId": "record-diff",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 403
+    },
+    {
+      "route": "record-editor",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "病历 · 专注编辑",
+      "routeId": "record-editor",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 844
+    },
+    {
+      "route": "record-qc",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "病历质控与审签中心",
+      "routeId": "record-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 700
+    },
+    {
+      "route": "record-sign",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "病历签署确认",
+      "routeId": "record-sign",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 690
+    },
+    {
+      "route": "record-sources",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "病历来源与证据中心",
+      "routeId": "record-sources",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 685
+    },
+    {
+      "route": "record-versions",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "病历版本与法律证据",
+      "routeId": "record-versions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 918
+    },
+    {
+      "route": "release-gates",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "Release 门禁与制品发布",
+      "routeId": "release-gates",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1046
+    },
+    {
+      "route": "reproductive-care",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "生殖护理与周期照护",
+      "routeId": "reproductive-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 478
+    },
+    {
+      "route": "reproductive-evidence",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "生殖诊疗证据",
+      "routeId": "reproductive-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 497
+    },
+    {
+      "route": "reproductive-followup",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "妊娠结局",
+      "routeId": "reproductive-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 467
+    },
+    {
+      "route": "reproductive-qc",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "reproductive-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 651
+    },
+    {
+      "route": "reproductive-record",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "辅助生殖周期记录",
+      "routeId": "reproductive-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 565
+    },
+    {
+      "route": "reproductive-treatment",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "胚胎移植记录",
+      "routeId": "reproductive-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 450
+    },
+    {
+      "route": "reproductive-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "生殖工作台",
+      "routeId": "reproductive-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 577
+    },
+    {
+      "route": "research",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "科研项目与统计中心",
+      "routeId": "research",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 790
+    },
+    {
+      "route": "research-dataset",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "研究数据集请求",
+      "routeId": "research-dataset",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1135
+    },
+    {
+      "route": "research-stats",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "科研统计分析",
+      "routeId": "research-stats",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 411
+    },
+    {
+      "route": "rule-center",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "规则、时限与提示设计器",
+      "routeId": "rule-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2423
+    },
+    {
+      "route": "scope-designer",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "角色、职责与数据范围设计器",
+      "routeId": "scope-designer",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1833
+    },
+    {
+      "route": "skill-catalog",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医助能力库",
+      "routeId": "skill-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2001
+    },
+    {
+      "route": "specialty-center",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "专科支持总览",
+      "routeId": "specialty-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 709
+    },
+    {
+      "route": "specialty-coverage",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "科室与专科适配工作台",
+      "routeId": "specialty-coverage",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1530
+    },
+    {
+      "route": "surgery-schedule",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "手术",
+      "routeId": "surgery-schedule",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3614
+    },
+    {
+      "route": "tcm-care",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "中医护理与辨证施护",
+      "routeId": "tcm-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 473
+    },
+    {
+      "route": "tcm-evidence",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "四诊记录",
+      "routeId": "tcm-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 401
+    },
+    {
+      "route": "tcm-followup",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "tcm-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 415
+    },
+    {
+      "route": "tcm-qc",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "tcm-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 828
+    },
+    {
+      "route": "tcm-record",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "中医记录",
+      "routeId": "tcm-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 406
+    },
+    {
+      "route": "tcm-treatment",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "草药处方",
+      "routeId": "tcm-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 605
+    },
+    {
+      "route": "tcm-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "中医工作台",
+      "routeId": "tcm-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 505
+    },
+    {
+      "route": "therapy-workbench",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "治疗",
+      "routeId": "therapy-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1046
+    },
+    {
+      "route": "tool-catalog",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "医助工具库",
+      "routeId": "tool-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2388
+    },
+    {
+      "route": "transfusion",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "输血",
+      "routeId": "transfusion",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1640
+    },
+    {
+      "route": "unified-home",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "统一首页与任务中心",
+      "routeId": "unified-home",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 831
+    },
+    {
+      "route": "ward",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "心内科一病区 · 护理工作台",
+      "routeId": "ward",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 463
+    },
+    {
+      "route": "workflow",
+      "viewport": "1440x960",
+      "issues": [],
+      "h1": "流程与状态设计器",
+      "routeId": "workflow",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1892
+    },
+    {
+      "route": "admin",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "系统管理工作台",
+      "routeId": "admin",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 859
+    },
+    {
+      "route": "admin-audit",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "管理审计与权限复核",
+      "routeId": "admin-audit",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2884
+    },
+    {
+      "route": "admin-auth",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "认证与账户安全策略",
+      "routeId": "admin-auth",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1656
+    },
+    {
+      "route": "admin-dictionaries",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "字典、术语与值集中心",
+      "routeId": "admin-dictionaries",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1069
+    },
+    {
+      "route": "admin-jobs",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "通知任务与治理执行中心",
+      "routeId": "admin-jobs",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1048
+    },
+    {
+      "route": "admin-master-data",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医院主数据与标准编码",
+      "routeId": "admin-master-data",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2158
+    },
+    {
+      "route": "admin-org",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "组织机构与工作单元",
+      "routeId": "admin-org",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1133
+    },
+    {
+      "route": "admin-parameters",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "系统参数与功能开关",
+      "routeId": "admin-parameters",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 859
+    },
+    {
+      "route": "admin-permissions",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "权限策略与访问模拟",
+      "routeId": "admin-permissions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2674
+    },
+    {
+      "route": "admin-roles",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "角色、工作组与职责分离",
+      "routeId": "admin-roles",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2607
+    },
+    {
+      "route": "admin-templates",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "模板、编号与输出管理",
+      "routeId": "admin-templates",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1940
+    },
+    {
+      "route": "admin-users",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "用户、人员与账户管理",
+      "routeId": "admin-users",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1585
+    },
+    {
+      "route": "admission-bed",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "入院、病区与床位管理",
+      "routeId": "admission-bed",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1543
+    },
+    {
+      "route": "agent",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助运行证据采集",
+      "routeId": "agent",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1974
+    },
+    {
+      "route": "agent-catalog",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助团队设计与编排",
+      "routeId": "agent-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1895
+    },
+    {
+      "route": "agent-compose",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助团队与能力工具编排",
+      "routeId": "agent-compose",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1333
+    },
+    {
+      "route": "agent-context",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助诊疗范围策略",
+      "routeId": "agent-context",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 809
+    },
+    {
+      "route": "agent-evals",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助评测与发布审核",
+      "routeId": "agent-evals",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2211
+    },
+    {
+      "route": "ai-action-review",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "临床操作确认与执行核验",
+      "routeId": "ai-action-review",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 380
+    },
+    {
+      "route": "ai-assistant",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "AI医助 Eva",
+      "routeId": "ai-assistant",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 255
+    },
+    {
+      "route": "ai-assistant-policy",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "AI医助 Eva 工作策略",
+      "routeId": "ai-assistant-policy",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 321
+    },
+    {
+      "route": "ai-capture",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助运行证据采集",
+      "routeId": "ai-capture",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1974
+    },
+    {
+      "route": "ai-center",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "ai-center",
+      "routeId": "ai-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 409
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "主动提醒详情",
+      "routeId": "ai-reminder-detail",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1043
+    },
+    {
+      "route": "aiops",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助运行监测",
+      "routeId": "aiops",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3978
+    },
+    {
+      "route": "anesthesia-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "麻醉",
+      "routeId": "anesthesia-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3785
+    },
+    {
+      "route": "appointment-registration",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "预约挂号与就诊队列",
+      "routeId": "appointment-registration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1498
+    },
+    {
+      "route": "archive-assets",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病案资产与共享文档中心",
+      "routeId": "archive-assets",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 487
+    },
+    {
+      "route": "archive-borrow",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病案借阅、复制与对外提供",
+      "routeId": "archive-borrow",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 363
+    },
+    {
+      "route": "archive-catalog",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病案目录与完整性",
+      "routeId": "archive-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 292
+    },
+    {
+      "route": "archive-integrity",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病案完整性、签名与长期验真",
+      "routeId": "archive-integrity",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 505
+    },
+    {
+      "route": "archive-preservation",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病案长期保存与恢复验证",
+      "routeId": "archive-preservation",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 397
+    },
+    {
+      "route": "archive-scan",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "纸质病历扫描与智能编目",
+      "routeId": "archive-scan",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 434
+    },
+    {
+      "route": "asset-detail",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病案资产证据详情",
+      "routeId": "asset-detail",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 234
+    },
+    {
+      "route": "backup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "备份恢复与完整性报告",
+      "routeId": "backup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 719
+    },
+    {
+      "route": "billing",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "费用结算",
+      "routeId": "billing",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 8629
+    },
+    {
+      "route": "capability-pack",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "能力包与灰度发布",
+      "routeId": "capability-pack",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1940
+    },
+    {
+      "route": "care-operations",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "执行总览",
+      "routeId": "care-operations",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 10033
+    },
+    {
+      "route": "clinical",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "临床业务门户",
+      "routeId": "clinical",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1615
+    },
+    {
+      "route": "clinical-specialty-ai",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "专科医助复核",
+      "routeId": "clinical-specialty-ai",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 433
+    },
+    {
+      "route": "clinical-tasks",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "任务中心",
+      "routeId": "clinical-tasks",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1077
+    },
+    {
+      "route": "cohort-builder",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "研究队列构建器",
+      "routeId": "cohort-builder",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1799
+    },
+    {
+      "route": "config-release",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "配置差异、审批与灰度发布",
+      "routeId": "config-release",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 765
+    },
+    {
+      "route": "config-upgrade",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "配置包升级与冲突处理",
+      "routeId": "config-upgrade",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 754
+    },
+    {
+      "route": "credentials",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "临床资质与医疗授权中心",
+      "routeId": "credentials",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1442
+    },
+    {
+      "route": "data-center",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "数据总览",
+      "routeId": "data-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 835
+    },
+    {
+      "route": "data-quality",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "全院数据质量与问题工单",
+      "routeId": "data-quality",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1237
+    },
+    {
+      "route": "dental-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "口腔护理与术后观察",
+      "routeId": "dental-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 255
+    },
+    {
+      "route": "dental-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "口腔诊疗证据",
+      "routeId": "dental-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 262
+    },
+    {
+      "route": "dental-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "dental-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 183
+    },
+    {
+      "route": "dental-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "dental-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 598
+    },
+    {
+      "route": "dental-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "口腔记录",
+      "routeId": "dental-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 200
+    },
+    {
+      "route": "dental-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "口腔治疗记录",
+      "routeId": "dental-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 612
+    },
+    {
+      "route": "dental-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "口腔工作台",
+      "routeId": "dental-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 294
+    },
+    {
+      "route": "department-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "院科病历质控与整改",
+      "routeId": "department-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 504
+    },
+    {
+      "route": "dermatology-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "皮肤护理与创面观察",
+      "routeId": "dermatology-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 242
+    },
+    {
+      "route": "dermatology-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "皮肤诊疗证据",
+      "routeId": "dermatology-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 264
+    },
+    {
+      "route": "dermatology-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生物制剂随访",
+      "routeId": "dermatology-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 218
+    },
+    {
+      "route": "dermatology-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "dermatology-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 605
+    },
+    {
+      "route": "dermatology-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "皮肤科记录",
+      "routeId": "dermatology-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 226
+    },
+    {
+      "route": "dermatology-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生物制剂筛查",
+      "routeId": "dermatology-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 370
+    },
+    {
+      "route": "dermatology-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "皮肤工作台",
+      "routeId": "dermatology-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 329
+    },
+    {
+      "route": "device-monitoring",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "设备监护",
+      "routeId": "device-monitoring",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2828
+    },
+    {
+      "route": "devices",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医疗设备目录与接入状态",
+      "routeId": "devices",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1378
+    },
+    {
+      "route": "emergency",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "急诊工作台",
+      "routeId": "emergency",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1993
+    },
+    {
+      "route": "emergency-access",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "紧急访问",
+      "routeId": "emergency-access",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 355
+    },
+    {
+      "route": "ent-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "气道风险交接",
+      "routeId": "ent-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1021
+    },
+    {
+      "route": "ent-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "耳鼻喉诊疗证据",
+      "routeId": "ent-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 263
+    },
+    {
+      "route": "ent-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "ent-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 166
+    },
+    {
+      "route": "ent-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "ent-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 935
+    },
+    {
+      "route": "ent-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "耳鼻喉记录",
+      "routeId": "ent-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 205
+    },
+    {
+      "route": "ent-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "耳鼻喉治疗执行",
+      "routeId": "ent-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 261
+    },
+    {
+      "route": "ent-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "耳鼻喉工作台",
+      "routeId": "ent-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 274
+    },
+    {
+      "route": "er-handoff",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "急诊会诊、交接与转运",
+      "routeId": "er-handoff",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 473
+    },
+    {
+      "route": "er-nursing",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "急诊护理、输液与执行",
+      "routeId": "er-nursing",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 849
+    },
+    {
+      "route": "er-observation",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "急诊抢救留观与去向",
+      "routeId": "er-observation",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 508
+    },
+    {
+      "route": "er-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "急诊病历与抢救记录",
+      "routeId": "er-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 838
+    },
+    {
+      "route": "er-triage",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "急诊预检分诊与分区",
+      "routeId": "er-triage",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1178
+    },
+    {
+      "route": "form-designer",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "表单与病历模板设计器",
+      "routeId": "form-designer",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1981
+    },
+    {
+      "route": "imaging-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "检查影像",
+      "routeId": "imaging-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 7204
+    },
+    {
+      "route": "infection-events",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "院感、传染病与不良事件",
+      "routeId": "infection-events",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 540
+    },
+    {
+      "route": "inpatient",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院医生工作站",
+      "routeId": "inpatient",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1413
+    },
+    {
+      "route": "inpatient-course",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院病程与文书中心",
+      "routeId": "inpatient-course",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 927
+    },
+    {
+      "route": "inpatient-discharge",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "出院病历与病案归档闭环",
+      "routeId": "inpatient-discharge",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 470
+    },
+    {
+      "route": "inpatient-doc-editor",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院病历 · 专注编辑",
+      "routeId": "inpatient-doc-editor",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 173
+    },
+    {
+      "route": "inpatient-doc-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院病历 · 质控与审签",
+      "routeId": "inpatient-doc-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 174
+    },
+    {
+      "route": "inpatient-doc-versions",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院文书版本与查房证据",
+      "routeId": "inpatient-doc-versions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 207
+    },
+    {
+      "route": "inpatient-overview",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院患者总览",
+      "routeId": "inpatient-overview",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 791
+    },
+    {
+      "route": "inpatient-pharmacy",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院药房",
+      "routeId": "inpatient-pharmacy",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3977
+    },
+    {
+      "route": "install",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "安装向导与首次健康检查",
+      "routeId": "install",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 698
+    },
+    {
+      "route": "integration",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "外部系统集成与互操作中心",
+      "routeId": "integration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 155
+    },
+    {
+      "route": "integration-connectors",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "连接器目录与能力卡",
+      "routeId": "integration-connectors",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3614
+    },
+    {
+      "route": "integration-mapping",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "字段映射与历史迁移转换",
+      "routeId": "integration-mapping",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1371
+    },
+    {
+      "route": "integration-messages",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "集成消息追踪与业务对账",
+      "routeId": "integration-messages",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 627
+    },
+    {
+      "route": "ip-consult",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院查房、会诊与协同",
+      "routeId": "ip-consult",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 745
+    },
+    {
+      "route": "ip-orders",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院医嘱与用药中心",
+      "routeId": "ip-orders",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2976
+    },
+    {
+      "route": "ip-pathway",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院临床路径执行中心",
+      "routeId": "ip-pathway",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 704
+    },
+    {
+      "route": "ip-results",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院检查检验与危急值",
+      "routeId": "ip-results",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 981
+    },
+    {
+      "route": "knowledge-center",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "1型糖尿病临床路径(2009年版)",
+      "routeId": "knowledge-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 14140
+    },
+    {
+      "route": "lab-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "检验",
+      "routeId": "lab-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 5435
+    },
+    {
+      "route": "lis-report",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "LIS 检验报告调阅",
+      "routeId": "lis-report",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 929
+    },
+    {
+      "route": "mental-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "心理危机交接",
+      "routeId": "mental-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 897
+    },
+    {
+      "route": "mental-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "精神心理诊疗证据",
+      "routeId": "mental-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 180
+    },
+    {
+      "route": "mental-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "危机随访",
+      "routeId": "mental-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 166
+    },
+    {
+      "route": "mental-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "mental-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 166
+    },
+    {
+      "route": "mental-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "精神心理健康记录",
+      "routeId": "mental-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 232
+    },
+    {
+      "route": "mental-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "精神心理治疗执行",
+      "routeId": "mental-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 165
+    },
+    {
+      "route": "mental-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "精神心理工作台",
+      "routeId": "mental-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 305
+    },
+    {
+      "route": "migration",
+      "viewport": "390x844",
+      "issues": [
+        {
+          "issue": "HORIZONTAL_OVERFLOW",
+          "scroll_width": 576,
+          "viewport_width": 390,
+          "samples": [
+            {
+              "tag": "DIV",
+              "class_name": "",
+              "right_px": 390,
+              "width_px": 390,
+              "scroll_width": 576,
+              "client_width": 390
+            },
+            {
+              "tag": "DIV",
+              "class_name": "shell",
+              "right_px": 390,
+              "width_px": 390,
+              "scroll_width": 576,
+              "client_width": 390
+            },
+            {
+              "tag": "MAIN",
+              "class_name": "main",
+              "right_px": 390,
+              "width_px": 390,
+              "scroll_width": 576,
+              "client_width": 390
+            },
+            {
+              "tag": "SECTION",
+              "class_name": "content admin-content vue-native-page migration-page",
+              "right_px": 378,
+              "width_px": 366,
+              "scroll_width": 564,
+              "client_width": 366
+            },
+            {
+              "tag": "DIV",
+              "class_name": "page-heading admin-heading",
+              "right_px": 576,
+              "width_px": 564,
+              "scroll_width": 564,
+              "client_width": 564
+            }
+          ]
+        }
+      ],
+      "h1": "历史数据迁移与上线切换",
+      "routeId": "migration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 290
+    },
+    {
+      "route": "model-connection",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "模型连接与凭据状态",
+      "routeId": "model-connection",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 267
+    },
+    {
+      "route": "model-evaluation",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "模型评估",
+      "routeId": "model-evaluation",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 206
+    },
+    {
+      "route": "model-routing",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助模型候选与数据边界",
+      "routeId": "model-routing",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 246
+    },
+    {
+      "route": "models",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "模型服务与 API 配置",
+      "routeId": "models",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 246
+    },
+    {
+      "route": "neonatal-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "腕带核对",
+      "routeId": "neonatal-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 363
+    },
+    {
+      "route": "neonatal-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "新生儿筛查记录",
+      "routeId": "neonatal-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 211
+    },
+    {
+      "route": "neonatal-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "neonatal-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 184
+    },
+    {
+      "route": "neonatal-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "neonatal-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 353
+    },
+    {
+      "route": "neonatal-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "新生儿记录",
+      "routeId": "neonatal-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 252
+    },
+    {
+      "route": "neonatal-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "新生儿治疗执行",
+      "routeId": "neonatal-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 259
+    },
+    {
+      "route": "neonatal-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "新生儿工作台",
+      "routeId": "neonatal-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 309
+    },
+    {
+      "route": "obgyn-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "妇产护理与产后观察",
+      "routeId": "obgyn-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 244
+    },
+    {
+      "route": "obgyn-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "产前检查",
+      "routeId": "obgyn-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 333
+    },
+    {
+      "route": "obgyn-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "产后随访",
+      "routeId": "obgyn-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 195
+    },
+    {
+      "route": "obgyn-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "obgyn-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 461
+    },
+    {
+      "route": "obgyn-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "妇产记录",
+      "routeId": "obgyn-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 270
+    },
+    {
+      "route": "obgyn-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "分娩记录",
+      "routeId": "obgyn-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 216
+    },
+    {
+      "route": "obgyn-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "妇产工作台",
+      "routeId": "obgyn-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 287
+    },
+    {
+      "route": "opd-consult",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊会诊、转诊与协同",
+      "routeId": "opd-consult",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 426
+    },
+    {
+      "route": "opd-diagnosis",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊诊断与问题清单",
+      "routeId": "opd-diagnosis",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 631
+    },
+    {
+      "route": "opd-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊随访与终诊",
+      "routeId": "opd-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 777
+    },
+    {
+      "route": "opd-orders",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊医嘱与处方",
+      "routeId": "opd-orders",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 4864
+    },
+    {
+      "route": "opd-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊病历工作台",
+      "routeId": "opd-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 604
+    },
+    {
+      "route": "opd-results",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊检查检验与结果",
+      "routeId": "opd-results",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1759
+    },
+    {
+      "route": "opensource",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "开源发布指标",
+      "routeId": "opensource",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 352
+    },
+    {
+      "route": "operations",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生产运行、灾备与停机续运",
+      "routeId": "operations",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 712
+    },
+    {
+      "route": "ophthalmology-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "眼科护理与术后观察",
+      "routeId": "ophthalmology-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 255
+    },
+    {
+      "route": "ophthalmology-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "眼科诊疗证据",
+      "routeId": "ophthalmology-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 263
+    },
+    {
+      "route": "ophthalmology-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "术后随访",
+      "routeId": "ophthalmology-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 168
+    },
+    {
+      "route": "ophthalmology-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "ophthalmology-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 170
+    },
+    {
+      "route": "ophthalmology-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "眼科记录",
+      "routeId": "ophthalmology-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 203
+    },
+    {
+      "route": "ophthalmology-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "术前核对",
+      "routeId": "ophthalmology-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1390
+    },
+    {
+      "route": "ophthalmology-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "眼科工作台",
+      "routeId": "ophthalmology-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 343
+    },
+    {
+      "route": "outpatient",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊医生工作台",
+      "routeId": "outpatient",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1769
+    },
+    {
+      "route": "outpatient-pharmacy",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "门诊药房",
+      "routeId": "outpatient-pharmacy",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 9605
+    },
+    {
+      "route": "pacs-viewer",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "PACS 影像调阅",
+      "routeId": "pacs-viewer",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 760
+    },
+    {
+      "route": "pathology-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病理",
+      "routeId": "pathology-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 584
+    },
+    {
+      "route": "pathway-graph",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "知识图谱",
+      "routeId": "pathway-graph",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2913
+    },
+    {
+      "route": "pathway-review",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "审核队列",
+      "routeId": "pathway-review",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 57416
+    },
+    {
+      "route": "pathway-versions",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "版本历史",
+      "routeId": "pathway-versions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 10983
+    },
+    {
+      "route": "patient-merge",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "患者合并与可逆撤销",
+      "routeId": "patient-merge",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 374
+    },
+    {
+      "route": "patient-registry",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "患者主索引与身份核验",
+      "routeId": "patient-registry",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 353
+    },
+    {
+      "route": "patient-timeline",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "授权患者纵向时间线",
+      "routeId": "patient-timeline",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 336
+    },
+    {
+      "route": "pediatrics-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生长发育记录",
+      "routeId": "pediatrics-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 280
+    },
+    {
+      "route": "pediatrics-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "儿科诊疗证据",
+      "routeId": "pediatrics-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 264
+    },
+    {
+      "route": "pediatrics-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "pediatrics-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 183
+    },
+    {
+      "route": "pediatrics-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "pediatrics-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 578
+    },
+    {
+      "route": "pediatrics-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "儿科记录",
+      "routeId": "pediatrics-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 214
+    },
+    {
+      "route": "pediatrics-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "儿科治疗执行",
+      "routeId": "pediatrics-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 272
+    },
+    {
+      "route": "pediatrics-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "儿科工作台",
+      "routeId": "pediatrics-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 324
+    },
+    {
+      "route": "quality-center",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医疗质量中心",
+      "routeId": "quality-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 702
+    },
+    {
+      "route": "quality-rating",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医疗质量与电子病历评级看板",
+      "routeId": "quality-rating",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 480
+    },
+    {
+      "route": "record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "全院病历中心",
+      "routeId": "record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1756
+    },
+    {
+      "route": "record-diff",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病历版本差异",
+      "routeId": "record-diff",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 171
+    },
+    {
+      "route": "record-editor",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病历 · 专注编辑",
+      "routeId": "record-editor",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 612
+    },
+    {
+      "route": "record-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病历质控与审签中心",
+      "routeId": "record-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 468
+    },
+    {
+      "route": "record-sign",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病历签署确认",
+      "routeId": "record-sign",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 458
+    },
+    {
+      "route": "record-sources",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病历来源与证据中心",
+      "routeId": "record-sources",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 453
+    },
+    {
+      "route": "record-versions",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病历版本与法律证据",
+      "routeId": "record-versions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 686
+    },
+    {
+      "route": "release-gates",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "Release 门禁与制品发布",
+      "routeId": "release-gates",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 814
+    },
+    {
+      "route": "reproductive-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生殖护理与周期照护",
+      "routeId": "reproductive-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 246
+    },
+    {
+      "route": "reproductive-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生殖诊疗证据",
+      "routeId": "reproductive-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 265
+    },
+    {
+      "route": "reproductive-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "妊娠结局",
+      "routeId": "reproductive-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 235
+    },
+    {
+      "route": "reproductive-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "reproductive-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 419
+    },
+    {
+      "route": "reproductive-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "辅助生殖周期记录",
+      "routeId": "reproductive-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 333
+    },
+    {
+      "route": "reproductive-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "胚胎移植记录",
+      "routeId": "reproductive-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 218
+    },
+    {
+      "route": "reproductive-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生殖工作台",
+      "routeId": "reproductive-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 345
+    },
+    {
+      "route": "research",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "科研项目与统计中心",
+      "routeId": "research",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 558
+    },
+    {
+      "route": "research-dataset",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "研究数据集请求",
+      "routeId": "research-dataset",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 903
+    },
+    {
+      "route": "research-stats",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "科研统计分析",
+      "routeId": "research-stats",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 179
+    },
+    {
+      "route": "rule-center",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "规则、时限与提示设计器",
+      "routeId": "rule-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2191
+    },
+    {
+      "route": "scope-designer",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "角色、职责与数据范围设计器",
+      "routeId": "scope-designer",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1501
+    },
+    {
+      "route": "skill-catalog",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助能力库",
+      "routeId": "skill-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1769
+    },
+    {
+      "route": "specialty-center",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "专科支持总览",
+      "routeId": "specialty-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 477
+    },
+    {
+      "route": "specialty-coverage",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "科室与专科适配工作台",
+      "routeId": "specialty-coverage",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1298
+    },
+    {
+      "route": "surgery-schedule",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "手术",
+      "routeId": "surgery-schedule",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3382
+    },
+    {
+      "route": "tcm-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "中医护理与辨证施护",
+      "routeId": "tcm-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 241
+    },
+    {
+      "route": "tcm-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "四诊记录",
+      "routeId": "tcm-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 169
+    },
+    {
+      "route": "tcm-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "tcm-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 183
+    },
+    {
+      "route": "tcm-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "tcm-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 596
+    },
+    {
+      "route": "tcm-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "中医记录",
+      "routeId": "tcm-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 174
+    },
+    {
+      "route": "tcm-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "草药处方",
+      "routeId": "tcm-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 373
+    },
+    {
+      "route": "tcm-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "中医工作台",
+      "routeId": "tcm-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 273
+    },
+    {
+      "route": "therapy-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "治疗",
+      "routeId": "therapy-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 814
+    },
+    {
+      "route": "tool-catalog",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助工具库",
+      "routeId": "tool-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2156
+    },
+    {
+      "route": "transfusion",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "输血",
+      "routeId": "transfusion",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1408
+    },
+    {
+      "route": "unified-home",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "统一首页与任务中心",
+      "routeId": "unified-home",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 599
+    },
+    {
+      "route": "ward",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "心内科一病区 · 护理工作台",
+      "routeId": "ward",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 231
+    },
+    {
+      "route": "workflow",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "流程与状态设计器",
+      "routeId": "workflow",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1622
+    }
+  ]
+}

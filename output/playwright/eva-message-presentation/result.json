@@ -1,0 +1,19 @@
+{
+  "test_mode": "UI_FIXTURE_NO_MODEL_CALL",
+  "surfaces": [
+    "workbench",
+    "center",
+    "side"
+  ],
+  "avatar_idle_motion": "PASS",
+  "avatar_working_motion": "PASS",
+  "markdown": "PASS",
+  "loading": "PASS",
+  "elapsed_timer": "PASS",
+  "narrow_side_window": "PASS",
+  "mode_switch_keeps_message": "PASS",
+  "failure_stops_loading": "PASS",
+  "cancellation_stops_loading": "PASS",
+  "reduced_motion": "PASS",
+  "errors": []
+}

@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
 const outputDir = resolve(projectDir, 'output/playwright');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
 await mkdir(outputDir, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
@@ -58,13 +58,26 @@ try {
     return { text };
   });
 
-  await check('clinical-foundation-menu-trimmed', async () => {
+  await check('clinical-foundation-menu-keeps-unified-home', async () => {
     const text = (await page.locator('.center-nav').innerText()).replace(/\s+/g, ' ');
-    for (const removed of ['统一首页', '患者登记', '患者时间线']) {
-      if (text.includes(removed)) throw new Error(`仍显示已删除菜单：${removed}`);
-    }
-    for (const expected of ['业务门户', '预约挂号', '入院床位', '紧急访问']) requireText(text, expected);
+    for (const expected of ['业务门户', '统一首页', '预约挂号', '入院床位', '紧急访问']) requireText(text, expected);
+    const unifiedHome = page.locator('.center-nav a', { hasText: '统一首页' });
+    if (await unifiedHome.count() !== 1) throw new Error('统一首页必须作为唯一的临床通用入口显示');
+    const href = await unifiedHome.getAttribute('href');
+    if (href !== '#/unified-home') throw new Error(`统一首页入口地址错误：${href}`);
     return { text };
+  });
+
+  await route('unified-home');
+  await check('unified-home-aggregates-real-authorized-work', async () => {
+    if (await page.locator('.clinical-page-state.error').count()) throw new Error('统一首页聚合数据加载失败，未允许静态数字回退');
+    const cards = page.locator('.unified-home-fact');
+    if (await cards.count() !== 6) throw new Error(`预期 6 张聚合事实卡，实际 ${await cards.count()} 张`);
+    const values = await cards.locator('b').allInnerTexts();
+    if (values.some((value) => !/^\d+$/.test(value.trim()))) throw new Error(`聚合卡必须展示服务端计算出的数字，实际：${values.join(', ')}`);
+    const score = (await page.locator('.hub-score b').innerText()).trim();
+    if (!/^\d+$/.test(score)) throw new Error(`统一首页待办总数无效：${score}`);
+    return { values, score };
   });
 
   await check('all-portal-buttons-route-correctly', async () => {

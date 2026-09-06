@@ -1,0 +1,29 @@
+{
+  "run_at": "2026-09-05T12:02:56.859Z",
+  "defect": "E2E 眼科质控缺陷 1788609776859",
+  "checks": [
+    {
+      "name": "real-preop-source-is-created-before-qc-review",
+      "status": "PASS",
+      "detail": "术前核对 52dbaab4-56a6-4db0-8071-75cb3825ac09 已由真实业务入口创建"
+    },
+    {
+      "name": "fail-qc-review-selects-real-source-and-creates-remediation-task",
+      "status": "PASS",
+      "detail": "FAIL 复核 47691510-8d2e-47ea-847b-ba50dd4fd888 已绑定术前核对"
+    },
+    {
+      "name": "remediation-task-is-visible-in-outpatient-task-center",
+      "status": "PASS",
+      "detail": "门诊任务中心展示高风险待处理的 QC_REMEDIATION，来源为 SPECIALTY_QC_REVIEW"
+    }
+  ],
+  "findings": [],
+  "evidence": {
+    "preop_verification_id": "52dbaab4-56a6-4db0-8071-75cb3825ac09",
+    "qc_review_id": "47691510-8d2e-47ea-847b-ba50dd4fd888",
+    "remediation_task_title": "眼科质控不通过整改"
+  },
+  "passed": 3,
+  "failed": 0
+}

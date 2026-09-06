@@ -1,4 +1,4 @@
-# openemr2026 医疗 UI 设计系统基础契约
+# HaoEMR 医疗 UI 设计系统基础契约
 
 > 状态：`CREATED`。本文件只定义不依赖 A/B/C 品牌选择的医疗安全、布局、组件和可访问性规则；最终颜色值、材质和图标资产在视觉方向确认后写入 `design-system.md` 与 `tokens.json`。
 

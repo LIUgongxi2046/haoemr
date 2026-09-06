@@ -12,7 +12,7 @@ import './align-prototype.css';
 import './vue/vue-shell.css';
 
 const root = document.getElementById('root');
-if (!root) throw new Error('openemr2026 root element is missing');
+if (!root) throw new Error('haoemr root element is missing');
 
 const app = createApp(App);
 app.use(createPinia());

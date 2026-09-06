@@ -1,0 +1,291 @@
+{
+  "run_at": "2026-09-05T04:50:20.101Z",
+  "routes": 15,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 30,
+  "verified_route_viewports": 30,
+  "findings": [],
+  "observations": [
+    {
+      "route": "archive-integrity",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "病案完整性、签名与长期验真",
+      "routeId": "archive-integrity",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 687
+    },
+    {
+      "route": "archive-preservation",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "病案长期保存与恢复验证",
+      "routeId": "archive-preservation",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 630
+    },
+    {
+      "route": "archive-scan",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "纸质病历扫描与智能编目",
+      "routeId": "archive-scan",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 667
+    },
+    {
+      "route": "asset-detail",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "病案资产证据详情",
+      "routeId": "asset-detail",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 501
+    },
+    {
+      "route": "backup",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "备份恢复与完整性报告",
+      "routeId": "backup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 952
+    },
+    {
+      "route": "billing",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "费用结算",
+      "routeId": "billing",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 8862
+    },
+    {
+      "route": "capability-pack",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "能力包与灰度发布",
+      "routeId": "capability-pack",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2173
+    },
+    {
+      "route": "care-operations",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "执行总览",
+      "routeId": "care-operations",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 9876
+    },
+    {
+      "route": "clinical",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "临床业务门户",
+      "routeId": "clinical",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1855
+    },
+    {
+      "route": "clinical-specialty-ai",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "专科医助复核",
+      "routeId": "clinical-specialty-ai",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 675
+    },
+    {
+      "route": "clinical-tasks",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "任务中心",
+      "routeId": "clinical-tasks",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1190
+    },
+    {
+      "route": "cohort-builder",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "研究队列构建器",
+      "routeId": "cohort-builder",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1368
+    },
+    {
+      "route": "config-release",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "配置差异、审批与灰度发布",
+      "routeId": "config-release",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 998
+    },
+    {
+      "route": "config-upgrade",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "配置包升级与冲突处理",
+      "routeId": "config-upgrade",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 987
+    },
+    {
+      "route": "credentials",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "临床资质与医疗授权中心",
+      "routeId": "credentials",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1666
+    },
+    {
+      "route": "archive-integrity",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病案完整性、签名与长期验真",
+      "routeId": "archive-integrity",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 454
+    },
+    {
+      "route": "archive-preservation",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病案长期保存与恢复验证",
+      "routeId": "archive-preservation",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 397
+    },
+    {
+      "route": "archive-scan",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "纸质病历扫描与智能编目",
+      "routeId": "archive-scan",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 434
+    },
+    {
+      "route": "asset-detail",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病案资产证据详情",
+      "routeId": "asset-detail",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 234
+    },
+    {
+      "route": "backup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "备份恢复与完整性报告",
+      "routeId": "backup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 719
+    },
+    {
+      "route": "billing",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "费用结算",
+      "routeId": "billing",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 8629
+    },
+    {
+      "route": "capability-pack",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "能力包与灰度发布",
+      "routeId": "capability-pack",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1940
+    },
+    {
+      "route": "care-operations",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "执行总览",
+      "routeId": "care-operations",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 9643
+    },
+    {
+      "route": "clinical",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "临床业务门户",
+      "routeId": "clinical",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1622
+    },
+    {
+      "route": "clinical-specialty-ai",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "专科医助复核",
+      "routeId": "clinical-specialty-ai",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 442
+    },
+    {
+      "route": "clinical-tasks",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "任务中心",
+      "routeId": "clinical-tasks",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 957
+    },
+    {
+      "route": "cohort-builder",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "研究队列构建器",
+      "routeId": "cohort-builder",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1135
+    },
+    {
+      "route": "config-release",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "配置差异、审批与灰度发布",
+      "routeId": "config-release",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 765
+    },
+    {
+      "route": "config-upgrade",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "配置包升级与冲突处理",
+      "routeId": "config-upgrade",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 754
+    },
+    {
+      "route": "credentials",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "临床资质与医疗授权中心",
+      "routeId": "credentials",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1433
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import workbenchSource from './components/SimulationWorkbenchPage.vue?raw';
 import hierarchySource from './views/SimulationHierarchyPage.vue?raw';
+import shellSource from './components/ClinicalShell.vue?raw';
+import overviewSource from './views/MockInterfacePage.vue?raw';
 import routerSource from './router.ts?raw';
 import { mockInterfaceSubmenus, simulationWorkbenches } from './simulation-workbenches';
 
@@ -42,4 +44,13 @@ describe('mock interface submenu contract', () => {
     expect(workbenchSource).toContain('五级·运行历史');
     expect(workbenchSource).toContain('六级·运行详情');
   });
+
+  it('keeps retired AI simulation URLs as compatibility entries into the maintained real pages', () => {
+    expect(routerSource).toContain("'ai-capture': '/ai-capture'");
+    expect(routerSource).toContain("'model-connection': '/model-connection'");
+    expect(routerSource).toContain("'model-routing': '/model-routing'");
+    expect(overviewSource).toContain("delegated ? `/${workbenchId}` : `/mock-interfaces/${workbenchId}`");
+    expect(routerSource).toContain("'agent': () => import('./views/AiCapturePage.vue')");
+  });
+
 });

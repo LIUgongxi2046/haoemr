@@ -67,7 +67,7 @@ async function createNote() {
       <div>
         <p class="eyebrow">专科中心 / 口腔</p>
         <h1>口腔护理与术后观察</h1>
-        <p>记录口腔术前准备、疼痛出血评估、术后观察与宣教，高风险信号进入复核和随访。</p>
+        <p>记录口腔术前准备、疼痛出血评估、术后观察与宣教；高风险仅作为可追溯标记，复核或随访须由临床人员发起。</p>
       </div>
       
     </div>
@@ -107,7 +107,7 @@ async function createNote() {
             <label><span>护理评估</span><textarea v-model="form.assessment" rows="3" required placeholder="记录专科症状、生命体征、疼痛和风险评估" /></label>
             <label><span>护理干预与观察</span><textarea v-model="form.intervention" rows="3" required placeholder="记录护理措施、用药执行、效果观察和交接计划" /></label>
             <label><span>记录时间</span><input v-model="form.recorded_at" type="datetime-local" required /></label>
-            <label class="risk-confirm"><input v-model="form.risk_flag" type="checkbox" /><span>存在危险信号（需交接与复核）</span></label>
+            <label class="risk-confirm"><input v-model="form.risk_flag" type="checkbox" /><span>存在危险信号（保存风险标记，后续交接或复核须由临床人员发起）</span></label>
             <button class="button primary full" :disabled="busy || !form.assessment.trim() || !form.intervention.trim()">{{ busy ? '正在保存…' : '保存护理记录' }}</button>
           </form>
         </section>

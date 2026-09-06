@@ -84,7 +84,7 @@ async function createNote() {
 
       <div class="admin-layout">
         <section class="admin-panel">
-          <header><div><h2>治疗执行台账</h2><p>治疗前评估、方案执行与疗效分项记录，高风险结果进入复核闭环。</p></div><button class="button secondary" @click="itemsQuery.refetch()">刷新</button></header>
+          <header><div><h2>治疗执行台账</h2><p>治疗前评估、方案执行与疗效分项记录；高风险标记不自动创建复核。</p></div><button class="button secondary" @click="itemsQuery.refetch()">刷新</button></header>
           <div v-if="!items.length" class="admin-empty" role="status">暂无治疗记录，可在右侧新增首条记录。</div>
           <div v-else class="admin-table-wrap">
             <table class="admin-table">
@@ -107,7 +107,7 @@ async function createNote() {
             <label><span>治疗前评估</span><textarea v-model="form.assessment" rows="3" required placeholder="记录适应证、禁忌证、剂量依据和风险评估" /></label>
             <label><span>治疗方案与执行</span><textarea v-model="form.intervention" rows="3" required placeholder="记录方案、执行过程、疗效观察和后续计划" /></label>
             <label><span>记录时间</span><input v-model="form.recorded_at" type="datetime-local" required /></label>
-            <label class="risk-confirm"><input v-model="form.risk_flag" type="checkbox" /><span>存在危险信号（需交接与复核）</span></label>
+            <label class="risk-confirm"><input v-model="form.risk_flag" type="checkbox" /><span>存在危险信号（保存风险标记，后续交接或复核须由临床人员发起）</span></label>
             <button class="button primary full" :disabled="busy || !form.assessment.trim() || !form.intervention.trim()">{{ busy ? '正在保存…' : '保存治疗记录' }}</button>
           </form>
         </section>

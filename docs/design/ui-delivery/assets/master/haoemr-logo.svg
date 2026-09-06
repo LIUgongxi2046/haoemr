@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="252" height="48" viewBox="0 0 252 48" role="img" aria-labelledby="title desc">
+  <title id="title">HaoEMR</title>
+  <desc id="desc">临床可信蓝版品牌组合字标</desc>
+  <rect width="48" height="48" rx="12" fill="#1769E0"/>
+  <path d="M13 24h7l3-8 4 16 3-8h5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24 8v8M20 12h8" stroke="#BFE0FF" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="60" y="29" fill="#102A43" font-family="Inter,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" font-size="22" font-weight="750" letter-spacing="-.4">HaoEMR</text>
+  <text x="61" y="42" fill="#607086" font-family="Inter,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" font-size="9" font-weight="600" letter-spacing="1.4">OPEN CLINICAL RECORD</text>
+</svg>

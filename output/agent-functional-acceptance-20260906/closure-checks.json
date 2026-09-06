@@ -1,0 +1,28 @@
+[
+  {
+    "name": "candidate_task_claim",
+    "state": "CLAIMED",
+    "task_id": "93add963-61f3-4f5f-a6a3-a01aa78d7faa"
+  },
+  {
+    "name": "source_acknowledgement_closes_task",
+    "state": "COMPLETED",
+    "pass": true
+  },
+  {
+    "name": "cross_patient_reminder_rejected",
+    "pass": true,
+    "error": "/clinical-reminders HTTP 409 {\"error\":{\"code\":\"MEDICAL_AGENT_REMINDER_SOURCE_INVALID\",\"category\":\"CONFLICT\",\"message\":\"A completed live candidate from this patient and encounter is required\",\"trace_id\":\"2d4a4651-7734-4c66-8425-d2c432a2da0f\",\"retryable\":false,\"recovery\":null,\"violations\":[]}}"
+  },
+  {
+    "name": "cross_patient_document_rejected",
+    "pass": true,
+    "error": "/documents/018f0000-0000-7000-8000-000000001001/draft HTTP 409 {\"error\":{\"code\":\"MEDICAL_AGENT_DRAFT_SOURCE_STALE\",\"category\":\"CONFLICT\",\"message\":\"The candidate is unavailable or belongs to another patient or document version; regenerate it\",\"trace_id\":\"73f3d6b8-951a-4a89-9b19-438ac31579b8\",\"retryable\":false,\"recovery\":null,\"violations\":[]}}"
+  },
+  {
+    "name": "no_patient_real_execution",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "697dc5c1-cc60-47b8-805f-173eb9c0aa84",
+    "pass": true
+  }
+]

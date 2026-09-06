@@ -1,0 +1,18 @@
+{
+  "run_at": "2026-09-05T10:12:11.037Z",
+  "checks": [
+    {
+      "name": "model-registration-offers-only-real-provider-options",
+      "status": "PASS",
+      "detail": "新建入口仅提供 5 个真实 Provider；未提供 SYNTHETIC 或模拟配置"
+    },
+    {
+      "name": "retired-example-configurations-are-visible-but-cannot-be-tested-or-routed",
+      "status": "PASS",
+      "detail": "当前台账未暴露 .example 配置；页面明确其已退役且不可检测或路由"
+    }
+  ],
+  "findings": [],
+  "passed": 2,
+  "failed": 0
+}

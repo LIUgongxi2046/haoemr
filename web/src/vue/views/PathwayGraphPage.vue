@@ -9,6 +9,7 @@ import {
   getKnowledgeGraphPaths,
   issuePathwayKnowledgeLease,
 } from '../../api/pathway-knowledge';
+import { importKnowledgeGraph, issueKnowledgeLease, listKnowledgeSources } from '../../api/knowledge';
 import type {
   ContextLeaseWire,
   KnowledgeGraphEdgeWire,
@@ -16,6 +17,7 @@ import type {
   KnowledgeGraphNodeWire,
   KnowledgeGraphPathWire,
   KnowledgeGraphPathsWire,
+  KnowledgeSourceWire,
 } from '../../generated/contracts';
 
 const container = ref<HTMLDivElement | null>(null);
@@ -27,6 +29,10 @@ const allNodes = ref<KnowledgeGraphNodeWire[]>([]);
 const allEdges = ref<KnowledgeGraphEdgeWire[]>([]);
 const hiddenTypes = ref<Set<string>>(new Set());
 const showEdgeLabels = ref(false);
+const importOpen = ref(false);
+const importBusy = ref(false);
+const importSources = ref<KnowledgeSourceWire[]>([]);
+const graphImport = ref({ sourceId: '', sourceDocumentVersionId: '', concepts: '[\n  {"system":"LOCAL","code":"EXAMPLE-A","display":"示例概念 A"},\n  {"system":"LOCAL","code":"EXAMPLE-B","display":"示例概念 B"}\n]', relations: '[\n  {"from_system":"LOCAL","from_code":"EXAMPLE-A","to_system":"LOCAL","to_code":"EXAMPLE-B","relation_type":"SUPPORTED_BY"}\n]' });
 
 // 当前视图数据源：全图 or 某个节点的 ego 子图
 const viewNodes = ref<KnowledgeGraphNodeWire[]>([]);
@@ -161,6 +167,48 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+
+const usableImportSources = computed(() => importSources.value.filter((source) => ['REGISTERED', 'ACTIVE'].includes(source.status)));
+
+async function openImport() {
+  importOpen.value = !importOpen.value;
+  if (!importOpen.value || importSources.value.length) return;
+  try {
+    importSources.value = await listKnowledgeSources(await issueKnowledgeLease());
+    if (!graphImport.value.sourceId && usableImportSources.value.length) graphImport.value.sourceId = usableImportSources.value[0].source_id;
+  } catch (error) {
+    notice.value = error instanceof Error ? error.message : '无法读取可用知识来源';
+  }
+}
+
+async function submitGraphImport() {
+  if (importBusy.value || !graphImport.value.sourceId) return;
+  importBusy.value = true;
+  notice.value = '';
+  try {
+    const concepts = JSON.parse(graphImport.value.concepts);
+    const relations = JSON.parse(graphImport.value.relations);
+    if (!Array.isArray(concepts) || !Array.isArray(relations)) throw new Error('概念和关系必须分别是 JSON 数组');
+    if (concepts.some((concept) => concept?.source_type && concept.source_type !== 'DICTIONARY')) {
+      throw new Error('仅允许已审核的 DICTIONARY 词典概念导入；EXTRACTED 内容须先走证据复核');
+    }
+    const batch = await importKnowledgeGraph(await issueKnowledgeLease(), {
+      source_id: graphImport.value.sourceId,
+      source_document_version_id: graphImport.value.sourceDocumentVersionId.trim() || null,
+      concepts: concepts.map((concept) => ({ ...concept, source_type: 'DICTIONARY' })),
+      relations,
+    });
+    notice.value = `图谱导入已完成：新增 ${batch.imported_concept_count} 个词典概念、${batch.imported_relation_count} 条关系；批次 …${batch.graph_import_batch_id.slice(-8)}。`;
+    importOpen.value = false;
+    const l = await ensureLease();
+    const graph = await getKnowledgeGraph(l, 250);
+    stats.value = { nodes: graph.nodes.length, edges: graph.edges.length };
+    allNodes.value = graph.nodes; allEdges.value = graph.edges; viewNodes.value = graph.nodes; viewEdges.value = graph.edges;
+    renderAll();
+  } catch (error) {
+    notice.value = error instanceof Error ? error.message : '图谱导入失败';
+  } finally { importBusy.value = false; }
+}
 
 onBeforeUnmount(() => { simulation?.stop(); });
 
@@ -390,6 +438,7 @@ function exportCsv() {
         <p>临床路径 ↔ 疾病 / 药品 / 检查 / 临床所见 的关系网络。点节点看邻居，选两点查路径，展开子图看局部。</p>
       </div>
       <div class="head-actions">
+        <button class="btn ghost" @click="openImport">{{ importOpen ? '收起受控导入' : '受控导入' }}</button>
         <button class="btn ghost" @click="toggleEdgeLabels">
           {{ showEdgeLabels ? '隐藏关系标签' : '显示关系标签' }}
         </button>
@@ -398,6 +447,18 @@ function exportCsv() {
       </div>
     </div>
     <p v-if="notice" class="notice-banner">{{ notice }}</p>
+
+    <section v-if="importOpen" class="graph-import-panel" aria-label="受控图谱导入">
+      <header><div><h2>受控图谱导入</h2><p>仅可选择已登记且可用的来源；只接受已审核的词典概念。导入会生成固定清单哈希、批次、审计和 Outbox，不会写入患者或临床事实。</p></div></header>
+      <div v-if="!usableImportSources.length" class="path-empty">暂无可用知识来源。请先在知识来源台账登记并启用来源。</div>
+      <form v-else class="graph-import-form" @submit.prevent="submitGraphImport">
+        <label>来源<select v-model="graphImport.sourceId" required aria-label="图谱导入来源"><option v-for="source in usableImportSources" :key="source.source_id" :value="source.source_id">{{ source.source_name }}（{{ source.source_code }} · {{ source.status }}）</option></select></label>
+        <label>来源文档版本（可选）<input v-model="graphImport.sourceDocumentVersionId" placeholder="知识文档版本 UUID；留空表示来源级导入" /></label>
+        <label>词典概念 JSON<textarea v-model="graphImport.concepts" rows="7" aria-label="词典概念 JSON" required /></label>
+        <label>关系 JSON<textarea v-model="graphImport.relations" rows="6" aria-label="关系 JSON" required /></label>
+        <div class="graph-import-actions"><button type="button" class="btn ghost" @click="importOpen = false">取消</button><button class="btn primary" :disabled="importBusy">{{ importBusy ? '正在导入…' : '导入审核词典概念' }}</button></div>
+      </form>
+    </section>
 
     <div class="graph-layout">
       <aside class="graph-side">
@@ -427,7 +488,7 @@ function exportCsv() {
         <div class="side-block" v-if="selectedId">
           <h3>子图展开</h3>
           <label class="field-label">跳数</label>
-          <select v-model.number="egoDepth" class="depth-select">
+          <select v-model.number="egoDepth" class="depth-select" aria-label="邻域跳数">
             <option :value="1">1 跳</option>
             <option :value="2">2 跳</option>
             <option :value="3">3 跳</option>
@@ -461,7 +522,7 @@ function exportCsv() {
             </div>
           </div>
           <label class="field-label">最大跳数</label>
-          <select v-model.number="pathDepth" class="depth-select">
+          <select v-model.number="pathDepth" class="depth-select" aria-label="路径最大跳数">
             <option :value="1">1 跳</option>
             <option :value="2">2 跳</option>
             <option :value="3">3 跳</option>
@@ -600,6 +661,15 @@ function exportCsv() {
 .stat { font-size: 12px; color: #64748b; }
 .notice-banner { margin: 12px 0; padding: 10px 14px; border-radius: 8px; background: #eff6ff; color: #2563eb; }
 .loading { color: #94a3b8; padding: 20px; text-align: center; }
+.graph-import-panel { margin: 12px 0; padding: 16px; border: 1px solid #bfdbfe; border-radius: 12px; background: #f8fbff; }
+.graph-import-panel header h2 { margin: 0; font-size: 16px; color: #1e3a5f; }
+.graph-import-panel header p { margin: 6px 0 14px; color: #475569; font-size: 13px; line-height: 1.5; }
+.graph-import-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.graph-import-form label { display: grid; gap: 5px; color: #334155; font-size: 12px; font-weight: 600; }
+.graph-import-form label:nth-child(3), .graph-import-form label:nth-child(4) { grid-column: 1 / -1; }
+.graph-import-form input, .graph-import-form select, .graph-import-form textarea { box-sizing: border-box; width: 100%; border: 1px solid #cbd7e5; border-radius: 8px; padding: 8px 10px; background: #fff; color: #334155; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.graph-import-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 8px; }
+.graph-import-actions .btn.primary { width: auto; margin: 0; }
 
 .search-bar, .pick { position: relative; margin-bottom: 8px; }
 .search-bar input, .pick input { width: 100%; padding: 8px 10px; border: 1px solid #cbd7e5; border-radius: 8px; font-size: 13px; box-sizing: border-box; }
@@ -634,4 +704,5 @@ function exportCsv() {
 .neighbor-row { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 5px 6px; border: none; background: transparent; cursor: pointer; font-size: 13px; border-radius: 6px; }
 .neighbor-row:hover { background: #f1f5f9; }
 .neighbor-row em { margin-left: auto; color: #94a3b8; font-style: normal; font-size: 12px; background: #f1f5f9; padding: 1px 6px; border-radius: 10px; }
+@media (max-width: 600px) { .graph-layout { display: grid; grid-template-columns: minmax(0, 1fr); } .graph-side, .neighbor-panel { width: auto; max-height: none; } .graph-container { min-height: 340px; height: 55vh; } .graph-import-form { grid-template-columns: minmax(0, 1fr); } .graph-import-form label:nth-child(3), .graph-import-form label:nth-child(4) { grid-column: auto; } }
 </style>

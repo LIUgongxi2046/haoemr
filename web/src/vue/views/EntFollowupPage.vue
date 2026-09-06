@@ -2,9 +2,10 @@
 import { useQuery } from '@tanstack/vue-query';
 import { computed, reactive, ref } from 'vue';
 import type { EntFollowupRecordWire } from '../../generated/contracts';
-import { createEntFollowupRecord, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listEntFollowupRecords } from '../../api/specialty-layers';
+import { createEntFollowupRecord, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listEntAirwayRiskHandovers, listEntFollowupRecords } from '../../api/specialty-layers';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { localDateTimeInputValue } from '../date-input';
 
 const patientLeaseQuery = useQuery({
   queryKey: ['specialty-layers', 'ent-followup', 'patient-lease'],
@@ -26,19 +27,21 @@ const recordsQuery = useQuery({
   enabled: () => Boolean(patientLease.value),
   retry: false,
 });
+const handoversQuery = useQuery({ queryKey: ['specialty-layers', 'ent-followup', 'handovers'], queryFn: () => listEntAirwayRiskHandovers(patientLease.value!), enabled: () => Boolean(patientLease.value), retry: false });
 
-const issue = computed(() => (patientLeaseQuery.error.value ?? encounterLeaseQuery.error.value ?? recordsQuery.error.value)
-  ? toClinicalIssue(patientLeaseQuery.error.value ?? encounterLeaseQuery.error.value ?? recordsQuery.error.value) : null);
+const issue = computed(() => (patientLeaseQuery.error.value ?? encounterLeaseQuery.error.value ?? recordsQuery.error.value ?? handoversQuery.error.value)
+  ? toClinicalIssue(patientLeaseQuery.error.value ?? encounterLeaseQuery.error.value ?? recordsQuery.error.value ?? handoversQuery.error.value) : null);
 const records = computed(() => recordsQuery.data.value ?? []);
-const anyPending = computed(() => patientLeaseQuery.isPending.value || encounterLeaseQuery.isPending.value || recordsQuery.isPending.value);
+const anyPending = computed(() => patientLeaseQuery.isPending.value || encounterLeaseQuery.isPending.value || recordsQuery.isPending.value || handoversQuery.isPending.value);
 
 const form = reactive({
+  airwayHandoverId: '',
   followupReason: '',
   scheduledDate: '',
   attended: false,
   noShowReason: '',
   outcomeNote: '',
-  recordedAt: new Date().toISOString(),
+  recordedAt: localDateTimeInputValue(),
 });
 const busy = ref('');
 const notice = ref('');
@@ -49,17 +52,18 @@ function formatDate(value: string | null | undefined) {
 
 async function reload() {
   notice.value = '';
-  await recordsQuery.refetch();
+  await Promise.all([recordsQuery.refetch(), handoversQuery.refetch()]);
 }
 
 async function createRecord() {
   const lease = encounterLease.value;
-  if (!lease || busy.value || !form.followupReason.trim() || !form.scheduledDate) return;
+  if (!lease || busy.value || !form.airwayHandoverId || !form.followupReason.trim() || !form.scheduledDate) return;
   busy.value = 'create'; notice.value = '';
   try {
     await createEntFollowupRecord(lease, {
+      airway_handover_id: form.airwayHandoverId,
       followup_reason: form.followupReason.trim(),
-      scheduled_date: form.scheduledDate,
+      scheduled_date: new Date(form.scheduledDate).toISOString(),
       attended: form.attended,
       no_show_reason: form.noShowReason.trim() || null,
       outcome_note: form.outcomeNote.trim() || null,
@@ -79,9 +83,9 @@ async function createRecord() {
   <section data-page-root class="content admin-content vue-native-page">
     <div class="page-heading admin-heading">
       <div>
-        <p class="eyebrow">专科其余层 / 儿科 · 随访</p>
+        <p class="eyebrow">专科其余层 / 耳鼻喉 · 随访</p>
         <h1>随访记录</h1>
-        <p>随访原因、预约日期、是否到访与结局备注登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记随访原因、预约日期、是否到访与结局备注。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>
@@ -97,7 +101,7 @@ async function createRecord() {
       <div class="admin-layout">
         <section class="admin-panel">
           <header>
-            <div><h2>随访记录台账</h2><p>当前患者儿科随访档案。</p></div>
+            <div><h2>随访记录台账</h2><p>当前患者耳鼻喉随访档案。</p></div>
           </header>
           <div v-if="records.length === 0" class="admin-empty" role="status">暂无随访记录，可在右侧新增。</div>
           <div v-else class="admin-table-wrap">
@@ -117,8 +121,9 @@ async function createRecord() {
         </section>
 
         <section class="admin-panel admin-form-panel">
-          <header><div><h2>新增随访记录</h2><p>随访原因与预约日期必填。</p></div></header>
+          <header><div><h2>新增随访记录</h2><p>必须关联当前患者同一次就诊的气道风险交接。</p></div></header>
           <form class="admin-form" @submit.prevent="createRecord">
+            <label><span>气道风险交接</span><select v-model="form.airwayHandoverId" required><option value="" disabled>请选择气道风险交接</option><option v-for="item in handoversQuery.data.value ?? []" :key="item.handover_id" :value="item.handover_id">{{ item.handover_id }} · {{ item.airway_risk_level }}</option></select></label>
             <label><span>随访原因</span><input v-model="form.followupReason" required /></label>
             <label><span>预约日期</span><input v-model="form.scheduledDate" type="date" required /></label>
             <label><span>记录时间</span><input v-model="form.recordedAt" type="datetime-local" required /></label>

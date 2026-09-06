@@ -5,6 +5,7 @@ import type { ArtCycleRecordWire } from '../../generated/contracts';
 import { createArtCycleRecord, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listArtCycleRecords } from '../../api/specialty';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { localDateTimeInputValue } from '../date-input';
 
 const patientLeaseQuery = useQuery({
   queryKey: ['specialty', 'reproductive-record', 'patient-lease'],
@@ -35,7 +36,7 @@ const anyPending = computed(() => patientLeaseQuery.isPending.value || encounter
 const form = reactive({
   cycleType: 'IVF' as ArtCycleRecordWire['cycle_type'],
   cycleNumber: 1,
-  ethicsConsentDate: new Date().toISOString(),
+  ethicsConsentDate: localDateTimeInputValue(),
   consentDocumentId: '',
   partnerPatientId: '',
 });

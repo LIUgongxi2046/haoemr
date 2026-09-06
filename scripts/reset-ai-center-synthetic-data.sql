@@ -4,8 +4,8 @@ begin;
 
 do $$
 begin
-  if current_database() <> 'openemr2026_dev' then
-    raise exception 'AI synthetic reset is restricted to openemr2026_dev';
+  if current_database() <> 'haoemr_dev' then
+    raise exception 'AI synthetic reset is restricted to haoemr_dev';
   end if;
 end $$;
 

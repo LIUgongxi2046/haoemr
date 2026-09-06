@@ -76,7 +76,7 @@ onMounted(() => { void refresh(); });
         >{{ p.display_name }}</button>
       </aside>
 
-      <main class="ver-main">
+      <section class="ver-main">
         <template v-if="selectedId">
           <h2>{{ selectedName }} · 版本时间线</h2>
           <div class="timeline">
@@ -95,7 +95,7 @@ onMounted(() => { void refresh(); });
           </div>
         </template>
         <div v-else class="ver-empty ver-empty-big">从左侧选择路径查看版本历史</div>
-      </main>
+      </section>
     </div>
   </section>
 </template>
@@ -122,4 +122,5 @@ onMounted(() => { void refresh(); });
 .notice-banner { margin: 12px 0; padding: 10px 14px; border-radius: 8px; background: #eff6ff; color: #2563eb; }
 .btn { padding: 7px 12px; border-radius: 8px; border: 1px solid #cbd7e5; background: #fff; cursor: pointer; font-size: 12px; }
 .btn.danger { background: #fee2e2; color: #dc2626; border-color: #fecaca; }
+@media (max-width: 600px) { .ver-layout { display: grid; grid-template-columns: 1fr; } .ver-side { width: auto; max-height: 180px; } .ver-main { min-width: 0; padding: 14px; } .tl-head { align-items: flex-start; flex-direction: column; gap: 4px; } }
 </style>

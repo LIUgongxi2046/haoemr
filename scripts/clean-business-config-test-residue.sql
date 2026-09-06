@@ -4,8 +4,8 @@ begin;
 
 do $$
 begin
-  if current_database() <> 'openemr2026_dev' then
-    raise exception 'This cleanup may only run against openemr2026_dev';
+  if current_database() <> 'haoemr_dev' then
+    raise exception 'This cleanup may only run against haoemr_dev';
   end if;
 end $$;
 

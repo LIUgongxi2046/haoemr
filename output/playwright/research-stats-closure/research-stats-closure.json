@@ -1,0 +1,18 @@
+{
+  "run_at": "2026-09-05T08:34:52.555Z",
+  "checks": [
+    {
+      "name": "compute-and-render-current-materialized-research-statistics",
+      "status": "PASS",
+      "detail": "当前计算批次展示 4 项指标、4 个年龄分层及 5 个季度趋势点，快照后缀 40e5389f"
+    },
+    {
+      "name": "recompute-replaces-visible-calculation-batch-without-mixing-old-points",
+      "status": "PASS",
+      "detail": "二次计算仍只展示当前批次 4 项指标、4 个年龄分层与 5 个趋势点，快照后缀 96cc18a4"
+    }
+  ],
+  "findings": [],
+  "passed": 2,
+  "failed": 0
+}

@@ -5,6 +5,7 @@ script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 project_dir=$(cd "$script_dir/.." && pwd)
 
 cd "$project_dir"
+"$script_dir/verify-open-source-governance.sh"
 "$script_dir/dev-db.sh" start
 npm --prefix contracts test
 npm --prefix contracts run check

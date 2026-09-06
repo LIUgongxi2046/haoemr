@@ -30,7 +30,7 @@ create trigger referral_identity_immutable
 
 create function require_controlled_referral_edit() returns trigger language plpgsql as $$
 begin
-  if coalesce(current_setting('openemr2026.allow_referral_edit', true), 'false') <> 'true' then
+  if coalesce(current_setting('haoemr.allow_referral_edit', true), 'false') <> 'true' then
     raise exception 'referral clinical content may only change through the versioned service command';
   end if;
   return new;

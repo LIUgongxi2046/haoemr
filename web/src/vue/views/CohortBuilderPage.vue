@@ -11,6 +11,7 @@ import {
   listResearchCohortMembers,
   listResearchCohortSnapshots,
   listResearchCohorts,
+  recomputeResearchCohort,
   recordResearchCohortSnapshot,
 } from '../../api/data';
 import AdminActionDialog from '../components/AdminActionDialog.vue';
@@ -155,6 +156,18 @@ async function computeMember() {
     const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`;
   } finally { busy.value = ''; }
 }
+
+async function recomputeAllMembers() {
+  const lease = leaseQuery.data.value;
+  if (!lease || busy.value || !selectedCohortId.value) return;
+  busy.value = 'recompute'; notice.value = '';
+  try {
+    const result = await recomputeResearchCohort(lease, selectedCohortId.value);
+    notice.value = `已筛选全库 ${result.evaluated_count} 名活动患者，命中 ${result.matched_count} 名，新增 ${result.new_member_count} 名，并生成快照。`;
+    await Promise.all([membersQuery.refetch(), snapshotsQuery.refetch()]);
+  } catch (error) { const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`; }
+  finally { busy.value = ''; }
+}
 </script>
 
 <template>
@@ -217,7 +230,7 @@ async function computeMember() {
       <section v-if="selectedCohort" class="admin-panel">
         <header>
           <div><h2>快照与成员 · {{ selectedCohort.cohort_code }}</h2><p>快照记录成员数与判据哈希；成员由患者入排计算得出。</p></div>
-          <div class="toolbar-actions"><button class="button secondary" @click="snapshotOpen = true">记录快照</button><button class="button primary" @click="memberOpen = true">计算成员</button><button class="button secondary" @click="selectCohort('')">关闭</button></div>
+          <div class="toolbar-actions"><button class="button secondary" :disabled="Boolean(busy)" @click="snapshotOpen = true">记录快照</button><button class="button primary" :disabled="Boolean(busy)" @click="recomputeAllMembers">全库重算</button><button class="button secondary" :disabled="Boolean(busy)" @click="memberOpen = true">计算成员</button><button class="button secondary" @click="selectCohort('')">关闭</button></div>
         </header>
         <ClinicalPageState v-if="snapshotsQuery.isPending.value || membersQuery.isPending.value" kind="loading" message="正在读取队列快照与成员" />
         <ClinicalPageState v-else-if="detailIssue" kind="error" :code="detailIssue.code" :message="detailIssue.message" @retry="snapshotsQuery.refetch()" />

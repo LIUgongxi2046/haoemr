@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { useQueryClient } from '@tanstack/vue-query';
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import type { AIProposalWire, DocumentVersionWire, QualityFindingWire } from '../../generated/contracts';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import type { DocumentVersionWire } from '../../generated/contracts';
 
 import {
   ClinicalApiError,
-  decideProposal,
   loadCurrentDocument,
   runQualityChecks,
   saveDocumentDraft,
   signDocument,
-  startAiDraft,
 } from '../../clinical-api';
 import { developmentCopy } from '../../development-copy';
 import {
@@ -22,9 +20,16 @@ import {
   type SecureDocumentDraft,
 } from '../../secure-draft-cache';
 import AgentInlineReview from '../components/AgentInlineReview.vue';
+import AgentCandidateReview from '../components/AgentCandidateReview.vue';
+import { useAgentDraftHandoff } from '../composables/use-agent-draft-handoff';
+import type { MedicalAgentRunWire } from '../../generated/contracts';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
 import { useCurrentDocument } from '../composables/use-current-document';
+import { useRecordQcSnapshot } from '../composables/use-record-qc-snapshot';
+import { useRecordQcAutomation } from '../composables/use-record-qc-automation';
+import EncounterRecordQcPanel from '../components/EncounterRecordQcPanel.vue';
+import RecordQcPanel from '../components/RecordQcPanel.vue';
 
 const sectionFields = [
   ['chief_complaint', '主诉', 3],
@@ -40,9 +45,8 @@ const autosaveDelayMs = import.meta.env.DEV && Number.isFinite(configuredAutosav
 const current = useCurrentDocument();
 const queryClient = useQueryClient();
 const sections = ref<Record<string, unknown>>({});
-const findings = ref<QualityFindingWire[]>([]);
-const proposal = ref<AIProposalWire | null>(null);
 const assistantOpen = ref(true);
+const agentReview = ref<InstanceType<typeof AgentInlineReview> | null>(null);
 const busy = ref<string | null>(null);
 const notice = ref('');
 const warningDisposition = ref('已核对警告，不影响本次签署');
@@ -58,6 +62,11 @@ const editGeneration = ref(0);
 const issue = computed(() => current.error.value ? toClinicalIssue(current.error.value) : null);
 const document = computed(() => current.data.value?.document);
 const hasUnsavedChanges = computed(() => ['dirty', 'autosaving', 'offline', 'conflict', 'error'].includes(saveState.value));
+const qc = useRecordQcSnapshot(() => current.data.value, () => hasUnsavedChanges.value);
+const qcAuto = useRecordQcAutomation({ context: () => current.data.value, dirty: () => hasUnsavedChanges.value,
+  run: ({ lease, document }) => runQualityChecks(lease, document, 'POST_SAVE'), refresh: qc.refresh });
+const qcFields = Object.fromEntries(sectionFields.map(([key, label]) => [key, label]));
+function focusQcField(field: string) { window.document.getElementById(`record-field-${field}`)?.focus(); }
 const saveStateLabel = computed(() => ({
   idle: '正在准备安全草稿', dirty: '有未保存更改', autosaving: '正在自动保存…', saved: '已自动保存',
   offline: '离线 · 加密草稿已保留', conflict: '版本冲突 · 禁止覆盖', error: '保存失败 · 草稿已保留', signed: '已签署只读',
@@ -69,6 +78,22 @@ const conflictFields = computed(() => {
 });
 const agentPatientId = computed(() => current.data.value?.lease.patient_id ?? null);
 const agentEncounterId = computed(() => current.data.value?.lease.encounter_id ?? null);
+const pendingAgentRunId = ref<string | null>(null);
+const handoff = useAgentDraftHandoff(() => ({ patientId: agentPatientId.value, encounterId: agentEncounterId.value }));
+watch(() => document.value?.document_id, () => { pendingAgentRunId.value = null; });
+function adoptAgentDraft(draft: Record<string, string>, candidate: MedicalAgentRunWire) {
+  if (!document.value || document.value.status !== 'DRAFT' || busy.value
+    || candidate.patient_id !== agentPatientId.value || candidate.encounter_id !== agentEncounterId.value
+    || (candidate.target_type === 'DOCUMENT' && candidate.target_id !== document.value.document_id)) {
+    notice.value = '候选或文书状态已变化，请在当前患者的可编辑草稿中重新运行医助。'; return;
+  }
+  if (hasUnsavedChanges.value) { notice.value = '请先保存现有修改，再审阅并带入医助候选。'; return; }
+  sections.value = { ...sections.value, ...draft };
+  pendingAgentRunId.value = candidate.run_id;
+  markDirty();
+  notice.value = '已带入医生确认的候选段落；保存时将核验来源版本并保留医助来源记录。';
+}
+
 const outpatientDraftObjective = computed(() => '基于当前门诊就诊信息起草病历文书候选，仅供医生审阅后采用，不自动写入。');
 
 let debounceTimer: ReturnType<typeof setTimeout> | undefined;
@@ -151,38 +176,32 @@ function save() {
 
 function checkQuality() {
   const snapshot = current.data.value;
-  if (!snapshot) return;
+  if (!snapshot || busy.value || hasUnsavedChanges.value) return;
+  qcAuto.cancel();
+  const isCurrent = qc.captureContext();
   void execute('quality', async () => {
-    findings.value = await runQualityChecks(snapshot.lease, snapshot.document);
-    notice.value = findings.value.length === 0 ? '确定性质控通过，可以进入签署' : `发现 ${findings.value.length} 项待处理问题`;
+    try {
+      const result = await runQualityChecks(snapshot.lease, snapshot.document);
+      if (!isCurrent()) return;
+      await qc.refresh();
+      if (!isCurrent()) return;
+      notice.value = result.length === 0 ? '本次确定性规则检查未发现问题，签署仍需服务端校验' : `发现 ${result.length} 项问题，请在右侧核对`;
+    } catch (error) { if (isCurrent()) throw error; }
   });
 }
 
 function askAi() {
-  const snapshot = current.data.value;
-  if (!snapshot) return;
   void execute('ai', async () => {
-    const run = await startAiDraft(snapshot.lease, snapshot.document);
-    proposal.value = run.proposals[0] ?? null;
     assistantOpen.value = true;
-    notice.value = run.state === 'DEGRADED' ? 'AI 当前不可用，病历主链仍可手工完成' : 'AI 候选已生成，尚未写入病历';
-  });
-}
-
-function decide(decision: 'ACCEPTED' | 'REJECTED') {
-  const snapshot = current.data.value;
-  if (!snapshot || !proposal.value) return;
-  void execute('proposal', async () => {
-    const next = await decideProposal(snapshot.lease, proposal.value!, decision);
-    proposal.value = next;
-    const proposedSections = next.payload.sections;
-    if (decision === 'ACCEPTED' && proposedSections && typeof proposedSections === 'object' && !Array.isArray(proposedSections)) {
-      sections.value = { ...proposedSections as Record<string, unknown> };
-      markDirty();
-      notice.value = 'AI 候选已由医生接受到编辑区，正在进入自动保存；仍需重新质控';
-    } else {
-      notice.value = 'AI 候选已拒绝，病历未发生变化';
-    }
+    await nextTick();
+    const run = await agentReview.value?.runAgent();
+    notice.value = run?.state === 'WAITING_FOR_REVIEW'
+      ? 'AI医助 EVA 文书候选只供人工复核，不会自动写入病历。'
+      : run?.failure_code === 'MEDICAL_AGENT_MODEL_UNAVAILABLE'
+        ? '尚未生成文书候选：当前没有经独立评测并可用的真实模型；病历仍可手工完成。'
+        : run
+          ? `尚未生成文书候选：请查看上方运行记录${run.failure_code ? `（${run.failure_code}）` : ''}后转人工处理或修复后重试；病历仍可手工完成。`
+          : '尚未生成文书候选：未能创建 AI医助 EVA 运行，请检查上方提示后转人工处理；病历仍可手工完成。';
   });
 }
 
@@ -219,8 +238,6 @@ function markDirty() {
   if (document.value?.status !== 'DRAFT' || saveState.value === 'conflict') return;
   editGeneration.value += 1;
   saveState.value = navigator.onLine ? 'dirty' : 'offline';
-  findings.value = [];
-  proposal.value = null;
   void persistSecureCopy();
   scheduleAutosave();
 }
@@ -282,13 +299,14 @@ async function persistDraft(manual: boolean) {
   const startedGeneration = editGeneration.value;
   const submittedSections = clinicalJsonSnapshot(sections.value);
   try {
-    const next = await saveDocumentDraft(snapshot.lease, snapshot.document, submittedSections);
+    const next = await saveDocumentDraft(snapshot.lease, snapshot.document, submittedSections, pendingAgentRunId.value);
+    pendingAgentRunId.value = null;
     replaceCurrentDocument(next);
-    findings.value = [];
-    proposal.value = null;
     lastSavedAt.value = new Intl.DateTimeFormat('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(new Date());
     if (editGeneration.value === startedGeneration) {
       saveState.value = 'saved';
+      await nextTick();
+      if (current.data.value?.document.document_version_id === next.document_version_id) qcAuto.afterSave();
       if (secureStorageId.value) await clearSecureCopyQuietly(secureStorageId.value);
       if (manual) notice.value = `草稿已保存为不可变版本 v${next.version_no}`;
     } else {
@@ -378,14 +396,16 @@ async function useRemoteVersion() {
 
 <template>
   <section data-page-root class="content vue-native-page">
-    <div class="page-heading"><div><p class="eyebrow">门诊 / 病历编辑</p><h1>门诊病历工作台</h1></div>
+    <div class="page-heading"><div><p class="eyebrow">门诊 / 病历编辑</p><h1>门诊病历工作台</h1><p>记录当前门诊就诊的病历内容，并查看保存状态。</p></div>
       <div class="status-legend" :class="`save-${saveState}`"><span class="dot" :class="saveState === 'saved' || saveState === 'signed' ? 'success' : saveState === 'conflict' || saveState === 'error' ? 'danger' : 'warning'" />{{ saveStateLabel }}<small v-if="lastSavedAt"> · {{ lastSavedAt }}</small></div></div>
     <section class="patient-strip" aria-label="患者上下文"><div class="patient-avatar">{{ developmentCopy.patientAvatar }}</div>
       <div><strong>{{ developmentCopy.patientName }}</strong><span>{{ developmentCopy.contextNotice }}</span></div><dl>
         <div><dt>患者标识</dt><dd>…{{ current.data.value?.lease.patient_id?.slice(-6) }}</dd></div>
         <div><dt>就诊类型</dt><dd>门诊 · 进行中</dd></div><div><dt>数据范围</dt><dd>当前患者 / 当前就诊</dd></div></dl>
-      <span v-if="current.data.value" class="lease-badge">受控租约</span></section>
-    <AgentInlineReview v-if="current.data.value" agent-code="DOCUMENT_DRAFTER" stage-code="OUTPATIENT" :objective="outpatientDraftObjective" :patient-id="agentPatientId" :encounter-id="agentEncounterId" target-type="ENCOUNTER" :target-id="agentEncounterId" title="AI 门诊文书起草候选" source-route="opd-record" />
+      <span v-if="current.data.value" class="lease-badge">已核验</span></section>
+    <p v-if="handoff.notice.value" role="status">{{ handoff.notice.value }}</p>
+    <AgentCandidateReview v-if="handoff.run.value" :run="handoff.run.value" allow-document-adoption @adopt-draft="adoptAgentDraft" />
+    <AgentInlineReview allow-document-adoption @adopt-draft="adoptAgentDraft" v-if="current.data.value" ref="agentReview" agent-code="DOCUMENT_DRAFTER" stage-code="OUTPATIENT" :objective="outpatientDraftObjective" :patient-id="agentPatientId" :encounter-id="agentEncounterId" target-type="ENCOUNTER" :target-id="agentEncounterId" title="AI 门诊文书起草候选" source-route="opd-record" />
     <ClinicalPageState v-if="current.isPending.value" kind="loading" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="current.refetch()" />
     <div v-else-if="document && current.data.value" class="clinical-grid" :class="{ 'assistant-collapsed': !assistantOpen }">
@@ -399,21 +419,17 @@ async function useRemoteVersion() {
         <section v-if="saveState === 'conflict'" class="draft-conflict-panel" role="alert"><header><div><strong>版本冲突：系统已禁止覆盖</strong><span>本地基于旧版本编辑，服务器已有新版本。请逐字段选择后再基于当前版本继续。</span></div><RouterLink v-if="conflictRemote && conflictBaseVersionId" :to="`/record-diff/${document.document_id}/${conflictBaseVersionId}/${conflictRemote.document_version_id}`">打开完整版本差异</RouterLink></header><article v-for="field in conflictFields" :key="field[0]"><strong>{{ field[1] }}</strong><div><span>本地草稿</span><p>{{ String(conflictLocal[field[0]] ?? '—') }}</p><button @click="chooseConflictField(field[0], 'local')">选择本地</button></div><div><span>服务器当前版</span><p>{{ remoteConflictValue(field[0]) }}</p><button @click="chooseConflictField(field[0], 'remote')">选择服务器</button></div></article><footer><button class="button secondary" @click="useRemoteVersion">全部采用服务器版本</button><button class="button primary" :disabled="!conflictRemote" @click="continueAfterConflict">基于当前版本继续</button></footer></section>
         <div class="document-meta"><span>文书类型：{{ document.document_type_code }}</span><span>内容哈希：{{ document.content_hash.slice(0, 12) }}…</span><span>停止输入 {{ autosaveDelayMs }}ms 自动保存 · 最长 5s</span><span>自动合并：禁用</span></div>
         <form class="record-form" @submit.prevent><label v-for="field in sectionFields" :key="field[0]" class="field-group"><span>{{ field[1] }}</span>
-          <textarea :value="String(sections[field[0]] ?? '')" :rows="field[2]" :readonly="document.status === 'SIGNED' || saveState === 'conflict'" :aria-describedby="`${field[0]}-hint`" @compositionstart="compositionStart" @compositionend="compositionEnd" @input="updateSection(field[0], $event)" />
+          <textarea :id="`record-field-${field[0]}`" :value="String(sections[field[0]] ?? '')" :rows="field[2]" :readonly="document.status === 'SIGNED' || saveState === 'conflict'" :aria-describedby="`${field[0]}-hint`" @compositionstart="compositionStart" @compositionend="compositionEnd" @input="updateSection(field[0], $event)" />
           <small :id="`${field[0]}-hint`">自动保存形成不可变草稿版本；断网时仅保留本会话加密副本；签署后不可修改。</small></label></form></section>
-      <aside class="right-rail" aria-label="质控与 AI 辅助"><section class="side-card"><div class="side-card-title"><h2>病历质控</h2><span>{{ findings.length }}</span></div>
-        <div v-if="findings.length === 0" class="empty-state"><span>✓</span><p>尚无未处理发现</p><small>保存后运行确定性质控</small></div>
-        <article v-for="finding in findings" v-else :key="finding.finding_id" class="finding" :class="finding.severity.toLowerCase()"><strong>{{ finding.severity }}</strong><p>{{ finding.message }}</p><code>{{ finding.field_path }}</code></article>
+      <aside class="right-rail" aria-label="质控与 AI 辅助"><section class="side-card">
+        <RecordQcPanel :snapshot="qc.snapshot.value" :version-id="document.document_version_id" :content-hash="document.content_hash" :fields="qcFields" :dirty="hasUnsavedChanges" :loading="qc.loading.value" :error="qc.error.value" :sections="sections" v-model:auto-enabled="qcAuto.enabled.value" :auto-running="qcAuto.running.value" :auto-error="qcAuto.error.value" @retry-auto="qcAuto.afterSave()" @retry="qc.refresh()" @locate="focusQcField" />
+        <EncounterRecordQcPanel v-if="current.data.value" :lease="current.data.value.lease" :revision="qc.snapshot.value?.data_watermark ?? document.content_hash" />
         <label class="warning-disposition"><span>警告处置说明</span><input v-model="warningDisposition" /></label>
         <button class="button danger full" :disabled="Boolean(busy) || document.status === 'SIGNED' || hasUnsavedChanges" @click="sign">{{ document.status === 'SIGNED' ? '病历已签署' : hasUnsavedChanges ? '请先完成自动保存' : '签署当前版本' }}</button>
         <RouterLink class="record-governance-link" to="/record-qc">查看完整质控与签名证据</RouterLink></section>
-        <section v-if="assistantOpen" class="side-card ai-card"><div class="side-card-title"><h2>AI医助 Eva</h2><span class="ai-state">医生确认</span></div>
-          <div v-if="!proposal" class="empty-state ai-empty"><span>✦</span><p>Eva 不会直接改写病历</p><small>点击“AI 辅助”生成带来源的病历草稿</small></div>
-          <template v-else><div class="ai-warning">草稿尚未写入病历，请医生逐项审阅。</div><div class="proposal-copy">{{ String(proposal.payload.notice || '病历段落草稿') }}</div>
-            <h3>来源证据</h3><div v-for="reference in proposal.references" :key="reference.reference_id" class="reference"><strong>{{ reference.source_type }}</strong><p>{{ reference.excerpt || '结构化字段引用' }}</p><code>{{ reference.field_path }}</code></div>
-            <div class="proposal-actions"><button class="button secondary" :disabled="Boolean(busy) || proposal.status !== 'PENDING_REVIEW'" @click="decide('REJECTED')">拒绝</button>
-              <button class="button ai" :disabled="Boolean(busy) || proposal.status !== 'PENDING_REVIEW'" @click="decide('ACCEPTED')">接受到编辑区</button></div></template></section></aside>
+        <section v-if="assistantOpen" class="side-card ai-card"><div class="side-card-title"><h2>AI医助 EVA</h2><span class="ai-state">医生确认</span></div>
+          <div class="empty-state ai-empty"><span>✦</span><p>AI医助 EVA 不会直接改写病历</p><small>点击“AI 辅助”运行上方的文书起草候选；无合规模型时会明确说明原因。</small></div></section></aside>
     </div>
-    <button class="ai-fab" aria-label="打开AI医助Eva病历候选面板" :aria-expanded="assistantOpen" @click="assistantOpen = !assistantOpen"><img src="/brand/ai-medical-assistant-eva.png" alt="" width="32" height="32" /><small>{{ assistantOpen ? '收起 Eva' : 'AI医助 Eva' }}</small></button>
+    <button class="ai-fab" aria-label="打开 AI医助 EVA 病历候选面板" :aria-expanded="assistantOpen" @click="assistantOpen = !assistantOpen"><img src="/brand/ai-medical-assistant-eva.png" alt="" width="32" height="32" /><small>{{ assistantOpen ? '收起 AI医助 EVA' : 'AI医助 EVA' }}</small></button>
   </section>
 </template>

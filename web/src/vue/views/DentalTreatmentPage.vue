@@ -5,6 +5,7 @@ import type { DentalTreatmentRecordWire } from '../../generated/contracts';
 import { createDentalTreatmentRecord, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listDentalTreatmentRecords } from '../../api/specialty-layers';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { localDateTimeInputValue } from '../date-input';
 
 const patientLeaseQuery = useQuery({
   queryKey: ['specialty-layers', 'dental-treatment', 'patient-lease'],
@@ -36,7 +37,7 @@ const form = reactive({
   toothNotation: '',
   treatmentType: 'FILLING' as DentalTreatmentRecordWire['treatment_type'],
   materialBatch: '',
-  treatedAt: new Date().toISOString(),
+  treatedAt: localDateTimeInputValue(),
 });
 const busy = ref('');
 const notice = ref('');
@@ -83,7 +84,7 @@ async function createRecord() {
       <div>
         <p class="eyebrow">专科其余层 / 口腔 · 治疗</p>
         <h1>口腔治疗记录</h1>
-        <p>牙位、治疗类型、材料批次与治疗时间登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记牙位、治疗类型、材料批次与治疗时间。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>

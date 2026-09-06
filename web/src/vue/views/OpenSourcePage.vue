@@ -20,6 +20,10 @@ const metricOptions: MetricType[] = ['STARS', 'DOWNLOADS', 'ACTIVE_INSTALLS'];
 const channelOptions: Channel[] = ['GITHUB', 'WEBSITE', 'PACKAGE_REGISTRY', 'DOCKER_HUB'];
 const metricLabels: Record<MetricType, string> = { STARS: '星标', DOWNLOADS: '下载量', ACTIVE_INSTALLS: '活跃安装' };
 const channelLabels: Record<Channel, string> = { GITHUB: 'GitHub', WEBSITE: '官网', PACKAGE_REGISTRY: '包仓库', DOCKER_HUB: 'Docker Hub' };
+const sourceRepositoryUrl = 'https://github.com/LIUgongxi2046/haoemr';
+const licenseUrl = `${sourceRepositoryUrl}/blob/main/LICENSE`;
+const commercialLicenseUrl = `${sourceRepositoryUrl}/blob/main/COMMERCIAL_LICENSE.md`;
+const trademarkPolicyUrl = `${sourceRepositoryUrl}/blob/main/TRADEMARKS.md`;
 
 const metricType = ref<MetricType>('STARS');
 const channelFilter = ref('');
@@ -119,6 +123,24 @@ async function recordEvent() {
         <button class="button secondary" :disabled="Boolean(busy)" @click="snapshotsQuery.refetch()">刷新指标</button>
       </div>
     </div>
+
+    <section class="admin-panel" aria-labelledby="open-source-license-title">
+      <header>
+        <div>
+          <h2 id="open-source-license-title">开源许可与源码</h2>
+          <p>HaoEMR Community Edition 使用 AGPL-3.0-only；商业使用可以进行，但必须遵守该许可证。修改后的网络服务须按 AGPL 第 13 条向服务用户提供对应源码。</p>
+        </div>
+        <div class="admin-inline-tools">
+          <a class="button primary" :href="sourceRepositoryUrl" target="_blank" rel="noreferrer">查看官方源码</a>
+          <a class="button secondary" :href="licenseUrl" target="_blank" rel="noreferrer">查看许可证</a>
+        </div>
+      </header>
+      <div class="admin-metrics" aria-label="开源授权信息">
+        <article><span>社区许可证</span><strong>AGPL-3.0-only</strong><small>网络修改版需向用户提供对应源码</small></article>
+        <article><span>闭源使用</span><strong>另行授权</strong><small><a :href="commercialLicenseUrl" target="_blank" rel="noreferrer">商业授权说明</a></small></article>
+        <article><span>品牌使用</span><strong>独立管理</strong><small><a :href="trademarkPolicyUrl" target="_blank" rel="noreferrer">HaoEMR 商标政策</a></small></article>
+      </div>
+    </section>
 
     <ClinicalPageState v-if="leaseQuery.isPending.value" kind="loading" message="正在建立数据中心上下文" />
     <ClinicalPageState v-else-if="leaseIssue" kind="error" :code="leaseIssue.code" :message="leaseIssue.message" @retry="leaseQuery.refetch()" />

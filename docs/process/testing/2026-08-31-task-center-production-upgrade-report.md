@@ -3,7 +3,7 @@
 - 日期：2026-08-31（Asia/Shanghai）
 - 基线提交：`c50c7f8`
 - 范围：任务总览、团队队列、委托协作、消息通知、临床路径、任务规则、L4–L7 证据下钻、Eva 任务上下文
-- 环境：`dev-synthetic` + 独立 PostgreSQL 数据库 `openemr2026_task_center_test_20260831`
+- 环境：`dev-synthetic` + 独立 PostgreSQL 数据库 `haoemr_task_center_test_20260831`
 - 结论：**CONDITIONAL_GO（选定患者/就诊上下文内可验收；全院生产上线仍有外部依赖与范围缺口）**
 
 ## 1. 本轮实际完成

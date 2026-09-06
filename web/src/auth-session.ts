@@ -7,7 +7,7 @@ import {
 } from './generated/contracts';
 import { clearActiveOutpatientContext } from './active-outpatient-context';
 
-const STORAGE_KEY = 'openemr2026.clinical-session';
+const STORAGE_KEY = 'haoemr.clinical-session';
 
 interface StoredSession { token: string; user: SessionUserWire }
 

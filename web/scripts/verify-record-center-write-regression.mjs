@@ -6,13 +6,13 @@ import { chromium } from 'playwright';
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
 const outputDir = resolve(projectDir, 'output/playwright/record-center-write-regression');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
-const username = process.env.OPENEMR2026_DEV_LOGIN_USERNAME || 'linwei';
-const password = process.env.OPENEMR2026_DEV_LOGIN_PASSWORD || 'OpenEMR2026-dev!';
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const username = process.env.HAOEMR_DEV_LOGIN_USERNAME || 'linwei';
+const password = process.env.HAOEMR_DEV_LOGIN_PASSWORD || 'HaoEMR-dev!';
 const runId = `E2E-${new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14)}`;
 const primaryType = 'WS445.2.OUTPATIENT_RECORD';
 const voidType = 'WS445.2.OUTPATIENT_RECORD';
-const primaryEncounterId = process.env.OPENEMR2026_E2E_ENCOUNTER_ID || '018f0000-0000-7000-8000-000000000101';
+const primaryEncounterId = process.env.HAOEMR_E2E_ENCOUNTER_ID || '018f0000-0000-7000-8000-000000000101';
 
 await mkdir(outputDir, { recursive: true });
 const browser = await chromium.launch({ headless: true });
@@ -69,7 +69,7 @@ async function login(loginUsername = username) {
 async function switchUser(loginUsername) {
   switchingUser = true;
   await page.evaluate(async () => {
-    const raw = sessionStorage.getItem('openemr2026.clinical-session');
+    const raw = sessionStorage.getItem('haoemr.clinical-session');
     const token = raw ? JSON.parse(raw)?.token : '';
     if (token) await fetch('/api/v1/session/logout', { method: 'POST', headers: { Authorization: `Bearer ${token}` } }).catch(() => undefined);
     sessionStorage.clear();
@@ -96,7 +96,7 @@ async function selectExecutionPatient(routeId, encounterId) {
 async function ensureSessionFresh(minimumRemainingMs = 10 * 60 * 1000) {
   const routeId = currentRoute;
   const renewed = await page.evaluate(async ({ username, password, minimumRemainingMs }) => {
-    const storageKey = 'openemr2026.clinical-session';
+    const storageKey = 'haoemr.clinical-session';
     const stored = JSON.parse(sessionStorage.getItem(storageKey) || 'null');
     const expiresAt = Date.parse(stored?.user?.expires_at || '');
     if (stored?.token && Number.isFinite(expiresAt) && expiresAt - Date.now() > minimumRemainingMs) return false;

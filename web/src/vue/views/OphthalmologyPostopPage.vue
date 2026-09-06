@@ -2,9 +2,10 @@
 import { useQuery } from '@tanstack/vue-query';
 import { computed, reactive, ref } from 'vue';
 import type { OphthalmologyPostopFollowupWire } from '../../generated/contracts';
-import { createOphthalmologyPostopFollowup, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listOphthalmologyPostopFollowups } from '../../api/specialty-layers';
+import { createOphthalmologyPostopFollowup, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listOphthalmologyPostopFollowups, listOphthalmologyPreopVerifications } from '../../api/specialty-layers';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { localDateTimeInputValue } from '../date-input';
 
 const patientLeaseQuery = useQuery({
   queryKey: ['specialty-layers', 'ophthalmology-followup', 'patient-lease'],
@@ -26,18 +27,20 @@ const recordsQuery = useQuery({
   enabled: () => Boolean(patientLease.value),
   retry: false,
 });
+const preopQuery = useQuery({ queryKey: ['specialty-layers', 'ophthalmology-followup', 'preop'], queryFn: () => listOphthalmologyPreopVerifications(patientLease.value!), enabled: () => Boolean(patientLease.value), retry: false });
 
-const issue = computed(() => (patientLeaseQuery.error.value ?? encounterLeaseQuery.error.value ?? recordsQuery.error.value)
-  ? toClinicalIssue(patientLeaseQuery.error.value ?? encounterLeaseQuery.error.value ?? recordsQuery.error.value) : null);
+const issue = computed(() => (patientLeaseQuery.error.value ?? encounterLeaseQuery.error.value ?? recordsQuery.error.value ?? preopQuery.error.value)
+  ? toClinicalIssue(patientLeaseQuery.error.value ?? encounterLeaseQuery.error.value ?? recordsQuery.error.value ?? preopQuery.error.value) : null);
 const records = computed(() => recordsQuery.data.value ?? []);
-const anyPending = computed(() => patientLeaseQuery.isPending.value || encounterLeaseQuery.isPending.value || recordsQuery.isPending.value);
+const anyPending = computed(() => patientLeaseQuery.isPending.value || encounterLeaseQuery.isPending.value || recordsQuery.isPending.value || preopQuery.isPending.value);
 
 const form = reactive({
   surgicalEye: 'OD' as OphthalmologyPostopFollowupWire['surgical_eye'],
+  preopVerificationId: '',
   followupDate: '',
   iopMmhg: 0,
   complicationNote: '',
-  recordedAt: new Date().toISOString(),
+  recordedAt: localDateTimeInputValue(),
 });
 const busy = ref('');
 const notice = ref('');
@@ -53,17 +56,18 @@ function formatDate(value: string | null | undefined) {
 
 async function reload() {
   notice.value = '';
-  await recordsQuery.refetch();
+  await Promise.all([recordsQuery.refetch(), preopQuery.refetch()]);
 }
 
 async function createRecord() {
   const lease = encounterLease.value;
-  if (!lease || busy.value || !form.followupDate) return;
+  if (!lease || busy.value || !form.preopVerificationId || !form.followupDate) return;
   busy.value = 'create'; notice.value = '';
   try {
     await createOphthalmologyPostopFollowup(lease, {
+      preop_verification_id: form.preopVerificationId,
       surgical_eye: form.surgicalEye,
-      followup_date: form.followupDate,
+      followup_date: new Date(form.followupDate).toISOString(),
       iop_mmhg: form.iopMmhg,
       complication_note: form.complicationNote.trim() || null,
       recorded_at: form.recordedAt,
@@ -83,7 +87,7 @@ async function createRecord() {
       <div>
         <p class="eyebrow">专科其余层 / 眼科 · 随访</p>
         <h1>术后随访</h1>
-        <p>手术眼别、随访日期、眼压与并发症备注登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记手术眼别、随访日期、眼压与并发症备注。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>
@@ -118,11 +122,12 @@ async function createRecord() {
         </section>
 
         <section class="admin-panel admin-form-panel">
-          <header><div><h2>新增术后随访</h2><p>手术眼别、随访日期与眼压必填。</p></div></header>
+          <header><div><h2>新增术后随访</h2><p>必须关联当前患者同一次就诊的术前核对。</p></div></header>
           <form class="admin-form" @submit.prevent="createRecord">
             <label><span>手术眼别</span><select v-model="form.surgicalEye">
               <option value="OD">右眼</option><option value="OS">左眼</option><option value="OU">双眼</option>
             </select></label>
+            <label><span>术前核对</span><select v-model="form.preopVerificationId" required><option value="" disabled>请选择同眼别术前核对</option><option v-for="item in (preopQuery.data.value ?? []).filter((item) => item.surgical_eye === form.surgicalEye)" :key="item.verification_id" :value="item.verification_id">{{ item.verification_id }}</option></select></label>
             <label><span>随访日期</span><input v-model="form.followupDate" type="date" required /></label>
             <label><span>眼压（mmHg）</span><input v-model.number="form.iopMmhg" type="number" min="0" step="0.1" required /></label>
             <label><span>记录时间</span><input v-model="form.recordedAt" type="datetime-local" required /></label>

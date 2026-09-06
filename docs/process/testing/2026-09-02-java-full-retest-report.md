@@ -1,17 +1,17 @@
-# OpenEMR2026 Java 全量回归复跑报告
+# HaoEMR Java 全量回归复跑报告
 
 - 复跑日期：2026-09-02（Asia/Shanghai）
 - 复跑依据：`2026-08-31-s009-pc-full-functional-s010-security-report.md`（该报告冻结提交 `c50c7f8`，总体结论 NO_GO）
 - 当前代码：`main` @ `6def1df`（含全院病历中心、医疗质量中心、病案资产中心、住院药房迁移）
-- 复跑环境：**干净隔离库**（重建 `openemr2026_dev`，0 表，Flyway 全量重迁移 232 个迁移至 V342）；`dev-synthetic` profile；为 prod 门禁补充归档环境变量
+- 复跑环境：**干净隔离库**（重建 `haoemr_dev`，0 表，Flyway 全量重迁移 232 个迁移至 V342）；`dev-synthetic` profile；为 prod 门禁补充归档环境变量
 - 总体结论：**Java 全量 775 项 / 6 失败**（对比报告 714 项 / 2 失败）；Web 单测 160/160 通过
 
 ## 1. 复跑环境修正说明
 
 上一轮（打在同名但脏的 dev 库上，且与运行后端并发）出现了 22 项失败，其中大量是脏数据/并发噪声。本轮为得到确定结论做了两处修正：
 
-1. 停掉运行中的后端（8080），重建干净 `openemr2026_dev` 库，使 Flyway 从头迁移、数据导入从零开始。
-2. 补充 `ProdSecurityApiTest` 因归档生产化新增门禁而缺失的三项环境变量（`openemr2026.archive.ocr-endpoint`、`cda-validation-endpoint`、`malware-scanner.host`），该测试 5/5 恢复通过（与报告「归类为环境配置」一致）。
+1. 停掉运行中的后端（8080），重建干净 `haoemr_dev` 库，使 Flyway 从头迁移、数据导入从零开始。
+2. 补充 `ProdSecurityApiTest` 因归档生产化新增门禁而缺失的三项环境变量（`haoemr.archive.ocr-endpoint`、`cda-validation-endpoint`、`malware-scanner.host`），该测试 5/5 恢复通过（与报告「归类为环境配置」一致）。
 
 修正后，脏库噪声（MedicalAgentHarnessApiTest 的 outbox 外键冲突、TertiaryTaskCenterDataImportTest 的 DuplicateKey、OutboxDispatcherTest 的 PENDING/PUBLISHED）全部消失。
 

@@ -1,0 +1,20 @@
+{
+  "run_at": "2026-09-05T10:39:03.410Z",
+  "code": "E2E_PATH_1788604743410",
+  "name": "E2E 路径知识 1788604743410",
+  "checks": [
+    {
+      "name": "author-creates-pathway-and-draft-version",
+      "status": "PASS",
+      "detail": "作者创建路径及版本并提交审核"
+    },
+    {
+      "name": "independent-reviewer-reviews-and-author-approves-after-separation",
+      "status": "PASS",
+      "detail": "独立用户复核后，非复核用户完成审批发布"
+    }
+  ],
+  "findings": [],
+  "passed": 2,
+  "failed": 0
+}

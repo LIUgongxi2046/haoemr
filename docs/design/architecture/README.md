@@ -1,4 +1,4 @@
-# openemr2026 v1.0 架构包
+# HaoEMR v1.0 架构包
 
 本目录把 PRD v0.15、Prototype v0.13、194 条实际页面路由与“临床可信蓝”UI v1.2.0 契约收口为一套可评审、可实现、可测试的系统设计。五份文档共同生效，不能只实现其中一份。
 
@@ -6,19 +6,19 @@
 
 | 顺序 | 文档 | 解决的问题 |
 |---:|---|---|
-| 1 | [HLD & ADR](./2026-08-14-openemr2026-hld.md) | 系统边界、部署单元、技术选型、S/M/L 拓扑、标准与架构决策 |
-| 2 | [LLD-DATA](./2026-08-14-openemr2026-lld-data.md) | 临床事实、迁移、按需读模型、检索引用、数据质量与恢复 |
-| 3 | [LLD-BACK](./2026-08-14-openemr2026-lld-back.md) | 领域命令、状态机、事务、API、Outbox、集成和后台作业 |
-| 4 | [LLD-AGENT](./2026-08-14-openemr2026-lld-agent.md) | 模型切换、Agent/Skill、Hook、Tool、评测和人工批准 |
-| 5 | [LLD-FRONT](./2026-08-14-openemr2026-lld-front.md) | Vue 3 单栈迁移、194 路由、组件拓扑、病历编辑、SSE、弱网、可访问性和前端门禁 |
+| 1 | [HLD & ADR](./2026-08-14-haoemr-hld.md) | 系统边界、部署单元、技术选型、S/M/L 拓扑、标准与架构决策 |
+| 2 | [LLD-DATA](./2026-08-14-haoemr-lld-data.md) | 临床事实、迁移、按需读模型、检索引用、数据质量与恢复 |
+| 3 | [LLD-BACK](./2026-08-14-haoemr-lld-back.md) | 领域命令、状态机、事务、API、Outbox、集成和后台作业 |
+| 4 | [LLD-AGENT](./2026-08-14-haoemr-lld-agent.md) | 模型切换、Agent/Skill、Hook、Tool、评测和人工批准 |
+| 5 | [LLD-FRONT](./2026-08-14-haoemr-lld-front.md) | Vue 3 单栈迁移、194 路由、组件拓扑、病历编辑、SSE、弱网、可访问性和前端门禁 |
 
 Agent 优化版增量设计：
 
-- [Medical Agent Harness LLD](./2026-08-25-openemr2026-medical-agent-harness-lld.md)：承接 Agent 优化版 PRD v0.2，参考 DeepSeek Harness 细化主 Agent、诊疗环节子 Agent、Skill、Tool、父子运行、声明式 Composition、追加式轨迹与增量迁移；应在基础 LLD-AGENT 之后阅读。
+- [Medical Agent Harness LLD](./2026-08-25-haoemr-medical-agent-harness-lld.md)：承接 Agent 优化版 PRD v0.2，参考 DeepSeek Harness 细化主 Agent、诊疗环节子 Agent、Skill、Tool、父子运行、声明式 Composition、追加式轨迹与增量迁移；应在基础 LLD-AGENT 之后阅读。
 
 关联事实源：
 
-- 产品需求：`docs/product/prd/2026-08-11-openemr2026-v1.0-prd.md`（138 FR / 138 AC）。
+- 产品需求：`docs/product/prd/2026-08-11-haoemr-v1.0-prd.md`（138 FR / 138 AC）。
 - 路由与原型：`prototype/app/`、`docs/design/ui-delivery/route-design-map.csv`（194 路由，含 70 个专科深页）。
 - UI 契约：`docs/design/ui-delivery/tokens.json`、`docs/design/ui-delivery/design-system.md`、`docs/design/ui-delivery/state-matrix.md`。
 - 合成金标：`samples/data/synthetic-clinical-golden-v1.json`，仅用于研发和验证，不得混入生产。

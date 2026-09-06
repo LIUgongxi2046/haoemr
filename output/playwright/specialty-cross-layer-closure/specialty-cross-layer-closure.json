@@ -1,0 +1,46 @@
+{
+  "run_at": "2026-09-05T12:27:22.217Z",
+  "checks": [
+    {
+      "name": "ophthalmology-preop-to-postop-keeps-real-reference",
+      "status": "PASS",
+      "detail": "眼科术后随访已绑定同眼别的真实术前核对"
+    },
+    {
+      "name": "mental-crisis-handover-to-followup-keeps-real-reference-and-restricted-classification",
+      "status": "PASS",
+      "detail": "精神心理危机随访已绑定真实危机交接，并返回 RESTRICTED"
+    },
+    {
+      "name": "ent-airway-handover-to-followup-keeps-real-reference",
+      "status": "PASS",
+      "detail": "耳鼻喉随访已绑定真实气道风险交接"
+    },
+    {
+      "name": "dental-treatment-completes-matching-active-dental-record",
+      "status": "PASS",
+      "detail": "同牙位的 ACTIVE 口腔记录已由真实治疗记录原子迁移为已完成"
+    }
+  ],
+  "findings": [],
+  "evidence": {
+    "ophthalmology": {
+      "preop_id": "8987acc6-a93e-4021-bef3-bcc33ee1ab92",
+      "followup_id": "4b25ed97-0aff-4189-8c78-d926e484d90e"
+    },
+    "mental_health": {
+      "handover_id": "cfc7e683-d3fa-4785-a917-4b61179d2aec",
+      "followup_id": "483876b1-56dd-4d9c-909d-d30027616bd7"
+    },
+    "ent": {
+      "handover_id": "93fd7216-94d4-46a4-b3d5-8faf526db032",
+      "followup_id": "16a257cf-7a69-4b64-a5d8-30b0cf1e60e6"
+    },
+    "dental": {
+      "dental_record_id": "93f6cfcc-350d-47f3-b976-541cfd8c720b",
+      "treatment_id": "1b4677a0-f6ba-4148-a970-09980632f1a2"
+    }
+  },
+  "passed": 4,
+  "failed": 0
+}

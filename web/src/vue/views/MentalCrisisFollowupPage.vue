@@ -2,9 +2,10 @@
 import { useQuery } from '@tanstack/vue-query';
 import { computed, reactive, ref } from 'vue';
 import type { MentalHealthCrisisFollowupWire } from '../../generated/contracts';
-import { createMentalHealthCrisisFollowup, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listMentalHealthCrisisFollowups } from '../../api/specialty-layers';
+import { createMentalHealthCrisisFollowup, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listMentalHealthCrisisFollowups, listMentalHealthCrisisHandovers } from '../../api/specialty-layers';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { localDateTimeInputValue } from '../date-input';
 
 const patientLeaseQuery = useQuery({
   queryKey: ['specialty-layers', 'mental-followup', 'patient-lease'],
@@ -26,17 +27,19 @@ const recordsQuery = useQuery({
   enabled: () => Boolean(patientLease.value),
   retry: false,
 });
+const handoversQuery = useQuery({ queryKey: ['specialty-layers', 'mental-followup', 'handovers'], queryFn: () => listMentalHealthCrisisHandovers(patientLease.value!), enabled: () => Boolean(patientLease.value), retry: false });
 
-const issue = computed(() => (patientLeaseQuery.error.value ?? encounterLeaseQuery.error.value ?? recordsQuery.error.value)
-  ? toClinicalIssue(patientLeaseQuery.error.value ?? encounterLeaseQuery.error.value ?? recordsQuery.error.value) : null);
+const issue = computed(() => (patientLeaseQuery.error.value ?? encounterLeaseQuery.error.value ?? recordsQuery.error.value ?? handoversQuery.error.value)
+  ? toClinicalIssue(patientLeaseQuery.error.value ?? encounterLeaseQuery.error.value ?? recordsQuery.error.value ?? handoversQuery.error.value) : null);
 const records = computed(() => recordsQuery.data.value ?? []);
-const anyPending = computed(() => patientLeaseQuery.isPending.value || encounterLeaseQuery.isPending.value || recordsQuery.isPending.value);
+const anyPending = computed(() => patientLeaseQuery.isPending.value || encounterLeaseQuery.isPending.value || recordsQuery.isPending.value || handoversQuery.isPending.value);
 
 const form = reactive({
+  crisisHandoverId: '',
   followupDate: '',
   riskLevel: 'NONE' as MentalHealthCrisisFollowupWire['risk_level'],
   protectiveMeasures: '',
-  recordedAt: new Date().toISOString(),
+  recordedAt: localDateTimeInputValue(),
 });
 const busy = ref('');
 const notice = ref('');
@@ -54,16 +57,17 @@ function formatDate(value: string | null | undefined) {
 
 async function reload() {
   notice.value = '';
-  await recordsQuery.refetch();
+  await Promise.all([recordsQuery.refetch(), handoversQuery.refetch()]);
 }
 
 async function createRecord() {
   const lease = encounterLease.value;
-  if (!lease || busy.value || !form.followupDate) return;
+  if (!lease || busy.value || !form.crisisHandoverId || !form.followupDate) return;
   busy.value = 'create'; notice.value = '';
   try {
     await createMentalHealthCrisisFollowup(lease, {
-      followup_date: form.followupDate,
+      crisis_handover_id: form.crisisHandoverId,
+      followup_date: new Date(form.followupDate).toISOString(),
       risk_level: form.riskLevel,
       protective_measures: form.protectiveMeasures.trim() || null,
       recorded_at: form.recordedAt,
@@ -118,8 +122,9 @@ async function createRecord() {
         </section>
 
         <section class="admin-panel admin-form-panel">
-          <header><div><h2>新增危机随访</h2><p>随访日期与风险等级必填。</p></div></header>
+          <header><div><h2>新增危机随访</h2><p>必须关联当前患者同一次就诊的危机交接。</p></div></header>
           <form class="admin-form" @submit.prevent="createRecord">
+            <label><span>危机交接</span><select v-model="form.crisisHandoverId" required><option value="" disabled>请选择危机交接</option><option v-for="item in handoversQuery.data.value ?? []" :key="item.crisis_handover_id" :value="item.crisis_handover_id">{{ item.crisis_handover_id }} · {{ item.risk_level }}</option></select></label>
             <label><span>随访日期</span><input v-model="form.followupDate" type="date" required /></label>
             <label><span>风险等级</span><select v-model="form.riskLevel">
               <option value="NONE">无</option><option value="LOW">低</option>

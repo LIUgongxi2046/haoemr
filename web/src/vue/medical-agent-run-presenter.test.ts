@@ -10,7 +10,7 @@ function runFixture(): MedicalAgentRunWire {
     root_agent_code: 'EVA', root_agent_version: '1.0.0', composition_code: 'EVA_OPD', composition_version: '1.0.0',
     requested_stage: 'OPD', patient_id: '10000000-0000-0000-0000-000000000003', encounter_id: '10000000-0000-0000-0000-000000000004',
     target_type: 'ENCOUNTER', target_id: '10000000-0000-0000-0000-000000000004', objective: '汇总本次就诊', state: 'WAITING_FOR_REVIEW',
-    sequence: 8, output: { summary: 'Eva 已完成汇总。', execution_mode: 'SYNTHETIC_MODEL' },
+    sequence: 8, output: { summary: 'AI医助 EVA 已完成汇总。', execution_mode: 'SYNTHETIC_MODEL' },
     created_at: '2026-08-30T08:00:00Z', completed_at: '2026-08-30T08:00:01Z', row_version: 2,
     attempt: 1, max_attempts: 3, cancel_requested_at: null, failure_code: null,
     child_runs: [{
@@ -27,6 +27,13 @@ function runFixture(): MedicalAgentRunWire {
 }
 
 describe('medical agent run presenter', () => {
+  it('provides structured Markdown for display while preserving plain text for business handoffs', () => {
+    const result = presentMedicalAgentResult(runFixture(), 'markdown');
+    expect(result).toContain('### 门诊摘要医助\n\n已找到两项临床依据');
+    expect(result).toContain('#### 关键依据');
+    expect(result).toContain('- 现病史已读取');
+    expect(presentMedicalAgentResult(runFixture())).toContain('• 现病史已读取');
+  });
   it('shows actual tool and model execution evidence in the conversation trajectory', () => {
     const events = presentMedicalAgentEvents(runFixture(), '机构模型 · 检查检验');
     expect(events[0]).toMatchObject({ label: '诊疗工具读取完成', detail: 'CLINICAL_RESULT_READ · 2 条 · 17ms', status: 'done' });
@@ -38,7 +45,7 @@ describe('medical agent run presenter', () => {
     expect(result).toContain('【门诊摘要医助】已找到两项临床依据');
     expect(result).toContain('• 现病史已读取');
     expect(result).toContain('待确认：');
-    expect(result).toContain('当前为开发环境仿真模型');
+    expect(result).toContain('当前为开发环境测试模型，不是临床结论。');
   });
 
   it('renders durable queue, cancellation and retry trajectory in doctor-facing language', () => {

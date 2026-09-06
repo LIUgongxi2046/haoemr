@@ -92,13 +92,13 @@ describe('系统管理弹窗交互契约', () => {
 
   it('AI 策略和医助评测在列表外层打开弹窗编辑器', () => {
     const studio = components['./components/ConfigurationStudioPage.vue'];
-    expect(studio).toContain("['agent-evals', 'ai-assistant-policy']");
+    expect(studio).toContain("['agent-evals']");
     expect(studio).toContain(':modal="isModalEditor"');
     expect(studio).toContain('编辑 / 版本管理');
     expect(studio).toContain('@click="requestArchive(item)"');
   });
 
-  it('AI 医助 Eva 的新任务直接创建空白聊天，清空已有任务仍确认', () => {
+  it('AI医助 EVA 的新任务直接创建空白聊天，清空已有任务仍确认', () => {
     const assistant = views['./views/AiAssistantPage.vue'];
     expect(assistant).toContain('@click="newTask">新建医助任务</button>');
     expect(assistant).toContain("function newTask() { messages.value = []; draft.value = '';");

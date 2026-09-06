@@ -1,0 +1,291 @@
+{
+  "run_at": "2026-09-05T04:55:32.122Z",
+  "routes": 15,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 30,
+  "verified_route_viewports": 30,
+  "findings": [],
+  "observations": [
+    {
+      "route": "record-sign",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "病历签署确认",
+      "routeId": "record-sign",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 695
+    },
+    {
+      "route": "record-sources",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "病历来源与证据中心",
+      "routeId": "record-sources",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 686
+    },
+    {
+      "route": "record-versions",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "病历版本与法律证据",
+      "routeId": "record-versions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 857
+    },
+    {
+      "route": "release-gates",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "Release 门禁与制品发布",
+      "routeId": "release-gates",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1047
+    },
+    {
+      "route": "reproductive-care",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "生殖护理与周期照护",
+      "routeId": "reproductive-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 479
+    },
+    {
+      "route": "reproductive-evidence",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "生殖诊疗证据",
+      "routeId": "reproductive-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 498
+    },
+    {
+      "route": "reproductive-followup",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "妊娠结局",
+      "routeId": "reproductive-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 472
+    },
+    {
+      "route": "reproductive-qc",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "reproductive-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 468
+    },
+    {
+      "route": "reproductive-record",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "辅助生殖周期记录",
+      "routeId": "reproductive-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 483
+    },
+    {
+      "route": "reproductive-treatment",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "胚胎移植记录",
+      "routeId": "reproductive-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 455
+    },
+    {
+      "route": "reproductive-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "生殖工作台",
+      "routeId": "reproductive-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 578
+    },
+    {
+      "route": "research",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "科研项目与统计中心",
+      "routeId": "research",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 794
+    },
+    {
+      "route": "research-dataset",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "研究数据集请求",
+      "routeId": "research-dataset",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1136
+    },
+    {
+      "route": "research-stats",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "科研统计分析",
+      "routeId": "research-stats",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 759
+    },
+    {
+      "route": "rule-center",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "规则、时限与提示设计器",
+      "routeId": "rule-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2423
+    },
+    {
+      "route": "record-sign",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病历签署确认",
+      "routeId": "record-sign",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 462
+    },
+    {
+      "route": "record-sources",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病历来源与证据中心",
+      "routeId": "record-sources",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 453
+    },
+    {
+      "route": "record-versions",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病历版本与法律证据",
+      "routeId": "record-versions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 624
+    },
+    {
+      "route": "release-gates",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "Release 门禁与制品发布",
+      "routeId": "release-gates",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 814
+    },
+    {
+      "route": "reproductive-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生殖护理与周期照护",
+      "routeId": "reproductive-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 246
+    },
+    {
+      "route": "reproductive-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生殖诊疗证据",
+      "routeId": "reproductive-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 265
+    },
+    {
+      "route": "reproductive-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "妊娠结局",
+      "routeId": "reproductive-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 239
+    },
+    {
+      "route": "reproductive-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "reproductive-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 235
+    },
+    {
+      "route": "reproductive-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "辅助生殖周期记录",
+      "routeId": "reproductive-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 250
+    },
+    {
+      "route": "reproductive-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "胚胎移植记录",
+      "routeId": "reproductive-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 222
+    },
+    {
+      "route": "reproductive-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "生殖工作台",
+      "routeId": "reproductive-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 345
+    },
+    {
+      "route": "research",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "科研项目与统计中心",
+      "routeId": "research",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 561
+    },
+    {
+      "route": "research-dataset",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "研究数据集请求",
+      "routeId": "research-dataset",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 903
+    },
+    {
+      "route": "research-stats",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "科研统计分析",
+      "routeId": "research-stats",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 526
+    },
+    {
+      "route": "rule-center",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "规则、时限与提示设计器",
+      "routeId": "rule-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2190
+    }
+  ]
+}

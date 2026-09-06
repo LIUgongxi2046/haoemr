@@ -1,0 +1,13 @@
+{
+  "test_mode": "UI_FIXTURE_NO_MODEL_CALL",
+  "center_running_handoff": "PASS",
+  "multiple_messages": "PASS",
+  "patient_and_model_preserved": "PASS",
+  "continue_next_turn": "PASS",
+  "side_pending_creation": "PASS",
+  "same_route_handoff": "PASS",
+  "unbound_context_preserved": "PASS",
+  "no_duplicate_submissions": "PASS",
+  "empty_popup_preserves_workbench": "PASS",
+  "errors": []
+}

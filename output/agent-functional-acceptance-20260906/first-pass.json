@@ -1,0 +1,398 @@
+[
+  {
+    "agent_code": "ANTICOAGULATION_ADVISOR",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "cd722681-a2e6-493e-97b3-041abb38512f",
+    "errors": []
+  },
+  {
+    "agent_code": "CHEST_PAIN_TRIAGE",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "2aff92bb-bb8f-4227-b953-bd19c9a7ce32",
+    "errors": []
+  },
+  {
+    "agent_code": "HEART_FAILURE_FOLLOWUP",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "166f48f1-28cd-498e-baa6-afe118ed8278",
+    "errors": []
+  },
+  {
+    "agent_code": "CONSULT_PREPARATION_AGENT",
+    "state": "FAILED",
+    "run_id": "ba5d37ce-0520-4b53-9f31-395dbf0213d4",
+    "errors": [
+      "MEDICAL_AGENT_SOURCE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "DISCHARGE_TRANSITION_AGENT",
+    "state": "FAILED",
+    "run_id": "d5e4fedf-b1f8-40f9-8c45-82d45896ca5e",
+    "errors": [
+      "MEDICAL_AGENT_SOURCE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "FOLLOWUP_COORDINATION_AGENT",
+    "state": "FAILED",
+    "run_id": "2946b846-d35f-4e1d-9eb1-6780b7b7b056",
+    "errors": [
+      "MEDICAL_AGENT_SOURCE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "MDT_BRIEF_AGENT",
+    "state": "FAILED",
+    "run_id": "b8cf1137-3a74-4e83-a8a6-4a32582beffc",
+    "errors": [
+      "MEDICAL_AGENT_SOURCE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "TASK_RECONCILIATION_AGENT",
+    "state": "FAILED",
+    "run_id": "92afa6e9-d7bb-455d-a6a0-bc25ba097707",
+    "errors": [
+      "MEDICAL_AGENT_SOURCE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "TRANSFER_HANDOFF_AGENT",
+    "state": "FAILED",
+    "run_id": "e669c7d6-bc9d-4ae5-8287-de3e547ee25e",
+    "errors": [
+      "MEDICAL_AGENT_SOURCE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "ADMISSION_NOTE_DRAFTER",
+    "state": "FAILED",
+    "run_id": "60f7c2fb-2f6d-469f-9c14-0a16a358828f",
+    "errors": [
+      "MEDICAL_AGENT_MODEL_RESPONSE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "CONSULT_NOTE_DRAFTER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "e2d9cc95-7749-4fed-ad6f-c79f73683600",
+    "errors": []
+  },
+  {
+    "agent_code": "DISCHARGE_NOTE_DRAFTER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "7a7b4f40-86d2-4be2-886b-2924d0778323",
+    "errors": []
+  },
+  {
+    "agent_code": "EMERGENCY_NOTE_DRAFTER",
+    "state": "FAILED",
+    "run_id": "a72a8a3e-d90f-47fb-8c02-f1c69215effe",
+    "errors": [
+      "MEDICAL_AGENT_MODEL_RESPONSE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "FIRST_COURSE_DRAFTER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "82896cea-7df4-430c-a5a2-53f8fa61065d",
+    "errors": []
+  },
+  {
+    "agent_code": "NURSING_HANDOFF_DRAFTER",
+    "state": "FAILED",
+    "run_id": "3bf01ebf-58b1-4934-9000-f64a06c5e657",
+    "errors": [
+      "MEDICAL_AGENT_MODEL_OUTPUT_TRUNCATED"
+    ]
+  },
+  {
+    "agent_code": "OUTPATIENT_NOTE_DRAFTER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "78e887e5-aca4-4308-beaf-8e6d00bbe7d8",
+    "errors": []
+  },
+  {
+    "agent_code": "PERIOPERATIVE_NOTE_DRAFTER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "45495d15-2eef-4fa9-a8d5-19c149e67e66",
+    "errors": []
+  },
+  {
+    "agent_code": "PROGRESS_NOTE_DRAFTER",
+    "state": "FAILED",
+    "run_id": "2db2f5cf-27a5-4fea-99af-99c288f97b63",
+    "errors": [
+      "MEDICAL_AGENT_MODEL_RESPONSE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "WARD_ROUND_NOTE_DRAFTER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "105fc963-fd99-4ad4-ba22-4474c05e0910",
+    "errors": []
+  },
+  {
+    "agent_code": "ACTIVE_ENCOUNTER_SUMMARIZER",
+    "state": "FAILED",
+    "run_id": "2c8cbe95-be5c-494f-9042-fe453f1d3624",
+    "errors": [
+      "MEDICAL_AGENT_SOURCE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "DISCHARGE_READINESS_SUMMARIZER",
+    "state": "FAILED",
+    "run_id": "e03c5735-0d69-46be-bad7-c857c3177836",
+    "errors": [
+      "MEDICAL_AGENT_SOURCE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "INPATIENT_DAILY_SUMMARIZER",
+    "state": "FAILED",
+    "run_id": "2b484fa8-30b8-40b4-825a-8ad392303517",
+    "errors": [
+      "MEDICAL_AGENT_SOURCE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "PERIOPERATIVE_CONTEXT_SUMMARIZER",
+    "state": "FAILED",
+    "run_id": "b5abc90f-c99f-4426-af7f-17a79076dd51",
+    "errors": [
+      "MEDICAL_AGENT_SOURCE_INVALID",
+      "MEDICAL_AGENT_SOURCE_INVALID",
+      "MEDICAL_AGENT_SOURCE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "PRE_VISIT_SUMMARIZER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "4a00e3b2-7282-4f9b-859c-5b0af634b823",
+    "errors": []
+  },
+  {
+    "agent_code": "TRIAGE_CONTEXT_SUMMARIZER",
+    "state": "FAILED",
+    "run_id": "68ee06ca-0606-4f34-a65a-eae885183335",
+    "errors": [
+      "MEDICAL_AGENT_SOURCE_INVALID",
+      "MEDICAL_AGENT_SOURCE_INVALID",
+      "MEDICAL_AGENT_SOURCE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "ADMISSION_GLUCOSE_ASSESSOR",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "118a1d6f-c716-428d-a7cd-1fb513123413",
+    "errors": []
+  },
+  {
+    "agent_code": "DISCHARGE_GLUCOSE_PLAN",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "07883e26-daf2-487f-a734-cc2bcbd57b1c",
+    "errors": []
+  },
+  {
+    "agent_code": "HYPOGLYCEMIA_GUARD",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "cc5b880a-0b2d-448f-8146-5aaaab66cf3a",
+    "errors": []
+  },
+  {
+    "agent_code": "INSULIN_DOSE_ADVISOR",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "50ca0eae-8471-41bf-b965-45f69df30beb",
+    "errors": []
+  },
+  {
+    "agent_code": "DETERIORATION_MONITOR",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "0787dc45-7d93-4e29-baa5-59622dd95c64",
+    "errors": []
+  },
+  {
+    "agent_code": "ICU_HANDOFF_SUMMARIZER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "75ff2612-9995-4af1-8e1c-01f5e7cc69c3",
+    "errors": []
+  },
+  {
+    "agent_code": "SEPSIS_RISK_ASSESSOR",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "c50a3961-5325-44f8-b128-42ac43be6d3f",
+    "errors": []
+  },
+  {
+    "agent_code": "INFECTION_CASE_REVIEWER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "a7b40b72-2e11-485d-b2f2-6a9bbd47c727",
+    "errors": []
+  },
+  {
+    "agent_code": "NOTIFIABLE_REPORT_ASSISTANT",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "0ab028d9-63e5-4cc9-815c-7c682e9dbcd2",
+    "errors": []
+  },
+  {
+    "agent_code": "OUTBREAK_ALERT_ASSESSOR",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "4b1e9dbe-0333-4c14-ba47-fba573296741",
+    "errors": []
+  },
+  {
+    "agent_code": "CHARGE_RATIONALITY_REVIEWER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "9a6068fe-e27e-46e8-920a-13f022663546",
+    "errors": []
+  },
+  {
+    "agent_code": "DRG_CODING_REVIEWER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "bdd9d3cf-785b-4453-81fe-830135f00b2c",
+    "errors": []
+  },
+  {
+    "agent_code": "EQUIPMENT_UTILIZATION_REVIEWER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "5264acbb-07a0-42e9-a74e-f1b3cf038ec8",
+    "errors": []
+  },
+  {
+    "agent_code": "EXAM_SLOT_PLANNER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "4e5032d4-3b43-4f93-979c-0fb60a71d929",
+    "errors": []
+  },
+  {
+    "agent_code": "FOLLOWUP_REMINDER_ASSISTANT",
+    "state": "FAILED",
+    "run_id": "2d7654dc-db1f-4190-89cf-91a8986a3ba1",
+    "errors": [
+      "MEDICAL_AGENT_SOURCE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "DISCHARGE_MEDICATION_GUIDE",
+    "state": "FAILED",
+    "run_id": "1cb2487e-c1c1-4306-8e23-f7cfe9336331",
+    "errors": [
+      "MEDICAL_AGENT_SOURCE_INVALID"
+    ]
+  },
+  {
+    "agent_code": "ACTIVE_RECORD_QC_REVIEWER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "eababcb3-64d2-4809-957c-cdbdeeaf4a3c",
+    "errors": []
+  },
+  {
+    "agent_code": "CORRECTION_CONSISTENCY_REVIEWER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "07d6f96b-4383-42c6-a370-4cf74b71af03",
+    "errors": []
+  },
+  {
+    "agent_code": "PRE_SIGN_QC_REVIEWER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "246f3b38-a7c8-4faa-acf9-37d03526e469",
+    "errors": []
+  },
+  {
+    "agent_code": "TERMINAL_RECORD_QC_REVIEWER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "dfea7fd2-27f2-465c-9be2-4520f6643188",
+    "errors": []
+  },
+  {
+    "agent_code": "WRITING_QC_REVIEWER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "fa45930a-f598-434b-b116-1cb36d429e5f",
+    "errors": []
+  },
+  {
+    "agent_code": "COHORT_ENROLLMENT_ASSISTANT",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "33d0909b-ae5f-46eb-bc84-d1ac0e3acec4",
+    "errors": []
+  },
+  {
+    "agent_code": "OUTCOME_COLLECTION_ASSISTANT",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "df6745a1-93ea-41e0-b7ee-9c1a9c77b0b7",
+    "errors": []
+  },
+  {
+    "agent_code": "CORRECTED_RESULT_RECONCILER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "f81aad9b-3441-4a21-8b9c-bc0d45479b6a",
+    "errors": []
+  },
+  {
+    "agent_code": "CRITICAL_RESULT_CONTEXT_AGENT",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "acc02e3c-28f3-4b9f-844f-2d2fa585110f",
+    "errors": []
+  },
+  {
+    "agent_code": "FOLLOWUP_TASK_PLANNER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "5e721970-0931-43af-935d-a5c6abf4e918",
+    "errors": []
+  },
+  {
+    "agent_code": "NEW_RESULT_INTAKE_AGENT",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "c15224cd-b633-442b-9860-7db79622ed1b",
+    "errors": []
+  },
+  {
+    "agent_code": "PENDING_RESULT_TRACKER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "53654477-809c-40f7-b4ef-1cdb1e1e2a95",
+    "errors": []
+  },
+  {
+    "agent_code": "RESULT_TREND_REVIEWER",
+    "state": "WAITING_FOR_REVIEW",
+    "run_id": "e6e7ba15-b2a8-43d9-9fbb-1a9fac5a0966",
+    "errors": []
+  },
+  {
+    "agent_code": "DECOCTION_GUIDE",
+    "state": "FAILED",
+    "run_id": "7f668d15-64a8-446c-ba8a-fe5a87a41c37",
+    "errors": [
+      "MEDICAL_AGENT_TOOL_FAILED"
+    ]
+  },
+  {
+    "agent_code": "HERBAL_FORMULA_ADVISOR",
+    "state": "FAILED",
+    "run_id": "c4349610-a6aa-49a6-9e4d-6626bb510e5a",
+    "errors": [
+      "MEDICAL_AGENT_TOOL_FAILED"
+    ]
+  },
+  {
+    "agent_code": "HERB_INTERACTION_GUARD",
+    "state": "FAILED",
+    "run_id": "e0ba29a0-1afc-48ed-ac1f-18db691eed6d",
+    "errors": [
+      "MEDICAL_AGENT_TOOL_FAILED",
+      "MEDICAL_AGENT_TOOL_FAILED",
+      "MEDICAL_AGENT_TOOL_FAILED"
+    ]
+  },
+  {
+    "agent_code": "SYNDROME_DIFFERENTIATION",
+    "state": "FAILED",
+    "run_id": "35373d03-cec2-4b54-8a6f-c16e9f6bcc91",
+    "errors": [
+      "MEDICAL_AGENT_TOOL_FAILED"
+    ]
+  }
+]

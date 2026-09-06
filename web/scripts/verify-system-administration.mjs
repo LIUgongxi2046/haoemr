@@ -6,11 +6,11 @@ import { chromium } from 'playwright';
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
 const outputDir = resolve(projectDir, 'output/playwright/system-administration');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4178').replace(/\/$/, '');
-const readOnly = process.env.OPENEMR2026_ADMIN_READ_ONLY === '1';
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4178').replace(/\/$/, '');
+const readOnly = process.env.HAOEMR_ADMIN_READ_ONLY === '1';
 const credentials = {
-  username: process.env.OPENEMR2026_BROWSER_USERNAME || 'linwei',
-  password: process.env.OPENEMR2026_BROWSER_PASSWORD || 'OpenEMR2026-dev!',
+  username: process.env.HAOEMR_BROWSER_USERNAME || 'linwei',
+  password: process.env.HAOEMR_BROWSER_PASSWORD || 'HaoEMR-dev!',
 };
 const routes = [
   ['admin', '系统管理工作台'],

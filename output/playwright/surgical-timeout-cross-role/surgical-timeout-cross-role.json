@@ -1,0 +1,25 @@
+{
+  "run_at": "2026-09-05T09:54:28.915Z",
+  "procedure_name": "E2E Time-Out 独立核验 1788602068915",
+  "checks": [
+    {
+      "name": "scheduler-creates-procedure-and-cannot-time-out-before-independent-verification",
+      "status": "PASS",
+      "detail": "排程已创建；缺少第二人核验时服务端拒绝 Time-Out：SURGICAL_TIME_OUT_SECOND_PERSON_REQUIRED：完成 Time-out 前必须由独立第二操作者提交安全核验"
+    },
+    {
+      "name": "independent-user-verifies-and-cannot-perform-own-final-time-out-transition",
+      "status": "PASS",
+      "detail": "第二名用户已形成不可覆盖的核验证据；同一核验账号被拒绝最终迁移：SURGICAL_TIME_OUT_SELF_VERIFICATION_FORBIDDEN：提交第二人 Time-out 核验的账号不能执行最终 Time-out 状态迁移"
+    },
+    {
+      "name": "another-user-completes-time-out-and-terminal-procedure-through-ui",
+      "status": "PASS",
+      "detail": "非核验账号完成 Time-Out 并完成手术；终态不再暴露重复完成操作"
+    }
+  ],
+  "findings": [],
+  "selected_patient_id": "018f0000-0000-7000-8000-000000000002",
+  "passed": 3,
+  "failed": 0
+}

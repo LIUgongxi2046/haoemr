@@ -22,7 +22,7 @@ export interface SimulationWorkbenchDefinition {
 export const mockInterfaceSubmenus: ReadonlyArray<readonly [SimulationWorkbenchId | 'mock-interfaces', string]> = [
   ['mock-interfaces', '接口总览'],
   ['admin-auth', '身份认证'],
-  ['ai-capture', '语音转写'],
+  ['ai-capture', '运行证据'],
   ['model-connection', '模型连接'],
   ['model-routing', '模型路由'],
   ['devices', '设备目录'],
@@ -42,7 +42,7 @@ export const mockInterfaceSubmenus: ReadonlyArray<readonly [SimulationWorkbenchI
 
 export const simulationWorkbenches: Record<SimulationWorkbenchId, SimulationWorkbenchDefinition> = {
   'admin-auth': { id: 'admin-auth', title: '认证与 MFA 场景演练', subtitle: 'OIDC + PKCE、MFA 与会话任期的确定性身份模拟', systemType: 'IDENTITY', entityLabel: '合成主体', entityKey: 'subject', defaultEntity: '018f0000-0000-7000-8000-00000000aa04', steps: ['发起 OIDC 授权', '校验 PKCE', '执行 MFA', '建立限时会话'], safeguards: ['不接收真实口令', 'Token 不写日志', '高风险操作仍需 step-up'], resultFocus: ['authenticated', 'mfa', 'token_expires_in_seconds'] },
-  'ai-capture': { id: 'ai-capture', title: '语音采集、转写与人工复核', subtitle: '从合成音频引用到逐句确认，不直接写入病历', systemType: 'DICTATION', entityLabel: '音频引用', entityKey: 'audio_ref', defaultEntity: 'synthetic://dictation/opd-001', steps: ['获取患者同意', '采集合成音频', 'ASR 分句转写', '医生逐句确认'], safeguards: ['未确认句不得入病历', '保留说话人和置信度', '原始音频按策略到期'], resultFocus: ['segments', 'unconfirmed_segments'] },
+  'ai-capture': { id: 'ai-capture', title: '医助运行证据采集', subtitle: '读取真实医助任务、模型调用、工具链与审计事件', systemType: 'AI_PLATFORM', entityLabel: '运行 ID', entityKey: 'run_id', defaultEntity: 'latest-medical-agent-run', steps: ['读取任务运行', '汇总模型调用', '下钻工具链', '核对审计事件'], safeguards: ['只读，不生成前端模拟记录', '不展示患者明文', '证据以服务端记录为准'], resultFocus: ['run_id', 'model_request_count', 'tool_call_count'] },
   'model-connection': { id: 'model-connection', title: '模型 Provider 连接与数据边界', subtitle: '验证兼容接口、驻留边界、引用和超时', systemType: 'MODEL', entityLabel: '模型名', entityKey: 'model', defaultEntity: 'MedBase-L-2.1', steps: ['最小化输入', '调用 Provider', '校验结构与引用', '人工采纳或拒绝'], safeguards: ['仅发送允许字段', '模型输出不是临床事实', '无引用结果默认降级'], resultFocus: ['model', 'output_text', 'citations', 'behavior'] },
   'model-routing': { id: 'model-routing', title: '模型路由、主备与人工降级', subtitle: '用成功、降级、不可用场景验证故障切换', systemType: 'MODEL', entityLabel: '路由策略', entityKey: 'route_policy', defaultEntity: 'clinical-summary-primary', steps: ['评估数据级别', '选择主模型', '触发备用路由', '进入人工处理'], safeguards: ['不可用时禁止静默成功', '降级结果显式标识不完整', '不得自动执行临床动作'], resultFocus: ['behavior', '_simulation', 'citations'] },
   devices: { id: 'devices', title: '设备目录、绑定与校准', subtitle: '设备身份、患者绑定、时钟偏移和校准场景', systemType: 'DEVICE', entityLabel: '设备 ID', entityKey: 'device_id', defaultEntity: 'BEDSIDE-MONITOR-01', steps: ['登记设备身份', '双标识绑定患者', '校准设备时钟', '启用遥测'], safeguards: ['绑定前不入患者视图', '时钟偏移超限需复核', '解绑必须留痕'], resultFocus: ['device_id', 'bound_patient', 'device_clock_offset_seconds'] },

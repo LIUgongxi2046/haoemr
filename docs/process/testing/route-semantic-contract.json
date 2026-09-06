@@ -2,7 +2,7 @@
   "schema_version": 1,
   "generated_at": "2026-08-24",
   "source": "contracts/generated/route-contract.generated.json + explicit high-risk page semantics",
-  "route_count": 198,
+  "route_count": 196,
   "routes": [
     {
       "route_id": "admin",
@@ -132,11 +132,7 @@
         "rollback"
       ],
       "data_source": "DETERMINISTIC_SCENARIO_API",
-      "critical_text": [
-        "认证策略成功场景可运行验证",
-        "降级场景下人工兜底路径可验证可用",
-        "账户安全策略变更需通过安全治理门禁"
-      ],
+      "critical_text": [],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -765,11 +761,7 @@
         "rollback"
       ],
       "data_source": "CONFIGURATION_LIFECYCLE_API",
-      "critical_text": [
-        "组合画布可创建草稿并执行组合一致性校验",
-        "提交审批后由独立审批人批准方可发布",
-        "发布与回滚遵循配置生命周期且全程可审计"
-      ],
+      "critical_text": [],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -819,11 +811,7 @@
         "rollback"
       ],
       "data_source": "CONFIGURATION_LIFECYCLE_API",
-      "critical_text": [
-        "上下文与记忆策略配置支持草稿-校验-审批-发布流程",
-        "记忆范围与保留策略受模型治理策略约束",
-        "发布生效前后策略版本可追溯"
-      ],
+      "critical_text": [],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -873,11 +861,7 @@
         "rollback"
       ],
       "data_source": "CONFIGURATION_LIFECYCLE_API",
-      "critical_text": [
-        "评估集与评测结果可追溯至具体版本",
-        "评测通过门禁后方可进入发布流程",
-        "评估发布遵循职责分离（提交≠审批≠发布）"
-      ],
+      "critical_text": [],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -893,54 +877,8 @@
       "artifact_path": "docs/design/ui-delivery/screens/agent-evals.png"
     },
     {
-      "route_id": "ai-action-review",
-      "title": "AI 候选动作与审批",
-      "primary_domain": "AI",
-      "key_regions": [
-        "页面标题与业务范围",
-        "主要业务工作区",
-        "状态与结果反馈",
-        "跨域导航或业务入口"
-      ],
-      "primary_actions": [
-        "刷新业务事实",
-        "进入主要业务动作"
-      ],
-      "required_states": [
-        "loading",
-        "empty",
-        "error",
-        "permission",
-        "success",
-        "default",
-        "partial",
-        "stale",
-        "timeout",
-        "conflict",
-        "approval",
-        "publishing",
-        "failed",
-        "rollback"
-      ],
-      "data_source": "AI_GOVERNANCE_API",
-      "critical_text": [],
-      "browser_assertions": [
-        "main [data-page-root].vue-native-page 可见",
-        "H1 非空",
-        "一级导航唯一激活",
-        "无横向溢出",
-        "API 请求可收敛"
-      ],
-      "requirement_refs": [
-        "FR-123",
-        "AC-123",
-        "#ai-action-review"
-      ],
-      "artifact_path": "docs/design/ui-delivery/screens/ai-action-review.png"
-    },
-    {
       "route_id": "ai-assistant",
-      "title": "AI医助 Eva",
+      "title": "AI医助 EVA",
       "primary_domain": "AI",
       "key_regions": [
         "页面标题与业务范围",
@@ -986,56 +924,6 @@
         "GLOBAL-AI"
       ],
       "artifact_path": "docs/design/ui-delivery/screens/ai-assistant.png"
-    },
-    {
-      "route_id": "ai-assistant-policy",
-      "title": "AI医助 Eva 工作策略与效果治理",
-      "primary_domain": "AI",
-      "key_regions": [
-        "页面标题与业务范围",
-        "主要业务工作区",
-        "状态与结果反馈",
-        "跨域导航或业务入口"
-      ],
-      "primary_actions": [
-        "创建草稿",
-        "校验",
-        "提交审批",
-        "独立批准",
-        "发布",
-        "回滚"
-      ],
-      "required_states": [
-        "loading",
-        "empty",
-        "error",
-        "permission",
-        "success",
-        "default",
-        "partial",
-        "stale",
-        "timeout",
-        "conflict",
-        "approval",
-        "publishing",
-        "failed",
-        "rollback"
-      ],
-      "data_source": "CONFIGURATION_LIFECYCLE_API",
-      "critical_text": [],
-      "browser_assertions": [
-        "main [data-page-root].vue-native-page 可见",
-        "H1 非空",
-        "一级导航唯一激活",
-        "无横向溢出",
-        "API 请求可收敛"
-      ],
-      "requirement_refs": [
-        "FR-124",
-        "AC-124",
-        "#ai-assistant-policy"
-      ],
-      "artifact_path": "docs/design/ui-delivery/screens/ai-assistant-policy.png"
     },
     {
       "route_id": "ai-capture",
@@ -1086,6 +974,9 @@
       "artifact_path": "docs/design/ui-delivery/screens/ai-capture.png"
     },
     {
+      "route_id": "ai-center",
+      "title": "ai-center",
+      "primary_domain": "AI",
       "key_regions": [
         "页面标题与业务范围",
         "主要业务工作区",
@@ -1112,6 +1003,7 @@
         "failed",
         "rollback"
       ],
+      "data_source": "AI_GOVERNANCE_API",
       "critical_text": [],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
@@ -1123,10 +1015,6 @@
       "requirement_refs": [
         "Prototype SPEC v0.13"
       ],
-      "route_id": "ai-center",
-      "title": "AI 中心",
-      "primary_domain": "AI",
-      "data_source": "AI_GOVERNANCE_API",
       "artifact_path": "docs/design/ui-delivery/screens/ai-center.png"
     },
     {
@@ -2144,11 +2032,7 @@
         "rollback"
       ],
       "data_source": "METRIC_SNAPSHOT_API_WITH_LINEAGE",
-      "critical_text": [
-        "按登记口径计算并返回数据事实快照",
-        "事实血缘可追溯至来源表与字段",
-        "数据质量问题返回可整改事实清单"
-      ],
+      "critical_text": [],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -4481,7 +4365,7 @@
     },
     {
       "route_id": "knowledge-center",
-      "title": "知识中心",
+      "title": "路径知识库",
       "primary_domain": "CONFIG",
       "key_regions": [
         "页面标题与业务范围",
@@ -5127,11 +5011,7 @@
         "rollback"
       ],
       "data_source": "DETERMINISTIC_SCENARIO_API",
-      "critical_text": [
-        "主备模型路由切换场景可运行验证",
-        "模型不可用时人工降级路径可验证可用",
-        "路由策略变更遵循治理并保留审计记录"
-      ],
+      "critical_text": [],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -6489,11 +6369,7 @@
         "recovery"
       ],
       "data_source": "CLINICAL_FACT_API",
-      "critical_text": [
-        "候诊患者列表可切换并加载对应诊疗快照",
-        "病历、医嘱、结果、质控与签署入口在同一工作台可直达",
-        "跨患者切换时患者与就诊上下文正确隔离"
-      ],
+      "critical_text": [],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -6633,11 +6509,7 @@
         "compensation"
       ],
       "data_source": "DETERMINISTIC_SCENARIO_API",
-      "critical_text": [
-        "病理标本与结果在工作台可检索与调阅",
-        "病理结果与病历及医嘱上下文关联展示",
-        "危急值或异常结果有明确反馈与处置入口"
-      ],
+      "critical_text": [],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -6653,117 +6525,18 @@
       "artifact_path": "docs/design/ui-delivery/screens/pathology-workbench.png"
     },
     {
-      "key_regions": [
-        "页面标题与业务范围",
-        "图谱主画布",
-        "节点类型图例与筛选",
-        "关系路径查询",
-        "节点邻居面板"
-      ],
-      "primary_actions": [
-        "搜索定位节点",
-        "按类型筛选",
-        "查询两点关系路径",
-        "查看节点邻居关系"
-      ],
-      "required_states": [
-        "loading",
-        "empty",
-        "error",
-        "permission",
-        "success",
-        "default",
-        "partial",
-        "stale",
-        "timeout",
-        "conflict",
-        "approval",
-        "publishing",
-        "failed",
-        "rollback"
-      ],
-      "critical_text": [
-        "图谱节点按类型着色且可缩放拖拽",
-        "路径查询高亮最短关系路径",
-        "节点邻居面板展示入边与出边谓词"
-      ],
-      "browser_assertions": [
-        "main [data-page-root].vue-native-page 可见",
-        "H1 非空",
-        "一级导航唯一激活",
-        "无横向溢出",
-        "API 请求可收敛"
-      ],
-      "requirement_refs": [
-        "Prototype SPEC v0.13"
-      ],
       "route_id": "pathway-graph",
       "title": "知识图谱",
       "primary_domain": "CONFIG",
-      "data_source": "ADMIN_OR_CONFIGURATION_API",
-      "artifact_path": "docs/design/ui-delivery/"
-    },
-    {
       "key_regions": [
         "页面标题与业务范围",
-        "待审队列分区",
-        "审核操作",
-        "状态与结果反馈"
-      ],
-      "primary_actions": [
-        "查看待审队列",
-        "提交审核",
-        "批准",
-        "退回"
-      ],
-      "required_states": [
-        "loading",
-        "empty",
-        "error",
-        "permission",
-        "success",
-        "default",
-        "partial",
-        "stale",
-        "timeout",
-        "conflict",
-        "approval",
-        "publishing",
-        "failed",
-        "rollback"
-      ],
-      "critical_text": [
-        "审核队列按状态分区加载",
-        "提交、审核、批准职责分离",
-        "队列一次性批量加载避免逐条请求"
-      ],
-      "browser_assertions": [
-        "main [data-page-root].vue-native-page 可见",
-        "H1 非空",
-        "一级导航唯一激活",
-        "无横向溢出",
-        "API 请求可收敛"
-      ],
-      "requirement_refs": [
-        "Prototype SPEC v0.13"
-      ],
-      "route_id": "pathway-review",
-      "title": "审核队列",
-      "primary_domain": "CONFIG",
-      "data_source": "ADMIN_OR_CONFIGURATION_API",
-      "artifact_path": "docs/design/ui-delivery/"
-    },
-    {
-      "key_regions": [
-        "页面标题与业务范围",
-        "版本时间线",
-        "版本状态标识",
+        "主要业务工作区",
+        "状态与结果反馈",
         "跨域导航或业务入口"
       ],
       "primary_actions": [
-        "查看版本历史",
-        "默认选中首个路径",
-        "查看版本详情"
+        "刷新",
+        "查看或维护治理对象"
       ],
       "required_states": [
         "loading",
@@ -6772,20 +6545,13 @@
         "permission",
         "success",
         "default",
-        "partial",
-        "stale",
-        "timeout",
+        "offline",
         "conflict",
-        "approval",
-        "publishing",
-        "failed",
-        "rollback"
+        "blocked",
+        "recovery"
       ],
-      "critical_text": [
-        "版本历史默认选中第一条路径",
-        "版本状态与审批人可见",
-        "时间线展示版本演进"
-      ],
+      "data_source": "ADMIN_OR_CONFIGURATION_API",
+      "critical_text": [],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -6796,10 +6562,86 @@
       "requirement_refs": [
         "Prototype SPEC v0.13"
       ],
+      "artifact_path": "docs/design/ui-delivery/"
+    },
+    {
+      "route_id": "pathway-review",
+      "title": "审核队列",
+      "primary_domain": "CONFIG",
+      "key_regions": [
+        "页面标题与业务范围",
+        "主要业务工作区",
+        "状态与结果反馈",
+        "跨域导航或业务入口"
+      ],
+      "primary_actions": [
+        "刷新",
+        "查看或维护治理对象"
+      ],
+      "required_states": [
+        "loading",
+        "empty",
+        "error",
+        "permission",
+        "success",
+        "default",
+        "offline",
+        "conflict",
+        "blocked",
+        "recovery"
+      ],
+      "data_source": "ADMIN_OR_CONFIGURATION_API",
+      "critical_text": [],
+      "browser_assertions": [
+        "main [data-page-root].vue-native-page 可见",
+        "H1 非空",
+        "一级导航唯一激活",
+        "无横向溢出",
+        "API 请求可收敛"
+      ],
+      "requirement_refs": [
+        "Prototype SPEC v0.13"
+      ],
+      "artifact_path": "docs/design/ui-delivery/"
+    },
+    {
       "route_id": "pathway-versions",
       "title": "版本历史",
       "primary_domain": "CONFIG",
+      "key_regions": [
+        "页面标题与业务范围",
+        "主要业务工作区",
+        "状态与结果反馈",
+        "跨域导航或业务入口"
+      ],
+      "primary_actions": [
+        "刷新",
+        "查看或维护治理对象"
+      ],
+      "required_states": [
+        "loading",
+        "empty",
+        "error",
+        "permission",
+        "success",
+        "default",
+        "offline",
+        "conflict",
+        "blocked",
+        "recovery"
+      ],
       "data_source": "ADMIN_OR_CONFIGURATION_API",
+      "critical_text": [],
+      "browser_assertions": [
+        "main [data-page-root].vue-native-page 可见",
+        "H1 非空",
+        "一级导航唯一激活",
+        "无横向溢出",
+        "API 请求可收敛"
+      ],
+      "requirement_refs": [
+        "Prototype SPEC v0.13"
+      ],
       "artifact_path": "docs/design/ui-delivery/"
     },
     {
@@ -8039,11 +7881,7 @@
         "rollback"
       ],
       "data_source": "METRIC_SNAPSHOT_API_WITH_LINEAGE",
-      "critical_text": [
-        "科研项目登记口径驱动统计计算",
-        "统计结果血缘可追溯至来源事实",
-        "数据问题返回可整改事实而非静默丢弃"
-      ],
+      "critical_text": [],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",

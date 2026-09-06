@@ -20,6 +20,17 @@
 
 @media (max-width: 600px) {
   .main > [data-page-root].content { padding-top: var(--page-content-top-gap-compact); }
+  .focus-editor,
+  .pacs-layout,
+  .report-layout,
+  .evidence-layout,
+  .qc-layout,
+  .sign-layout,
+  .version-layout { grid-template-columns: minmax(0, 1fr); }
+  .focus-editor > *, .pacs-layout > *, .report-layout > *, .evidence-layout > *, .qc-layout > *, .sign-layout > *, .version-layout > * { min-width: 0; }
+  .document-sheet { padding: 20px 16px; }
+  .image-viewer { min-height: 340px; }
+  .version-row { grid-template-columns: 14px 36px minmax(0, 1fr); }
 }
 
 /* .admin-layout/.auth-layout 是生产「工作台两栏」（主区 + 侧表单），与原型管理段的同名类（176px 左导航）冲突，

@@ -6,7 +6,7 @@ import {
   acceptInpatientConsultation, completeInpatientConsultation, createInpatientConsultation,
   getInpatientSyntheticActor, inpatientSyntheticActors, issueInpatientLease,
   loadInpatientConsultations, loadInpatientOverview, rejectInpatientConsultation,
-  setInpatientSyntheticActor, signInpatientConsultationOpinion, type InpatientSyntheticActorKey,
+  signInpatientConsultationOpinion, type InpatientSyntheticActorKey,
 } from '../../clinical-api';
 import BusinessActionDialog from '../components/BusinessActionDialog.vue';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
@@ -64,17 +64,6 @@ const canSign = computed(() => selected.value?.status === 'ACCEPTED'
 const canComplete = computed(() => selected.value?.status === 'OPINION_SIGNED'
   && activeActor.value?.userId === selected.value.requested_by);
 
-async function switchActor(key: InpatientSyntheticActorKey) {
-  if (busy.value || key === selectedActorKey.value) return;
-  busy.value = true; notice.value = '';
-  try {
-    setInpatientSyntheticActor(key); selectedActorKey.value = key;
-    await workspace.refetch();
-    notice.value = `已切换为${activeActor.value?.roleLabel ?? key}，并重新签发住院患者租约。`;
-  } catch (error) {
-    const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`;
-  } finally { busy.value = false; }
-}
 
 async function refresh(selectedId?: string) {
   if (selectedId) selectedConsultationId.value = selectedId;
@@ -150,11 +139,10 @@ function urgencyLabel(value: InpatientConsultationWire['urgency']) {
 <template>
   <section data-page-root class="content vue-native-page inpatient-consult-page">
     <div class="page-heading"><div><p class="eyebrow">住院 / 跨科协同</p><h1>住院查房、会诊与协同</h1><p>申请、接诊、意见签署和申请方确认分离，通知不代表完成。</p></div><button class="button primary" type="button" @click="openCreate = true">新建会诊</button></div>
-    <details v-if="inpatientSyntheticActors.length" class="development-acceptance-tools"><summary>开发角色模拟</summary><section class="inpatient-role-simulator" aria-label="开发环境会诊岗位身份"><div><strong>会诊岗位模拟</strong><span>只在开发合成环境可切换；生产身份由 OIDC 与岗位任期确定</span></div><div role="group"><button v-for="actor in inpatientSyntheticActors" :key="actor.key" type="button" :class="{ active: actor.key === selectedActorKey }" :disabled="busy" @click="switchActor(actor.key)"><b>{{ actor.roleLabel }}</b><small>{{ actor.displayName }}</small></button></div></section></details>
-    <ClinicalPageState v-if="workspace.isPending.value" kind="loading" message="正在校验住院患者租约与会诊队列" />
+    <ClinicalPageState v-if="workspace.isPending.value" kind="loading" message="正在加载住院患者与会诊队列" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="workspace.refetch()" />
     <template v-else-if="workspace.data.value">
-      <section class="patient-strip" aria-label="住院患者上下文"><div class="patient-avatar">{{ workspace.data.value.overview.patient_display_name.slice(0, 1) }}</div><div><strong>{{ workspace.data.value.overview.patient_display_name }}</strong><span>{{ workspace.data.value.overview.ward_display_name }} · {{ workspace.data.value.overview.bed_label }}床</span></div><dl><div><dt>当前身份</dt><dd>{{ activeActor?.displayName ?? '当前登录人' }}</dd></div><div><dt>住院状态</dt><dd>{{ workspace.data.value.overview.admission.status }}</dd></div><div><dt>租约范围</dt><dd>当前患者·当前住院</dd></div></dl><span class="lease-badge">…{{ workspace.data.value.overview.admission.admission_id.slice(-8) }}</span></section>
+      <section class="patient-strip" aria-label="当前住院患者"><div class="patient-avatar">{{ workspace.data.value.overview.patient_display_name.slice(0, 1) }}</div><div><strong>{{ workspace.data.value.overview.patient_display_name }}</strong><span>{{ workspace.data.value.overview.ward_display_name }} · {{ workspace.data.value.overview.bed_label }}床</span></div><dl><div><dt>当前身份</dt><dd>{{ activeActor?.displayName ?? '当前登录人' }}</dd></div><div><dt>住院状态</dt><dd>{{ workspace.data.value.overview.admission.status }}</dd></div><div><dt>查看范围</dt><dd>当前患者 · 当前住院</dd></div></dl><span class="lease-badge">…{{ workspace.data.value.overview.admission.admission_id.slice(-8) }}</span></section>
       <div v-if="notice" class="inline-notice" :class="{ error: notice.includes('：') }" role="status">{{ notice }}</div>
 
       <BusinessActionDialog :open="openCreate" title="新建住院会诊" description="申请后内容固化；如需修改，必须重新发起以保留原始证据。" confirm-label="提交会诊申请" :busy="busy" width="wide" @cancel="openCreate = false" @confirm="submitCreate"><div class="dialog-grid"><label>邀请科室<input v-model="requestedDepartment" required minlength="2" maxlength="128" /></label><label>紧急程度<select v-model="urgency"><option value="ROUTINE">普通</option><option value="URGENT">紧急</option><option value="EMERGENCY">立即</option></select></label><label>期望完成时间<input v-model="dueAt" required type="datetime-local" /></label></div><label>会诊原因<textarea v-model="reason" required minlength="4" maxlength="1000" rows="3" placeholder="当前临床问题、已完成的处置和邀请理由" /></label><label>希望解决的临床问题<textarea v-model="clinicalQuestion" required minlength="4" maxlength="2000" rows="3" placeholder="请用可回答的临床问题描述" /></label><p class="dialog-warning">服务端会校验当前住院状态、病区权限与时限。</p></BusinessActionDialog>

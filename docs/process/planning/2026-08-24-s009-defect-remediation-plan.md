@@ -64,8 +64,8 @@ OPT-CHUNK-01,主 chunk 分包,S009-OBS-007,RETEST-S009-01,B4,LOW,haonan-s008-cod
 ### FIX-DS-ADAPTER-01 + FIX-DS-HARNESS-01 DeepSeek 失败关闭集成
 
 - 目标价值：提供可审计、默认关闭的 OpenAI-compatible Chat Completions adapter，并将“未配置实模”显式报为阻塞。
-- 允许修改：`org.openemr2026.agent`、`evals/deepseek/`、adapter/harness 测试。
-- 安全边界：仅 `prod` + `openemr2026.production.ai.enabled=true` 注册；仅接受 HTTPS 与 `env://`/`file://` 密钥引用；不记录请求正文、密钥或模型原始错误；provider 失败转 `DEGRADED`，临床主链继续。
+- 允许修改：`org.haoemr.agent`、`evals/deepseek/`、adapter/harness 测试。
+- 安全边界：仅 `prod` + `haoemr.production.ai.enabled=true` 注册；仅接受 HTTPS 与 `env://`/`file://` 密钥引用；不记录请求正文、密钥或模型原始错误；provider 失败转 `DEGRADED`，临床主链继续。
 - 契约：非流式 `POST {base-uri}/chat/completions`，Bearer 认证，JSON object 输出，仅接受 `sections`，后续仍经 `AgentOutputGuard`。
 - 测试：adapter 合成 HTTP 成功/非 2xx/非法 JSON/密钥引用；harness 未配置时返回 `INSUFFICIENT_EVIDENCE` 而非假 PASS。
 - 回滚：删除 prod adapter/harness 文件并恢复 provider 列表；数据不迁移。

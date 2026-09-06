@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
 import { computed, ref, watch } from 'vue';
-import type { MockInterfaceWire, MockInvocationResultWire } from '../../generated/contracts';
-import { invokeMockInterface, issueMockLease, listMockInterfaces } from '../../api/mock';
+import type { ConfigurationItemWire, MockInterfaceWire, MockInvocationResultWire } from '../../generated/contracts';
+import { issueConfigurationLease, listConfigurations } from '../../api/config';
+import {
+  invokeMockInterface,
+  issueMockLease,
+  listMockInterfaceRuns,
+  listMockInterfaces,
+  type MockInterfaceRun,
+} from '../../api/mock';
 import { toClinicalIssue } from '../clinical-error';
 import { mockInterfaceSubmenus, simulationWorkbenches, type SimulationWorkbenchId } from '../simulation-workbenches';
 
@@ -16,30 +23,83 @@ const interfacesQuery = useQuery({
   queryFn: () => listMockInterfaces(leaseQuery.data.value!),
   enabled: () => Boolean(leaseQuery.data.value), retry: false,
 });
-const issue = computed(() => (leaseQuery.error.value ?? interfacesQuery.error.value)
-  ? toClinicalIssue(leaseQuery.error.value ?? interfacesQuery.error.value) : null);
+const configurationLeaseQuery = useQuery({
+  queryKey: ['mock', 'configuration-lease'], queryFn: issueConfigurationLease,
+  retry: false, staleTime: 5 * 60_000, gcTime: 0,
+});
+const profilesQuery = useQuery({
+  queryKey: ['mock', 'profiles'],
+  queryFn: () => listConfigurations(configurationLeaseQuery.data.value!, 'MOCK_INTERFACE_PROFILE'),
+  enabled: () => Boolean(configurationLeaseQuery.data.value), retry: false,
+});
+const issue = computed(() => {
+  const error = leaseQuery.error.value ?? interfacesQuery.error.value ?? configurationLeaseQuery.error.value ?? profilesQuery.error.value;
+  return error ? toClinicalIssue(error) : null;
+});
 
 const selected = ref<MockInterfaceWire | null>(null);
 const busyCode = ref('');
 const notice = ref('');
 const lastResult = ref<MockInvocationResultWire | null>(null);
+const lastRun = ref<MockInterfaceRun | null>(null);
+const selections = ref<Record<string, { profileKey: string; scenario: 'SUCCESS' | 'DEGRADED' | 'UNAVAILABLE' }>>({});
+const replayKeys = ref<Record<string, string>>({});
 const submenuCards = mockInterfaceSubmenus
   .filter(([id]) => id !== 'mock-interfaces')
-  .map(([id, label]) => ({ id: id as SimulationWorkbenchId, label, definition: simulationWorkbenches[id as SimulationWorkbenchId] }));
-watch(() => interfacesQuery.data.value, (items) => {
+  .map(([id, label]) => {
+    const workbenchId = id as SimulationWorkbenchId;
+    const delegated = ['ai-capture', 'model-connection', 'model-routing'].includes(workbenchId);
+    return { id: workbenchId, label, definition: simulationWorkbenches[workbenchId], delegated, target: delegated ? `/${workbenchId}` : `/mock-interfaces/${workbenchId}` };
+  });
+const profilesFor = (code: string): ConfigurationItemWire[] => (profilesQuery.data.value ?? []).filter((profile) =>
+  profile.status === 'ACTIVE' && profile.validation_state === 'VALID' && profile.approval_state === 'APPROVED'
+  && profile.payload?.interface_code === code && profile.payload?.production_adapter_state === 'SYNTHETIC_ONLY');
+function selectionFor(code: string) {
+  return selections.value[code] ?? { profileKey: '', scenario: 'SUCCESS' as const };
+}
+function setProfile(code: string, profileKey: string) {
+  selections.value[code] = { ...selectionFor(code), profileKey };
+}
+function setScenario(code: string, scenario: 'SUCCESS' | 'DEGRADED' | 'UNAVAILABLE') {
+  selections.value[code] = { ...selectionFor(code), scenario };
+}
+watch([() => interfacesQuery.data.value, () => profilesQuery.data.value], ([items]) => {
   if (!selected.value && items?.[0]) selected.value = items[0];
+  for (const item of items ?? []) {
+    if (!selectionFor(item.code).profileKey) setProfile(item.code, profilesFor(item.code)[0]?.config_key ?? '');
+  }
 }, { immediate: true });
 
 async function invoke(code: string) {
   const lease = leaseQuery.data.value;
+  const selection = selectionFor(code);
   if (!lease || busyCode.value) return;
+  if (!selection.profileKey) {
+    notice.value = 'MOCK_PROFILE_REQUIRED：请先为该接口选择已批准且已发布的仿真配置。';
+    return;
+  }
   busyCode.value = code; notice.value = '';
   try {
-    lastResult.value = await invokeMockInterface(lease, code);
+    const replaySlot = `${code}|${selection.profileKey}|${selection.scenario}`;
+    const idempotencyKey = replayKeys.value[replaySlot] ?? crypto.randomUUID();
+    replayKeys.value[replaySlot] = idempotencyKey;
+    lastResult.value = await invokeMockInterface(lease, code, {
+      profile_key: selection.profileKey,
+      simulation_scenario: selection.scenario,
+    }, idempotencyKey);
   } catch (error) {
     const next = toClinicalIssue(error);
     notice.value = `${next.code}：${next.message}`;
   } finally {
+    // The invocation response intentionally contains only synthetic payload. Read the persisted
+    // run separately so successful and failed scenarios expose the same auditable evidence link.
+    try {
+      const runs = await listMockInterfaceRuns(lease, { profileKey: selection.profileKey });
+      lastRun.value = runs.find((run) => run.interface_code === code && run.scenario === selection.scenario) ?? null;
+    } catch (error) {
+      const next = toClinicalIssue(error);
+      notice.value = notice.value || `${next.code}：调用已结束，但运行证据暂时无法读取。`;
+    }
     busyCode.value = '';
   }
 }
@@ -47,6 +107,7 @@ async function invoke(code: string) {
 function select(item: MockInterfaceWire) {
   selected.value = item;
   lastResult.value = null;
+  lastRun.value = null;
 }
 
 function systemTypeLabel(value: string) {
@@ -61,7 +122,7 @@ function systemTypeLabel(value: string) {
       <div class="head-actions"><button class="btn" type="button" @click="interfacesQuery.refetch()">刷新</button></div>
     </div>
 
-    <div v-if="leaseQuery.isPending.value || interfacesQuery.isPending.value" class="card"><div class="card-body">正在读取模拟接口注册表…</div></div>
+    <div v-if="leaseQuery.isPending.value || interfacesQuery.isPending.value || configurationLeaseQuery.isPending.value || profilesQuery.isPending.value" class="card"><div class="card-body">正在读取模拟接口注册表与已发布配置…</div></div>
     <div v-else-if="issue" class="card"><div class="card-body">加载失败：{{ issue.code }} {{ issue.message }}</div></div>
 
     <template v-else>
@@ -75,7 +136,7 @@ function systemTypeLabel(value: string) {
       <section class="admin-panel submenu-catalog">
         <header><div><h2>{{ submenuCards.length }} 个模拟接口子菜单</h2><p>每个子菜单均提供完整接口文档、三级医院仿真配置、弹窗式新建/编辑/删除和真实流程门禁。</p></div></header>
         <div class="submenu-grid">
-          <RouterLink v-for="card in submenuCards" :key="card.id" :to="`/mock-interfaces/${card.id}`" class="submenu-card">
+          <RouterLink v-for="card in submenuCards" :key="card.id" :to="card.target" class="submenu-card">
             <span>{{ card.label }}</span><strong>{{ card.definition.title }}</strong><small>{{ card.definition.subtitle }}</small><b>进入配置与联调 →</b>
           </RouterLink>
         </div>
@@ -85,16 +146,17 @@ function systemTypeLabel(value: string) {
 
       <div class="admin-layout">
         <section class="admin-panel">
-          <header><div><h2>模拟接口注册表</h2><p>点选接口查看对接标准与文档，点「调用」触发合成 handler。</p></div></header>
+          <header><div><h2>模拟接口注册表</h2><p>先选择已批准发布的仿真配置和场景；同配置、同场景再次调用会重放同一运行证据。</p></div></header>
           <div class="admin-table-wrap">
             <table class="admin-table">
-              <thead><tr><th>接口</th><th>系统类型</th><th>对接标准</th><th>操作</th></tr></thead>
+              <thead><tr><th>接口</th><th>系统类型</th><th>已发布仿真配置</th><th>场景</th><th>操作</th></tr></thead>
               <tbody>
                 <tr v-for="item in interfacesQuery.data.value ?? []" :key="item.code" :class="{ 'selected-row': selected?.code === item.code }">
                   <td><button class="link-button" @click="select(item)"><strong>{{ item.display_name }}</strong><small><code>{{ item.code }}</code></small></button></td>
                   <td><span class="admin-status muted">{{ systemTypeLabel(item.system_type) }}</span></td>
-                  <td>{{ item.standard_interface ?? '—' }}</td>
-                  <td><button class="task-action" :disabled="Boolean(busyCode)" @click="invoke(item.code)">{{ busyCode === item.code ? '调用中…' : '调用' }}</button></td>
+                  <td><select :value="selectionFor(item.code).profileKey" :aria-label="`${item.display_name} 的已发布仿真配置`" @change="setProfile(item.code, ($event.target as HTMLSelectElement).value)"><option value="">无可用配置</option><option v-for="profile in profilesFor(item.code)" :key="profile.config_id" :value="profile.config_key">{{ profile.display_name }} · v{{ profile.row_version }}</option></select></td>
+                  <td><select :value="selectionFor(item.code).scenario" :aria-label="`${item.display_name} 的仿真场景`" @change="setScenario(item.code, ($event.target as HTMLSelectElement).value as 'SUCCESS' | 'DEGRADED' | 'UNAVAILABLE')"><option value="SUCCESS">成功</option><option value="DEGRADED">降级</option><option value="UNAVAILABLE">不可用</option></select></td>
+                  <td><button class="task-action" :disabled="Boolean(busyCode) || !selectionFor(item.code).profileKey" @click="invoke(item.code)">{{ busyCode === item.code ? '调用中…' : '调用 / 重放' }}</button></td>
                 </tr>
               </tbody>
             </table>
@@ -128,8 +190,20 @@ function systemTypeLabel(value: string) {
         <div class="card-body">
           <div class="folder-row">请求 ID<span><code>…{{ lastResult.request_id.slice(-8) }}</code></span></div>
           <div class="folder-row">产生时间<span>{{ new Date(lastResult.produced_at).toLocaleString('zh-CN', { hour12: false }) }}</span></div>
+          <div class="folder-row">配置与场景<span><code>{{ selectionFor(lastResult.mock_interface_code).profileKey }} · {{ selectionFor(lastResult.mock_interface_code).scenario }}</code></span></div>
           <div class="notice info recent-result-notice"><div class="notice-title">提示</div>{{ lastResult.notice }}</div>
           <pre class="mock-payload">{{ JSON.stringify(lastResult.payload, null, 2) }}</pre>
+        </div>
+      </section>
+
+      <section v-if="lastRun" class="admin-panel recent-result-panel" aria-label="最近运行证据">
+        <header><div><h2>最近运行证据</h2><p>{{ lastRun.interface_code }} · {{ lastRun.scenario }} · {{ lastRun.status }}</p></div><span class="admin-status" :class="lastRun.status === 'COMPLETED' ? 'green' : 'amber'">{{ lastRun.status }}</span></header>
+        <div class="card-body">
+          <div class="folder-row">配置版本<span><code>v{{ lastRun.profile_version }}</code></span></div>
+          <div class="folder-row">合成记录数<span>{{ lastRun.record_count }}</span></div>
+          <div class="folder-row">证据摘要<span><code>…{{ lastRun.evidence_hash.slice(-12) }}</code></span></div>
+          <div class="folder-row">开始时间<span>{{ new Date(lastRun.started_at).toLocaleString('zh-CN', { hour12: false }) }}</span></div>
+          <RouterLink class="button secondary" :to="`/mock-interfaces/${lastRun.workbench_id}/profiles/${selectionFor(lastRun.interface_code).profileKey}/scenarios/${lastRun.scenario}/runs/${lastRun.run_id}/evidence`">查看完整运行与证据</RouterLink>
         </div>
       </section>
     </template>

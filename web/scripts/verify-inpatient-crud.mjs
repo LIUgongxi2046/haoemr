@@ -5,7 +5,7 @@ import { chromium } from 'playwright';
 
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const outputDir = resolve(webDir, '../output/playwright/inpatient-workstation');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
 const stamp = Date.now().toString().slice(-8);
 const orderName = `验收血常规-${stamp}`;
 const orderNameEdited = `${orderName}-已编辑`;
@@ -22,7 +22,7 @@ page.on('pageerror', (error) => result.failures.push(`pageerror: ${error.message
 async function login() {
   await page.goto(`${baseUrl}/#/login`);
   await page.getByLabel('用户名').fill('linwei');
-  await page.getByLabel('密码', { exact: true }).fill('OpenEMR2026-dev!');
+  await page.getByLabel('密码', { exact: true }).fill('HaoEMR-dev!');
   await page.getByRole('button', { name: '登录系统', exact: true }).click();
   await page.waitForURL(/#\/clinical$/);
 }

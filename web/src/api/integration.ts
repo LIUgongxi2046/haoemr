@@ -4,13 +4,15 @@ import {
   integrationMessageReconcileRequestWireSchema,
   integrationMessageWireSchema,
   integrationReconciliationWireSchema,
+  outboxReconciliationWireSchema,
   type ContextLeaseWire,
   type IntegrationMessageCollectRequestWire,
   type IntegrationMessageCollectResultWire,
   type IntegrationMessageWire,
   type IntegrationReconciliationWire,
+  type OutboxReconciliationWire,
 } from '../generated/contracts';
-import { clinicalContext, issueContextLease, request, wardHeaders } from '../clinical-api';
+import { ClinicalApiError, clinicalContext, issueContextLease, request, wardHeaders } from '../clinical-api';
 
 export function issueIntegrationLease(): Promise<ContextLeaseWire> {
   return issueContextLease(null, null, 'INTEGRATION_OPERATIONS');
@@ -66,6 +68,20 @@ export async function listIntegrationReconciliations(
   return integrationReconciliationWireSchema.array().parse(await request(
     `/integration-reconciliations${suffix}`, { headers: wardHeaders(lease) },
   ));
+}
+
+export async function getOutboxReconciliation(lease: ContextLeaseWire): Promise<OutboxReconciliationWire | null> {
+  try {
+    return outboxReconciliationWireSchema.parse(await request('/outbox/reconciliation', {
+      headers: wardHeaders(lease),
+    }));
+  } catch (error) {
+    // Older dev-synthetic backends may not expose the read-only outbox
+    // reconciliation endpoint yet.  The rest of the integration workbench
+    // remains usable; only this optional status card is unavailable.
+    if (error instanceof ClinicalApiError && error.status === 404) return null;
+    throw error;
+  }
 }
 
 function orgFacility() {

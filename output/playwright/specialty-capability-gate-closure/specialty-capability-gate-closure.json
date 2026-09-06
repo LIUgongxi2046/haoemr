@@ -1,0 +1,20 @@
+{
+  "run_at": "2026-09-05T10:46:47.415Z",
+  "department_id": "018f0000-0000-7000-8000-00000000ab02",
+  "pack_release_id": "018f0000-0000-7000-8000-00000000c402",
+  "checks": [
+    {
+      "name": "positive-specialty-support-is-rejected-without-active-pack-release",
+      "status": "PASS",
+      "detail": "正向支持声明缺少活动专科包发布时被服务端拒绝"
+    },
+    {
+      "name": "active-pack-and-approved-composition-enable-positive-support-declaration",
+      "status": "PASS",
+      "detail": "活动专科包、经审批能力组合、有效证据与零缺口同时满足后，正向声明成功保存"
+    }
+  ],
+  "findings": [],
+  "passed": 2,
+  "failed": 0
+}

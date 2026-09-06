@@ -1,0 +1,291 @@
+{
+  "run_at": "2026-09-05T04:52:30.225Z",
+  "routes": 15,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 30,
+  "verified_route_viewports": 30,
+  "findings": [],
+  "observations": [
+    {
+      "route": "integration",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "外部系统集成与互操作中心",
+      "routeId": "integration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2278
+    },
+    {
+      "route": "integration-connectors",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "连接器目录与能力卡",
+      "routeId": "integration-connectors",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3847
+    },
+    {
+      "route": "integration-mapping",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "字段映射与历史迁移转换",
+      "routeId": "integration-mapping",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1435
+    },
+    {
+      "route": "integration-messages",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "集成消息追踪与业务对账",
+      "routeId": "integration-messages",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 860
+    },
+    {
+      "route": "ip-consult",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "住院查房、会诊与协同",
+      "routeId": "ip-consult",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1026
+    },
+    {
+      "route": "ip-orders",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "住院医嘱与用药中心",
+      "routeId": "ip-orders",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2049
+    },
+    {
+      "route": "ip-pathway",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "住院临床路径执行中心",
+      "routeId": "ip-pathway",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 993
+    },
+    {
+      "route": "ip-results",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "住院检查检验与危急值",
+      "routeId": "ip-results",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1252
+    },
+    {
+      "route": "knowledge-center",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "1型糖尿病临床路径(2009年版)",
+      "routeId": "knowledge-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 14365
+    },
+    {
+      "route": "lab-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "检验",
+      "routeId": "lab-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 5667
+    },
+    {
+      "route": "lis-report",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "LIS 检验报告调阅",
+      "routeId": "lis-report",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 799
+    },
+    {
+      "route": "mental-care",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "心理危机交接",
+      "routeId": "mental-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 436
+    },
+    {
+      "route": "mental-evidence",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "精神心理诊疗证据",
+      "routeId": "mental-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 500
+    },
+    {
+      "route": "mental-followup",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "危机随访",
+      "routeId": "mental-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 439
+    },
+    {
+      "route": "mental-qc",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "mental-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 459
+    },
+    {
+      "route": "integration",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "外部系统集成与互操作中心",
+      "routeId": "integration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2045
+    },
+    {
+      "route": "integration-connectors",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "连接器目录与能力卡",
+      "routeId": "integration-connectors",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3614
+    },
+    {
+      "route": "integration-mapping",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "字段映射与历史迁移转换",
+      "routeId": "integration-mapping",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1202
+    },
+    {
+      "route": "integration-messages",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "集成消息追踪与业务对账",
+      "routeId": "integration-messages",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 627
+    },
+    {
+      "route": "ip-consult",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院查房、会诊与协同",
+      "routeId": "ip-consult",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 752
+    },
+    {
+      "route": "ip-orders",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院医嘱与用药中心",
+      "routeId": "ip-orders",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1774
+    },
+    {
+      "route": "ip-pathway",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院临床路径执行中心",
+      "routeId": "ip-pathway",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 711
+    },
+    {
+      "route": "ip-results",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院检查检验与危急值",
+      "routeId": "ip-results",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 984
+    },
+    {
+      "route": "knowledge-center",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "1型糖尿病临床路径(2009年版)",
+      "routeId": "knowledge-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 14132
+    },
+    {
+      "route": "lab-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "检验",
+      "routeId": "lab-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 5434
+    },
+    {
+      "route": "lis-report",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "LIS 检验报告调阅",
+      "routeId": "lis-report",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 566
+    },
+    {
+      "route": "mental-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "心理危机交接",
+      "routeId": "mental-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 203
+    },
+    {
+      "route": "mental-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "精神心理诊疗证据",
+      "routeId": "mental-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 267
+    },
+    {
+      "route": "mental-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "危机随访",
+      "routeId": "mental-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 206
+    },
+    {
+      "route": "mental-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "mental-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 226
+    }
+  ]
+}

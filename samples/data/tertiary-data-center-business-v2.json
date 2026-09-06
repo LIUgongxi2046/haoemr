@@ -94,11 +94,11 @@
   ],
   "quality_rules": [
     {"id":"018f0000-0000-7000-8000-00000000d501","rule_code":"DQ-ORDER-PATIENT","rule_name":"医嘱患者就诊关联一致性","dimension":"CONSISTENCY","target_entity":"ClinicalOrder","threshold":1.0,"severity":"BLOCKING"},
-    {"id":"018f0000-0000-7000-8000-00000000d502","rule_code":"DQ-ALLERGY-CODE","rule_name":"药物过敏编码有效性","dimension":"VALIDITY","target_entity":"AllergyIntolerance","threshold":0.999,"severity":"BLOCKING"},
-    {"id":"018f0000-0000-7000-8000-00000000d503","rule_code":"DQ-CRITICAL-ACK","rule_name":"危急值临床确认及时性","dimension":"TIMELINESS","target_entity":"CriticalResult","threshold":0.98,"severity":"BLOCKING"},
-    {"id":"018f0000-0000-7000-8000-00000000d504","rule_code":"DQ-SURGERY-SITE","rule_name":"手术名称部位侧别完整性","dimension":"COMPLETENESS","target_entity":"SurgerySchedule","threshold":1.0,"severity":"BLOCKING"},
-    {"id":"018f0000-0000-7000-8000-00000000d505","rule_code":"DQ-TRANSFUSION-TRACE","rule_name":"输血制品全链路追溯完整性","dimension":"COMPLETENESS","target_entity":"TransfusionEpisode","threshold":1.0,"severity":"BLOCKING"},
-    {"id":"018f0000-0000-7000-8000-00000000d506","rule_code":"DQ-DISCHARGE-DIAG","rule_name":"出院诊断与病案首页一致性","dimension":"CONSISTENCY","target_entity":"DischargeSummary","threshold":0.995,"severity":"WARNING"},
+    {"id":"018f0000-0000-7000-8000-00000000d502","rule_code":"DQ-ALLERGY-CODE","rule_name":"药物过敏编码有效性","dimension":"VALIDITY","target_entity":"PatientAllergy","threshold":0.999,"severity":"BLOCKING"},
+    {"id":"018f0000-0000-7000-8000-00000000d503","rule_code":"DQ-CRITICAL-ACK","rule_name":"危急值临床确认及时性","dimension":"TIMELINESS","target_entity":"CriticalValueCase","threshold":0.98,"severity":"BLOCKING"},
+    {"id":"018f0000-0000-7000-8000-00000000d504","rule_code":"DQ-SURGERY-SITE","rule_name":"手术名称部位侧别完整性","dimension":"COMPLETENESS","target_entity":"SurgicalProcedure","threshold":1.0,"severity":"BLOCKING"},
+    {"id":"018f0000-0000-7000-8000-00000000d505","rule_code":"DQ-TRANSFUSION-TRACE","rule_name":"输血制品全链路追溯完整性","dimension":"COMPLETENESS","target_entity":"BloodTransfusion","threshold":1.0,"severity":"BLOCKING"},
+    {"id":"018f0000-0000-7000-8000-00000000d506","rule_code":"DQ-DISCHARGE-DIAG","rule_name":"出院诊断与病案首页一致性","dimension":"CONSISTENCY","target_entity":"InpatientDischarge","threshold":0.995,"severity":"WARNING"},
     {"id":"018f0000-0000-7000-8000-00000000d507","rule_code":"DQ-DEVICE-CLOCK","rule_name":"医疗设备事件时钟可信度","dimension":"VALIDITY","target_entity":"DeviceMetric","threshold":0.999,"severity":"WARNING"}
   ],
   "quality_evaluations": [
@@ -139,13 +139,5 @@
     {"id":"018f0000-0000-7000-8000-00000000d702","purpose":"脓毒症预警模型外部验证","scope_description":"去标识生命体征、乳酸、培养、抗菌药和转归字段，不含自由文本","status":"REQUESTED","created_days_ago":5},
     {"id":"018f0000-0000-7000-8000-00000000d703","purpose":"VTE预防依从性统计","scope_description":"聚合的风险评分、预防医嘱、执行和院内VTE结局","status":"EXPORTED","created_days_ago":18,"export_watermark":"RDS-VTE-20260810-01"},
     {"id":"018f0000-0000-7000-8000-00000000d704","purpose":"多重耐药菌药敏与处方匹配分析","scope_description":"去标识培养药敏、抗菌药处方、会诊与隔离措施字段","status":"APPROVED","created_days_ago":11}
-  ],
-  "metric_snapshots": [
-    {"id":"018f0000-0000-7000-8000-00000000d801","metric_type":"RESEARCH_STATS","metric_name":"年龄18-39","metric_value":2247,"unit":"人","dimension":{"group":"AGE_DISTRIBUTION","label":"18–39","rate":71,"order":1,"source":"research_cohort_snapshot"}},
-    {"id":"018f0000-0000-7000-8000-00000000d802","metric_type":"RESEARCH_STATS","metric_name":"年龄40-49","metric_value":4245,"unit":"人","dimension":{"group":"AGE_DISTRIBUTION","label":"40–49","rate":67,"order":2,"source":"research_cohort_snapshot"}},
-    {"id":"018f0000-0000-7000-8000-00000000d803","metric_type":"RESEARCH_STATS","metric_name":"年龄50-59","metric_value":7741,"unit":"人","dimension":{"group":"AGE_DISTRIBUTION","label":"50–59","rate":64,"order":3,"source":"research_cohort_snapshot"}},
-    {"id":"018f0000-0000-7000-8000-00000000d804","metric_type":"RESEARCH_STATS","metric_name":"年龄60-69","metric_value":10238,"unit":"人","dimension":{"group":"AGE_DISTRIBUTION","label":"60–69","rate":59,"order":4,"source":"research_cohort_snapshot"}},
-    {"id":"018f0000-0000-7000-8000-00000000d805","metric_type":"RESEARCH_STATS","metric_name":"年龄70以上","metric_value":6743,"unit":"人","dimension":{"group":"AGE_DISTRIBUTION","label":"≥70","rate":55,"order":5,"source":"research_cohort_snapshot"}},
-    {"id":"018f0000-0000-7000-8000-00000000d806","metric_type":"RESEARCH_STATS","metric_name":"季度血压达标率趋势","metric_value":62.7,"unit":"%","dimension":{"group":"TREND","labels":["2025 Q2","2025 Q3","2025 Q4","2026 Q1","2026 Q2"],"values":[58.1,59.3,60.8,61.5,62.7],"source":"cohort_bp_observation","formula":"controlled / eligible * 100","data_cutoff":"2026-06-30","cohort_version":"v6","indicator_version":"BP-CONTROL v3","small_cell_suppression":"已启用","script_version":"analysis-plan v4","ai_derived_fields":0}}
   ]
 }

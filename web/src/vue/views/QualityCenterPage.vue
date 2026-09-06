@@ -35,7 +35,7 @@ const credentials = computed(() => credentialsQuery.data.value ?? []);
 
 // —— 院科质控：与 DepartmentQcPage 同口径 ——
 const qcPayload = (item: (typeof qcItems.value)[number]) => (item.payload ?? {}) as Record<string, unknown>;
-const qcOpen = computed(() => qcItems.value.filter((item) => String(qcPayload(item).workflow_status) !== 'CLOSED'));
+const qcOpen = computed(() => qcItems.value.filter((item) => item.status !== 'ARCHIVED' && String(qcPayload(item).workflow_status) !== 'CLOSED'));
 const qcBlocking = computed(() => qcOpen.value.filter((item) => String(qcPayload(item).severity) === 'BLOCKING'));
 const qcOverdue = computed(() => qcOpen.value.filter((item) => {
   const due = qcPayload(item).due_at;
@@ -65,9 +65,9 @@ const issue = computed(() => {
     infectionLeaseQuery.error.value, infectionItemsQuery.error.value, credentialsQuery.error.value].find(Boolean);
   return firstError ? toClinicalIssue(firstError).message : '';
 });
-function retryAll() {
-  void qcLeaseQuery.refetch(); void ratingLeaseQuery.refetch(); void infectionLeaseQuery.refetch();
-  void credentialsQuery.refetch();
+async function retryAll() {
+  await Promise.allSettled([qcLeaseQuery.refetch(), ratingLeaseQuery.refetch(), infectionLeaseQuery.refetch()]);
+  await Promise.allSettled([qcItemsQuery.refetch(), ratingItemsQuery.refetch(), infectionItemsQuery.refetch(), credentialsQuery.refetch()]);
 }
 const anyPending = computed(() => qcLeaseQuery.isPending.value || qcItemsQuery.isPending.value || ratingLeaseQuery.isPending.value || ratingItemsQuery.isPending.value
   || infectionLeaseQuery.isPending.value || infectionItemsQuery.isPending.value || credentialsQuery.isPending.value);
@@ -125,8 +125,8 @@ const queueRows = computed(() => [
 <template>
   <section data-page-root class="content vue-native-page quality-center-page">
     <div class="page-head">
-      <div class="page-title"><h1>医疗质量中心</h1><p>院科病历质量、评级证据、院感事件和临床资质统一治理</p></div>
-      <div class="head-actions"><RouterLink class="btn" to="/quality-center/initiatives">角色工作台</RouterLink><RouterLink class="btn primary" to="/clinical-tasks">查看全部待办</RouterLink></div>
+      <div class="page-title"><h1>医疗质量中心</h1><p>集中查看病历质量、评级材料、院感事件和临床资质。</p></div>
+      <div class="head-actions"><RouterLink class="btn" to="/quality-center/initiatives">角色工作台</RouterLink></div>
     </div>
 
     <div v-if="loading" class="quality-center-state" role="status">正在读取四域实时质量数据…</div>
@@ -149,7 +149,7 @@ const queueRows = computed(() => [
         <RouterLink class="quality-cross-link" to="/archive-assets"><b>病案资产中心</b><span>进入目录、扫描、验真、借阅和长期保存</span></RouterLink>
       </div>
 
-      <div class="quality-center-queue card">
+      <div id="quality-pending-queue" class="quality-center-queue card">
         <header><b>跨四域重点队列</b><span>实时业务数据 · 与各工作台同源</span></header>
         <div class="quality-center-table-wrap">
           <table class="quality-center-table">

@@ -40,7 +40,7 @@ scripts/verify.sh → VERIFY_EXIT=0
 
 - **迁移 V122**：`clinical_task_team_queue`（租户/队列/院区/科室/任务/状态/入队人/入队时间/领取人/领取时间/row_version）；状态枚举、领取一致性、活动项部分唯一索引、身份不可变触发器、科室索引。
 - **契约**：新增 `ClinicalTaskTeamQueue`、`ClinicalTaskTeamQueueEnqueueRequest`、`ClinicalTaskTeamQueueTransitionRequest` 三 Schema 与 5 端点（list/enqueue/claim/complete/withdraw）。
-- **模块**：`org.openemr2026.tasks` 下 `ClinicalTaskTeamQueueService`（入队 + 领取/完成/撤回状态机 + 团队成员校验 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
+- **模块**：`org.haoemr.tasks` 下 `ClinicalTaskTeamQueueService`（入队 + 领取/完成/撤回状态机 + 团队成员校验 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
 - **测试**：`ClinicalTaskTeamQueueApiTest` 7 用例覆盖入队、领取、完成、撤回、终态拒绝、过期版本冲突、篡改拒绝。
 
 ## 5. 未关闭风险

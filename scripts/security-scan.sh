@@ -8,8 +8,8 @@ trap 'rm -f "$scan_result"' EXIT
 
 private_key_pattern='-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----'
 aws_key_pattern='AKIA[0-9A-Z]{16}'
-openai_key_pattern='sk-[A-Za-z0-9_-]{24,}'
-github_key_pattern='ghp_[A-Za-z0-9]{30,}'
+openai_key_pattern='(^|[^A-Za-z0-9])sk-[A-Za-z0-9_-]{24,}'
+github_key_pattern='(gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{22,})'
 
 cd "$project_dir"
 

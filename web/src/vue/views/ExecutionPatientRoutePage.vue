@@ -29,6 +29,7 @@ const detailComponents = {
   'device-monitoring': defineAsyncComponent(() => import('./DeviceMonitoringPage.vue')),
 } as const;
 
+import { clinicalContext } from '../../clinical-api';
 const route = useRoute();
 const routeId = computed(() => String(route.meta.contractId ?? route.name ?? 'care-operations'));
 const config = computed(() => executionRouteConfigs[routeId.value] ?? executionRouteConfigs['care-operations']);
@@ -50,7 +51,7 @@ watch(routeId, () => {
 });
 
 const queueQuery = useQuery({
-  queryKey: computed(() => ['execution-patient-flow', routeId.value, config.value.domain]),
+  queryKey: computed(() => ['execution-patient-flow', routeId.value, config.value.domain, clinicalContext.userId, clinicalContext.roleId, clinicalContext.facilityId]),
   queryFn: async () => {
     const lease = await issueExecutionWorklistLease(config.value.domain);
     return mapExecutionWorklist(await listExecutionWorklist(lease, config.value.domain));
@@ -64,6 +65,7 @@ const rows = computed(() => queueQuery.data.value ?? []);
 const statusOptions = computed(() => Array.from(new Set(rows.value.map((row) => row.status))));
 const filteredRows = computed(() => filterExecutionPatientRows(rows.value, search.value, status.value));
 const waitingCount = computed(() => rows.value.filter((row) => row.pendingCount > 0).length);
+const waitingTaskCount = computed(() => rows.value.reduce((sum, row) => sum + row.pendingCount, 0));
 const overdueCount = computed(() => rows.value.reduce((sum, row) => sum + row.overdueCount, 0));
 const completedCount = computed(() => rows.value.filter((row) => ['COMPLETED', 'READY'].includes(row.status)).length);
 const issue = computed(() => queueQuery.error.value ? toClinicalIssue(queueQuery.error.value) : null);
@@ -112,10 +114,10 @@ function selectPatient(row: ExecutionPatientRow) {
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="queueQuery.refetch()" />
     <template v-else>
       <div class="queue-metrics" aria-label="患者执行队列指标">
-        <article><span>队列患者</span><strong>{{ rows.length }}</strong><small>来自当前授权范围</small></article>
-        <article><span>待执行</span><strong>{{ waitingCount }}</strong><small>{{ config.taskLabel }}</small></article>
+        <article><span>当前队列患者</span><strong>{{ rows.length }}</strong><small>来自当前授权范围</small></article>
+        <article><span>待执行任务</span><strong>{{ waitingTaskCount }}</strong><small>当前队列 {{ waitingTaskCount }} 项 · {{ waitingCount }} 位患者待处理</small></article>
         <article><span>超时任务</span><strong :class="{ danger: overdueCount > 0 }">{{ overdueCount }}</strong><small>需优先下转处理</small></article>
-        <article><span>已完成</span><strong>{{ completedCount }}</strong><small>支持返回查看留痕</small></article>
+        <article><span>已完成队列患者</span><strong>{{ completedCount }}</strong><small>支持返回查看留痕</small></article>
       </div>
 
       <section class="queue-card">
@@ -199,7 +201,7 @@ function selectPatient(row: ExecutionPatientRow) {
 .queue-filters { display: grid; grid-template-columns: minmax(230px, 270px) 160px; align-items: end; gap: 12px; }
 .queue-filters label { display: grid; min-width: 0; gap: 6px; color: #536579; font-size: 12px; font-weight: 650; }
 .queue-filters input, .queue-filters select { width: 100%; height: 36px; min-width: 0; border: 1px solid #cfd9e3; border-radius: 8px; padding: 0 10px; background: #fff; color: #213548; }
-.queue-table-wrap { height: clamp(300px, 36vh, 400px); overflow: auto; }
+.queue-table-wrap { height: clamp(360px, 44vh, 520px); overflow: auto; }
 .queue-table { width: 100%; min-width: 1080px; table-layout: fixed; border-collapse: collapse; color: #263a4d; font-size: 13px; }
 .queue-table .col-sequence { width: 66px; }
 .queue-table .col-patient { width: 180px; }

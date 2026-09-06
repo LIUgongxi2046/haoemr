@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
 import { computed, reactive, ref } from 'vue';
-import type { HistoricalMigrationBatchWire, SourceFieldMappingWire, SourceSystemInventoryWire } from '../../generated/contracts';
+import type { HistoricalMigrationBatchWire, HistoricalMigrationSourceImportWire, SourceFieldMappingWire, SourceSystemInventoryWire } from '../../generated/contracts';
 import {
   activateSourceSystem, configureSourceSystem, deactivateSourceFieldMapping, issueGovernanceLease,
-  listHistoricalMigrationBatches, listHistoricalMigrationCheckpoints, listSourceFieldMappings,
+  archiveHistoricalMigrationBatch,
+  importSourcePatientMatchCandidatesCsv, listHistoricalMigrationBatches, listHistoricalMigrationCheckpoints,
+  listSourceFieldMappings, listSourcePatientMatchCandidateImports,
   listSourcePatientMatchCandidates, listSourceSystems, reconcileHistoricalMigrationBatch,
   recordHistoricalMigrationCheckpoint, recordSourcePatientMatchCandidate, registerSourceFieldMapping,
   registerSourceSystem, resolveSourcePatientMatchCandidate, retireSourceSystem, rollbackHistoricalMigrationBatch,
-  startHistoricalMigrationBatch, switchHistoricalMigrationBatch,
+  startHistoricalMigrationBatch, startHistoricalMigrationObservation, switchHistoricalMigrationBatch,
 } from '../../api/governance';
 import AdminActionDialog from '../components/AdminActionDialog.vue';
 import AdminConfirmDialog from '../components/AdminConfirmDialog.vue';
@@ -37,6 +39,11 @@ const candidatesQuery = useQuery({
   queryFn: () => listSourcePatientMatchCandidates(leaseQuery.data.value!, selectedSourceId.value),
   enabled: () => Boolean(leaseQuery.data.value && selectedSourceId.value), retry: false,
 });
+const importsQuery = useQuery({
+  queryKey: ['governance', 'migration', 'source-imports', selectedSourceId],
+  queryFn: () => listSourcePatientMatchCandidateImports(leaseQuery.data.value!, selectedSourceId.value),
+  enabled: () => Boolean(leaseQuery.data.value && selectedSourceId.value), retry: false,
+});
 const issue = computed(() => (leaseQuery.error.value ?? sourcesQuery.error.value ?? batchesQuery.error.value)
   ? toClinicalIssue(leaseQuery.error.value ?? sourcesQuery.error.value ?? batchesQuery.error.value) : null);
 
@@ -45,12 +52,15 @@ const registeredSourceCodes = computed(() => new Set(sources.value.map((source) 
 const batches = computed(() => (batchesQuery.data.value ?? [])
   .filter((batch) => registeredSourceCodes.value.has(batch.source_system)));
 const candidates = computed(() => candidatesQuery.data.value ?? []);
+const sourceImports = computed(() => importsQuery.data.value ?? []);
 const totalRecords = computed(() => batches.value.reduce((sum, batch) => sum + batch.record_count, 0));
 const totalMismatches = computed(() => batches.value.reduce((sum, batch) => sum + batch.mismatch_count, 0));
-const reconciledCount = computed(() => batches.value.filter((batch) => ['RECONCILED', 'SWITCHED'].includes(batch.batch_status)).length);
+const reconciledCount = computed(() => batches.value.filter((batch) => ['RECONCILED', 'SWITCHED', 'OBSERVING', 'ARCHIVED'].includes(batch.batch_status)).length);
 const differenceQueue = computed(() => batches.value.filter((batch) => batch.mismatch_count > 0));
 const migrationSteps = ['源盘点', '字段映射', '患者匹配', '试迁', '对账', '切换', '观察', '归档'];
 const currentStep = computed(() => {
+  if (batches.value.some((batch) => batch.batch_status === 'ARCHIVED')) return 8;
+  if (batches.value.some((batch) => batch.batch_status === 'OBSERVING')) return 7;
   if (batches.value.some((batch) => batch.batch_status === 'SWITCHED')) return 6;
   if (batches.value.some((batch) => batch.batch_status === 'RECONCILED')) return 5;
   if (batches.value.some((batch) => batch.batch_status === 'TRIAL')) return 4;
@@ -75,11 +85,14 @@ const checkpoints = computed(() => checkpointsQuery.data.value ?? []);
 const sourceForm = reactive({ sourceCode: '', displayName: '', systemType: 'EMR' });
 const mappingForm = reactive({ sourceField: '', targetEntity: '', targetField: '' });
 const candidateForm = reactive({ sourcePatientIdentifier: '', displayName: '', sexCode: 'M', birthDate: '' });
-const batchForm = reactive({ sourceSystem: '' });
+const importForm = reactive({ file: null as File | null });
+const batchForm = reactive({ sourceSystem: '', sourceImportId: '' });
 const checkpointForm = reactive({ processedRecords: 0, lastSourceKey: '' });
+const archiveForm = reactive({ observationSummary: '' });
 const busy = ref('');
 const notice = ref('');
-const dialog = ref<'' | 'source' | 'mapping' | 'candidate' | 'batch' | 'checkpoint'>('');
+const dialog = ref<'' | 'source' | 'mapping' | 'candidate' | 'import' | 'batch' | 'checkpoint' | 'archive'>('');
+const archiveBatch = ref<HistoricalMigrationBatchWire | null>(null);
 const riskOpen = ref(false);
 const riskKind = ref<'' | 'retire-source' | 'deactivate-mapping' | 'rollback-batch'>('');
 const riskSource = ref<SourceSystemInventoryWire | null>(null);
@@ -87,7 +100,7 @@ const riskMapping = ref<SourceFieldMappingWire | null>(null);
 const riskBatch = ref<HistoricalMigrationBatchWire | null>(null);
 
 function statusLabel(s: string) {
-  const map: Record<string, string> = { REGISTERED: '已注册', CONFIGURED: '已配置', ACTIVE: '激活', RETIRED: '已退休', TRIAL: '试迁', RECONCILED: '已对账', SWITCHED: '已切换', ROLLED_BACK: '已回退', PENDING: '待复核' };
+  const map: Record<string, string> = { REGISTERED: '已注册', CONFIGURED: '已配置', ACTIVE: '激活', RETIRED: '已退休', TRIAL: '试迁', RECONCILED: '已对账', SWITCHED: '已切换', OBSERVING: '观察中', ARCHIVED: '已归档', ROLLED_BACK: '已回退', PENDING: '待复核', RESOLVED: '已确认' };
   return map[s] ?? s;
 }
 
@@ -150,23 +163,51 @@ async function createCandidate() {
   finally { busy.value = ''; }
 }
 
+function selectCsvFile(event: Event) {
+  importForm.file = (event.target as HTMLInputElement).files?.[0] ?? null;
+}
+
+async function importCandidatesCsv() {
+  const lease = leaseQuery.data.value;
+  const file = importForm.file;
+  if (!lease || busy.value || !selectedSourceId.value || !file) return;
+  if (!file.name.toLowerCase().endsWith('.csv') || file.size > 1_048_576) {
+    notice.value = '请选择不超过 1 MiB 的 CSV 文件。'; return;
+  }
+  busy.value = 'import'; notice.value = '';
+  try {
+    const imported = await importSourcePatientMatchCandidatesCsv(lease, {
+      source_system_id: selectedSourceId.value, file_name: file.name, csv_content: await file.text(),
+    });
+    batchForm.sourceImportId = imported.source_import_id;
+    notice.value = `已导入并固化 ${imported.row_count} 条源患者记录，可据此开始可续迁批次。`;
+    importForm.file = null; dialog.value = '';
+    await Promise.all([candidatesQuery.refetch(), importsQuery.refetch()]);
+  } catch (error) { const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`; }
+  finally { busy.value = ''; }
+}
+
 async function createBatch() {
   const lease = leaseQuery.data.value;
   const source = sources.value.find((item) => item.source_code === batchForm.sourceSystem);
-  if (!lease || busy.value || !source || selectedSourceId.value !== source.source_system_id || candidates.value.length === 0) return;
+  if (!lease || busy.value || !source || selectedSourceId.value !== source.source_system_id || !batchForm.sourceImportId) return;
+  const sourceImport = sourceImports.value.find((item) => item.source_import_id === batchForm.sourceImportId);
+  if (!sourceImport) return;
   busy.value = 'batch'; notice.value = '';
   try {
     await startHistoricalMigrationBatch(lease, {
-      source_system: source.source_code, record_count: candidates.value.length, started_at: new Date().toISOString(),
+      source_system: source.source_code, source_import_id: sourceImport.source_import_id,
+      record_count: sourceImport.row_count, started_at: new Date().toISOString(),
     });
     batchForm.sourceSystem = '';
-    notice.value = `历史迁移批次已从服务端 ${candidates.value.length} 条暂存记录开始试迁。`; dialog.value = ''; await batchesQuery.refetch();
+    notice.value = `历史迁移批次已绑定受控导入 ${sourceImport.file_name}（${sourceImport.row_count} 条）并开始试迁。`; dialog.value = ''; await batchesQuery.refetch();
   } catch (error) { const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`; }
   finally { busy.value = ''; }
 }
 
 function selectBatchSource(sourceCode: string) {
   batchForm.sourceSystem = sourceCode;
+  batchForm.sourceImportId = '';
   selectedSourceId.value = sources.value.find((item) => item.source_code === sourceCode)?.source_system_id ?? '';
 }
 
@@ -174,15 +215,37 @@ function handleBatchSourceChange(event: Event) {
   selectBatchSource((event.target as HTMLSelectElement).value);
 }
 
-async function transitionBatch(batch: HistoricalMigrationBatchWire, action: 'reconcile' | 'switch' | 'rollback') {
+async function transitionBatch(batch: HistoricalMigrationBatchWire, action: 'reconcile' | 'switch' | 'observe' | 'rollback') {
   const lease = leaseQuery.data.value;
   if (!lease || busy.value) return;
   busy.value = batch.batch_id; notice.value = '';
   try {
     if (action === 'reconcile') await reconcileHistoricalMigrationBatch(lease, batch, 0);
     else if (action === 'switch') await switchHistoricalMigrationBatch(lease, batch);
+    else if (action === 'observe') await startHistoricalMigrationObservation(lease, batch);
     else await rollbackHistoricalMigrationBatch(lease, batch);
     notice.value = `批次 ${batch.source_system} 状态已推进。`; await batchesQuery.refetch();
+  } catch (error) { const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`; }
+  finally { busy.value = ''; }
+}
+
+function openArchive(batch: HistoricalMigrationBatchWire) {
+  archiveBatch.value = batch;
+  archiveForm.observationSummary = '';
+  dialog.value = 'archive';
+}
+
+async function archiveBatchAfterObservation() {
+  const lease = leaseQuery.data.value;
+  const batch = archiveBatch.value;
+  const summary = archiveForm.observationSummary.trim();
+  if (!lease || !batch || busy.value || summary.length < 10) return;
+  busy.value = batch.batch_id; notice.value = '';
+  try {
+    await archiveHistoricalMigrationBatch(lease, batch, summary);
+    notice.value = `批次 ${batch.source_system} 的观察结论已固化，迁移证据已归档。`;
+    archiveForm.observationSummary = ''; archiveBatch.value = null; dialog.value = '';
+    await batchesQuery.refetch();
   } catch (error) { const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`; }
   finally { busy.value = ''; }
 }
@@ -320,7 +383,8 @@ const riskDescription = computed(() => riskKind.value === 'retire-source'
           </tr>
         </tbody></table></div>
 
-        <header style="margin-top:16px"><div><h2>迁移源患者匹配</h2><p>确定性匹配评分，复核后决议。</p></div><button class="button primary" @click="dialog = 'candidate'">登记患者候选</button></header>
+        <header style="margin-top:16px"><div><h2>迁移源患者匹配</h2><p>CSV 受控导入会固化文件哈希、行数与操作者；单条登记仅兼容既有存量流程。</p></div><div class="toolbar-actions"><button class="button secondary" @click="dialog = 'candidate'">登记单条候选</button><button class="button primary" @click="dialog = 'import'">导入 CSV</button></div></header>
+        <div v-if="sourceImports.length" class="migration-import-list" aria-label="受控源数据导入批次"><span v-for="sourceImport in sourceImports.slice(0, 3)" :key="sourceImport.source_import_id">{{ sourceImport.file_name }} · {{ sourceImport.row_count }} 条 · <code>…{{ sourceImport.content_hash.slice(-10) }}</code></span></div>
         <div v-if="candidates.length === 0" class="admin-empty">暂无患者匹配候选。</div>
         <div v-else class="admin-table-wrap"><table class="admin-table"><thead><tr><th>源标识</th><th>姓名</th><th>匹配分</th><th>复核状态</th><th>操作</th></tr></thead><tbody>
           <tr v-for="candidate in candidates" :key="candidate.candidate_id">
@@ -334,17 +398,19 @@ const riskDescription = computed(() => riskKind.value === 'retire-source'
       </section>
 
       <section class="admin-panel">
-        <header><div><h2>历史迁移批次</h2><p>试迁→对账→切换→回退；切换须差异数为 0。</p></div><button class="button primary" @click="dialog = 'batch'">开始试迁</button></header>
+        <header><div><h2>历史迁移批次</h2><p>试迁→对账→切换→观察→归档；切换须差异数为 0，观察结论会与批次证据一同固化。</p></div><button class="button primary" @click="dialog = 'batch'">开始试迁</button></header>
         <div v-if="batches.length === 0" class="admin-empty">暂无迁移批次。</div>
-        <div v-else class="admin-table-wrap"><table class="admin-table"><thead><tr><th>源系统</th><th>记录数</th><th>差异数</th><th>状态</th><th>操作</th></tr></thead><tbody>
+        <div v-else class="admin-table-wrap"><table class="admin-table"><thead><tr><th>源系统 / 受控输入</th><th>记录数</th><th>差异数</th><th>状态</th><th>操作</th></tr></thead><tbody>
           <tr v-for="batch in batches" :key="batch.batch_id">
-            <td><button class="link-button" @click="selectedBatchId = batch.batch_id"><strong>{{ batch.source_system }}</strong><small>…{{ batch.batch_id.slice(-8) }}</small></button></td>
+            <td><button class="link-button" @click="selectedBatchId = batch.batch_id"><strong>{{ batch.source_system }}</strong><small>{{ batch.source_import_id ? `导入 …${batch.source_import_id.slice(-8)}` : `兼容批次 …${batch.batch_id.slice(-8)}` }}</small></button></td>
             <td>{{ batch.record_count }}</td><td>{{ batch.mismatch_count }}</td>
             <td><span class="admin-status" :class="batch.batch_status.toLowerCase()">{{ statusLabel(batch.batch_status) }}</span></td>
             <td>
               <button v-if="batch.batch_status === 'TRIAL'" class="task-action" :disabled="Boolean(busy)" @click="transitionBatch(batch, 'reconcile')">对账</button>
               <button v-else-if="batch.batch_status === 'RECONCILED'" class="task-action" :disabled="Boolean(busy)" @click="transitionBatch(batch, 'switch')">切换</button>
-              <button v-if="batch.batch_status === 'TRIAL' || batch.batch_status === 'RECONCILED'" class="task-action danger" :disabled="Boolean(busy)" @click="requestRiskAction('rollback-batch', batch)">回退</button>
+              <button v-else-if="batch.batch_status === 'SWITCHED'" class="task-action" :disabled="Boolean(busy)" @click="transitionBatch(batch, 'observe')">开始观察</button>
+              <button v-else-if="batch.batch_status === 'OBSERVING'" class="task-action" :disabled="Boolean(busy)" @click="openArchive(batch)">归档观察结论</button>
+              <button v-if="batch.batch_status === 'RECONCILED'" class="task-action danger" :disabled="Boolean(busy)" @click="requestRiskAction('rollback-batch', batch)">回退</button>
               <span v-else>—</span>
             </td>
           </tr>
@@ -366,8 +432,10 @@ const riskDescription = computed(() => riskKind.value === 'retire-source'
     <AdminActionDialog :open="dialog === 'source'" title="注册迁移源系统" description="源系统身份编码创建后不可覆盖修改；后续配置、激活和退休会直接控制迁移流程。" @update:open="dialog = $event ? 'source' : ''"><form class="admin-form" @submit.prevent="createSource"><label><span>源编码</span><input v-model="sourceForm.sourceCode" maxlength="96" required /></label><label><span>显示名</span><input v-model="sourceForm.displayName" maxlength="256" required /></label><label><span>系统类型</span><select v-model="sourceForm.systemType"><option>EMR</option><option>LIS</option><option>PACS</option><option>PHARMACY</option><option>BILLING</option><option>OTHER</option></select></label></form><template #footer="{ close }"><button class="button secondary" @click="close">取消</button><button class="button primary" @click="createSource">注册</button></template></AdminActionDialog>
     <AdminActionDialog :open="dialog === 'mapping'" title="新建源字段映射" description="映射会参与后续迁移转换；已登记的身份字段不可覆盖修改。" @update:open="dialog = $event ? 'mapping' : ''"><form class="admin-form" @submit.prevent="createMapping"><label><span>源字段</span><input v-model="mappingForm.sourceField" required /></label><label><span>目标实体</span><input v-model="mappingForm.targetEntity" required /></label><label><span>目标字段</span><input v-model="mappingForm.targetField" required /></label></form><template #footer="{ close }"><button class="button secondary" @click="close">取消</button><button class="button primary" @click="createMapping">登记</button></template></AdminActionDialog>
     <AdminActionDialog :open="dialog === 'candidate'" title="登记迁移源患者候选" description="候选会进入确定性匹配与人工复核队列，不会直接合并患者主索引。" @update:open="dialog = $event ? 'candidate' : ''"><form class="admin-form" @submit.prevent="createCandidate"><label><span>源患者标识</span><input v-model="candidateForm.sourcePatientIdentifier" required /></label><label><span>姓名</span><input v-model="candidateForm.displayName" required /></label><label><span>性别</span><select v-model="candidateForm.sexCode"><option value="M">男</option><option value="F">女</option></select></label><label><span>出生日期</span><input v-model="candidateForm.birthDate" type="date" required /></label></form><template #footer="{ close }"><button class="button secondary" @click="close">取消</button><button class="button primary" @click="createCandidate">登记</button></template></AdminActionDialog>
-    <AdminActionDialog :open="dialog === 'batch'" title="开始历史迁移批次" description="记录数由服务端按已登记源患者候选计算；对账会按有效映射和人工复核结果逐条生成不可变证据。" @update:open="dialog = $event ? 'batch' : ''"><form class="admin-form" @submit.prevent="createBatch"><label><span>源系统</span><select :value="batchForm.sourceSystem" required @change="handleBatchSourceChange"><option value="" disabled>请选择已激活源系统</option><option v-for="source in sources.filter((item) => item.connection_status === 'ACTIVE')" :key="source.source_system_id" :value="source.source_code">{{ source.display_name }} · {{ source.source_code }}</option></select></label><div class="migration-server-count"><span>服务端暂存记录</span><strong>{{ candidates.length }}</strong><small v-if="batchForm.sourceSystem && candidates.length === 0">请先为该源登记患者候选</small></div></form><template #footer="{ close }"><button class="button secondary" @click="close">取消</button><button class="button primary" :disabled="candidates.length === 0 || Boolean(busy)" @click="createBatch">开始试迁</button></template></AdminActionDialog>
+    <AdminActionDialog :open="dialog === 'import'" title="导入受控迁移 CSV" description="CSV 仅接受 source_patient_identifier、display_name、sex_code、birth_date 四列。导入后保存不可变哈希和行数，供试迁批次固定引用。" @update:open="dialog = $event ? 'import' : ''"><form class="admin-form" @submit.prevent="importCandidatesCsv"><label><span>CSV 文件（最多 1 MiB / 1,000 条）</span><input type="file" accept=".csv,text/csv" required @change="selectCsvFile" /></label><small v-if="importForm.file">已选：{{ importForm.file.name }}（{{ importForm.file.size.toLocaleString('zh-CN') }} bytes）</small></form><template #footer="{ close }"><button class="button secondary" @click="close">取消</button><button class="button primary" :disabled="!importForm.file || Boolean(busy)" @click="importCandidatesCsv">导入并固化</button></template></AdminActionDialog>
+    <AdminActionDialog :open="dialog === 'batch'" title="开始历史迁移批次" description="试迁必须绑定一个已固化的 CSV 导入。后续新增候选不会改变该批次的对账输入；对账会按有效映射和人工复核结果逐条生成不可变证据。" @update:open="dialog = $event ? 'batch' : ''"><form class="admin-form" @submit.prevent="createBatch"><label><span>源系统</span><select :value="batchForm.sourceSystem" required @change="handleBatchSourceChange"><option value="" disabled>请选择已激活源系统</option><option v-for="source in sources.filter((item) => item.connection_status === 'ACTIVE')" :key="source.source_system_id" :value="source.source_code">{{ source.display_name }} · {{ source.source_code }}</option></select></label><label><span>受控 CSV 导入</span><select v-model="batchForm.sourceImportId" :disabled="!batchForm.sourceSystem" required><option value="" disabled>请选择已固化的 CSV 导入</option><option v-for="sourceImport in sourceImports" :key="sourceImport.source_import_id" :value="sourceImport.source_import_id">{{ sourceImport.file_name }} · {{ sourceImport.row_count }} 条 · …{{ sourceImport.content_hash.slice(-8) }}</option></select></label><div class="migration-server-count"><span>固定导入记录</span><strong>{{ sourceImports.find((item) => item.source_import_id === batchForm.sourceImportId)?.row_count ?? 0 }}</strong><small v-if="batchForm.sourceSystem && sourceImports.length === 0">请先为该源导入受控 CSV</small></div></form><template #footer="{ close }"><button class="button secondary" @click="close">取消</button><button class="button primary" :disabled="!batchForm.sourceImportId || Boolean(busy)" @click="createBatch">开始试迁</button></template></AdminActionDialog>
     <AdminActionDialog :open="dialog === 'checkpoint'" title="记录迁移检查点" description="检查点进度必须单调递增，用于失败恢复与断点续迁。" @update:open="dialog = $event ? 'checkpoint' : ''"><form class="admin-form" @submit.prevent="createCheckpoint"><label><span>已处理记录数</span><input v-model.number="checkpointForm.processedRecords" type="number" min="0" required /></label><label><span>最后源键（可选）</span><input v-model="checkpointForm.lastSourceKey" /></label></form><template #footer="{ close }"><button class="button secondary" @click="close">取消</button><button class="button primary" @click="createCheckpoint">记录检查点</button></template></AdminActionDialog>
+    <AdminActionDialog :open="dialog === 'archive'" title="归档迁移观察结论" description="归档会关闭观察期并固化本次结论、操作者、时间与审计证据；提交后不可修改。" @update:open="dialog = $event ? 'archive' : ''"><form class="admin-form" @submit.prevent="archiveBatchAfterObservation"><label><span>观察结论</span><textarea v-model="archiveForm.observationSummary" minlength="10" maxlength="1000" required placeholder="说明观察期间的核验结果、已处理问题或未发现异常。" /></label><small>至少 10 个字符；请勿填写患者身份信息或临床事实正文。</small></form><template #footer="{ close }"><button class="button secondary" @click="close">取消</button><button class="button primary" :disabled="archiveForm.observationSummary.trim().length < 10 || Boolean(busy)" @click="archiveBatchAfterObservation">固化并归档</button></template></AdminActionDialog>
     <AdminConfirmDialog v-model:open="riskOpen" :title="riskTitle" :description="riskDescription" confirm-label="确认执行" :busy="Boolean(busy)" @confirm="confirmRiskAction" />
   </section>
 </template>
@@ -391,13 +459,23 @@ const riskDescription = computed(() => riskKind.value === 'retire-source'
 .migration-operations { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, .8fr); gap: 14px; }
 .migration-reconciliation, .migration-differences { margin: 0; }
 .migration-differences { align-content: start; }
-.difference-row { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: inherit; cursor: pointer; }
+.difference-row { display: flex; width: calc(100% - 32px); align-items: center; justify-content: space-between; gap: 12px; margin: 8px 16px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: inherit; cursor: pointer; }
 .difference-row strong { color: var(--red); }
 .migration-clean { color: var(--green); }
-.export-button { width: 100%; margin-top: 12px; }
+.export-button { width: calc(100% - 32px); margin: 12px 16px 16px; }
 .migration-server-count { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px 14px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); }
 .migration-server-count strong { font-size: 20px; color: var(--blue); }
 .migration-server-count small { grid-column: 1 / -1; color: var(--red); }
+.migration-import-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 16px 12px; color: var(--muted); font-size: 12px; }
+.migration-import-list span { padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-soft); }
 @media (max-width: 900px) { .migration-operations { grid-template-columns: minmax(0, 1fr); } .migration-stepper { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 16px; } .migration-stepper li:nth-child(4)::after { display: none; } }
-@media (max-width: 600px) { .migration-stepper { grid-template-columns: repeat(2, minmax(0, 1fr)); } .migration-stepper li:nth-child(even)::after { display: none; } .migration-head-actions { align-items: stretch; } .migration-head-actions .button { width: 100%; } }
+@media (max-width: 600px) {
+  .migration-page > .page-heading { min-width: 0; }
+  .migration-page > .page-heading > div { min-width: 0; }
+  .migration-page > .page-heading .toolbar-actions { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; }
+  .migration-stepper { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .migration-stepper li:nth-child(even)::after { display: none; }
+  .migration-head-actions { align-items: stretch; }
+  .migration-head-actions .button { width: 100%; }
+}
 </style>

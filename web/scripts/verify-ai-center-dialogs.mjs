@@ -6,14 +6,13 @@ import { chromium } from 'playwright';
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
 const outputDir = resolve(projectDir, 'output/playwright/ai-center-dialogs');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4178/app/index.html').replace(/#.*$/, '');
-const loginPassword = process.env.OPENEMR2026_DEV_LOGIN_PASSWORD;
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4178/app/index.html').replace(/#.*$/, '');
+const loginPassword = process.env.HAOEMR_DEV_LOGIN_PASSWORD;
 const routes = [
   { id: 'models', create: '新建模型 API 配置', createTitle: '新建模型 API 配置', editLabel: '编辑', deleteLabel: '删除', dataText: 'DeepSeek V3 临床综合主模型' },
-  { id: 'agent-catalog', create: '新建医助团队', createTitle: '新建医助团队', editLabel: '编辑', deleteLabel: '删除', dataText: '就诊摘要' },
-  { id: 'skill-catalog', create: '新建医助能力', createTitle: '新建医助能力', editLabel: '编辑', deleteLabel: '删除', dataText: '入院风险摘要' },
-  { id: 'tool-catalog', create: '新建医助工具', createTitle: '新建医助工具', editLabel: '编辑', deleteLabel: '删除', dataText: '手术排程只读工具' },
-  { id: 'ai-assistant-policy', create: '新建草稿', createTitle: '新建配置草稿', editLabel: '编辑 / 版本管理', deleteLabel: '删除', dataText: '三级甲等医院临床工作策略' },
+  { id: 'agent-catalog', create: '新建医助agent', createTitle: '新建医助agent', editLabel: '编辑', deleteLabel: '删除', dataText: '就诊摘要' },
+  { id: 'skill-catalog', create: '新建医助skill', createTitle: '新建医助skill', editLabel: '编辑', deleteLabel: '删除', dataText: '入院风险摘要' },
+  { id: 'tool-catalog', create: '新建医助tool', createTitle: '新建医助tool', editLabel: '编辑', deleteLabel: '删除', dataText: '手术排程只读工具' },
   { id: 'agent-evals', create: '新建草稿', createTitle: '新建配置草稿', editLabel: '编辑 / 版本管理', deleteLabel: '删除', dataText: '急诊分诊上下文完整性评测' },
   { id: 'aiops', create: '新建处理额度', createTitle: '新建处理额度', editLabel: '编辑', deleteLabel: '删除', dataText: '就诊摘要医助单次处理上限' },
   { id: 'ai-assistant', create: '新建医助任务', createTitle: '新建医助任务', dataText: '小南医助团队' },
@@ -34,7 +33,7 @@ page.on('response', (response) => {
 });
 
 try {
-  if (!loginPassword) throw new Error('OPENEMR2026_DEV_LOGIN_PASSWORD is required for browser verification');
+  if (!loginPassword) throw new Error('HAOEMR_DEV_LOGIN_PASSWORD is required for browser verification');
   await page.goto(`${baseUrl}#/login`, { waitUntil: 'domcontentloaded', timeout: 30_000 });
   await page.getByLabel('用户名').fill('linwei');
   await page.getByLabel('密码', { exact: true }).fill(loginPassword);

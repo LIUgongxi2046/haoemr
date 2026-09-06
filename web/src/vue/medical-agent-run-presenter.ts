@@ -82,7 +82,7 @@ export function presentMedicalAgentEvents(run: MedicalAgentRunWire, contextDetai
     ModelGenerationCompleted: '机构模型分析完成',
     ModelGenerationFailed: '机构模型未产生有效结果',
     ChildContributionReady: '诊疗环节结果已生成',
-    ChildHandoffReceived: 'Eva 已接收医助结果',
+    ChildHandoffReceived: 'AI医助 EVA 已接收医助结果',
     ChildAgentFailed: '诊疗环节医助执行失败',
     RunReadyForReview: '结果已完成核对',
     RunFailed: '医助任务未完成',
@@ -102,25 +102,28 @@ export function presentMedicalAgentEvents(run: MedicalAgentRunWire, contextDetai
   });
 }
 
-export function presentMedicalAgentResult(run: MedicalAgentRunWire): string {
-  if (run.state === 'QUEUED') return '任务已进入后台队列，Eva 会持续更新处理进度。';
-  if (run.state === 'RUNNING') return `Eva 正在调度医助团队执行（第 ${run.attempt} 次）。`;
+export function presentMedicalAgentResult(run: MedicalAgentRunWire, format: 'text' | 'markdown' = 'text'): string {
+  if (run.state === 'QUEUED') return '任务已进入后台队列，AI医助 EVA 会持续更新处理进度。';
+  if (run.state === 'RUNNING') return `AI医助 EVA 正在调度医助团队执行（第 ${run.attempt} 次）。`;
   if (run.state === 'CANCELLED') return '任务已取消，未产生可采用的诊疗结果。';
   if (run.state === 'FAILED') return '任务未完成，可获取新授权后重试。';
-  const rootSummary = doctorFacingAiText(text(run.output.summary, 'Eva 已完成本次医助任务。'));
+  const rich = format === 'markdown';
+  const rootSummary = doctorFacingAiText(text(run.output.summary, 'AI医助 EVA 已完成本次医助任务。'));
   const sections = run.child_runs.map((child) => {
     const contribution = child.contribution;
-    const lines = [`【${doctorFacingAiText(child.display_name)}】${doctorFacingAiText(text(contribution.summary, '未生成摘要'))}`];
+    const heading = doctorFacingAiText(child.display_name);
+    const summary = doctorFacingAiText(text(contribution.summary, '未生成摘要'));
+    const lines = [rich ? `### ${heading}\n\n${summary}` : `【${heading}】${summary}`];
     const facts = textList(contribution.facts).map(doctorFacingAiText);
     const gaps = textList(contribution.gaps).map(doctorFacingAiText);
     const warnings = textList(contribution.warnings).map(doctorFacingAiText);
-    if (facts.length) lines.push('关键依据：', ...facts.map((item) => `• ${item}`));
-    if (gaps.length) lines.push('待确认：', ...gaps.map((item) => `• ${item}`));
-    if (warnings.length) lines.push('注意事项：', ...warnings.map((item) => `• ${item}`));
+    if (facts.length) lines.push(rich ? '\n#### 关键依据\n' : '关键依据：', ...facts.map((item) => rich ? `- ${item.replace(/\n/g, '\n  ')}` : `• ${item}`));
+    if (gaps.length) lines.push(rich ? '\n#### 待确认\n' : '待确认：', ...gaps.map((item) => rich ? `- ${item.replace(/\n/g, '\n  ')}` : `• ${item}`));
+    if (warnings.length) lines.push(rich ? '\n#### 注意事项\n' : '注意事项：', ...warnings.map((item) => rich ? `- ${item.replace(/\n/g, '\n  ')}` : `• ${item}`));
     return lines.join('\n');
   });
   const executionNotice = run.output.execution_mode === 'SYNTHETIC_MODEL'
-    ? '运行说明：当前为开发环境仿真模型，不是真实大模型医疗分析。'
+    ? '运行说明：当前为开发环境测试模型，不是临床结论。'
     : '';
   return [rootSummary, ...sections, executionNotice].filter(Boolean).join('\n\n');
 }

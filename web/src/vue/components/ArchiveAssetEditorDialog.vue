@@ -28,7 +28,7 @@ const emit = defineEmits<{ cancel: []; save: [draft: AssetDraft] }>();
 
 const form = reactive<AssetDraft>({
   assetType: 'DIGITAL', displayName: '', mediaType: 'application/xml', pageCount: 1,
-  sourceSystem: 'openemr2026', location: '', contentHash: '', cdaStatus: 'NOT_APPLICABLE',
+  sourceSystem: 'haoemr', location: '', contentHash: '', cdaStatus: 'NOT_APPLICABLE',
   scanStatus: 'NOT_APPLICABLE', preservationStatus: 'NOT_SCHEDULED', retentionYears: 30,
   file: null,
 });
@@ -39,7 +39,7 @@ watch(() => [props.open, props.asset, props.presetType] as const, ([open, asset,
   form.displayName = asset?.display_name ?? (preset === 'SCAN' ? '纸质病历扫描件' : '病案资产');
   form.mediaType = asset?.media_type ?? (preset === 'SCAN' ? 'application/pdf' : 'application/xml');
   form.pageCount = asset?.page_count ?? 1;
-  form.sourceSystem = asset?.source_system ?? 'openemr2026';
+  form.sourceSystem = asset?.source_system ?? 'haoemr';
   form.location = asset?.custody_location ?? '';
   form.contentHash = asset?.content_hash ?? '';
   form.cdaStatus = asset?.cda_status ?? 'NOT_APPLICABLE';

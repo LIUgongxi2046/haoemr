@@ -2,7 +2,7 @@ alter table medical_record_asset
   add column display_name varchar(256) not null default '病案资产',
   add column media_type varchar(96) not null default 'application/octet-stream',
   add column page_count integer not null default 1,
-  add column source_system varchar(128) not null default 'openemr2026',
+  add column source_system varchar(128) not null default 'haoemr',
   add column custody_location varchar(128),
   add column integrity_status varchar(16) not null default 'PENDING',
   add column cda_status varchar(24) not null default 'NOT_APPLICABLE',

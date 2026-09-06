@@ -1,4 +1,4 @@
-# OpenEMR2026 50 疾病病例与患者切换复测报告
+# HaoEMR 50 疾病病例与患者切换复测报告
 
 - 日期：2026-08-25
 - 测试模式：S009 `PLAN + IMPLEMENT + EXECUTE + REPORT`

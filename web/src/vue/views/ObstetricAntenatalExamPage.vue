@@ -5,6 +5,7 @@ import type { ObstetricAntenatalExamWire } from '../../generated/contracts';
 import { createObstetricAntenatalExam, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listObstetricAntenatalExams } from '../../api/specialty-layers';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { localDateTimeInputValue } from '../date-input';
 
 const patientLeaseQuery = useQuery({
   queryKey: ['specialty-layers', 'obgyn-evidence', 'patient-lease'],
@@ -40,7 +41,7 @@ const form = reactive({
   diastolicBp: 0,
   proteinuria: 'NEGATIVE' as ObstetricAntenatalExamWire['proteinuria'],
   preeclampsiaRisk: false,
-  examinedAt: new Date().toISOString(),
+  examinedAt: localDateTimeInputValue(),
 });
 const busy = ref('');
 const notice = ref('');
@@ -90,7 +91,7 @@ async function createRecord() {
       <div>
         <p class="eyebrow">专科其余层 / 妇产 · 证据</p>
         <h1>产前检查</h1>
-        <p>孕周、宫高、胎心、血压、蛋白尿与子痫前期风险登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记孕周、宫高、胎心、血压、蛋白尿与子痫前期风险。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>

@@ -1,0 +1,25 @@
+{
+  "run_at": "2026-09-05T08:16:12.075Z",
+  "source_code": "E2E-MIGRATION-1788596172075",
+  "source_patient_identifier": "E2E-PATIENT-1788596172075",
+  "checks": [
+    {
+      "name": "create-and-activate-isolated-source-through-ui",
+      "status": "PASS",
+      "detail": "已通过源系统盘点页面完成注册、配置和激活"
+    },
+    {
+      "name": "map-import-and-human-confirm-controlled-patient-input",
+      "status": "PASS",
+      "detail": "CSV 受控导入已固定 1 条输入；唯一候选经过页面人工确认后进入已解决状态"
+    },
+    {
+      "name": "reconcile-switch-observe-and-archive-through-ui",
+      "status": "PASS",
+      "detail": "批次经零差异对账后依次完成切换、观察和不可变结论归档"
+    }
+  ],
+  "findings": [],
+  "passed": 3,
+  "failed": 0
+}

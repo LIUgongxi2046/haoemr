@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import type { InpatientDocumentTaskWire } from '../../generated/contracts';
+import type { DocumentVersionWire, InpatientDocumentTaskWire } from '../../generated/contracts';
 import {
   getInpatientSyntheticActor, inpatientSyntheticActors, issueInpatientLease,
   loadInpatientDocument, loadInpatientDocumentGovernance, loadInpatientOverview,
-  runInpatientDocumentQuality, saveInpatientDocumentDraft, setInpatientSyntheticActor,
+  runInpatientDocumentQuality, saveInpatientDocumentDraft,
   signInpatientDocument, type InpatientSyntheticActorKey,
 } from '../../clinical-api';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import BusinessActionDialog from '../components/BusinessActionDialog.vue';
 import { toClinicalIssue } from '../clinical-error';
+import RecordQcPanel from '../components/RecordQcPanel.vue';
+import EncounterRecordQcPanel from '../components/EncounterRecordQcPanel.vue';
+import { useRecordQcAutomation } from '../composables/use-record-qc-automation';
+import { useRecordQcSnapshot } from '../composables/use-record-qc-snapshot';
 
 const route = useRoute();
 const documentId = computed(() => typeof route.query.document_id === 'string' ? route.query.document_id : '');
@@ -19,6 +23,7 @@ const routeId = computed(() => String(route.name ?? 'inpatient-doc-editor'));
 const selectedActorKey = ref<InpatientSyntheticActorKey>(getInpatientSyntheticActor()?.key ?? 'AUTHOR');
 const sections = ref<Record<string, string>>({});
 const baseline = ref('');
+const draftBase = ref<DocumentVersionWire | null>(null);
 const busy = ref('');
 const notice = ref('');
 const commandError = ref('');
@@ -43,8 +48,11 @@ const editorQuery = useQuery({
   retry: false, staleTime: 0, gcTime: 0,
 });
 
-watch(() => editorQuery.data.value, (data) => {
+watch(() => editorQuery.data.value, (data, previous) => {
   if (data?.kind !== 'ready') return;
+  if (previous?.kind === 'ready' && previous.document.document_id === data.document.document_id
+    && JSON.stringify(sections.value) !== baseline.value) return;
+  draftBase.value = data.document;
   const next = Object.fromEntries(Object.entries(data.document.sections ?? {}).map(([key, value]) => [key, typeof value === 'string' ? value : JSON.stringify(value)]));
   sections.value = next; baseline.value = JSON.stringify(next);
 }, { immediate: true });
@@ -55,8 +63,18 @@ const task = computed(() => data.value?.overview.document_tasks.find((item) =>
   item.working_document_id === data.value?.document.document_id || item.completed_document_id === data.value?.document.document_id));
 const activeActor = computed(() => inpatientSyntheticActors.find((actor) => actor.key === selectedActorKey.value));
 const dirty = computed(() => JSON.stringify(sections.value) !== baseline.value);
-const qualityPassed = computed(() => data.value?.governance.quality_run?.outcome === 'PASSED');
-const qualityWarning = computed(() => data.value?.governance.quality_run?.outcome === 'WARNING');
+const qc = useRecordQcSnapshot(() => data.value ?? undefined, () => dirty.value,
+  ({ lease, document }) => loadInpatientDocumentGovernance(lease, document));
+const qcAuto = useRecordQcAutomation({ context: () => data.value,
+  dirty: () => dirty.value || selectedActorKey.value !== 'AUTHOR',
+  run: ({ lease, document }) => runInpatientDocumentQuality(lease, document, 'POST_SAVE'), refresh: qc.refresh });
+const qcFields = computed(() => Object.fromEntries(Object.keys(sections.value).map(key => [key, fieldLabel(key)])));
+function focusQcField(field: string) { window.document.getElementById(`inpatient-record-field-${field}`)?.focus(); }
+// The legacy signing summary must use the same pending/error boundary as the embedded panel.
+const currentQualityRun = computed(() => !qcAuto.running.value && !qcAuto.error.value
+  && !qc.loading.value && !qc.error.value && !dirty.value ? qc.snapshot.value?.quality_run : null);
+const qualityPassed = computed(() => currentQualityRun.value?.outcome === 'PASSED');
+const qualityWarning = computed(() => currentQualityRun.value?.outcome === 'WARNING');
 const qualityAcceptable = computed(() => qualityPassed.value || qualityWarning.value);
 const canEdit = computed(() => selectedActorKey.value === 'AUTHOR' && task.value
   && ['AUTHOR', null].includes(task.value.next_signature_level ?? null)
@@ -77,36 +95,33 @@ async function execute(label: string, action: () => Promise<void>) {
   finally { busy.value = ''; }
 }
 
-async function switchActor(key: InpatientSyntheticActorKey) {
-  if (key === selectedActorKey.value || busy.value) return;
-  await execute('actor', async () => {
-    setInpatientSyntheticActor(key); selectedActorKey.value = key;
-    await editorQuery.refetch(); notice.value = `已切换为${activeActor.value?.roleLabel ?? key}并重新签发患者上下文租约。`;
-  });
-}
 
-function fillSyntheticContent() {
-  if (!canEdit.value) return;
-  sections.value = Object.fromEntries(Object.keys(sections.value).map((key) => [key, `合成验收内容：${fieldLabel(key)}，已由作者核对。`]));
-}
 
 async function save() {
   const current = data.value;
   if (!current || !canEdit.value || !dirty.value) return;
   await execute('save', async () => {
-    await saveInpatientDocumentDraft(current.lease, current.document, { ...sections.value });
+    const submitted = { ...sections.value };
+    const saved = await saveInpatientDocumentDraft(current.lease, draftBase.value ?? current.document, submitted);
     saveOpen.value = false;
     await editorQuery.refetch(); notice.value = '已生成新的不可变住院病历版本；旧审签证据不会沿用。';
+    await nextTick();
+    if (data.value?.document.document_id !== saved.document_id) return;
+    draftBase.value = saved;
+    baseline.value = JSON.stringify(submitted);
+    if (data.value?.document.document_version_id === saved.document_version_id) qcAuto.afterSave();
   });
 }
 
 async function qualityCheck() {
   const current = data.value;
   if (!current || dirty.value || selectedActorKey.value !== 'AUTHOR') return;
+  qcAuto.cancel();
   await execute('quality', async () => {
     const findings = await runInpatientDocumentQuality(current.lease, current.document);
     qualityOpen.value = false;
     await editorQuery.refetch();
+    await qc.refresh();
     notice.value = findings.some((item) => item.severity === 'BLOCKING') ? '质控发现阻断项，请修订并重新保存。' : '确定性质控已通过，可执行当前层级签名。';
   });
 }
@@ -142,8 +157,7 @@ function formatDate(value: string) { return new Intl.DateTimeFormat('zh-CN', { d
 
 <template>
   <section data-page-root class="content vue-native-page">
-    <div class="page-heading"><div><p class="eyebrow">住院 / 病历创作与分级审签</p><h1>{{ routeId === 'inpatient-doc-qc' ? '住院病历 · 质控与审签' : '住院病历 · 专注编辑' }}</h1></div><RouterLink class="button secondary" to="/inpatient">返回住院工作站</RouterLink></div>
-    <details v-if="inpatientSyntheticActors.length" class="development-acceptance-tools"><summary>开发角色模拟</summary><section class="inpatient-role-simulator compact" aria-label="开发环境四角色审签身份"><div><strong>四角色审签模拟</strong><span>仅开发合成环境；生产由 OIDC 与岗位任期决定</span></div><div role="group"><button v-for="actor in inpatientSyntheticActors" :key="actor.key" type="button" :class="{ active: actor.key === selectedActorKey }" :disabled="Boolean(busy)" @click="switchActor(actor.key)"><b>{{ actor.roleLabel }}</b><small>{{ actor.displayName }}</small></button></div></section></details>
+    <div class="page-heading"><div><p class="eyebrow">住院 / 病历创作与分级审签</p><h1>{{ routeId === 'inpatient-doc-qc' ? '住院病历 · 质控与审签' : '住院病历 · 专注编辑' }}</h1><p>{{ routeId === 'inpatient-doc-qc' ? '查看质控问题并完成分级审签。' : '编辑住院病历内容，并保留完整版本记录。' }}</p></div><RouterLink class="button secondary" to="/inpatient">返回住院工作站</RouterLink></div>
     <ClinicalPageState v-if="editorQuery.isPending.value" kind="loading" message="正在核验患者、住院任务、文书版本与审签证据" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="editorQuery.refetch()" />
     <div v-else-if="editorQuery.data.value?.kind === 'missing'" class="record-evidence-empty"><h2>当前患者尚无可编辑住院文书</h2><p>先从病程与文书中选择任务并建立草稿；建立后本页会自动载入最近一份文书。</p><RouterLink class="button primary" to="/inpatient-course">进入病程与文书</RouterLink></div>
@@ -156,12 +170,14 @@ function formatDate(value: string) { return new Intl.DateTimeFormat('zh-CN', { d
       <BusinessActionDialog :open="signOpen" :title="`执行${activeActor?.roleLabel ?? selectedActorKey}签名`" description="签名会固化签署人、岗位、时间、内容哈希，并把任务流转到下一审签岗位。" confirm-label="确认签署并流转" :busy="busy === 'sign'" :confirm-disabled="!canSign" width="wide" @cancel="signOpen = false" @confirm="sign"><p class="dialog-warning">签署对象：v{{ data.document.version_no }} · {{ data.document.content_hash.slice(0, 20) }}…</p><label v-if="qualityWarning"><span>警告处置说明（至少 4 字）</span><textarea v-model="warningDisposition" rows="3" maxlength="1000" placeholder="说明已核对的警告及处置结论" /></label></BusinessActionDialog>
       <div class="inpatient-document-layout">
         <section class="inpatient-document-editor">
-          <header><div><p class="eyebrow">结构化正文</p><h2>{{ task.document_type_code }}</h2></div><div class="toolbar-actions"><button v-if="inpatientSyntheticActors.length" class="button secondary" :disabled="!canEdit || Boolean(busy)" @click="fillSyntheticContent">填入合成验收内容</button><button class="button primary" :disabled="!canEdit || !dirty || Boolean(busy)" @click="saveOpen = true">保存新版本</button></div></header>
+          <header><div><p class="eyebrow">结构化正文</p><h2>{{ task.document_type_code }}</h2></div><div class="toolbar-actions"><button class="button primary" :disabled="!canEdit || !dirty || Boolean(busy)" @click="saveOpen = true">保存新版本</button></div></header>
           <div v-if="!canEdit" class="document-readonly-banner"><strong>只读审签视图</strong><span>{{ task.next_signature_level === selectedActorKey ? '请核对正文、质控和历史签名后执行本级签署或返回工作站退回。' : `当前待办属于 ${task.next_signature_level ?? '已完成'} 岗位。` }}</span></div>
-          <div class="inpatient-section-form"><label v-for="(_, key) in sections" :key="key"><span>{{ fieldLabel(String(key)) }}</span><small>{{ String(key) }}</small><textarea v-model="sections[key]" rows="4" :readonly="!canEdit" /></label></div>
+          <div class="inpatient-section-form"><label v-for="(_, key) in sections" :key="key"><span>{{ fieldLabel(String(key)) }}</span><small>{{ String(key) }}</small><textarea :id="`inpatient-record-field-${key}`" v-model="sections[key]" rows="4" :readonly="!canEdit" /></label></div>
         </section>
         <aside class="inpatient-review-rail">
-          <section><header><div><p class="eyebrow">确定性门禁</p><h2>质控与当前动作</h2></div><span :class="['review-outcome', data.governance.quality_run?.outcome?.toLowerCase() ?? 'missing']">{{ data.governance.quality_run?.outcome ?? '未运行' }}</span></header><dl><div><dt>文书内容哈希</dt><dd>{{ data.document.content_hash.slice(0, 18) }}…</dd></div><div><dt>质控规则版本</dt><dd>{{ data.governance.quality_run?.rule_version ?? '—' }}</dd></div><div><dt>阻断问题</dt><dd>{{ data.governance.quality_run?.blocking_count ?? '—' }}</dd></div><div><dt>下一签名</dt><dd>{{ task.next_signature_level ?? '已完成' }}</dd></div></dl><div class="review-actions"><button class="button secondary full" :disabled="selectedActorKey !== 'AUTHOR' || dirty || Boolean(busy) || task.review_status === 'COMPLETED'" @click="qualityOpen = true">运行确定性质控</button><button class="button primary full" :disabled="!qualityAcceptable || dirty || task.next_signature_level !== selectedActorKey || Boolean(busy)" @click="signOpen = true">{{ task.review_status === 'COMPLETED' ? '审签已完成' : `执行${activeActor?.roleLabel ?? selectedActorKey}签名` }}</button><small v-if="task.review_status === 'COMPLETED'">四级签名链已固化，正文转为只读。</small><small v-else-if="dirty">存在未保存修改，质控与签名已禁用。</small><small v-else-if="!qualityAcceptable">必须先取得绑定当前内容哈希的通过或可处置警告结论。</small><small v-else-if="qualityWarning">质控存在警告，请在签名弹窗记录人工核对和处置说明。</small><small v-else-if="task.next_signature_level !== selectedActorKey">请切换到 {{ task.next_signature_level ?? '任务已完成' }} 对应的真实岗位。</small></div></section>
+          <RecordQcPanel :snapshot="qc.snapshot.value" :version-id="data.document.document_version_id" :content-hash="data.document.content_hash" :fields="qcFields" :dirty="dirty" :loading="qc.loading.value" :error="qc.error.value" :sections="sections" v-model:auto-enabled="qcAuto.enabled.value" :auto-running="qcAuto.running.value" :auto-error="qcAuto.error.value" @retry-auto="qcAuto.afterSave()" @retry="qc.refresh()" @locate="focusQcField" />
+          <EncounterRecordQcPanel :lease="data.lease" :revision="qc.snapshot.value?.data_watermark ?? data.document.content_hash" />
+          <section><header><div><p class="eyebrow">确定性门禁</p><h2>质控与当前动作</h2></div><span :class="['review-outcome', currentQualityRun?.outcome?.toLowerCase() ?? 'missing']">{{ currentQualityRun?.outcome ?? '未运行' }}</span></header><dl><div><dt>文书内容哈希</dt><dd>{{ data.document.content_hash.slice(0, 18) }}…</dd></div><div><dt>质控规则版本</dt><dd>{{ currentQualityRun?.rule_version ?? '—' }}</dd></div><div><dt>阻断问题</dt><dd>{{ currentQualityRun?.blocking_count ?? '—' }}</dd></div><div><dt>下一签名</dt><dd>{{ task.next_signature_level ?? '已完成' }}</dd></div></dl><div class="review-actions"><button class="button secondary full" :disabled="selectedActorKey !== 'AUTHOR' || dirty || Boolean(busy) || task.review_status === 'COMPLETED'" @click="qualityOpen = true">运行确定性质控</button><button class="button primary full" :disabled="!qualityAcceptable || dirty || task.next_signature_level !== selectedActorKey || Boolean(busy)" @click="signOpen = true">{{ task.review_status === 'COMPLETED' ? '审签已完成' : `执行${activeActor?.roleLabel ?? selectedActorKey}签名` }}</button><small v-if="task.review_status === 'COMPLETED'">四级签名链已固化，正文转为只读。</small><small v-else-if="dirty">存在未保存修改，质控与签名已禁用。</small><small v-else-if="!qualityAcceptable">必须先取得绑定当前内容哈希的通过或可处置警告结论。</small><small v-else-if="qualityWarning">质控存在警告，请在签名弹窗记录人工核对和处置说明。</small><small v-else-if="task.next_signature_level !== selectedActorKey">请切换到 {{ task.next_signature_level ?? '任务已完成' }} 对应的真实岗位。</small></div></section>
           <section><header><div><p class="eyebrow">不可变证据</p><h2>签名时间轴</h2></div><span>{{ data.governance.signatures.length }} 份</span></header><div v-if="data.governance.signatures.length === 0" class="legal-empty-state compact"><strong>尚未签名</strong><p>作者签名后，每一级人员、角色、时间与内容哈希将在此固化。</p></div><article v-for="signature in data.governance.signatures" v-else :key="signature.signature_id" class="inpatient-signature-evidence"><span>{{ signature.signature_role }}</span><div><strong>{{ signature.signer_display_name }}</strong><small>{{ formatDate(signature.signed_at) }} · {{ signature.signature_status }}</small><code>{{ signature.content_hash.slice(0, 16) }}…</code></div></article></section>
           <section class="review-safety-note"><h2>审签安全边界</h2><ul><li>不允许跳过前序层级</li><li>要求人员分离时同一人不可连续签署</li><li>退回后必须生成新版本并重新质控</li><li>CA 未回传时不伪造有效证据</li></ul></section>
         </aside>

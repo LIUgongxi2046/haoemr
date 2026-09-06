@@ -6,6 +6,7 @@ import { createArtEmbryoTransferRecord, issueSpecialtyEncounterLease, issueSpeci
 import { listArtCycleRecords } from '../../api/specialty';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { localDateTimeInputValue } from '../date-input';
 
 const patientLeaseQuery = useQuery({
   queryKey: ['specialty-layers', 'reproductive-treatment', 'patient-lease'],
@@ -44,7 +45,7 @@ const form = reactive({
   cycleId: '',
   embryoCount: 0,
   verifierId: '',
-  transferredAt: new Date().toISOString(),
+  transferredAt: localDateTimeInputValue(),
 });
 const busy = ref('');
 const notice = ref('');

@@ -48,7 +48,7 @@ function formatTime(value: string) { return new Intl.DateTimeFormat('zh-CN', { m
 
 <template>
   <aside class="eva-patient-picker" :class="{ compact }" aria-label="选择患者">
-    <header><div><strong>患者上下文</strong><span>搜索并绑定一次就诊</span></div><b>{{ current.scene }}</b></header>
+    <header><div><strong>选择患者</strong><span>搜索并选择本次就诊</span></div><b>{{ current.scene }}</b></header>
     <form role="search" @submit.prevent="submit"><input v-model="query" type="search" placeholder="姓名 / 病历号 / 证件号" aria-label="搜索患者" /><button :disabled="searching || !query.trim()">{{ searching ? '…' : '搜索' }}</button></form>
 
     <section class="eva-current-patient"><span>当前患者</span><div class="eva-current-patient-row"><i>{{ current.patientName.slice(0,1) }}</i><strong>{{ current.patientName }}</strong><b>{{ current.patientId ? '已绑定' : '未绑定' }}</b><button v-if="current.patientId" type="button" class="eva-unbind" @click="emit('unbind')">取消绑定</button></div><small>{{ current.patientSummary }} · {{ current.label }}</small></section>

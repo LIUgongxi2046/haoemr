@@ -1,0 +1,291 @@
+{
+  "run_at": "2026-09-05T04:56:02.760Z",
+  "routes": 15,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 30,
+  "verified_route_viewports": 30,
+  "findings": [],
+  "observations": [
+    {
+      "route": "scope-designer",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "角色、职责与数据范围设计器",
+      "routeId": "scope-designer",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1833
+    },
+    {
+      "route": "skill-catalog",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医助能力库",
+      "routeId": "skill-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2002
+    },
+    {
+      "route": "specialty-center",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "专科支持总览",
+      "routeId": "specialty-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 710
+    },
+    {
+      "route": "specialty-coverage",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "科室与专科适配工作台",
+      "routeId": "specialty-coverage",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1465
+    },
+    {
+      "route": "surgery-schedule",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "手术",
+      "routeId": "surgery-schedule",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3205
+    },
+    {
+      "route": "tcm-care",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "中医护理与辨证施护",
+      "routeId": "tcm-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 358
+    },
+    {
+      "route": "tcm-evidence",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "四诊记录",
+      "routeId": "tcm-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 402
+    },
+    {
+      "route": "tcm-followup",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "tcm-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 416
+    },
+    {
+      "route": "tcm-qc",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "tcm-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 459
+    },
+    {
+      "route": "tcm-record",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "中医记录",
+      "routeId": "tcm-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 407
+    },
+    {
+      "route": "tcm-treatment",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "草药处方",
+      "routeId": "tcm-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 402
+    },
+    {
+      "route": "tcm-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "中医工作台",
+      "routeId": "tcm-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 506
+    },
+    {
+      "route": "therapy-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "治疗",
+      "routeId": "therapy-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 789
+    },
+    {
+      "route": "tool-catalog",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医助工具库",
+      "routeId": "tool-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2389
+    },
+    {
+      "route": "transfusion",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "输血",
+      "routeId": "transfusion",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1641
+    },
+    {
+      "route": "scope-designer",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "角色、职责与数据范围设计器",
+      "routeId": "scope-designer",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1500
+    },
+    {
+      "route": "skill-catalog",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助能力库",
+      "routeId": "skill-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1769
+    },
+    {
+      "route": "specialty-center",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "专科支持总览",
+      "routeId": "specialty-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 477
+    },
+    {
+      "route": "specialty-coverage",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "科室与专科适配工作台",
+      "routeId": "specialty-coverage",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1232
+    },
+    {
+      "route": "surgery-schedule",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "手术",
+      "routeId": "surgery-schedule",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2972
+    },
+    {
+      "route": "tcm-care",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "中医护理与辨证施护",
+      "routeId": "tcm-care",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 241
+    },
+    {
+      "route": "tcm-evidence",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "四诊记录",
+      "routeId": "tcm-evidence",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 169
+    },
+    {
+      "route": "tcm-followup",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "随访记录",
+      "routeId": "tcm-followup",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 183
+    },
+    {
+      "route": "tcm-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "质控复核",
+      "routeId": "tcm-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 226
+    },
+    {
+      "route": "tcm-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "中医记录",
+      "routeId": "tcm-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 174
+    },
+    {
+      "route": "tcm-treatment",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "草药处方",
+      "routeId": "tcm-treatment",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 169
+    },
+    {
+      "route": "tcm-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "中医工作台",
+      "routeId": "tcm-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 273
+    },
+    {
+      "route": "therapy-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "治疗",
+      "routeId": "therapy-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 556
+    },
+    {
+      "route": "tool-catalog",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助工具库",
+      "routeId": "tool-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2156
+    },
+    {
+      "route": "transfusion",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "输血",
+      "routeId": "transfusion",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1408
+    }
+  ]
+}

@@ -55,7 +55,7 @@ function actionLabel(value: AuditEventWire['action_code']) { return adminCodeLab
 function exportEvidence() {
   const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), events: events.value }, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob); const anchor = document.createElement('a');
-  anchor.href = url; anchor.download = `openemr2026-admin-audit-${new Date().toISOString().slice(0, 10)}.json`; anchor.click(); URL.revokeObjectURL(url);
+  anchor.href = url; anchor.download = `haoemr-admin-audit-${new Date().toISOString().slice(0, 10)}.json`; anchor.click(); URL.revokeObjectURL(url);
 }
 async function createReviewTask() {
   const lease = configLeaseQuery.data.value;

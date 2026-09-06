@@ -1,3 +1,5 @@
+import { reactive } from 'vue';
+import { notifyClinicalWrite } from './clinical-data-events';
 import {
   aiProposalWireSchema,
   aiRunSnapshotWireSchema,
@@ -119,6 +121,7 @@ import {
   type EncounterWire,
 } from './generated/contracts';
 import { authSession } from './auth-session';
+import { canUseInpatientRoleSimulation } from './development-acceptance';
 import {
   persistActiveOutpatientContext,
   restoreActiveOutpatientContext,
@@ -145,7 +148,7 @@ const syntheticDefaults = {
   departmentId: '018f0000-0000-7000-8000-00000000aa08',
 };
 
-const emergencyContextStorageKey = 'openemr2026.emergency-context.v1';
+const emergencyContextStorageKey = 'haoemr.emergency-context.v1';
 
 function storedEmergencyContext(): { patientId: string; encounterId: string } | null {
   if (typeof sessionStorage === 'undefined') return null;
@@ -174,7 +177,7 @@ const restoredOutpatientContext = restoreActiveOutpatientContext(
   authSession.user?.user_id ?? developmentDefaults.userId,
 );
 
-export const clinicalContext = {
+export const clinicalContext = reactive({
   tenantId: import.meta.env.VITE_TENANT_ID || developmentDefaults.tenantId,
   organizationId: import.meta.env.VITE_ORGANIZATION_ID || developmentDefaults.organizationId,
   facilityId: import.meta.env.VITE_FACILITY_ID || developmentDefaults.facilityId,
@@ -193,7 +196,7 @@ export const clinicalContext = {
   inpatientWardId: import.meta.env.VITE_INPATIENT_WARD_ID || developmentDefaults.inpatientWardId,
   collaboratorUserId: import.meta.env.VITE_COLLABORATOR_USER_ID || developmentDefaults.collaboratorUserId,
   departmentId: import.meta.env.VITE_DEPARTMENT_ID || developmentDefaults.departmentId,
-};
+});
 
 export function setEmergencyClinicalContext(patientId: string, encounterId: string): void {
   if (!patientId || !encounterId) {
@@ -270,16 +273,20 @@ export const inpatientSyntheticActors: InpatientSyntheticActor[] = developmentIn
   ? Object.values(developmentInpatientActors) : [];
 let activeInpatientSyntheticActor: InpatientSyntheticActor | null = null;
 
+export function canUseInpatientSyntheticActors(): boolean {
+  return canUseInpatientRoleSimulation() && inpatientSyntheticActors.length > 0;
+}
+
 export function setInpatientSyntheticActor(key: InpatientSyntheticActorKey): InpatientSyntheticActor {
-  if (!developmentInpatientActors) {
-    throw new ClinicalApiError('SYNTHETIC_IDENTITY_FORBIDDEN', '生产环境禁止切换合成审签身份', 403);
+  if (!canUseInpatientSyntheticActors() || !developmentInpatientActors) {
+    throw new ClinicalApiError('SYNTHETIC_IDENTITY_FORBIDDEN', '开发角色模拟仅限开发验收配置中的系统管理员使用', 403);
   }
   activeInpatientSyntheticActor = developmentInpatientActors[key];
   return activeInpatientSyntheticActor;
 }
 
 export function getInpatientSyntheticActor(): InpatientSyntheticActor | null {
-  return activeInpatientSyntheticActor;
+  return canUseInpatientSyntheticActors() ? activeInpatientSyntheticActor : null;
 }
 
 export function clearInpatientSyntheticActor(): void {
@@ -311,18 +318,18 @@ export function clinicalServiceError(payload: unknown, status: number) {
 }
 
 function effectiveIdentityHeaders() {
-  const actor = activeInpatientSyntheticActor;
+  const actor = getInpatientSyntheticActor();
   const roleIds = authSession.user?.role_assignment_ids.join(',');
   return {
     Authorization: configuredBearer() ? `Bearer ${configuredBearer()}` : '',
-    'X-OpenEMR-Tenant-Id': authSession.user?.tenant_id ?? clinicalContext.tenantId,
-    'X-OpenEMR-User-Id': actor?.userId ?? authSession.user?.user_id ?? clinicalContext.userId,
-    'X-OpenEMR-Role-Assignment-Ids': actor?.roleId ?? roleIds ?? clinicalContext.roleId,
+    'X-HaoEMR-Tenant-Id': authSession.user?.tenant_id ?? clinicalContext.tenantId,
+    'X-HaoEMR-User-Id': actor?.userId ?? authSession.user?.user_id ?? clinicalContext.userId,
+    'X-HaoEMR-Role-Assignment-Ids': actor?.roleId ?? roleIds ?? clinicalContext.roleId,
   };
 }
 
 export async function request(path: string, init: RequestInit = {}) {
-  const actor = activeInpatientSyntheticActor;
+  const actor = getInpatientSyntheticActor();
   if (!clinicalContext.tenantId || !clinicalContext.organizationId || !clinicalContext.facilityId
       || !(actor?.userId ?? clinicalContext.userId) || !(actor?.roleId ?? clinicalContext.roleId) || !configuredBearer()) {
     throw new ClinicalApiError(
@@ -340,6 +347,7 @@ export async function request(path: string, init: RequestInit = {}) {
   if (!response.ok) {
     throw clinicalServiceError(payload, response.status);
   }
+  notifyClinicalWrite(path, init.method);
   return payload;
 }
 
@@ -356,7 +364,7 @@ export type ClinicalBinaryResponse = {
  * request() are retained so downloads cannot bypass the clinical context gate.
  */
 export async function requestBinary(path: string, headers: Record<string, string> = {}): Promise<ClinicalBinaryResponse> {
-  const actor = activeInpatientSyntheticActor;
+  const actor = getInpatientSyntheticActor();
   if (!clinicalContext.tenantId || !clinicalContext.organizationId || !clinicalContext.facilityId
       || !(actor?.userId ?? clinicalContext.userId) || !(actor?.roleId ?? clinicalContext.roleId) || !configuredBearer()) {
     throw new ClinicalApiError('CLINICAL_IDENTITY_NOT_CONFIGURED', '生产构建必须由 OIDC 会话注入身份与临床上下文', 401);
@@ -424,8 +432,8 @@ export async function adminRequest(path: string, init: RequestInit = {}) {
     ...init,
     headers: {
       ...effectiveIdentityHeaders(),
-      'X-OpenEMR-User-Id': clinicalContext.userId,
-      'X-OpenEMR-Role-Assignment-Ids': clinicalContext.adminRoleId,
+      'X-HaoEMR-User-Id': clinicalContext.userId,
+      'X-HaoEMR-Role-Assignment-Ids': clinicalContext.adminRoleId,
       ...init.headers,
     },
   });
@@ -440,6 +448,7 @@ export async function adminRequest(path: string, init: RequestInit = {}) {
       envelope.error?.recovery?.token,
     );
   }
+  notifyClinicalWrite(path, init.method);
   return payload;
 }
 
@@ -452,7 +461,7 @@ export async function issueDocumentLease(): Promise<ContextLeaseWire> {
       facility_id: clinicalContext.facilityId,
       patient_id: clinicalContext.patientId,
       encounter_id: clinicalContext.encounterId,
-      purpose_code: 'DOCUMENT_DRAFT_ASSIST',
+      purpose_code: 'DOCUMENT_DRAFT',
     }),
   }));
 }
@@ -773,23 +782,15 @@ export async function listClinicalOrders(
 export async function listClinicalTasks(
   lease: ContextLeaseWire,
   mode: ClinicalTaskMode,
+  includeExpired = false,
 ): Promise<ClinicalTaskWire[]> {
   const context = orderContext(mode);
   if (!context.encounterId || !context.patientId) return [];
   const payload = await request(
-    `/clinical-tasks?encounter_id=${context.encounterId}`,
+    `/clinical-tasks?encounter_id=${context.encounterId}&include_expired=${includeExpired}`,
     { headers: orderHeaders(lease, mode) },
   );
-  return clinicalTaskWireSchema.array().parse(filterOperationalClinicalTaskPayload(payload));
-}
-
-export function filterOperationalClinicalTaskPayload(payload: unknown): unknown {
-  if (!Array.isArray(payload)) return payload;
-  return payload.filter((item) => {
-    if (!item || typeof item !== 'object') return true;
-    const state = (item as { state?: unknown }).state;
-    return state !== 'WITHDRAWN' && state !== 'EXPIRED';
-  });
+  return clinicalTaskWireSchema.array().parse(payload);
 }
 
 export async function commandClinicalTask(
@@ -1311,7 +1312,7 @@ export async function createClinicalResult(
     body: JSON.stringify({
       organization_id: clinicalContext.organizationId, facility_id: clinicalContext.facilityId,
       patient_id: context.patientId, encounter_id: context.encounterId,
-      execution_task_id: executionTaskId, source_system: 'OPENEMR2026-MANUAL',
+      execution_task_id: executionTaskId, source_system: 'HAOEMR-MANUAL',
       source_report_key: crypto.randomUUID(), report_type: reportType, conclusion,
       reported_at: new Date().toISOString(), observations: [resultObservationPayload(observation)],
     }),
@@ -1657,7 +1658,7 @@ export async function createInpatientEncounterForAdmission(patientId: string): P
       patient_id: patientId,
       encounter_type: 'INPATIENT',
       started_at: new Date().toISOString(),
-      source_system: 'OPENEMR2026_ADMISSION_DESK',
+      source_system: 'HAOEMR_ADMISSION_DESK',
       source_key: `ADMISSION-DESK:${crypto.randomUUID()}`,
     }),
   }));
@@ -1775,7 +1776,7 @@ export async function createInpatientClinicalEvent(
         event_type: eventType,
         occurred_at: occurredAt,
         summary,
-        source_system: 'OPENEMR2026-WEB',
+        source_system: 'HAOEMR-WEB',
         source_event_key: `${eventType}:${occurredAt}:${crypto.randomUUID()}`,
       }),
     },
@@ -1852,6 +1853,7 @@ export async function saveInpatientDocumentDraft(
 export async function runInpatientDocumentQuality(
   lease: ContextLeaseWire,
   document: DocumentVersionWire,
+  triggerStage?: import('./generated/contracts').DocumentQualityCheckRequestWire['trigger_stage'],
 ): Promise<QualityFindingWire[]> {
   return qualityFindingWireSchema.array().parse(await request(`/documents/${document.document_id}/quality-checks`, {
     method: 'POST',
@@ -1860,6 +1862,7 @@ export async function runInpatientDocumentQuality(
       organization_id: clinicalContext.organizationId, facility_id: clinicalContext.facilityId,
       patient_id: clinicalContext.inpatientPatientId, encounter_id: clinicalContext.inpatientEncounterId,
       document_version_id: document.document_version_id,
+      trigger_stage: triggerStage,
     }),
   }));
 }
@@ -2358,6 +2361,7 @@ export async function saveDocumentDraft(
   lease: ContextLeaseWire,
   document: DocumentVersionWire,
   sections: Record<string, unknown>,
+  sourceMedicalAgentRunId?: string | null,
 ): Promise<DocumentVersionWire> {
   return documentVersionWireSchema.parse(await request(`/documents/${document.document_id}/draft`, {
     method: 'PUT',
@@ -2373,6 +2377,7 @@ export async function saveDocumentDraft(
       encounter_id: clinicalContext.encounterId,
       expected_row_version: document.row_version,
       sections,
+      source_medical_agent_run_id: sourceMedicalAgentRunId ?? null,
     }),
   }));
 }
@@ -2380,6 +2385,7 @@ export async function saveDocumentDraft(
 export async function runQualityChecks(
   lease: ContextLeaseWire,
   document: DocumentVersionWire,
+  triggerStage?: import('./generated/contracts').DocumentQualityCheckRequestWire['trigger_stage'],
 ): Promise<QualityFindingWire[]> {
   const payload = await request(`/documents/${document.document_id}/quality-checks`, {
     method: 'POST',
@@ -2390,6 +2396,7 @@ export async function runQualityChecks(
       patient_id: clinicalContext.patientId,
       encounter_id: clinicalContext.encounterId,
       document_version_id: document.document_version_id,
+      trigger_stage: triggerStage,
     }),
   });
   return qualityFindingWireSchema.array().parse(payload);
@@ -2581,7 +2588,7 @@ export async function requestEmergencyAccess(input: EmergencyAccessRequestWire):
     method: 'POST', headers: {
       'Content-Type': 'application/json',
       'Idempotency-Key': crypto.randomUUID(),
-      ...(import.meta.env.DEV ? { 'X-OpenEMR-Synthetic-Reauthenticated-At': new Date().toISOString() } : {}),
+      ...(import.meta.env.DEV ? { 'X-HaoEMR-Synthetic-Reauthenticated-At': new Date().toISOString() } : {}),
     },
     body: JSON.stringify(input),
   }));

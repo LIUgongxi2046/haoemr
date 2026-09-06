@@ -1,0 +1,504 @@
+{
+  "run_at": "2026-09-06T09:08:52.957Z",
+  "routes": 7,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 14,
+  "verified_route_viewports": 0,
+  "findings": [
+    {
+      "route": "knowledge-center",
+      "viewport": "1280x800",
+      "issue": "LINE_HEIGHT_BELOW_1_2",
+      "count": 1,
+      "samples": [
+        {
+          "tag": "BUTTON",
+          "class_name": "sidebar-collapse-toggle",
+          "ratio": 1,
+          "text": "‹"
+        }
+      ]
+    },
+    {
+      "route": "knowledge-center",
+      "viewport": "1280x800",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    },
+    {
+      "route": "pathway-graph",
+      "viewport": "1280x800",
+      "issue": "PAGE_HEAD_HEIGHT_TOO_SHORT",
+      "expected_min_px": 58,
+      "actual_px": 56
+    },
+    {
+      "route": "pathway-graph",
+      "viewport": "1280x800",
+      "issue": "LINE_HEIGHT_BELOW_1_2",
+      "count": 1,
+      "samples": [
+        {
+          "tag": "BUTTON",
+          "class_name": "sidebar-collapse-toggle",
+          "ratio": 1,
+          "text": "‹"
+        }
+      ]
+    },
+    {
+      "route": "pathway-graph",
+      "viewport": "1280x800",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    },
+    {
+      "route": "pathway-review",
+      "viewport": "1280x800",
+      "issue": "PAGE_HEAD_HEIGHT_TOO_SHORT",
+      "expected_min_px": 58,
+      "actual_px": 56
+    },
+    {
+      "route": "pathway-review",
+      "viewport": "1280x800",
+      "issue": "LINE_HEIGHT_BELOW_1_2",
+      "count": 1,
+      "samples": [
+        {
+          "tag": "BUTTON",
+          "class_name": "sidebar-collapse-toggle",
+          "ratio": 1,
+          "text": "‹"
+        }
+      ]
+    },
+    {
+      "route": "pathway-review",
+      "viewport": "1280x800",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    },
+    {
+      "route": "pathway-versions",
+      "viewport": "1280x800",
+      "issue": "PAGE_HEAD_HEIGHT_TOO_SHORT",
+      "expected_min_px": 58,
+      "actual_px": 56
+    },
+    {
+      "route": "pathway-versions",
+      "viewport": "1280x800",
+      "issue": "LINE_HEIGHT_BELOW_1_2",
+      "count": 1,
+      "samples": [
+        {
+          "tag": "BUTTON",
+          "class_name": "sidebar-collapse-toggle",
+          "ratio": 1,
+          "text": "‹"
+        }
+      ]
+    },
+    {
+      "route": "pathway-versions",
+      "viewport": "1280x800",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    },
+    {
+      "route": "specialty-center",
+      "viewport": "1280x800",
+      "issue": "LINE_HEIGHT_BELOW_1_2",
+      "count": 1,
+      "samples": [
+        {
+          "tag": "BUTTON",
+          "class_name": "sidebar-collapse-toggle",
+          "ratio": 1,
+          "text": "‹"
+        }
+      ]
+    },
+    {
+      "route": "specialty-center",
+      "viewport": "1280x800",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    },
+    {
+      "route": "specialty-coverage",
+      "viewport": "1280x800",
+      "issue": "PAGE_HEAD_HEIGHT_TOO_SHORT",
+      "expected_min_px": 58,
+      "actual_px": 56
+    },
+    {
+      "route": "specialty-coverage",
+      "viewport": "1280x800",
+      "issue": "LINE_HEIGHT_BELOW_1_2",
+      "count": 1,
+      "samples": [
+        {
+          "tag": "BUTTON",
+          "class_name": "sidebar-collapse-toggle",
+          "ratio": 1,
+          "text": "‹"
+        }
+      ]
+    },
+    {
+      "route": "specialty-coverage",
+      "viewport": "1280x800",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    },
+    {
+      "route": "workflow",
+      "viewport": "1280x800",
+      "issue": "LINE_HEIGHT_BELOW_1_2",
+      "count": 1,
+      "samples": [
+        {
+          "tag": "BUTTON",
+          "class_name": "sidebar-collapse-toggle",
+          "ratio": 1,
+          "text": "‹"
+        }
+      ]
+    },
+    {
+      "route": "workflow",
+      "viewport": "1280x800",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    },
+    {
+      "route": "knowledge-center",
+      "viewport": "390x844",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    },
+    {
+      "route": "pathway-graph",
+      "viewport": "390x844",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    },
+    {
+      "route": "pathway-review",
+      "viewport": "390x844",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    },
+    {
+      "route": "pathway-versions",
+      "viewport": "390x844",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    },
+    {
+      "route": "specialty-center",
+      "viewport": "390x844",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    },
+    {
+      "route": "specialty-coverage",
+      "viewport": "390x844",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    },
+    {
+      "route": "workflow",
+      "viewport": "390x844",
+      "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+    }
+  ],
+  "observations": [
+    {
+      "route": "knowledge-center",
+      "viewport": "1280x800",
+      "issues": [
+        {
+          "issue": "LINE_HEIGHT_BELOW_1_2",
+          "count": 1,
+          "samples": [
+            {
+              "tag": "BUTTON",
+              "class_name": "sidebar-collapse-toggle",
+              "ratio": 1,
+              "text": "‹"
+            }
+          ]
+        },
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "知识中心",
+      "routeId": "knowledge-center",
+      "aiLauncherTag": null,
+      "bodyTextLength": 348
+    },
+    {
+      "route": "pathway-graph",
+      "viewport": "1280x800",
+      "issues": [
+        {
+          "issue": "PAGE_HEAD_HEIGHT_TOO_SHORT",
+          "expected_min_px": 58,
+          "actual_px": 56
+        },
+        {
+          "issue": "LINE_HEIGHT_BELOW_1_2",
+          "count": 1,
+          "samples": [
+            {
+              "tag": "BUTTON",
+              "class_name": "sidebar-collapse-toggle",
+              "ratio": 1,
+              "text": "‹"
+            }
+          ]
+        },
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "知识图谱",
+      "routeId": "pathway-graph",
+      "aiLauncherTag": null,
+      "bodyTextLength": 454
+    },
+    {
+      "route": "pathway-review",
+      "viewport": "1280x800",
+      "issues": [
+        {
+          "issue": "PAGE_HEAD_HEIGHT_TOO_SHORT",
+          "expected_min_px": 58,
+          "actual_px": 56
+        },
+        {
+          "issue": "LINE_HEIGHT_BELOW_1_2",
+          "count": 1,
+          "samples": [
+            {
+              "tag": "BUTTON",
+              "class_name": "sidebar-collapse-toggle",
+              "ratio": 1,
+              "text": "‹"
+            }
+          ]
+        },
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "审核队列",
+      "routeId": "pathway-review",
+      "aiLauncherTag": null,
+      "bodyTextLength": 372
+    },
+    {
+      "route": "pathway-versions",
+      "viewport": "1280x800",
+      "issues": [
+        {
+          "issue": "PAGE_HEAD_HEIGHT_TOO_SHORT",
+          "expected_min_px": 58,
+          "actual_px": 56
+        },
+        {
+          "issue": "LINE_HEIGHT_BELOW_1_2",
+          "count": 1,
+          "samples": [
+            {
+              "tag": "BUTTON",
+              "class_name": "sidebar-collapse-toggle",
+              "ratio": 1,
+              "text": "‹"
+            }
+          ]
+        },
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "版本历史",
+      "routeId": "pathway-versions",
+      "aiLauncherTag": null,
+      "bodyTextLength": 344
+    },
+    {
+      "route": "specialty-center",
+      "viewport": "1280x800",
+      "issues": [
+        {
+          "issue": "LINE_HEIGHT_BELOW_1_2",
+          "count": 1,
+          "samples": [
+            {
+              "tag": "BUTTON",
+              "class_name": "sidebar-collapse-toggle",
+              "ratio": 1,
+              "text": "‹"
+            }
+          ]
+        },
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "专科支持总览",
+      "routeId": "specialty-center",
+      "aiLauncherTag": null,
+      "bodyTextLength": 706
+    },
+    {
+      "route": "specialty-coverage",
+      "viewport": "1280x800",
+      "issues": [
+        {
+          "issue": "PAGE_HEAD_HEIGHT_TOO_SHORT",
+          "expected_min_px": 58,
+          "actual_px": 56
+        },
+        {
+          "issue": "LINE_HEIGHT_BELOW_1_2",
+          "count": 1,
+          "samples": [
+            {
+              "tag": "BUTTON",
+              "class_name": "sidebar-collapse-toggle",
+              "ratio": 1,
+              "text": "‹"
+            }
+          ]
+        },
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "科室与专科适配工作台",
+      "routeId": "specialty-coverage",
+      "aiLauncherTag": null,
+      "bodyTextLength": 1473
+    },
+    {
+      "route": "workflow",
+      "viewport": "1280x800",
+      "issues": [
+        {
+          "issue": "LINE_HEIGHT_BELOW_1_2",
+          "count": 1,
+          "samples": [
+            {
+              "tag": "BUTTON",
+              "class_name": "sidebar-collapse-toggle",
+              "ratio": 1,
+              "text": "‹"
+            }
+          ]
+        },
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "流程与状态设计器",
+      "routeId": "workflow",
+      "aiLauncherTag": null,
+      "bodyTextLength": 1855
+    },
+    {
+      "route": "knowledge-center",
+      "viewport": "390x844",
+      "issues": [
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "知识中心",
+      "routeId": "knowledge-center",
+      "aiLauncherTag": null,
+      "bodyTextLength": 126
+    },
+    {
+      "route": "pathway-graph",
+      "viewport": "390x844",
+      "issues": [
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "知识图谱",
+      "routeId": "pathway-graph",
+      "aiLauncherTag": null,
+      "bodyTextLength": 232
+    },
+    {
+      "route": "pathway-review",
+      "viewport": "390x844",
+      "issues": [
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "审核队列",
+      "routeId": "pathway-review",
+      "aiLauncherTag": null,
+      "bodyTextLength": 150
+    },
+    {
+      "route": "pathway-versions",
+      "viewport": "390x844",
+      "issues": [
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "版本历史",
+      "routeId": "pathway-versions",
+      "aiLauncherTag": null,
+      "bodyTextLength": 122
+    },
+    {
+      "route": "specialty-center",
+      "viewport": "390x844",
+      "issues": [
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "专科支持总览",
+      "routeId": "specialty-center",
+      "aiLauncherTag": null,
+      "bodyTextLength": 484
+    },
+    {
+      "route": "specialty-coverage",
+      "viewport": "390x844",
+      "issues": [
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "科室与专科适配工作台",
+      "routeId": "specialty-coverage",
+      "aiLauncherTag": null,
+      "bodyTextLength": 1251
+    },
+    {
+      "route": "workflow",
+      "viewport": "390x844",
+      "issues": [
+        {
+          "issue": "GLOBAL_AI_LAUNCHER_MISSING"
+        }
+      ],
+      "h1": "流程与状态设计器",
+      "routeId": "workflow",
+      "aiLauncherTag": null,
+      "bodyTextLength": 1595
+    }
+  ]
+}

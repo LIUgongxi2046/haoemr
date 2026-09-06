@@ -38,7 +38,7 @@ scripts/verify.sh → VERIFY_EXIT=0
 
 - **迁移 V127**：`research_cohort_member`（租户/成员/队列/患者/计算人/计算时间/row_version）；同队列同患者唯一约束、不可变触发器（update/delete 阻断）、队列索引。
 - **契约**：新增 `ResearchCohortMember`、`ResearchCohortMemberComputeRequest` 两 Schema 与 2 端点（list/compute）。
-- **模块**：`org.openemr2026.research` 下 `ResearchCohortMemberService`（成员物化 + 活动队列/活动患者硬门 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
+- **模块**：`org.haoemr.research` 下 `ResearchCohortMemberService`（成员物化 + 活动队列/活动患者硬门 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
 - **测试**：`ResearchCohortMemberApiTest` 5 用例覆盖物化成功、重复拒绝、非活动队列拒绝、非活动患者拒绝、篡改拒绝。
 
 ## 5. 未关闭风险

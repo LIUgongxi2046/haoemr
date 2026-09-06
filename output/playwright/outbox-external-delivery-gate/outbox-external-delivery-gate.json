@@ -1,0 +1,26 @@
+{
+  "run_at": "2026-09-05T15:03:29.647Z",
+  "checks": [
+    {
+      "name": "integration-page-shows-fail-closed-hospital-delivery-state",
+      "status": "PASS",
+      "detail": "集成页以服务端租户状态明确显示：医院通道未配置，事件将安全保持待投递"
+    }
+  ],
+  "findings": [],
+  "evidence": {
+    "outbox_reconciliation": {
+      "external_delivery_configured": false,
+      "scheduled_dispatch_enabled": false,
+      "pending": 4,
+      "in_flight": 0,
+      "published": 10718,
+      "external_delivery_accepted": 1736,
+      "closed_without_external_evidence": 8982,
+      "dead_letter": 0,
+      "oldest_pending_seconds": 128
+    }
+  },
+  "passed": 1,
+  "failed": 0
+}

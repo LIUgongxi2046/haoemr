@@ -83,10 +83,10 @@ begin
   if tg_op = 'UPDATE' and new.status is not distinct from old.status then
     return new;
   end if;
-  transition_reason := nullif(current_setting('openemr2026.encounter_transition_reason', true), '');
-  transition_actor := nullif(current_setting('openemr2026.encounter_transition_actor', true), '')::uuid;
+  transition_reason := nullif(current_setting('haoemr.encounter_transition_reason', true), '');
+  transition_actor := nullif(current_setting('haoemr.encounter_transition_actor', true), '')::uuid;
   transition_time := coalesce(
-    nullif(current_setting('openemr2026.encounter_transition_time', true), '')::timestamptz,
+    nullif(current_setting('haoemr.encounter_transition_time', true), '')::timestamptz,
     case when new.status in ('FINISHED', 'CANCELLED') then new.ended_at else null end,
     new.started_at,
     now());

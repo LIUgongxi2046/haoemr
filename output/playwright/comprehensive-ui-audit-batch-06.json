@@ -1,0 +1,291 @@
+{
+  "run_at": "2026-09-05T04:51:57.357Z",
+  "routes": 15,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 30,
+  "verified_route_viewports": 30,
+  "findings": [],
+  "observations": [
+    {
+      "route": "er-observation",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "急诊抢救留观与去向",
+      "routeId": "er-observation",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 741
+    },
+    {
+      "route": "er-record",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "急诊病历与抢救记录",
+      "routeId": "er-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1074
+    },
+    {
+      "route": "er-triage",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "急诊预检分诊与分区",
+      "routeId": "er-triage",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1414
+    },
+    {
+      "route": "form-designer",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "表单与病历模板设计器",
+      "routeId": "form-designer",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2213
+    },
+    {
+      "route": "imaging-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "检查影像",
+      "routeId": "imaging-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 7437
+    },
+    {
+      "route": "infection-events",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "院感、传染病与不良事件",
+      "routeId": "infection-events",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 776
+    },
+    {
+      "route": "inpatient",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "住院医生工作站",
+      "routeId": "inpatient",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1714
+    },
+    {
+      "route": "inpatient-course",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "住院病程与文书中心",
+      "routeId": "inpatient-course",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1217
+    },
+    {
+      "route": "inpatient-discharge",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "出院病历与病案归档闭环",
+      "routeId": "inpatient-discharge",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 760
+    },
+    {
+      "route": "inpatient-doc-editor",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "住院病历 · 专注编辑",
+      "routeId": "inpatient-doc-editor",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 413
+    },
+    {
+      "route": "inpatient-doc-qc",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "住院病历 · 质控与审签",
+      "routeId": "inpatient-doc-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 414
+    },
+    {
+      "route": "inpatient-doc-versions",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "住院文书版本与查房证据",
+      "routeId": "inpatient-doc-versions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 494
+    },
+    {
+      "route": "inpatient-overview",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "住院患者总览",
+      "routeId": "inpatient-overview",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1078
+    },
+    {
+      "route": "inpatient-pharmacy",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "住院药房",
+      "routeId": "inpatient-pharmacy",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 4054
+    },
+    {
+      "route": "install",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "安装向导与首次健康检查",
+      "routeId": "install",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 931
+    },
+    {
+      "route": "er-observation",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "急诊抢救留观与去向",
+      "routeId": "er-observation",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 508
+    },
+    {
+      "route": "er-record",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "急诊病历与抢救记录",
+      "routeId": "er-record",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 841
+    },
+    {
+      "route": "er-triage",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "急诊预检分诊与分区",
+      "routeId": "er-triage",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1181
+    },
+    {
+      "route": "form-designer",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "表单与病历模板设计器",
+      "routeId": "form-designer",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1980
+    },
+    {
+      "route": "imaging-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "检查影像",
+      "routeId": "imaging-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 7204
+    },
+    {
+      "route": "infection-events",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "院感、传染病与不良事件",
+      "routeId": "infection-events",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 543
+    },
+    {
+      "route": "inpatient",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院医生工作站",
+      "routeId": "inpatient",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1423
+    },
+    {
+      "route": "inpatient-course",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院病程与文书中心",
+      "routeId": "inpatient-course",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 937
+    },
+    {
+      "route": "inpatient-discharge",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "出院病历与病案归档闭环",
+      "routeId": "inpatient-discharge",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 480
+    },
+    {
+      "route": "inpatient-doc-editor",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院病历 · 专注编辑",
+      "routeId": "inpatient-doc-editor",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 180
+    },
+    {
+      "route": "inpatient-doc-qc",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院病历 · 质控与审签",
+      "routeId": "inpatient-doc-qc",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 181
+    },
+    {
+      "route": "inpatient-doc-versions",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院文书版本与查房证据",
+      "routeId": "inpatient-doc-versions",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 214
+    },
+    {
+      "route": "inpatient-overview",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院患者总览",
+      "routeId": "inpatient-overview",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 798
+    },
+    {
+      "route": "inpatient-pharmacy",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "住院药房",
+      "routeId": "inpatient-pharmacy",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3821
+    },
+    {
+      "route": "install",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "安装向导与首次健康检查",
+      "routeId": "install",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 698
+    }
+  ]
+}

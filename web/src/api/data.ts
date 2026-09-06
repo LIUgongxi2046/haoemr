@@ -2,6 +2,7 @@ import {
   clinicalContext,
   issueContextLease,
   request,
+  requestBinary,
   wardHeaders,
 } from '../clinical-api';
 import {
@@ -24,6 +25,8 @@ import {
   researchCohortDeactivateRequestWireSchema,
   researchCohortDefineRequestWireSchema,
   researchCohortMemberComputeRequestWireSchema,
+  researchCohortRecomputeRequestWireSchema,
+  researchCohortRecomputeResultWireSchema,
   researchCohortMemberWireSchema,
   researchCohortSnapshotRequestWireSchema,
   researchCohortSnapshotWireSchema,
@@ -49,6 +52,7 @@ import {
   type ReleaseMetricSnapshotWire,
   type ResearchCohortDefineRequestWire,
   type ResearchCohortMemberComputeRequestWire,
+  type ResearchCohortRecomputeResultWire,
   type ResearchCohortMemberWire,
   type ResearchCohortSnapshotRequestWire,
   type ResearchCohortSnapshotWire,
@@ -250,6 +254,19 @@ export async function computeResearchCohortMember(
   }));
 }
 
+export async function recomputeResearchCohort(
+  lease: ContextLeaseWire,
+  cohortId: string,
+): Promise<ResearchCohortRecomputeResultWire> {
+  return researchCohortRecomputeResultWireSchema.parse(await request(
+    `/research-cohorts/${encodeURIComponent(cohortId)}/recomputations`, {
+      method: 'POST',
+      headers: { ...wardHeaders(lease), 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
+      body: JSON.stringify(researchCohortRecomputeRequestWireSchema.parse({ ...orgFacility(), computed_at: new Date().toISOString() })),
+    },
+  ));
+}
+
 // ── 研究数据集请求（状态机） ─────────────────────────────────
 export async function listResearchDatasetRequests(lease: ContextLeaseWire): Promise<ResearchDatasetRequestWire[]> {
   return researchDatasetRequestWireSchema.array().parse(await request('/research-dataset-requests', { headers: wardHeaders(lease) }));
@@ -310,6 +327,10 @@ export async function destroyResearchDatasetRequest(
       })),
     },
   ));
+}
+
+export async function downloadResearchDatasetExport(lease: ContextLeaseWire, requestId: string) {
+  return requestBinary(`/research-dataset-requests/${encodeURIComponent(requestId)}/exports/file`, wardHeaders(lease));
 }
 
 // ── 开源（发布指标快照 + 下载事件） ──────────────────────────

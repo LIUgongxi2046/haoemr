@@ -6,6 +6,8 @@ import {
   knowledgeFeedbackCreateRequestWireSchema,
   knowledgeImportBatchWireSchema,
   knowledgeImportRequestWireSchema,
+  knowledgeGraphImportBatchWireSchema,
+  knowledgeGraphImportRequestWireSchema,
   knowledgeSearchRequestWireSchema,
   knowledgeSearchResultWireSchema,
   knowledgeSourceRegisterRequestWireSchema,
@@ -20,6 +22,8 @@ import {
   type KnowledgeDocumentWire,
   type KnowledgeFeedbackCreateRequestWire,
   type KnowledgeImportBatchWire,
+  type KnowledgeGraphImportBatchWire,
+  type KnowledgeGraphImportRequestWire,
   type KnowledgeSearchResultWire,
   type KnowledgeSourceRegisterRequestWire,
   type KnowledgeSourceWire,
@@ -61,6 +65,18 @@ export async function importKnowledgeSource(
     method: 'POST',
     headers: { ...wardHeaders(lease), 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
     body: JSON.stringify(knowledgeImportRequestWireSchema.parse({ ...orgFacility(), selection_matrix_version: selectionMatrixVersion })),
+  }));
+}
+
+/** 受控图谱写入：仅接受已登记来源与审核词典概念，服务端生成批次、清单哈希及审计证据。 */
+export async function importKnowledgeGraph(
+  lease: ContextLeaseWire,
+  input: Omit<KnowledgeGraphImportRequestWire, 'organization_id' | 'facility_id'>,
+): Promise<KnowledgeGraphImportBatchWire> {
+  return knowledgeGraphImportBatchWireSchema.parse(await request('/knowledge-graph/imports', {
+    method: 'POST',
+    headers: { ...wardHeaders(lease), 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
+    body: JSON.stringify(knowledgeGraphImportRequestWireSchema.parse({ ...orgFacility(), ...input })),
   }));
 }
 

@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage();
 const orderResponses = [];
@@ -14,8 +14,8 @@ try {
   await page.goto(`${baseUrl}/#/outpatient`, { waitUntil: 'domcontentloaded' });
   const login = page.getByRole('button', { name: '登录系统' });
   if (await login.isVisible().catch(() => false)) {
-    await page.getByLabel('用户名').fill(process.env.OPENEMR2026_DEV_LOGIN_USERNAME || 'linwei');
-    await page.locator('#system-login-password').fill(process.env.OPENEMR2026_DEV_LOGIN_PASSWORD || 'OpenEMR2026-dev!');
+    await page.getByLabel('用户名').fill(process.env.HAOEMR_DEV_LOGIN_USERNAME || 'linwei');
+    await page.locator('#system-login-password').fill(process.env.HAOEMR_DEV_LOGIN_PASSWORD || 'HaoEMR-dev!');
     await login.click();
   }
   await page.waitForFunction(() => document.documentElement.dataset.routeId === 'outpatient');

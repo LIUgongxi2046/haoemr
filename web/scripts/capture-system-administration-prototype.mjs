@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
 const outputDir = resolve(projectDir, 'output/playwright/system-administration/prototype');
-const baseUrl = (process.env.OPENEMR2026_PROTOTYPE_BASE_URL || 'http://127.0.0.1:4180').replace(/\/$/, '');
+const baseUrl = (process.env.HAOEMR_PROTOTYPE_BASE_URL || 'http://127.0.0.1:4180').replace(/\/$/, '');
 const routes = [
   'admin', 'admin-org', 'admin-users', 'admin-roles', 'admin-permissions', 'admin-auth',
   'admin-dictionaries', 'admin-master-data', 'admin-templates', 'admin-parameters', 'admin-jobs', 'admin-audit',

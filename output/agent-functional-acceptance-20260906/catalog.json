@@ -1,0 +1,1728 @@
+[
+  {
+    "main_agent": {
+      "agent_code": "CARDIOVASCULAR_CARE",
+      "release_version": "1.0.0",
+      "display_name": "心血管诊疗主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "生成胸痛、心衰与房颤的专科决策候选",
+      "doctor_facing_summary": "帮你做心血管风险分层、抗凝用药与随访",
+      "category": "SPECIALTY",
+      "display_role": "心血管诊疗协理",
+      "current_action": "正在核对心血管风险与用药",
+      "contribution_label": "汇总风险分层、用药候选与随访计划",
+      "question_examples": [
+        "请对这位胸痛患者做心血管风险分层并给出检查建议。",
+        "请核对这位房颤患者的卒中与出血风险，给出抗凝建议。"
+      ],
+      "output_schema": "CardiovascularCareProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 12,
+      "max_tool_calls": 24,
+      "max_duration_seconds": 90,
+      "usage_count": 5
+    },
+    "child_agents": [
+      {
+        "agent_code": "ANTICOAGULATION_ADVISOR",
+        "release_version": "1.0.0",
+        "display_name": "抗凝用药建议",
+        "agent_level": "CHILD",
+        "parent_agent_code": "CARDIOVASCULAR_CARE",
+        "stage_code": "ANTICOAGULATION",
+        "description": "核对房颤卒中风险与抗凝候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "抗凝用药建议",
+        "current_action": "正在核对卒中与出血风险",
+        "contribution_label": "贡献抗凝方案候选",
+        "question_examples": [
+          "请核对房颤卒中风险并给出抗凝方案草稿。"
+        ],
+        "output_schema": "AnticoagulationAdvisorV1",
+        "autonomy_level": "A1",
+        "max_steps": 8,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "CHEST_PAIN_TRIAGE",
+        "release_version": "1.0.0",
+        "display_name": "胸痛风险分层",
+        "agent_level": "CHILD",
+        "parent_agent_code": "CARDIOVASCULAR_CARE",
+        "stage_code": "CHEST_PAIN",
+        "description": "核对胸痛风险分层与检查候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "胸痛风险分层",
+        "current_action": "正在核对胸痛风险与检查",
+        "contribution_label": "贡献胸痛分层候选",
+        "question_examples": [
+          "请核对胸痛危险因素并给出风险分层与检查建议。"
+        ],
+        "output_schema": "ChestPainTriageV1",
+        "autonomy_level": "A1",
+        "max_steps": 8,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "HEART_FAILURE_FOLLOWUP",
+        "release_version": "1.0.0",
+        "display_name": "心衰随访计划",
+        "agent_level": "CHILD",
+        "parent_agent_code": "CARDIOVASCULAR_CARE",
+        "stage_code": "HEART_FAILURE",
+        "description": "核对心衰指标与随访计划候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "心衰随访计划",
+        "current_action": "正在核对心衰指标与随访",
+        "contribution_label": "贡献心衰随访候选",
+        "question_examples": [
+          "请核对心衰指标并给出随访计划草稿。"
+        ],
+        "output_schema": "HeartFailureFollowupV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      }
+    ]
+  },
+  {
+    "main_agent": {
+      "agent_code": "CARE_COORDINATOR",
+      "release_version": "1.0.1",
+      "display_name": "诊疗协同主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "准备会诊、交接、出院和随访协同候选",
+      "doctor_facing_summary": "帮你准备会诊、转科、出院与随访协同事项",
+      "category": "CLINICAL",
+      "display_role": "诊疗协同总负责",
+      "current_action": "正在核对目标团队和责任范围",
+      "contribution_label": "汇总协同事实、未决问题和计划候选",
+      "question_examples": [
+        "请整理当前患者会诊、转科、出院和随访中尚未完成的协同事项。",
+        "请按责任人和完成时限整理下一步诊疗协同计划。"
+      ],
+      "output_schema": "CareCoordinationProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 14,
+      "max_tool_calls": 24,
+      "max_duration_seconds": 120,
+      "usage_count": 12
+    },
+    "child_agents": [
+      {
+        "agent_code": "CONSULT_PREPARATION_AGENT",
+        "release_version": "1.0.1",
+        "display_name": "会诊准备医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "CARE_COORDINATOR",
+        "stage_code": "CONSULT",
+        "description": "形成会诊摘要、问题和资料缺口",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "会诊资料准备",
+        "current_action": "正在核对会诊目的和目标科室",
+        "contribution_label": "贡献会诊事实包和问题清单",
+        "question_examples": [
+          "请准备会诊摘要，并列出需要目标科室重点回答的问题和缺失资料。"
+        ],
+        "output_schema": "ConsultPreparationV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "DISCHARGE_TRANSITION_AGENT",
+        "release_version": "1.0.1",
+        "display_name": "出院衔接医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "CARE_COORDINATOR",
+        "stage_code": "DISCHARGE",
+        "description": "将已确认出院计划组织为连续照护候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "出院衔接准备",
+        "current_action": "正在核对用药、教育和随访责任",
+        "contribution_label": "贡献连续照护候选",
+        "question_examples": [
+          "请把出院用药、健康教育、复诊和异常升级条件整理成连续照护计划。"
+        ],
+        "output_schema": "DischargeTransitionV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "FOLLOWUP_COORDINATION_AGENT",
+        "release_version": "1.0.1",
+        "display_name": "随访协调医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "CARE_COORDINATOR",
+        "stage_code": "FOLLOWUP",
+        "description": "把已确认随访计划组织为提醒和任务候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "随访协调准备",
+        "current_action": "正在核对计划、升级条件和渠道授权",
+        "contribution_label": "贡献随访协调候选",
+        "question_examples": [
+          "请根据已确认计划生成随访安排，并标出提醒时间和异常升级条件。"
+        ],
+        "output_schema": "FollowupCoordinationV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "MDT_BRIEF_AGENT",
+        "release_version": "1.0.1",
+        "display_name": "MDT 简报医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "CARE_COORDINATOR",
+        "stage_code": "MDT",
+        "description": "形成多学科简报、分歧和待决问题",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "MDT 资料准备",
+        "current_action": "正在整理获授权的多域资料",
+        "contribution_label": "贡献 MDT 简报和待决问题",
+        "question_examples": [
+          "请生成本次多学科讨论简报，突出主要分歧和待决策问题。"
+        ],
+        "output_schema": "MdtBriefV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "TASK_RECONCILIATION_AGENT",
+        "release_version": "1.0.1",
+        "display_name": "任务对账医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "CARE_COORDINATOR",
+        "stage_code": "TASK_RECONCILIATION",
+        "description": "对开放、重复、过期和转派任务提出建议",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "任务对账",
+        "current_action": "正在核对任务来源状态和责任人",
+        "contribution_label": "贡献任务对账建议",
+        "question_examples": [
+          "请核对当前开放、重复、逾期和已转派任务，并给出处理建议。"
+        ],
+        "output_schema": "TaskReconciliationV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "TRANSFER_HANDOFF_AGENT",
+        "release_version": "1.0.1",
+        "display_name": "转科交接医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "CARE_COORDINATOR",
+        "stage_code": "TRANSFER",
+        "description": "形成转床、转科或转院交接候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "转科交接准备",
+        "current_action": "正在核对未完成医嘱和接收状态",
+        "contribution_label": "贡献交接候选和未完成事项",
+        "question_examples": [
+          "请整理转科交接要点，包括当前病情、未完成医嘱和接收注意事项。"
+        ],
+        "output_schema": "TransferHandoffV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      }
+    ]
+  },
+  {
+    "main_agent": {
+      "agent_code": "DOCUMENT_DRAFTER",
+      "release_version": "1.0.1",
+      "display_name": "文书起草主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "为明确文书任务生成可审阅候选",
+      "doctor_facing_summary": "帮你起草病历、病程、出院小结等文书草稿",
+      "category": "CLINICAL",
+      "display_role": "文书候选总负责",
+      "current_action": "正在校验文书任务、模板与作者身份",
+      "contribution_label": "汇总逐段草稿、来源、缺口与差异",
+      "question_examples": [
+        "请根据当前已确认信息起草病历草稿，并把缺失内容单独列出。",
+        "请按医院病历模板整理这次诊疗记录，未确认的信息不要补写。"
+      ],
+      "output_schema": "ClinicalDocumentDraftProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 14,
+      "max_tool_calls": 24,
+      "max_duration_seconds": 120,
+      "usage_count": 18
+    },
+    "child_agents": [
+      {
+        "agent_code": "ADMISSION_NOTE_DRAFTER",
+        "release_version": "1.0.1",
+        "display_name": "入院记录起草医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "DOCUMENT_DRAFTER",
+        "stage_code": "ADMISSION",
+        "description": "草拟入院记录候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "入院文书起草",
+        "current_action": "正在核对入院史和查体来源",
+        "contribution_label": "贡献入院记录草稿和必填缺口",
+        "question_examples": [
+          "请根据现有病史、查体和辅助检查起草入院记录。"
+        ],
+        "output_schema": "AdmissionNoteDraftV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "CONSULT_NOTE_DRAFTER",
+        "release_version": "1.0.1",
+        "display_name": "会诊文书起草医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "DOCUMENT_DRAFTER",
+        "stage_code": "CONSULT",
+        "description": "草拟会诊申请或基于实际输入草拟意见",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "会诊文书起草",
+        "current_action": "正在校验申请方和会诊方角色",
+        "contribution_label": "贡献会诊文书草稿和角色提示",
+        "question_examples": [
+          "请整理会诊目的、患者摘要和需要会诊科室回答的具体问题。"
+        ],
+        "output_schema": "ConsultNoteDraftV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 10,
+        "max_duration_seconds": 45,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "DISCHARGE_NOTE_DRAFTER",
+        "release_version": "1.0.1",
+        "display_name": "出院文书起草医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "DOCUMENT_DRAFTER",
+        "stage_code": "DISCHARGE",
+        "description": "草拟出院小结或终末文书",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "出院文书起草",
+        "current_action": "正在核对住院经过和未决事项",
+        "contribution_label": "贡献出院文书草稿和未决结果",
+        "question_examples": [
+          "请起草出院小结，并单列出院用药、复诊安排和未回结果。"
+        ],
+        "output_schema": "DischargeNoteDraftV1",
+        "autonomy_level": "A1",
+        "max_steps": 8,
+        "max_tool_calls": 16,
+        "max_duration_seconds": 60,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "EMERGENCY_NOTE_DRAFTER",
+        "release_version": "1.0.1",
+        "display_name": "急诊记录起草医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "DOCUMENT_DRAFTER",
+        "stage_code": "EMERGENCY",
+        "description": "草拟急诊记录和时间线缺口",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "急诊文书起草",
+        "current_action": "正在核对急诊时间关键事件",
+        "contribution_label": "贡献急诊记录草稿和时间线缺口",
+        "question_examples": [
+          "请按时间线起草急诊记录，并提示关键时间点或处置记录缺口。"
+        ],
+        "output_schema": "EmergencyNoteDraftV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "FIRST_COURSE_DRAFTER",
+        "release_version": "1.0.1",
+        "display_name": "首次病程起草医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "DOCUMENT_DRAFTER",
+        "stage_code": "FIRST_COURSE",
+        "description": "草拟首次病程候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "首程文书起草",
+        "current_action": "正在区分事实、依据、鉴别和计划",
+        "contribution_label": "贡献首次病程分层草稿",
+        "question_examples": [
+          "请起草首次病程记录，区分诊断依据、鉴别诊断和诊疗计划。"
+        ],
+        "output_schema": "FirstCourseDraftV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "NURSING_HANDOFF_DRAFTER",
+        "release_version": "1.0.1",
+        "display_name": "护理交班起草医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "DOCUMENT_DRAFTER",
+        "stage_code": "NURSING_HANDOFF",
+        "description": "草拟班次或转单元护理交班",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "护理交班起草",
+        "current_action": "正在核对班次、MAR 和未完成任务",
+        "contribution_label": "贡献护理交班草稿和未完成项",
+        "question_examples": [
+          "请整理本班病情变化、用药执行和未完成任务，起草护理交班内容。"
+        ],
+        "output_schema": "NursingHandoffDraftV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "OUTPATIENT_NOTE_DRAFTER",
+        "release_version": "1.0.1",
+        "display_name": "门诊病历起草医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "DOCUMENT_DRAFTER",
+        "stage_code": "OUTPATIENT",
+        "description": "草拟门诊病历候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "门诊文书起草",
+        "current_action": "正在按模板组织已确认门诊事实",
+        "contribution_label": "贡献门诊病历分节草稿",
+        "question_examples": [
+          "请根据本次门诊已确认信息起草门诊病历，缺失项请标注待补充。"
+        ],
+        "output_schema": "OutpatientNoteDraftV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 10,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "PERIOPERATIVE_NOTE_DRAFTER",
+        "release_version": "1.0.1",
+        "display_name": "围术期文书起草医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "DOCUMENT_DRAFTER",
+        "stage_code": "PERIOPERATIVE",
+        "description": "草拟指定围术期文书",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "围术期文书起草",
+        "current_action": "正在核对手术、器械和人员来源",
+        "contribution_label": "贡献围术期草稿和高风险缺口",
+        "question_examples": [
+          "请根据已确认的手术信息起草围术期文书，并列出高风险缺项。"
+        ],
+        "output_schema": "PerioperativeNoteDraftV1",
+        "autonomy_level": "A1",
+        "max_steps": 8,
+        "max_tool_calls": 16,
+        "max_duration_seconds": 60,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "PROGRESS_NOTE_DRAFTER",
+        "release_version": "1.0.1",
+        "display_name": "病程记录起草医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "DOCUMENT_DRAFTER",
+        "stage_code": "PROGRESS",
+        "description": "草拟日常或阶段病程",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "病程文书起草",
+        "current_action": "正在核对时窗内计划与执行",
+        "contribution_label": "贡献病程草稿和状态差异",
+        "question_examples": [
+          "请根据今天的病情变化、检查结果和治疗调整起草病程记录。"
+        ],
+        "output_schema": "ProgressNoteDraftV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "WARD_ROUND_NOTE_DRAFTER",
+        "release_version": "1.0.1",
+        "display_name": "查房记录起草医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "DOCUMENT_DRAFTER",
+        "stage_code": "WARD_ROUND",
+        "description": "草拟主治或主任查房记录",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "查房文书起草",
+        "current_action": "正在核对查房者实际输入和来源",
+        "contribution_label": "贡献查房记录草稿和未确认项",
+        "question_examples": [
+          "请根据本次查房实际记录起草查房记录，并标出尚未确认的内容。"
+        ],
+        "output_schema": "WardRoundNoteDraftV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      }
+    ]
+  },
+  {
+    "main_agent": {
+      "agent_code": "ENCOUNTER_SUMMARIZER",
+      "release_version": "1.0.1",
+      "display_name": "就诊摘要主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "按诊疗阶段组织带来源的事实摘要",
+      "doctor_facing_summary": "帮你按诊疗阶段梳理就诊事实、变化与待确认问题",
+      "category": "CLINICAL",
+      "display_role": "就诊事实总协调",
+      "current_action": "正在选择当前诊疗环节的摘要医助",
+      "contribution_label": "汇总阶段事实、变化、缺口与来源",
+      "question_examples": [
+        "请按时间顺序总结这次就诊的关键事实、变化和仍需确认的问题。",
+        "请帮我整理本次就诊与既往记录相比有哪些新变化，并标注信息来源。"
+      ],
+      "output_schema": "EncounterSummaryProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 12,
+      "max_tool_calls": 24,
+      "max_duration_seconds": 90,
+      "usage_count": 12
+    },
+    "child_agents": [
+      {
+        "agent_code": "ACTIVE_ENCOUNTER_SUMMARIZER",
+        "release_version": "1.0.1",
+        "display_name": "接诊摘要医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "ENCOUNTER_SUMMARIZER",
+        "stage_code": "ACTIVE_ENCOUNTER",
+        "description": "汇总当次录入、变化和待确认问题",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "当次就诊整理",
+        "current_action": "正在整理本次接诊新变化",
+        "contribution_label": "贡献当次事实、变化和缺口",
+        "question_examples": [
+          "请总结本次接诊新增的症状、检查结果和待确认问题。"
+        ],
+        "output_schema": "ActiveEncounterSummaryV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 35,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "DISCHARGE_READINESS_SUMMARIZER",
+        "release_version": "1.0.1",
+        "display_name": "出院准备摘要医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "ENCOUNTER_SUMMARIZER",
+        "stage_code": "DISCHARGE",
+        "description": "列出出院准备事实和未闭环责任",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "出院准备核对",
+        "current_action": "正在核对未决结果、任务和用药",
+        "contribution_label": "贡献准备状态和未闭环责任",
+        "question_examples": [
+          "请评估患者目前是否具备出院准备条件，并列出仍需完成的事项。"
+        ],
+        "output_schema": "DischargeReadinessSummaryV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 16,
+        "max_duration_seconds": 45,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "INPATIENT_DAILY_SUMMARIZER",
+        "release_version": "1.0.1",
+        "display_name": "住院每日摘要医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "ENCOUNTER_SUMMARIZER",
+        "stage_code": "INPATIENT_DAILY",
+        "description": "按时窗汇总住院事件、结果和任务",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "住院每日事实整理",
+        "current_action": "正在核对指定时窗内的住院事实",
+        "contribution_label": "贡献每日事实、变化和未闭环项",
+        "question_examples": [
+          "请汇总患者过去24小时的病情变化、检查结果、治疗调整和未完成任务。"
+        ],
+        "output_schema": "InpatientDailySummaryV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 16,
+        "max_duration_seconds": 45,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "PERIOPERATIVE_CONTEXT_SUMMARIZER",
+        "release_version": "1.0.1",
+        "display_name": "围术期上下文医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "ENCOUNTER_SUMMARIZER",
+        "stage_code": "PERIOPERATIVE",
+        "description": "形成围术期事实包和缺项",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "围术期事实整理",
+        "current_action": "正在核对部位、侧别和核查来源",
+        "contribution_label": "贡献围术期事实和安全缺口",
+        "question_examples": [
+          "请整理围术期关键事实，并提示手术部位、侧别或术前核查中的缺项。"
+        ],
+        "output_schema": "PerioperativeContextV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 45,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "PRE_VISIT_SUMMARIZER",
+        "release_version": "1.0.1",
+        "display_name": "诊前摘要医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "ENCOUNTER_SUMMARIZER",
+        "stage_code": "PRE_VISIT",
+        "description": "汇总既往问题、过敏、用药、结果和开放任务",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "诊前资料整理",
+        "current_action": "正在核对既往资料与开放任务",
+        "contribution_label": "贡献诊前事实包和待确认问题",
+        "question_examples": [
+          "患者就诊前有哪些重要病史、过敏、用药和未完成事项需要先关注？"
+        ],
+        "output_schema": "PreVisitSummaryV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 35,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "TRIAGE_CONTEXT_SUMMARIZER",
+        "release_version": "1.0.1",
+        "display_name": "分诊上下文医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "ENCOUNTER_SUMMARIZER",
+        "stage_code": "TRIAGE",
+        "description": "汇总主诉、生命体征和分诊事实",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "分诊事实整理",
+        "current_action": "正在核对分诊事实和规则状态",
+        "contribution_label": "贡献分诊上下文和冲突提示",
+        "question_examples": [
+          "请根据主诉、生命体征和分诊记录整理需要优先关注的情况。"
+        ],
+        "output_schema": "TriageContextV1",
+        "autonomy_level": "A1",
+        "max_steps": 5,
+        "max_tool_calls": 10,
+        "max_duration_seconds": 25,
+        "usage_count": 0
+      }
+    ]
+  },
+  {
+    "main_agent": {
+      "agent_code": "GLYCEMIC_MANAGEMENT",
+      "release_version": "1.0.0",
+      "display_name": "血糖治理主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "生成住院血糖与胰岛素剂量调整候选",
+      "doctor_facing_summary": "帮你管理住院血糖、调整胰岛素与防低血糖",
+      "category": "SPECIALTY",
+      "display_role": "血糖治理总负责",
+      "current_action": "正在核对血糖、用药与低血糖风险",
+      "contribution_label": "汇总血糖趋势、剂量候选与低血糖风险",
+      "question_examples": [
+        "请核对当前患者的住院血糖趋势、降糖用药与低血糖风险。",
+        "请给出下一步胰岛素剂量调整建议，并标出低血糖诱因。"
+      ],
+      "output_schema": "GlycemicManagementProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 12,
+      "max_tool_calls": 24,
+      "max_duration_seconds": 90,
+      "usage_count": 4
+    },
+    "child_agents": [
+      {
+        "agent_code": "ADMISSION_GLUCOSE_ASSESSOR",
+        "release_version": "1.0.0",
+        "display_name": "入院血糖评估",
+        "agent_level": "CHILD",
+        "parent_agent_code": "GLYCEMIC_MANAGEMENT",
+        "stage_code": "ADMISSION_GLUCOSE",
+        "description": "核对入院血糖、糖化与降糖用药",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "入院血糖评估",
+        "current_action": "正在核对入院血糖与用药",
+        "contribution_label": "贡献入院血糖基线候选",
+        "question_examples": [
+          "请核对入院血糖、糖化血红蛋白和现有降糖用药。"
+        ],
+        "output_schema": "AdmissionGlucoseAssessmentV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "DISCHARGE_GLUCOSE_PLAN",
+        "release_version": "1.0.0",
+        "display_name": "出院血糖随访",
+        "agent_level": "CHILD",
+        "parent_agent_code": "GLYCEMIC_MANAGEMENT",
+        "stage_code": "DISCHARGE_GLUCOSE",
+        "description": "生成出院降糖方案与随访提醒候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "出院血糖随访",
+        "current_action": "正在核对出院方案与随访",
+        "contribution_label": "贡献出院降糖方案候选",
+        "question_examples": [
+          "请生成出院降糖方案与随访提醒草稿。"
+        ],
+        "output_schema": "DischargeGlucosePlanV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 10,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "HYPOGLYCEMIA_GUARD",
+        "release_version": "1.0.0",
+        "display_name": "低血糖预警",
+        "agent_level": "CHILD",
+        "parent_agent_code": "GLYCEMIC_MANAGEMENT",
+        "stage_code": "HYPOGLYCEMIA",
+        "description": "核对低血糖风险、诱因与处置候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "低血糖预警",
+        "current_action": "正在核对低血糖风险",
+        "contribution_label": "贡献低血糖风险与处置候选",
+        "question_examples": [
+          "请找出低血糖风险诱因并给出处置草稿。"
+        ],
+        "output_schema": "HypoglycemiaGuardV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "INSULIN_DOSE_ADVISOR",
+        "release_version": "1.0.0",
+        "display_name": "胰岛素剂量建议",
+        "agent_level": "CHILD",
+        "parent_agent_code": "GLYCEMIC_MANAGEMENT",
+        "stage_code": "INSULIN_DOSING",
+        "description": "生成胰岛素剂量调整候选与低血糖风险",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "胰岛素剂量建议",
+        "current_action": "正在核对剂量与低血糖风险",
+        "contribution_label": "贡献剂量调整候选",
+        "question_examples": [
+          "请根据近期血糖趋势给出胰岛素剂量调整草稿。"
+        ],
+        "output_schema": "InsulinDoseAdvisorV1",
+        "autonomy_level": "A1",
+        "max_steps": 8,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      }
+    ]
+  },
+  {
+    "main_agent": {
+      "agent_code": "ICU_RISK_ASSESSMENT",
+      "release_version": "1.0.0",
+      "display_name": "重症风险研判主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "生成脓毒症与病情恶化风险分层候选",
+      "doctor_facing_summary": "帮你研判脓毒症与恶化风险并整理交班",
+      "category": "SPECIALTY",
+      "display_role": "重症风险研判",
+      "current_action": "正在核对监护、检验与恶化风险",
+      "contribution_label": "汇总风险分层、处置清单与交班摘要",
+      "question_examples": [
+        "请评估这位危重患者的脓毒症与病情恶化风险。",
+        "请整理这位患者的重症交班摘要草稿。"
+      ],
+      "output_schema": "IcuRiskAssessmentProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 12,
+      "max_tool_calls": 24,
+      "max_duration_seconds": 90,
+      "usage_count": 3
+    },
+    "child_agents": [
+      {
+        "agent_code": "DETERIORATION_MONITOR",
+        "release_version": "1.0.0",
+        "display_name": "病情恶化预警",
+        "agent_level": "CHILD",
+        "parent_agent_code": "ICU_RISK_ASSESSMENT",
+        "stage_code": "DETERIORATION",
+        "description": "核对生命体征与恶化趋势",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "病情恶化预警",
+        "current_action": "正在核对生命体征趋势",
+        "contribution_label": "贡献恶化风险候选",
+        "question_examples": [
+          "请核对生命体征趋势并评估恶化风险。"
+        ],
+        "output_schema": "DeteriorationMonitorV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "ICU_HANDOFF_SUMMARIZER",
+        "release_version": "1.0.0",
+        "display_name": "重症交班摘要",
+        "agent_level": "CHILD",
+        "parent_agent_code": "ICU_RISK_ASSESSMENT",
+        "stage_code": "ICU_HANDOFF",
+        "description": "生成重症交班摘要草稿",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "重症交班摘要",
+        "current_action": "正在核对交班要素",
+        "contribution_label": "贡献交班摘要候选",
+        "question_examples": [
+          "请生成重症交班摘要草稿。"
+        ],
+        "output_schema": "IcuHandoffSummarizerV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "SEPSIS_RISK_ASSESSOR",
+        "release_version": "1.0.0",
+        "display_name": "脓毒症风险分层",
+        "agent_level": "CHILD",
+        "parent_agent_code": "ICU_RISK_ASSESSMENT",
+        "stage_code": "SEPSIS_RISK",
+        "description": "核对脓毒症筛查与风险分层候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "脓毒症风险分层",
+        "current_action": "正在核对脓毒症筛查与分层",
+        "contribution_label": "贡献脓毒症风险候选",
+        "question_examples": [
+          "请核对脓毒症筛查指标并给出风险分层。"
+        ],
+        "output_schema": "SepsisRiskAssessorV1",
+        "autonomy_level": "A1",
+        "max_steps": 8,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      }
+    ]
+  },
+  {
+    "main_agent": {
+      "agent_code": "INFECTION_SURVEILLANCE",
+      "release_version": "1.0.0",
+      "display_name": "院感监测主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "组织感染病例、暴发预警和法定传染病直报候选",
+      "doctor_facing_summary": "帮你发现院感线索、聚集暴发与直报风险",
+      "category": "GOVERNANCE",
+      "display_role": "院感监测总负责",
+      "current_action": "正在核对感染线索与直报状态",
+      "contribution_label": "汇总感染线索、时限风险与直报候选",
+      "question_examples": [
+        "请整理当前病区的院感线索、隔离措施和待核实病例，按风险排序。",
+        "请核对近期感染病例之间的时间、病区和操作关联，判断是否存在聚集倾向。"
+      ],
+      "output_schema": "InfectionSurveillanceProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 12,
+      "max_tool_calls": 24,
+      "max_duration_seconds": 90,
+      "usage_count": 3
+    },
+    "child_agents": [
+      {
+        "agent_code": "INFECTION_CASE_REVIEWER",
+        "release_version": "1.0.0",
+        "display_name": "感染病例线索复核",
+        "agent_level": "CHILD",
+        "parent_agent_code": "INFECTION_SURVEILLANCE",
+        "stage_code": "INFECTION_CASE",
+        "description": "核对感染病例、发病与报告时限",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "感染病例复核",
+        "current_action": "正在核对病例与时限",
+        "contribution_label": "贡献感染病例线索与时限风险",
+        "question_examples": [
+          "请核对这例院内感染病例的感染时间、部位和侵入性操作线索。"
+        ],
+        "output_schema": "InfectionCaseReviewV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "NOTIFIABLE_REPORT_ASSISTANT",
+        "release_version": "1.0.0",
+        "display_name": "法定传染病直报协助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "INFECTION_SURVEILLANCE",
+        "stage_code": "NOTIFIABLE",
+        "description": "整理法定传染病报告卡与回执候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "直报协助",
+        "current_action": "正在整理报告要素",
+        "contribution_label": "贡献报告卡与回执核对候选",
+        "question_examples": [
+          "请核对这例需上报的传染病是否符合直报时限和要素要求。"
+        ],
+        "output_schema": "NotifiableReportAssistantV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "OUTBREAK_ALERT_ASSESSOR",
+        "release_version": "1.0.0",
+        "display_name": "暴发预警评估",
+        "agent_level": "CHILD",
+        "parent_agent_code": "INFECTION_SURVEILLANCE",
+        "stage_code": "OUTBREAK",
+        "description": "评估疑似暴发聚集与上报必要",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "暴发预警评估",
+        "current_action": "正在评估聚集信号",
+        "contribution_label": "贡献暴发预警与上报建议",
+        "question_examples": [
+          "请评估近期病例是否构成聚集或暴发，并给出预警级别建议。"
+        ],
+        "output_schema": "OutbreakAlertAssessmentV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      }
+    ]
+  },
+  {
+    "main_agent": {
+      "agent_code": "INSURANCE_COMPLIANCE",
+      "release_version": "1.0.0",
+      "display_name": "医保合规主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "核对 DRG/DIP 编码与费用合理性候选",
+      "doctor_facing_summary": "帮你核对 DRG/DIP 编码与费用合理性",
+      "category": "GOVERNANCE",
+      "display_role": "医保合规总负责",
+      "current_action": "正在核对编码与费用合理性",
+      "contribution_label": "汇总编码风险与费用差异候选",
+      "question_examples": [
+        "请核对当前病历的 DRG/DIP 主要诊断与编码依据是否一致。",
+        "请检查本次诊疗的费用项目和医嘱是否符合医保报销与自费告知要求。"
+      ],
+      "output_schema": "InsuranceComplianceProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 12,
+      "max_tool_calls": 20,
+      "max_duration_seconds": 90,
+      "usage_count": 2
+    },
+    "child_agents": [
+      {
+        "agent_code": "CHARGE_RATIONALITY_REVIEWER",
+        "release_version": "1.0.0",
+        "display_name": "费用合理性核查",
+        "agent_level": "CHILD",
+        "parent_agent_code": "INSURANCE_COMPLIANCE",
+        "stage_code": "CHARGE",
+        "description": "核对费用项目、数量与医嘱依据",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "费用核查",
+        "current_action": "正在核对费用与医嘱",
+        "contribution_label": "贡献费用差异与复核候选",
+        "question_examples": [
+          "请比对医嘱与收费项目，找出重复计费或与诊疗不符的条目。"
+        ],
+        "output_schema": "ChargeRationalityReviewV1",
+        "autonomy_level": "A1",
+        "max_steps": 8,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "DRG_CODING_REVIEWER",
+        "release_version": "1.0.0",
+        "display_name": "DRG/DIP 编码核对",
+        "agent_level": "CHILD",
+        "parent_agent_code": "INSURANCE_COMPLIANCE",
+        "stage_code": "DRG_CODING",
+        "description": "核对主要诊断、操作与分组一致性",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "编码核对",
+        "current_action": "正在核对诊断与分组",
+        "contribution_label": "贡献编码风险与修正候选",
+        "question_examples": [
+          "请检查主要诊断与手术操作编码是否匹配，并标出依据不足处。"
+        ],
+        "output_schema": "DrgCodingReviewV1",
+        "autonomy_level": "A1",
+        "max_steps": 8,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      }
+    ]
+  },
+  {
+    "main_agent": {
+      "agent_code": "MEDICAL_TECH_SCHEDULING",
+      "release_version": "1.0.0",
+      "display_name": "医技预约调度主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "规划检查号源与设备利用候选",
+      "doctor_facing_summary": "帮你规划检查号源与设备利用",
+      "category": "GOVERNANCE",
+      "display_role": "医技调度总负责",
+      "current_action": "正在核对号源与设备占用",
+      "contribution_label": "汇总号源规划与设备利用候选",
+      "question_examples": [
+        "请根据待检查项目和设备占用情况规划可用的检查号源。",
+        "请找出需要优先安排或存在设备冲突的检查，并给出排程建议。"
+      ],
+      "output_schema": "MedicalTechSchedulingProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 10,
+      "max_tool_calls": 20,
+      "max_duration_seconds": 80,
+      "usage_count": 2
+    },
+    "child_agents": [
+      {
+        "agent_code": "EQUIPMENT_UTILIZATION_REVIEWER",
+        "release_version": "1.0.0",
+        "display_name": "设备利用分析",
+        "agent_level": "CHILD",
+        "parent_agent_code": "MEDICAL_TECH_SCHEDULING",
+        "stage_code": "EQUIPMENT",
+        "description": "分析设备占用与空闲时段候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "设备利用分析",
+        "current_action": "正在核对设备占用",
+        "contribution_label": "贡献设备利用与排程候选",
+        "question_examples": [
+          "请分析设备占用与维护窗口，找出可用时段和冲突风险。"
+        ],
+        "output_schema": "EquipmentUtilizationReviewV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "EXAM_SLOT_PLANNER",
+        "release_version": "1.0.0",
+        "display_name": "检查号源规划",
+        "agent_level": "CHILD",
+        "parent_agent_code": "MEDICAL_TECH_SCHEDULING",
+        "stage_code": "EXAM_SLOT",
+        "description": "规划检查号源与优先级候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "号源规划",
+        "current_action": "正在核对号源与优先级",
+        "contribution_label": "贡献号源规划与冲突提示",
+        "question_examples": [
+          "请根据申请项目、号源和设备状态给出可行的检查预约时段。"
+        ],
+        "output_schema": "ExamSlotPlanV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      }
+    ]
+  },
+  {
+    "main_agent": {
+      "agent_code": "PATIENT_EDUCATION",
+      "release_version": "1.0.0",
+      "display_name": "患者宣教主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "生成出院带药说明与复诊提醒候选",
+      "doctor_facing_summary": "帮你生成带药说明与复诊提醒",
+      "category": "CARE",
+      "display_role": "患者宣教总负责",
+      "current_action": "正在核对用药与复诊安排",
+      "contribution_label": "汇总用药说明与随访提醒候选",
+      "question_examples": [
+        "请为出院患者生成用药说明、复诊时间和异常情况的就医提醒。",
+        "请把本次诊疗需要患者配合的事项整理成通俗易懂的宣教要点。"
+      ],
+      "output_schema": "PatientEducationProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 8,
+      "max_tool_calls": 14,
+      "max_duration_seconds": 60,
+      "usage_count": 4
+    },
+    "child_agents": [
+      {
+        "agent_code": "FOLLOWUP_REMINDER_ASSISTANT",
+        "release_version": "1.0.0",
+        "display_name": "复诊提醒",
+        "agent_level": "CHILD",
+        "parent_agent_code": "PATIENT_EDUCATION",
+        "stage_code": "FOLLOWUP_REMINDER",
+        "description": "生成复诊与随访提醒候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "复诊提醒",
+        "current_action": "正在核对复诊安排",
+        "contribution_label": "贡献复诊提醒与随访要点",
+        "question_examples": [
+          "请根据复诊与随访计划生成提醒内容，并标出异常升级条件。"
+        ],
+        "output_schema": "FollowupReminderAssistantV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 10,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "DISCHARGE_MEDICATION_GUIDE",
+        "release_version": "1.0.0",
+        "display_name": "出院带药说明",
+        "agent_level": "CHILD",
+        "parent_agent_code": "PATIENT_EDUCATION",
+        "stage_code": "MEDICATION_GUIDE",
+        "description": "生成出院带药与用法说明候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "带药说明",
+        "current_action": "正在核对带药与用法",
+        "contribution_label": "贡献带药说明与注意事项",
+        "question_examples": [
+          "请生成出院带药的用法用量、注意事项和漏服处理说明。"
+        ],
+        "output_schema": "DischargeMedicationGuideV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 10,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      }
+    ]
+  },
+  {
+    "main_agent": {
+      "agent_code": "RECORD_QC",
+      "release_version": "1.0.1",
+      "display_name": "病历质控主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "在硬规则之后提供语义质控第二视角",
+      "doctor_facing_summary": "帮你复核病历完整性、前后矛盾与质量缺项",
+      "category": "CLINICAL",
+      "display_role": "语义质控总负责",
+      "current_action": "正在识别病历生命周期阶段",
+      "contribution_label": "汇总硬规则与 AI 语义发现",
+      "question_examples": [
+        "请检查当前病历是否存在前后矛盾、关键缺项或时间顺序问题。",
+        "这份病历签署前还需要补充或核对哪些内容？"
+      ],
+      "output_schema": "RecordQcProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 10,
+      "max_tool_calls": 20,
+      "max_duration_seconds": 90,
+      "usage_count": 5
+    },
+    "child_agents": [
+      {
+        "agent_code": "ACTIVE_RECORD_QC_REVIEWER",
+        "release_version": "1.0.1",
+        "display_name": "运行病历质控医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "RECORD_QC",
+        "stage_code": "ACTIVE_RECORD",
+        "description": "抽查逾期、复制和诊疗一致性",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "运行病历质控",
+        "current_action": "正在核对在院病历和责任任务",
+        "contribution_label": "贡献运行病历缺陷候选",
+        "question_examples": [
+          "请检查当前在院病历中的逾期记录、重复内容和未完成责任任务。"
+        ],
+        "output_schema": "ActiveRecordQcFindingsV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 45,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "CORRECTION_CONSISTENCY_REVIEWER",
+        "release_version": "1.0.1",
+        "display_name": "更正一致性医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "RECORD_QC",
+        "stage_code": "CORRECTION",
+        "description": "分析更正前后版本和引用影响",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "更正影响分析",
+        "current_action": "正在构建更正版本影响图",
+        "contribution_label": "贡献受影响对象和复核候选",
+        "question_examples": [
+          "这次病历更正影响了哪些文书、引用结果或后续任务？"
+        ],
+        "output_schema": "CorrectionImpactV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 45,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "PRE_SIGN_QC_REVIEWER",
+        "release_version": "1.0.1",
+        "display_name": "签署前质控医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "RECORD_QC",
+        "stage_code": "PRE_SIGN",
+        "description": "检查签署前完整性、一致性和时序",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "签署前语义质控",
+        "current_action": "正在核对不可变版本和硬规则",
+        "contribution_label": "贡献签署前语义发现",
+        "question_examples": [
+          "这份病历签署前有哪些完整性、时序或诊疗一致性问题需要处理？"
+        ],
+        "output_schema": "PreSignQcFindingsV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 10,
+        "max_duration_seconds": 35,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "TERMINAL_RECORD_QC_REVIEWER",
+        "release_version": "1.0.1",
+        "display_name": "终末质控医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "RECORD_QC",
+        "stage_code": "TERMINAL_RECORD",
+        "description": "检查归档前文书、编码和闭环",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "终末病历质控",
+        "current_action": "正在核对归档硬门和整改闭环",
+        "contribution_label": "贡献终末质控缺口清单",
+        "question_examples": [
+          "请列出病历归档前仍需整改的文书、编码和闭环问题。"
+        ],
+        "output_schema": "TerminalRecordQcFindingsV1",
+        "autonomy_level": "A1",
+        "max_steps": 8,
+        "max_tool_calls": 16,
+        "max_duration_seconds": 55,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "WRITING_QC_REVIEWER",
+        "release_version": "1.0.1",
+        "display_name": "书写中质控医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "RECORD_QC",
+        "stage_code": "WRITING",
+        "description": "提供低打扰结构和一致性提示",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "书写中语义质控",
+        "current_action": "正在检查结构、来源和一致性",
+        "contribution_label": "贡献非阻断书写提示",
+        "question_examples": [
+          "请在不打断书写的情况下提示当前病历的结构缺项和前后不一致。"
+        ],
+        "output_schema": "WritingQcFindingsV1",
+        "autonomy_level": "A1",
+        "max_steps": 5,
+        "max_tool_calls": 8,
+        "max_duration_seconds": 25,
+        "usage_count": 0
+      }
+    ]
+  },
+  {
+    "main_agent": {
+      "agent_code": "RESEARCH_FOLLOWUP",
+      "release_version": "1.0.0",
+      "display_name": "科研随访主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "协助队列入组与结局采集候选",
+      "doctor_facing_summary": "帮你核对队列入组与结局采集",
+      "category": "CARE",
+      "display_role": "科研随访总负责",
+      "current_action": "正在核对入组条件与结局口径",
+      "contribution_label": "汇总入组与结局采集候选",
+      "question_examples": [
+        "请核对当前患者是否符合研究队列的入组与排除条件。",
+        "请整理该随访节点的结局指标采集口径和仍需补齐的数据。"
+      ],
+      "output_schema": "ResearchFollowupProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 10,
+      "max_tool_calls": 18,
+      "max_duration_seconds": 80,
+      "usage_count": 2
+    },
+    "child_agents": [
+      {
+        "agent_code": "COHORT_ENROLLMENT_ASSISTANT",
+        "release_version": "1.0.0",
+        "display_name": "队列入组协助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "RESEARCH_FOLLOWUP",
+        "stage_code": "COHORT",
+        "description": "核对入组标准与排除条件",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "入组协助",
+        "current_action": "正在核对入组条件",
+        "contribution_label": "贡献入组候选与排除原因",
+        "question_examples": [
+          "请对照入排标准核查该患者是否可入组，并列出待确认条件。"
+        ],
+        "output_schema": "CohortEnrollmentAssistantV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "OUTCOME_COLLECTION_ASSISTANT",
+        "release_version": "1.0.0",
+        "display_name": "结局采集协助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "RESEARCH_FOLLOWUP",
+        "stage_code": "OUTCOME",
+        "description": "核对结局口径与采集时点",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "结局采集协助",
+        "current_action": "正在核对结局口径",
+        "contribution_label": "贡献结局采集与缺口候选",
+        "question_examples": [
+          "请按研究方案口径整理该随访节点的结局与不良事件信息。"
+        ],
+        "output_schema": "OutcomeCollectionAssistantV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      }
+    ]
+  },
+  {
+    "main_agent": {
+      "agent_code": "RESULT_FOLLOWUP_COORDINATOR",
+      "release_version": "1.0.1",
+      "display_name": "结果闭环主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "组织结果趋势、危急值上下文和闭环候选",
+      "doctor_facing_summary": "帮你跟踪检查检验结果、危急值与复查闭环",
+      "category": "CLINICAL",
+      "display_role": "结果闭环总负责",
+      "current_action": "正在核对结果和责任状态",
+      "contribution_label": "汇总结果状态、风险来源和任务候选",
+      "question_examples": [
+        "请汇总本次检查检验结果的异常变化和仍未闭环的事项。",
+        "请找出需要医生关注、复查或安排随访的结果，并说明依据。"
+      ],
+      "output_schema": "ResultFollowupProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 14,
+      "max_tool_calls": 28,
+      "max_duration_seconds": 120,
+      "usage_count": 6
+    },
+    "child_agents": [
+      {
+        "agent_code": "CORRECTED_RESULT_RECONCILER",
+        "release_version": "1.0.1",
+        "display_name": "更正结果对账医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "RESULT_FOLLOWUP_COORDINATOR",
+        "stage_code": "CORRECTED_RESULT",
+        "description": "分析结果更正对文书和任务的影响",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "更正结果对账",
+        "current_action": "正在构建结果版本影响图",
+        "contribution_label": "贡献受影响对象和复核候选",
+        "question_examples": [
+          "这项更正结果会影响哪些病历内容、诊疗判断或随访任务？"
+        ],
+        "output_schema": "CorrectedResultImpactV1",
+        "autonomy_level": "A1",
+        "max_steps": 7,
+        "max_tool_calls": 16,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "CRITICAL_RESULT_CONTEXT_AGENT",
+        "release_version": "1.0.1",
+        "display_name": "危急值上下文医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "RESULT_FOLLOWUP_COORDINATOR",
+        "stage_code": "CRITICAL_RESULT",
+        "description": "汇总危急值规则和闭环状态",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "危急值上下文核对",
+        "current_action": "正在核对规则、通知、接收和处置",
+        "contribution_label": "贡献危急值上下文和未闭环状态",
+        "question_examples": [
+          "请汇总这项危急值的通知、接收、处置和复核状态。"
+        ],
+        "output_schema": "CriticalResultContextV1",
+        "autonomy_level": "A1",
+        "max_steps": 5,
+        "max_tool_calls": 10,
+        "max_duration_seconds": 30,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "FOLLOWUP_TASK_PLANNER",
+        "release_version": "1.0.1",
+        "display_name": "随访任务规划医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "RESULT_FOLLOWUP_COORDINATOR",
+        "stage_code": "FOLLOWUP_TASK",
+        "description": "把已确认计划组织成任务候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "随访任务规划",
+        "current_action": "正在核对责任人、期限和重复任务",
+        "contribution_label": "贡献任务计划候选内容",
+        "question_examples": [
+          "请把已确认的复查和随访计划整理成责任人、时间和任务清单。"
+        ],
+        "output_schema": "FollowupTaskPlanV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "NEW_RESULT_INTAKE_AGENT",
+        "release_version": "1.0.1",
+        "display_name": "新结果接收医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "RESULT_FOLLOWUP_COORDINATOR",
+        "stage_code": "NEW_RESULT",
+        "description": "汇总新增或更正结果及任务",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "新结果整理",
+        "current_action": "正在核对结果状态和申请来源",
+        "contribution_label": "贡献新结果事实和状态缺口",
+        "question_examples": [
+          "请整理今天新增或更正的检查检验结果，并标出需要处理的异常项。"
+        ],
+        "output_schema": "NewResultIntakeV1",
+        "autonomy_level": "A1",
+        "max_steps": 5,
+        "max_tool_calls": 10,
+        "max_duration_seconds": 30,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "PENDING_RESULT_TRACKER",
+        "release_version": "1.0.1",
+        "display_name": "待回结果跟踪医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "RESULT_FOLLOWUP_COORDINATOR",
+        "stage_code": "PENDING_RESULT",
+        "description": "列出未报告、部分报告和更正中结果",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "待回结果跟踪",
+        "current_action": "正在核对结果水位和报告状态",
+        "contribution_label": "贡献待回结果清单",
+        "question_examples": [
+          "请列出当前仍未报告、部分报告或正在更正的检查检验结果。"
+        ],
+        "output_schema": "PendingResultListV1",
+        "autonomy_level": "A1",
+        "max_steps": 5,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 35,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "RESULT_TREND_REVIEWER",
+        "release_version": "1.0.1",
+        "display_name": "结果趋势医助",
+        "agent_level": "CHILD",
+        "parent_agent_code": "RESULT_FOLLOWUP_COORDINATOR",
+        "stage_code": "RESULT_TREND",
+        "description": "解释确定性计算后的可比趋势",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "结果趋势核对",
+        "current_action": "正在核对单位和参考范围版本",
+        "contribution_label": "贡献趋势、异常变化和不可比项",
+        "question_examples": [
+          "请比较近期同类结果的变化趋势，并提示单位或参考范围不可比的情况。"
+        ],
+        "output_schema": "ResultTrendReviewV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      }
+    ]
+  },
+  {
+    "main_agent": {
+      "agent_code": "TCM_SYNDROME_REVIEW",
+      "release_version": "1.0.0",
+      "display_name": "中医辨证审方主 Agent",
+      "agent_level": "MAIN",
+      "parent_agent_code": null,
+      "stage_code": "ALL",
+      "description": "生成辨证、方药思路与配伍禁忌候选",
+      "doctor_facing_summary": "帮你辨证、出方药思路并查配伍禁忌",
+      "category": "SPECIALTY",
+      "display_role": "中医辨证审方",
+      "current_action": "正在核对四诊、方药与配伍禁忌",
+      "contribution_label": "汇总辨证、方药候选与配伍风险",
+      "question_examples": [
+        "请根据四诊信息给出辨证分型与方药思路草稿。",
+        "请核对拟方是否存在十八反十九畏或中西药相互作用。"
+      ],
+      "output_schema": "TcmSyndromeReviewProposalV1",
+      "autonomy_level": "A1",
+      "max_steps": 12,
+      "max_tool_calls": 20,
+      "max_duration_seconds": 90,
+      "usage_count": 8
+    },
+    "child_agents": [
+      {
+        "agent_code": "DECOCTION_GUIDE",
+        "release_version": "1.0.0",
+        "display_name": "煎服指导",
+        "agent_level": "CHILD",
+        "parent_agent_code": "TCM_SYNDROME_REVIEW",
+        "stage_code": "DECOCTION",
+        "description": "生成煎服方法与注意事项候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "煎服指导",
+        "current_action": "正在核对煎服与用法",
+        "contribution_label": "贡献煎服指导候选",
+        "question_examples": [
+          "请生成煎服方法与注意事项草稿。"
+        ],
+        "output_schema": "DecoctionGuideV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 10,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "HERBAL_FORMULA_ADVISOR",
+        "release_version": "1.0.0",
+        "display_name": "方药思路",
+        "agent_level": "CHILD",
+        "parent_agent_code": "TCM_SYNDROME_REVIEW",
+        "stage_code": "HERBAL_FORMULA",
+        "description": "生成方药思路候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "方药思路",
+        "current_action": "正在核对方药与加减",
+        "contribution_label": "贡献方药思路候选",
+        "question_examples": [
+          "请给出方药思路与加减草稿。"
+        ],
+        "output_schema": "HerbalFormulaAdvisorV1",
+        "autonomy_level": "A1",
+        "max_steps": 8,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "HERB_INTERACTION_GUARD",
+        "release_version": "1.0.0",
+        "display_name": "配伍禁忌",
+        "agent_level": "CHILD",
+        "parent_agent_code": "TCM_SYNDROME_REVIEW",
+        "stage_code": "HERB_SAFETY",
+        "description": "核对十八反十九畏与中西药相互作用",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "配伍禁忌",
+        "current_action": "正在核对配伍与相互作用",
+        "contribution_label": "贡献配伍风险候选",
+        "question_examples": [
+          "请核对配伍禁忌与中西药相互作用。"
+        ],
+        "output_schema": "HerbInteractionGuardV1",
+        "autonomy_level": "A1",
+        "max_steps": 6,
+        "max_tool_calls": 12,
+        "max_duration_seconds": 40,
+        "usage_count": 0
+      },
+      {
+        "agent_code": "SYNDROME_DIFFERENTIATION",
+        "release_version": "1.0.0",
+        "display_name": "辨证草稿",
+        "agent_level": "CHILD",
+        "parent_agent_code": "TCM_SYNDROME_REVIEW",
+        "stage_code": "SYNDROME",
+        "description": "核对四诊与辨证分型候选",
+        "doctor_facing_summary": null,
+        "category": null,
+        "display_role": "辨证草稿",
+        "current_action": "正在核对四诊与辨证",
+        "contribution_label": "贡献辨证分型候选",
+        "question_examples": [
+          "请根据四诊信息给出辨证分型草稿。"
+        ],
+        "output_schema": "SyndromeDifferentiationV1",
+        "autonomy_level": "A1",
+        "max_steps": 8,
+        "max_tool_calls": 14,
+        "max_duration_seconds": 50,
+        "usage_count": 0
+      }
+    ]
+  }
+]

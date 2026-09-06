@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
 const outputDir = resolve(projectDir, 'output/playwright');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4178').replace(/\/$/, '');
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4178').replace(/\/$/, '');
 await mkdir(outputDir, { recursive: true });
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
@@ -46,7 +46,7 @@ try {
   });
   await check('database-login', async () => {
     await page.getByLabel('用户名').fill('linwei');
-    await page.getByLabel('密码', { exact: true }).fill('OpenEMR2026-dev!');
+    await page.getByLabel('密码', { exact: true }).fill('HaoEMR-dev!');
     await page.getByRole('button', { name: '登录系统', exact: true }).click();
     await page.waitForURL(/#\/clinical$/, { timeout: 15_000 });
     const header = (await page.locator('.topbar .user-meta').innerText()).replace(/\s+/g, ' ');

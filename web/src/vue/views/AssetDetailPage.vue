@@ -50,7 +50,7 @@ function formatDate(value: string | null | undefined) { return value ? new Intl.
         <div><dt>证据口径</dt><dd>服务端事实</dd></div>
         <div><dt>原件保真</dt><dd>内容哈希锚定</dd></div>
         <div><dt>不可变性</dt><dd>触发器兜底</dd></div></dl>
-      <span class="lease-badge">患者级租约</span></section>
+      <span class="lease-badge">已核验</span></section>
     <nav v-if="selected" class="archive-depth-nav" aria-label="病案资产二到七级导航"><RouterLink to="/archive-assets">L3 资产台账</RouterLink><RouterLink :to="`/archive-assets/${selected.medical_record_asset_id}`">L4 资产证据</RouterLink><RouterLink :to="`/archive-assets/${selected.medical_record_asset_id}/actions`">L5 整改动作</RouterLink><RouterLink :to="`/archive-assets/${selected.medical_record_asset_id}/evidence`">L6 证据束</RouterLink><RouterLink :to="`/archive-assets/${selected.medical_record_asset_id}/reviews`">L7 复核 / Agent</RouterLink></nav>
     <ClinicalPageState v-if="assetsQuery.isPending.value" kind="loading" message="正在加载病案资产证据" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="assetsQuery.refetch()" />

@@ -14,7 +14,7 @@
 ## 阅读顺序
 
 1. 根目录 `DEVELOPMENT_PRINCIPLES.md`。
-2. `product/prd/2026-08-11-openemr2026-v1.0-prd.md`。
+2. `product/prd/2026-08-11-haoemr-v1.0-prd.md`。
 3. `design/architecture/README.md` 与相关 HLD/LLD。
 4. `process/planning/2026-08-24-remaining-development-backlog-v4.md`。
 5. `process/testing/2026-08-24-s008-remaining-features-closeout.md`。

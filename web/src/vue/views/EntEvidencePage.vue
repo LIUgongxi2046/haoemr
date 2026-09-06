@@ -67,7 +67,7 @@ async function createNote() {
       <div>
         <p class="eyebrow">专科中心 / 耳鼻喉</p>
         <h1>耳鼻喉诊疗证据</h1>
-        <p>记录内镜、听力、气道风险与处置证据；异常结果进入交接与上级复核。</p>
+        <p>记录内镜、听力、气道风险与处置证据；异常结果仅保留风险标记，交接与上级复核须由临床人员发起。</p>
       </div>
       
     </div>
@@ -84,7 +84,7 @@ async function createNote() {
 
       <div class="admin-layout">
         <section class="admin-panel">
-          <header><div><h2>诊疗证据台账</h2><p>评估、处置和结论分项记录，高风险证据进入复核闭环。</p></div><button class="button secondary" @click="itemsQuery.refetch()">刷新</button></header>
+          <header><div><h2>诊疗证据台账</h2><p>评估、处置和结论分项记录；高风险标记不自动创建复核。</p></div><button class="button secondary" @click="itemsQuery.refetch()">刷新</button></header>
           <div v-if="!items.length" class="admin-empty" role="status">暂无诊疗证据，可在右侧新增首条证据。</div>
           <div v-else class="admin-table-wrap">
             <table class="admin-table">
@@ -107,7 +107,7 @@ async function createNote() {
             <label><span>证据评估</span><textarea v-model="form.assessment" rows="3" required placeholder="记录检查、量表、影像或专科评估结果" /></label>
             <label><span>处置与结论</span><textarea v-model="form.intervention" rows="3" required placeholder="记录处置、结论、复核要求与随访计划" /></label>
             <label><span>记录时间</span><input v-model="form.recorded_at" type="datetime-local" required /></label>
-            <label class="risk-confirm"><input v-model="form.risk_flag" type="checkbox" /><span>存在危险信号（需交接与复核）</span></label>
+            <label class="risk-confirm"><input v-model="form.risk_flag" type="checkbox" /><span>存在危险信号（保存风险标记，后续交接或复核须由临床人员发起）</span></label>
             <button class="button primary full" :disabled="busy || !form.assessment.trim() || !form.intervention.trim()">{{ busy ? '正在保存…' : '保存诊疗证据' }}</button>
           </form>
         </section>

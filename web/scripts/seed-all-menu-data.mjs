@@ -5,11 +5,11 @@ import { chromium } from 'playwright';
 
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
-const requestedRoutes = new Set((process.env.OPENEMR2026_MENU_SEED_ROUTES || '').split(',').filter(Boolean));
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const requestedRoutes = new Set((process.env.HAOEMR_MENU_SEED_ROUTES || '').split(',').filter(Boolean));
 const allTargets = [
   ['admin-dictionaries', '创建并生效'], ['admin-permissions', '生成待审草案'],
-  ['ai-action-review', '提议动作'], ['ai-reminder-detail', '创建提醒'],
+  ['ai-reminder-detail', '创建提醒'],
   ['anesthesia-workbench', '运行场景'], ['device-monitoring', '运行场景'],
   ['integration-messages', '运行场景'], ['model-connection', '运行场景'],
   ['model-routing', '运行场景'], ['pathology-workbench', '运行场景'], ['therapy-workbench', '运行场景'],
@@ -155,8 +155,11 @@ async function seedInpatientDocument(page) {
   const created = await createResponse;
   await page.waitForFunction(() => document.documentElement.dataset.routeId === 'inpatient-doc-editor', undefined, { timeout: 15_000 });
   await page.waitForFunction(() => Boolean(document.querySelector('.inpatient-document-editor')), undefined, { timeout: 20_000 });
-  const fill = page.getByRole('button', { name: '填入合成验收内容', exact: true });
-  if (await fill.count() && !await fill.isDisabled()) await fill.click();
+  const fields = page.locator('.inpatient-section-form label');
+  for (const field of await fields.all()) {
+    const input = field.locator('textarea:not([readonly])');
+    if (await input.count()) await input.fill(`合成验收内容：${await field.locator('span').textContent()}，已由作者核对。`);
+  }
   const save = page.getByRole('button', { name: '保存新版本', exact: true });
   let saved = null;
   if (await save.count() && !await save.isDisabled()) {

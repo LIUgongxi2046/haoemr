@@ -21,8 +21,8 @@ $haonan-s008-coder
 ## 3. 必读上下文
 
 1. `DEVELOPMENT_PRINCIPLES.md`，特别是 P3、P9、P10、P12。
-2. `docs/product/prd/2026-08-25-openemr2026-agent-optimization-prd.md`，特别是 FR-027–031、AC-027–031、NFR-009/011/013–15。
-3. `docs/design/architecture/2026-08-25-openemr2026-medical-agent-harness-lld.md`，特别是第 2、3、4、11、12、13 节。
+2. `docs/product/prd/2026-08-25-haoemr-agent-optimization-prd.md`，特别是 FR-027–031、AC-027–031、NFR-009/011/013–15。
+3. `docs/design/architecture/2026-08-25-haoemr-medical-agent-harness-lld.md`，特别是第 2、3、4、11、12、13 节。
 4. `docs/design/ui-delivery/ai-medical-assistant-v2/child-agent-experience.md` 和 `states/state-matrix.md`。
 5. `contracts/openapi.json`、`contracts/governance.source.json`、`contracts/generate.mjs`、`contracts/test/contracts.test.mjs`。
 6. 现有 `AgentRegistryApiTest`、`AgentRunApiTest`、`AgentDependencyApiTest`、`SkillRegistryApiTest`、`ToolRegistryApiTest`。

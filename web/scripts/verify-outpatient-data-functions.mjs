@@ -6,9 +6,9 @@ import { chromium } from 'playwright';
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
 const outputDir = resolve(projectDir, 'output/playwright/outpatient-final-audit');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
-const username = process.env.OPENEMR2026_DEV_LOGIN_USERNAME || 'linwei';
-const password = process.env.OPENEMR2026_DEV_LOGIN_PASSWORD || 'OpenEMR2026-dev!';
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const username = process.env.HAOEMR_DEV_LOGIN_USERNAME || 'linwei';
+const password = process.env.HAOEMR_DEV_LOGIN_PASSWORD || 'HaoEMR-dev!';
 const routes = ['outpatient', 'opd-record', 'opd-diagnosis', 'opd-orders', 'opd-results', 'opd-consult', 'opd-followup'];
 const navigationLabels = ['门诊工作台', '门诊病历', '诊断', '医嘱处方', '检查检验', '会诊转诊', '随访终诊'];
 
@@ -45,7 +45,7 @@ async function login(loginUsername = username) {
     await page.getByLabel('用户名').fill(loginUsername);
     await page.locator('#system-login-password').fill(password);
     await submit.click();
-    await page.waitForFunction(() => Boolean(sessionStorage.getItem('openemr2026.clinical-session')), undefined, { timeout: 30_000 });
+    await page.waitForFunction(() => Boolean(sessionStorage.getItem('haoemr.clinical-session')), undefined, { timeout: 30_000 });
   }
   await page.goto(`${baseUrl}/#/outpatient`, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => document.documentElement.dataset.routeId === 'outpatient', undefined, { timeout: 30_000 });
@@ -58,7 +58,7 @@ async function switchUser(loginUsername) {
   await page.getByLabel('用户名').fill(loginUsername);
   await page.locator('#system-login-password').fill(password);
   await page.getByRole('button', { name: '登录系统', exact: true }).click();
-  await page.waitForFunction(() => Boolean(sessionStorage.getItem('openemr2026.clinical-session')), undefined, { timeout: 30_000 });
+  await page.waitForFunction(() => Boolean(sessionStorage.getItem('haoemr.clinical-session')), undefined, { timeout: 30_000 });
 }
 
 async function openRoute(id) {

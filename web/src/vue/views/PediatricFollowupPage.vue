@@ -81,7 +81,7 @@ async function createRecord() {
       <div>
         <p class="eyebrow">专科其余层 / 儿科 · 随访</p>
         <h1>随访记录</h1>
-        <p>随访原因、预约日期、是否到访与结局备注登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记随访原因、预约日期、是否到访与结局备注。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>

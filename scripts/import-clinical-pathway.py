@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""把 Obsidian 临床路径数据（结构化版本 jsonl + 知识图谱 txt）导入 openemr2026。
+"""把 Obsidian 临床路径数据（结构化版本 jsonl + 知识图谱 txt）导入 haoemr。
 只读外部文件，不修改源数据。用法：python3 scripts/import-clinical-pathway.py
 """
 import json, uuid, subprocess, sys, csv, io
@@ -9,7 +9,7 @@ F2 = f"{OBS}/205_临床路径_结构化版本_20250529/临床路径_结构化版
 F1 = f"{OBS}/204_临床路径_知识图谱_20250529/临床路径_知识图谱_20250529.txt"
 TENANT = "018f0000-0000-7000-8000-00000000aa01"
 ACTOR = "018f0000-0000-7000-8000-00000000aa04"
-PSQL = ["/usr/local/opt/postgresql@18/bin/psql", "-X", "-h", "/private/tmp", "-p", "55432", "-d", "openemr2026_dev"]
+PSQL = ["/usr/local/opt/postgresql@18/bin/psql", "-X", "-h", "/private/tmp", "-p", "55432", "-d", "haoemr_dev"]
 
 def u5(s):
     return str(uuid.uuid5(uuid.NAMESPACE_OID, s))

@@ -2,9 +2,9 @@
   "config_version": "s009-deepseek-harness-v2",
   "execution_mode": "MANAGED_REMOTE",
   "provisioned": false,
-  "endpoint_env": "OPENEMR2026_EVAL_MODEL_ENDPOINT",
-  "model_env": "OPENEMR2026_EVAL_MODEL_CODE",
-  "api_key_ref_env": "OPENEMR2026_EVAL_MODEL_API_KEY_REF",
+  "endpoint_env": "HAOEMR_EVAL_MODEL_ENDPOINT",
+  "model_env": "HAOEMR_EVAL_MODEL_CODE",
+  "api_key_ref_env": "HAOEMR_EVAL_MODEL_API_KEY_REF",
   "model_artifact": null,
   "artifact_sha256": null,
   "quantization": null,
@@ -36,6 +36,6 @@
     "timeout_recovery": 1,
     "cancellation_recovery": 1
   },
-  "threshold_source": "OPENEMR2026_CLINICAL_AI_BASELINE_V1",
+  "threshold_source": "HAOEMR_CLINICAL_AI_BASELINE_V1",
   "notes": "Fail closed. MANAGED_REMOTE evaluates only the repository's synthetic dataset and reads the endpoint, model code and env:// or file:// secret reference from environment variables. Set provisioned=true only after hospital AI governance approval."
 }

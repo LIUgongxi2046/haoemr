@@ -1,2 +1,2 @@
-rootProject.name = "openemr2026"
+rootProject.name = "haoemr"
 

@@ -23,10 +23,11 @@
 .system-login-kicker { position: relative; z-index: 1; margin: 0 0 9px; color: #abd8f7; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
 .system-login-intro h1 { position: relative; z-index: 1; margin: 0; color: #fff; font-size: clamp(32px,4vw,50px); line-height: 1.15; letter-spacing: -.8px; }
 .system-login-intro > p:not(.system-login-kicker) { position: relative; z-index: 1; max-width: 560px; margin: 22px 0 0; color: #d9ebf7; font-size: 15px; line-height: 1.8; }
-.system-login-intro ul { position: relative; z-index: 1; display: grid; gap: 13px; max-width: 560px; padding: 0; margin: 30px 0 22px; list-style: none; }
-.system-login-intro li { display: flex; align-items: center; gap: 12px; color: #e7f3fb; font-size: 13px; line-height: 1.55; }
-.system-login-intro li span { display: grid; place-items: center; width: 43px; height: 27px; flex: 0 0 43px; color: #0d4774; border-radius: 999px; background: #dff2ff; font-size: 10px; font-weight: 850; }
-.system-login-ai-capabilities { position: relative; z-index: 1; display: grid; gap: 9px; max-width: 560px; padding: 14px 16px; margin-bottom: 22px; border: 1px solid rgba(255,255,255,.18); border-radius: 12px; background: rgba(4,25,45,.2); box-shadow: inset 0 1px 0 rgba(255,255,255,.05); }
+.system-login-intro ul { position: relative; z-index: 1; display: grid; gap: 10px; max-width: 590px; padding: 0; margin: 26px 0 18px; list-style: none; }
+.system-login-intro li { display: grid; grid-template-columns: 96px minmax(0,1fr); align-items: start; gap: 12px; color: #e7f3fb; font-size: 13px; line-height: 1.55; }
+.system-login-intro li span { display: grid; place-items: center; min-height: 27px; padding: 0 9px; color: #0d4774; border-radius: 999px; background: #dff2ff; font-size: 10px; font-weight: 850; line-height: 1.25; white-space: nowrap; }
+.system-login-intro li p { min-width: 0; margin: 3px 0 0; }
+.system-login-ai-capabilities { position: relative; z-index: 1; display: grid; gap: 9px; max-width: 590px; padding: 14px 16px; margin-bottom: 18px; border: 1px solid rgba(255,255,255,.18); border-radius: 12px; background: rgba(4,25,45,.2); box-shadow: inset 0 1px 0 rgba(255,255,255,.05); }
 .system-login-ai-capabilities > div:first-child { display: flex; align-items: center; gap: 10px; }
 .system-login-ai-capabilities img { width: 38px; height: 38px; border-radius: 10px; background: #fff; object-fit: cover; }
 .system-login-ai-capabilities strong { color: #fff; font-size: 13px; }
@@ -52,14 +53,6 @@
 .system-login-submit { height: 47px; margin-top: 5px; color: #fff; border: 0; border-radius: 9px; background: linear-gradient(135deg,#0f5388,#1769a7); box-shadow: 0 8px 20px rgba(15,83,136,.22); font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
 .system-login-submit:hover { background: linear-gradient(135deg,#0d4774,#125f99); }
 .system-login-submit:disabled { cursor: wait; opacity: .7; }
-.system-login-environment { display: grid; gap: 8px; padding: 13px; margin-top: 22px; color: #5f7184; border: 1px solid #cfe0ec; border-radius: 9px; background: #f8fbfd; font-size: 10px; line-height: 1.5; }
-.system-login-environment b { color: #36536c; font-size: 11px; }
-.system-login-environment dl { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0; }
-.system-login-environment dl > div { display: grid; gap: 3px; padding: 8px 10px; border: 1px solid #dce8f1; border-radius: 7px; background: #fff; }
-.system-login-environment dt { color: #708295; font-size: 9px; }
-.system-login-environment dd { margin: 0; color: #173a59; font-size: 12px; font-weight: 800; }
-.system-login-environment code { font: inherit; }
-.system-login-environment small { color: #7a8b9b; font-size: 9px; line-height: 1.55; }
 .system-login-panel > footer { display: flex; flex-wrap: wrap; gap: 8px 18px; padding-top: 24px; margin-top: 28px; color: #7d8d9d; border-top: 1px solid #dfe7ee; font-size: 9px; }
 .system-login-panel > footer span::before { content: '·'; margin-right: 6px; color: #2f86bd; font-size: 16px; line-height: 0; vertical-align: -2px; }
 @media (max-width: 860px) {
@@ -71,7 +64,6 @@
   .system-login-intro ul, .system-login-ai-capabilities, .system-login-intro > small { display: none; }
   .system-login-panel { width: min(440px,calc(100% - 40px)); padding: 38px 0 48px; }
   .system-login-heading h2 { font-size: 24px; }
-  .system-login-environment dl { grid-template-columns: 1fr; }
 }
 
 /* Record center: keep the seven real-data pages on the captured v0.13 prototype grid. */
@@ -114,6 +106,19 @@
   .record-real-report { min-width: 525px; }
   .record-real-versions { min-width: 590px; }
   .record-real-pacs { min-width: 990px; }
+}
+@media (max-width: 600px) {
+  .record-real-focus,
+  .record-real-evidence,
+  .record-real-qc,
+  .record-real-report,
+  .record-real-versions,
+  .record-real-pacs { min-width: 0; }
+  .record-real-focus,
+  .record-real-pacs { grid-template-columns: minmax(0, 1fr); }
+  .record-real-focus > *,
+  .record-real-pacs > * { min-width: 0; }
+  .record-real-versions .version-row { grid-template-columns: 14px 36px minmax(0, 1fr); }
 }
 @media (max-width: 900px) {
   .admin-domain-layout { grid-template-columns: minmax(0,1fr); }
@@ -237,6 +242,35 @@
 .topbar-ai-assistant:hover { background: linear-gradient(135deg,#173f64,#2879e3); }
 .topbar-ai-assistant > img { width: 30px; height: 30px; object-fit: contain; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px rgba(255,255,255,.7); }
 .topbar-ai-assistant small { font-size: 11px; font-weight: 700; white-space: nowrap; }
+
+/* EVA motion uses the existing portrait and responds to the actual task state. */
+.eva-avatar-motion { transform-origin: 50% 80%; animation: eva-avatar-breathe 4.8s ease-in-out infinite; }
+.eva-avatar-motion[data-active="true"] { animation: eva-avatar-working 1.8s ease-in-out infinite; }
+.eva-illustration-motion { transform-origin: 50% 85%; animation: eva-illustration-float 6s ease-in-out infinite; }
+.topbar-ai-assistant:hover .eva-avatar-motion,
+.topbar-ai-assistant:focus-visible .eva-avatar-motion { animation: eva-avatar-greet .75s ease-in-out; }
+@keyframes eva-avatar-breathe {
+  0%, 100% { transform: translateY(0) rotate(-1deg); box-shadow: 0 0 0 2px rgb(129 189 249 / 16%); }
+  50% { transform: translateY(-2px) rotate(1deg); box-shadow: 0 0 0 5px rgb(129 189 249 / 26%); }
+}
+@keyframes eva-avatar-working {
+  0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 0 0 2px rgb(112 208 204 / 22%); }
+  50% { transform: translateY(-2px) scale(1.035); box-shadow: 0 0 0 6px rgb(112 208 204 / 35%); }
+}
+@keyframes eva-illustration-float {
+  0%, 100% { transform: translateY(0) rotate(-.35deg); }
+  50% { transform: translateY(-5px) rotate(.35deg); }
+}
+@keyframes eva-avatar-greet {
+  0%, 100% { transform: rotate(0); }
+  30% { transform: rotate(-8deg) translateY(-2px); }
+  65% { transform: rotate(5deg) translateY(-1px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .eva-avatar-motion, .eva-illustration-motion,
+  .topbar-ai-assistant:hover .eva-avatar-motion,
+  .topbar-ai-assistant:focus-visible .eva-avatar-motion { animation: none !important; transform: none; }
+}
 .topbar .user-meta { flex: 0 0 auto; min-width: 88px; font-size: 10px; white-space: nowrap; }
 .appointment-layout.form-closed { grid-template-columns: minmax(0,1fr); }
 .admin-table td > small { display: block; margin-top: 4px; color: var(--muted); line-height: 1.4; }
@@ -268,9 +302,9 @@
 .admin-editor-dialog-content { display:grid; gap:16px; }
 .admin-editor-dialog-content .config-studio-layout,.admin-editor-dialog-content .config-studio-lower { margin:0; }
 .admin-editor-dialog-content .config-studio-layout { grid-template-columns:minmax(0,1fr); }
-:root { --assistant-side-width: clamp(560px, 42vw, 720px); }
+:root { --assistant-side-width: 400px; }
 .shell { transition: width .22s ease; }
-.shell.assistant-side-open { width: calc(100% - var(--assistant-side-width, 440px)); min-width: 0; transition: width .18s ease; }
+.shell.assistant-side-open { width: calc(100% - var(--assistant-side-width, 400px)); min-width: 0; transition: width .18s ease; }
 .shell.assistant-side-open .ai-workspace-layout,
 .shell.assistant-side-open .medical-agent-command-grid { grid-template-columns: minmax(0,1fr); }
 .shell.assistant-side-open .ai-workspace-layout > * { min-width: 0; }
@@ -593,13 +627,13 @@
   .topbar .icon-btn, .topbar .avatar { width: 32px; height: 32px; flex: 0 0 32px; }
   .topbar .notification-panel, .topbar .account-menu { position: fixed; top: 56px; right: 8px; left: 8px; width: auto; max-height: calc(100dvh - 64px); }
   .topbar .notification-panel ul { max-height: min(310px, calc(100dvh - 230px)); }
-  .sidebar { grid-row: 2; position: static; display: flex; align-items: center; width: 100%; height: auto; min-width: 0; padding: 7px 8px; overflow-x: auto; overflow-y: hidden; }
+  .sidebar { grid-row: 2; position: static; display: flex; align-items: center; width: 100%; height: auto; min-width: 0; padding: 7px 8px; overflow-x: auto; overflow-y: hidden; contain: inline-size; }
   .sidebar .nav-group { display: none; }
   .sidebar .nav-item { flex: 0 0 auto; width: auto; min-height: 38px; margin: 0 2px; padding: 8px 10px; white-space: nowrap; }
   .sidebar .nav-label { display: inline; }
   .sidebar .nav-count { margin-left: 2px; }
   .main { grid-column: 1; grid-row: 3; width: 100%; min-width: 0; padding-inline: 12px; }
-  .center-nav { width: auto; max-width: none; margin-inline: -12px; padding-inline: 12px; }
+  .center-nav { width: auto; max-width: none; margin-inline: -12px; padding-inline: 12px; contain: inline-size; }
   .center-nav.task-center-subnav { gap: 4px; }
   .center-nav.task-center-subnav a { min-height: 36px; padding-inline: 10px; }
   .vue-boundary-page { padding: 24px 12px 56px; }
@@ -1033,4 +1067,1417 @@
   .admin-domain-content .parameter-layout .table td,
   .admin-domain-content .jobs-layout .table th,
   .admin-domain-content .jobs-layout .table td { overflow-wrap: anywhere; }
+}
+
+/* 二级菜单页统一页头：标题说明留在左侧，当前页操作固定在右侧。 */
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head {
+  display: flex;
+  align-items: center !important;
+  justify-content: space-between;
+  gap: 24px;
+  min-width: 0;
+  min-height: 72px;
+  height: auto;
+  margin: 0 0 12px !important;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root] > .page-heading + *,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root] > .page-head + * {
+  margin-top: 0 !important;
+}
+
+/* 页面自身使用 grid 排版时，页头间距不能再与 grid gap 叠加。 */
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].data-overview-page,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].data-quality-page,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].emergency-depth-page,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].execution-queue-page,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].migration-page,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].mock-interface-page,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].quality-depth-page,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].research-stats-page,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].simulation-hierarchy-page {
+  row-gap: 12px;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].data-overview-page > .page-heading,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].data-overview-page > .page-head,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].data-quality-page > .page-heading,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].data-quality-page > .page-head,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].emergency-depth-page > .page-heading,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].emergency-depth-page > .page-head,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].execution-queue-page > .page-heading,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].execution-queue-page > .page-head,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].migration-page > .page-heading,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].migration-page > .page-head,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].mock-interface-page > .page-heading,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].mock-interface-page > .page-head,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].quality-depth-page > .page-heading,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].quality-depth-page > .page-head,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].research-stats-page > .page-heading,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].research-stats-page > .page-head,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].simulation-hierarchy-page > .page-heading,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) [data-page-root].simulation-hierarchy-page > .page-head {
+  margin-bottom: 0 !important;
+}
+
+/* 二级导航统一视觉：不同业务域保留布局方向，但共享同一套尺寸和交互状态。 */
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav {
+  box-sizing: border-box;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(18, 42, 67, .05);
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav {
+  position: sticky;
+  top: 58px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  height: 48px;
+  margin: 0 0 12px;
+  padding: 5px 8px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  overscroll-behavior-inline: contain;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav > b,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav .admin-nav-title b {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav > b {
+  flex: 0 0 auto;
+  margin: 0 4px 0 3px;
+  padding-right: 12px;
+  border-right: 1px solid var(--line);
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav a,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  box-sizing: border-box;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 7px;
+  color: var(--muted);
+  background: transparent;
+  font-size: 12px;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav a:hover,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav > a:hover {
+  color: var(--ink);
+  background: #f3f7fb;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav a.active,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav > a.active {
+  color: var(--blue);
+  background: var(--blue-50);
+  font-weight: 800;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout {
+  padding-top: 12px;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav {
+  padding: 0;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav .admin-nav-title {
+  padding: 12px 13px;
+  background: #f8fbff;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav .admin-nav-title span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav > a {
+  display: flex;
+  width: 100%;
+  min-height: 36px;
+  padding: 0 13px;
+  border-bottom: 1px solid #edf1f4;
+  border-radius: 0;
+  background: #fff;
+  text-align: left;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav > a.active {
+  position: relative;
+  padding-left: 13px;
+  border-left: 0;
+  background: var(--blue-50);
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav > a.active::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--blue);
+  content: '';
+}
+
+@media (max-width: 900px) {
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav {
+    height: 44px;
+    margin: 0 -12px 12px;
+    padding-inline: 12px;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+    box-shadow: 0 2px 8px rgba(18, 42, 67, .04);
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav > b {
+    padding-right: 10px;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav a {
+    min-height: 32px;
+    padding-inline: 10px;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout {
+    padding-top: 12px;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav {
+    gap: 4px;
+    padding: 5px 8px;
+    border-radius: 10px;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav > a {
+    width: auto;
+    min-height: 32px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 7px;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav > a.active {
+    padding-left: 10px;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav > a.active::before {
+    display: none;
+  }
+}
+
+/* 页头紧凑化：减少二级导航下标题模块的额外留白。 */
+.main > [data-page-root].content {
+  padding-top: 8px;
+}
+
+.main > [data-page-root] > :is(.page-heading, .page-head) {
+  margin-bottom: 10px !important;
+}
+
+@media (min-width: 721px) {
+  .main > [data-page-root] > :is(.page-heading, .page-head) {
+    min-height: 56px !important;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > [data-page-root] > :is(.page-heading, .page-head) {
+    min-height: 56px !important;
+    margin-bottom: 8px !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .main > [data-page-root].content {
+    padding-top: 6px;
+  }
+
+  .main > [data-page-root] > :is(.page-heading, .page-head) {
+    min-height: 0 !important;
+    margin-bottom: 10px !important;
+  }
+}
+
+/* 操作按钮按内容自适应宽度，空间不足时换行而不是互相挤压。 */
+:where(.head-actions, .toolbar-actions, .admin-row-actions, .page-actions, .row-actions, .panel-actions, .inline-actions, .alert-actions, .footer-actions, .mpi-actions) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+:where(.head-actions, .toolbar-actions, .admin-row-actions, .page-actions, .row-actions, .panel-actions, .inline-actions, .alert-actions, .footer-actions, .mpi-actions) > :where(.button, .btn, button, a) {
+  flex: 0 1 auto !important;
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 720px) {
+  :where(.head-actions, .toolbar-actions, .admin-row-actions, .page-actions, .row-actions, .panel-actions, .inline-actions, .alert-actions, .footer-actions, .mpi-actions) {
+    width: 100%;
+  }
+
+  :where(.head-actions, .toolbar-actions, .admin-row-actions, .page-actions, .row-actions, .panel-actions, .inline-actions, .alert-actions, .footer-actions, .mpi-actions) > :where(.button, .btn, button, a) {
+    flex: 0 1 auto !important;
+    max-width: 100%;
+  }
+}
+
+/* 二级导航最终形态：贴合主内容两侧，不做悬浮卡片。 */
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav {
+  width: calc(100% + 44px);
+  height: 48px;
+  margin: 0 -22px 12px;
+  padding: 0 22px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+  background: #fff;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav::after {
+  display: none;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav > b {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  height: 100%;
+  margin: 0 8px 0 0;
+  padding: 0 14px 0 0;
+  border-right: 1px solid var(--line);
+  line-height: 1;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav a {
+  align-self: stretch;
+  border-radius: 0;
+  background: transparent;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav a.active {
+  background: #f5f9ff;
+  box-shadow: inset 0 -3px 0 var(--blue);
+}
+
+@media (max-width: 900px) {
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav {
+    width: calc(100% + 24px);
+    height: 44px;
+    margin: 0 -12px 12px;
+    padding: 0 12px;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav > b {
+    padding-right: 10px;
+  }
+}
+
+/* 全页面操作区最终规范：不依赖二级导航，所有页面的按钮都按内容排布并允许换行。 */
+:is(
+  .admin-inline-tools,
+  .head-actions,
+  .toolbar-actions,
+  .admin-row-actions,
+  .admin-form-actions,
+  .page-actions,
+  .row-actions,
+  .panel-actions,
+  .inline-actions,
+  .alert-actions,
+  .footer-actions,
+  .mpi-actions,
+  .template-actions,
+  .prototype-action-row,
+  .scan-preview-actions,
+  .record-row-actions,
+  .review-actions,
+  [class$="-actions"],
+  [class*="-actions "]
+) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+:is(
+  .admin-inline-tools,
+  .head-actions,
+  .toolbar-actions,
+  .admin-row-actions,
+  .admin-form-actions,
+  .page-actions,
+  .row-actions,
+  .panel-actions,
+  .inline-actions,
+  .alert-actions,
+  .footer-actions,
+  .mpi-actions,
+  .template-actions,
+  .prototype-action-row,
+  .scan-preview-actions,
+  .record-row-actions,
+  .review-actions,
+  [class$="-actions"],
+  [class*="-actions "]
+) > :is(.button, .btn, .task-action, button, a):not(.full):not([class*="full"]) {
+  flex: 0 1 auto !important;
+  width: auto !important;
+  min-width: 0;
+  max-width: 100%;
+}
+
+:is(
+  .admin-inline-tools,
+  .head-actions,
+  .toolbar-actions,
+  .admin-row-actions,
+  .admin-form-actions,
+  .page-actions,
+  .row-actions,
+  .panel-actions,
+  .inline-actions,
+  .alert-actions,
+  .footer-actions,
+  .mpi-actions,
+  .template-actions,
+  .prototype-action-row,
+  .scan-preview-actions,
+  .record-row-actions,
+  .review-actions,
+  [class$="-actions"],
+  [class*="-actions "]
+) > :is(.button.full, .btn.full) {
+  flex: 1 1 100%;
+  width: 100% !important;
+  max-width: 100%;
+}
+
+.admin-inline-tools {
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.admin-inline-tools > .admin-code-input {
+  display: grid;
+  flex: 0 1 180px;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.admin-inline-tools > .admin-code-input select,
+.admin-inline-tools > .admin-code-input input {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 720px) {
+  :is(.admin-inline-tools, .head-actions, .toolbar-actions, .admin-row-actions, .admin-form-actions, .page-actions, .row-actions, .panel-actions, .inline-actions, .alert-actions, .footer-actions, .mpi-actions, .template-actions, .prototype-action-row, .scan-preview-actions, .record-row-actions, .review-actions) {
+    width: 100%;
+  }
+
+  .admin-inline-tools {
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+
+  .admin-inline-tools > .admin-code-input {
+    flex: 1 1 180px;
+  }
+}
+
+/* 固定导航最终布局：二级导航脱离滚动流，主内容以等高内边距保留标题空间。 */
+@media (min-width: 601px) {
+  .main.has-secondary-nav {
+    padding-top: 60px;
+  }
+
+  .shell .main.has-secondary-nav > .center-nav {
+    position: fixed;
+    top: var(--app-topbar-height);
+    right: 0;
+    left: var(--shell-sidebar-width);
+    z-index: 90;
+    width: auto !important;
+    max-width: none;
+    margin: 0 !important;
+  }
+
+  .shell.assistant-side-open .main.has-secondary-nav > .center-nav {
+    right: var(--assistant-side-width);
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .main.has-secondary-nav {
+    --page-min-block-size: calc(100dvh - var(--app-topbar-height) - 44px - 12px - 28px);
+    padding-top: 56px;
+  }
+}
+
+/* 工作区按真实可用空间自适应：左侧主菜单固定在可视区内滚动，主内容区成为布局断点容器。 */
+:root {
+  --app-topbar-height: 58px;
+}
+
+.shell {
+  min-height: 100dvh;
+  position: relative;
+  isolation: isolate;
+  --shell-sidebar-width: 220px;
+}
+
+/* 页面内容高于视口时，延展主菜单底色，避免侧栏下方露出白色空区。 */
+.shell::before {
+  position: absolute;
+  inset: var(--app-topbar-height) auto 0 0;
+  z-index: 0;
+  width: var(--shell-sidebar-width);
+  background: linear-gradient(180deg, var(--nav), #0b2238);
+  content: '';
+}
+
+.topbar {
+  /* 顶栏固定在视口顶部，并以明确高度为后续导航和内容提供统一偏移。 */
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 100;
+  height: var(--app-topbar-height);
+  min-height: var(--app-topbar-height);
+}
+
+.main {
+  position: relative;
+  z-index: 1;
+}
+
+.sidebar {
+  z-index: 1;
+}
+
+.main {
+  min-block-size: calc(100dvh - var(--app-topbar-height));
+  container-type: inline-size;
+  container-name: app-main;
+}
+
+@media (min-width: 601px) {
+  .main {
+    grid-row: 2;
+  }
+
+  .sidebar {
+    block-size: calc(100dvh - var(--app-topbar-height));
+    min-block-size: 0;
+    max-block-size: calc(100dvh - var(--app-topbar-height));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+@media (min-width: 901px) {
+  .shell {
+    --shell-sidebar-width: clamp(188px, 16vw, 220px);
+    grid-template-columns: var(--shell-sidebar-width) minmax(0, 1fr);
+  }
+
+  .shell.sidebar-collapsed {
+    --shell-sidebar-width: 72px;
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .shell {
+    --shell-sidebar-width: 64px;
+  }
+}
+
+@media (max-width: 600px) {
+  .shell::before {
+    display: none;
+  }
+}
+
+/* 两栏、三栏工作区在主内容区变窄时自然堆叠，避免左右模块被挤压。 */
+@container app-main (max-width: 1080px) {
+  :is(
+    .admin-layout,
+    .auth-layout,
+    .mpi-layout,
+    .mpi-merge-layout,
+    .inpatient-layout,
+    .inpatient-document-layout,
+    .result-layout,
+    .record-center-layout,
+    .record-version-layout,
+    .timeline-layout,
+    .template-admin-layout,
+    .archive-workflow-grid,
+    .emergency-grid,
+    .emergency-record-grid,
+    .emergency-prototype-layout,
+    .emergency-record-prototype,
+    .emergency-handoff-lower,
+    .inpatient-grid,
+    .prototype-secondary-grid,
+    .prototype-secondary-grid.prototype-course-grid,
+    .prototype-consult-grid,
+    .pathway-prototype-grid,
+    .prototype-ward-grid,
+    .ai-workspace-layout,
+    .coverage-layout,
+    .discharge-layout,
+    .inpatient-overview-grid,
+    .course-layout,
+    .specialty-ops-grid,
+    .specialty-care-layout,
+    .specialty-qc-layout,
+    .specialty-record-layout,
+    .specialty-evidence-layout,
+    .specialty-treatment-layout,
+    .specialty-followup-layout
+  ) {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  :is(
+    .admin-layout,
+    .auth-layout,
+    .mpi-layout,
+    .mpi-merge-layout,
+    .inpatient-layout,
+    .inpatient-document-layout,
+    .result-layout,
+    .record-center-layout,
+    .record-version-layout,
+    .timeline-layout,
+    .template-admin-layout,
+    .archive-workflow-grid,
+    .emergency-grid,
+    .emergency-record-grid,
+    .emergency-prototype-layout,
+    .emergency-record-prototype,
+    .emergency-handoff-lower,
+    .inpatient-grid,
+    .prototype-secondary-grid,
+    .prototype-consult-grid,
+    .pathway-prototype-grid,
+    .prototype-ward-grid,
+    .ai-workspace-layout,
+    .coverage-layout,
+    .discharge-layout,
+    .inpatient-overview-grid,
+    .course-layout,
+    .specialty-ops-grid,
+    .specialty-care-layout,
+    .specialty-qc-layout,
+    .specialty-record-layout,
+    .specialty-evidence-layout,
+    .specialty-treatment-layout,
+    .specialty-followup-layout
+  ) > * {
+    grid-column: auto !important;
+    min-width: 0;
+  }
+}
+
+/* 全局控件规范：统一高度、边界、焦点态，并为窄屏内容保留收缩空间。 */
+:root {
+  --control-height: 36px;
+  --control-height-sm: 32px;
+  --control-radius: 8px;
+  --control-border: #c7d4e2;
+  --control-border-hover: #8fb4df;
+  --control-focus-ring: rgba(23, 105, 224, .16);
+}
+
+html,
+body {
+  max-width: 100%;
+  /* clip 只裁掉横向溢出，不会像 hidden 一样把 body 变成额外滚动容器。 */
+  overflow-x: clip;
+}
+
+button,
+input,
+select,
+textarea {
+  min-width: 0;
+  max-width: 100%;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 统一常规操作按钮；图标按钮、头像和导航按钮保留各自语义尺寸。 */
+:where(.button, .btn) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: var(--control-height) !important;
+  max-width: 100%;
+  padding: 0 13px !important;
+  border-radius: var(--control-radius) !important;
+  line-height: 1.25;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: border-color .16s ease, background-color .16s ease, color .16s ease, box-shadow .16s ease;
+}
+
+:where(.button.sm, .btn.sm) {
+  min-height: var(--control-height-sm) !important;
+  padding-inline: 10px !important;
+  font-size: 12px;
+}
+
+:where(.button.full, .btn.full) {
+  width: 100%;
+}
+
+/* 表格内和辅助区操作链接也遵循同一套可点击面积与焦点反馈。 */
+:where(.task-action) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 30px;
+  max-width: 100%;
+  padding: 4px 9px !important;
+  border-radius: 7px !important;
+  line-height: 1.25;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 表单控件统一为 36px，复选框、单选框、文件和颜色选择器维持原生尺寸。 */
+:where(input:not([type="hidden"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):not([type="range"]), select) {
+  width: 100%;
+  min-height: var(--control-height) !important;
+  padding: 0 11px !important;
+  color: var(--ink-default);
+  border: 1px solid var(--control-border) !important;
+  border-radius: var(--control-radius) !important;
+  background-color: #fff;
+  line-height: 1.3;
+  transition: border-color .16s ease, box-shadow .16s ease, background-color .16s ease;
+}
+
+:where(textarea) {
+  width: 100%;
+  min-height: 84px;
+  padding: 9px 11px !important;
+  color: var(--ink-default);
+  border: 1px solid var(--control-border) !important;
+  border-radius: var(--control-radius) !important;
+  background-color: #fff;
+  line-height: 1.55;
+  resize: vertical;
+  transition: border-color .16s ease, box-shadow .16s ease, background-color .16s ease;
+}
+
+:where(input, select, textarea):hover:not(:disabled) {
+  border-color: var(--control-border-hover) !important;
+}
+
+:where(input, select, textarea):focus-visible {
+  border-color: var(--blue) !important;
+  box-shadow: 0 0 0 3px var(--control-focus-ring);
+}
+
+:where(input, select, textarea):disabled {
+  color: #8996a5;
+  background-color: var(--disabled, #eef2f5);
+  cursor: not-allowed;
+  opacity: .72;
+}
+
+/* 顶栏搜索框同时容纳左侧图标与右侧操作，不能继承普通输入框的统一内边距。 */
+.top-search {
+  position: relative;
+  flex: 1 1 240px;
+  min-width: 172px;
+  max-width: 440px;
+}
+
+.top-search::before {
+  top: 50%;
+  left: 13px;
+  z-index: 1;
+  font-size: 18px;
+  line-height: 1;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.top-search input {
+  min-width: 0;
+  padding-inline-start: 42px !important;
+  padding-inline-end: 62px !important;
+  text-overflow: ellipsis;
+}
+
+.top-search > button {
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+
+:where(input[type="checkbox"], input[type="radio"]) {
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  min-height: 16px !important;
+  padding: 0 !important;
+  accent-color: var(--blue);
+}
+
+:where(input[type="file"]) {
+  min-height: var(--control-height);
+  padding: 6px 8px;
+  border: 1px solid var(--control-border);
+  border-radius: var(--control-radius);
+  background: #fff;
+}
+
+/* 统一选择器箭头的留白，避免文字覆盖原生/自定义箭头。 */
+:where(select) {
+  padding-right: 34px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:where(.head-actions, .toolbar-actions, .admin-row-actions, .admin-form-actions, .page-actions, .row-actions, .panel-actions, .inline-actions, .alert-actions, .footer-actions, .mpi-actions) {
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+
+:where(.page-head, .page-heading, .card-toolbar, .admin-panel > header, .panel > header, .outpatient-command-card > header, .emergency-history > header, .inpatient-document-editor > header) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+:where(.page-head, .page-heading, .card-toolbar, .admin-panel > header, .panel > header, .outpatient-command-card > header, .emergency-history > header, .inpatient-document-editor > header) > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* 所有栅格/弹性子项允许收缩，长编码、长标题和长提示词可断行。 */
+:where([class*="-grid"], [class*="-layout"], [class*="-form"], [class*="-filters"], [class*="-toolbar"]) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+:where([class*="-grid"], [class*="-layout"], [class*="-form"], [class*="-filters"], [class*="-toolbar"]) > * {
+  min-width: 0;
+}
+
+:where(.main, [data-page-root], .vue-native-page, .admin-domain-content, .admin-domain-content > *) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+:where(.admin-table-wrap, .table-wrap, [class*="-table-wrap"], [class*="-table-scroll"]) {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+}
+
+:where(.admin-table, .table, .task-table, .archive-table, .mpi-table, .auth-table) {
+  max-width: 100%;
+}
+
+:where(pre, code) {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+:where(.button, .btn, .task-action, .topbar-ai-assistant, .context-pill, .icon-btn, .avatar, .tab, .center-nav a, .admin-domain-link):focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  :where(.head-actions, .toolbar-actions, .admin-row-actions, .admin-form-actions, .page-actions, .row-actions, .panel-actions, .inline-actions, .alert-actions, .footer-actions, .mpi-actions) {
+    width: 100%;
+  }
+
+  :where(.head-actions, .toolbar-actions, .admin-row-actions, .admin-form-actions, .page-actions, .row-actions, .panel-actions, .inline-actions, .alert-actions, .footer-actions, .mpi-actions) > :where(.button, .btn) {
+    flex: 1 1 132px;
+    min-width: 0;
+  }
+
+  :where(.admin-panel > header, .panel > header, .outpatient-command-card > header, .emergency-history > header, .inpatient-document-editor > header) {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav > b {
+  flex: 0 0 auto;
+  min-width: 0;
+  margin-right: 8px;
+  padding: 0 12px 0 4px;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav > b {
+    margin-right: 6px;
+    padding: 0 10px 0 2px;
+  }
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading > div:first-child,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head > .page-title {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading > div:first-child > p:not(.eyebrow),
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head > .page-title > p:not(.eyebrow) {
+  max-width: 760px;
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading > .toolbar-actions,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading > .head-actions,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading > a,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading > button,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head > .head-actions,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head > .toolbar-actions,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head > a,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head > button {
+  flex: 0 0 auto;
+  margin-left: auto;
+  align-self: center;
+  justify-content: flex-end;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading > .toolbar-actions,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading > .head-actions,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head > .toolbar-actions,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head > .head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 720px) {
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading,
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head {
+    align-items: stretch !important;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading > .toolbar-actions,
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading > .head-actions,
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head > .toolbar-actions,
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head > .head-actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading > a,
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-heading > button,
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head > a,
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) .page-head > button {
+    align-self: flex-end;
+    margin-left: 0;
+  }
+}
+
+/* 二级导航底部统一色带：所有菜单项在同一条底线上对齐。 */
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav {
+  align-items: stretch;
+  padding-top: 4px;
+  padding-bottom: 0;
+  border-bottom-color: #d9e8f8;
+  background: linear-gradient(to bottom, #fff 0%, #fff calc(100% - 3px), #edf5ff calc(100% - 3px), #edf5ff 100%);
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: #edf5ff;
+  content: '';
+  pointer-events: none;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav > b,
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav a {
+  position: relative;
+  z-index: 1;
+  align-self: stretch;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav a {
+  border-radius: 7px 7px 0 0;
+  background: transparent;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav a.active {
+  background: #f1f7ff;
+  box-shadow: inset 0 -3px 0 var(--blue);
+}
+
+@media (max-width: 900px) {
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav {
+    padding-top: 3px;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav {
+    position: relative;
+    align-items: stretch;
+    padding-top: 4px;
+    padding-bottom: 0;
+    border-bottom-color: #d9e8f8;
+    background: linear-gradient(to bottom, #fff 0%, #fff calc(100% - 3px), #edf5ff calc(100% - 3px), #edf5ff 100%);
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: #edf5ff;
+    content: '';
+    pointer-events: none;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav > a {
+    position: relative;
+    z-index: 1;
+    align-self: stretch;
+    border-radius: 7px 7px 0 0;
+    background: transparent;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .admin-domain-layout > .admin-domain-nav > a.active {
+    background: #f1f7ff;
+    box-shadow: inset 0 -3px 0 var(--blue);
+  }
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav > b {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  height: 100%;
+  line-height: 1;
+}
+
+/* 一级导航折叠：保留图标入口，给主内容更多可用空间。 */
+@media (min-width: 901px) {
+  .shell {
+    --shell-sidebar-width: clamp(188px, 16vw, 220px);
+    grid-template-columns: var(--shell-sidebar-width) minmax(0, 1fr);
+    transition: width .22s ease, grid-template-columns .2s ease;
+  }
+
+  .shell.sidebar-collapsed {
+    --shell-sidebar-width: 72px;
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 32px;
+    padding: 0 8px 8px;
+  }
+
+  .sidebar-header-label {
+    color: #8298ad;
+    font-size: 10px;
+    letter-spacing: .08em;
+  }
+
+  .sidebar-collapse-toggle {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    padding: 0;
+    color: #c8d5e4;
+    border: 1px solid rgba(200, 213, 228, .28);
+    border-radius: 7px;
+    background: rgba(255, 255, 255, .06);
+    font-size: 21px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .sidebar-collapse-toggle:hover,
+  .sidebar-collapse-toggle:focus-visible {
+    color: #fff;
+    border-color: rgba(255, 255, 255, .5);
+    background: rgba(255, 255, 255, .14);
+    outline: none;
+  }
+
+  .shell.sidebar-collapsed .sidebar-header {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .shell.sidebar-collapsed .sidebar-header-label,
+  .shell.sidebar-collapsed .sidebar .nav-group,
+  .shell.sidebar-collapsed .sidebar .nav-label {
+    display: none;
+  }
+
+  .shell.sidebar-collapsed .sidebar {
+    padding-inline: 8px;
+  }
+
+  .shell.sidebar-collapsed .sidebar .nav-item {
+    justify-content: center;
+    gap: 0;
+    padding-inline: 0;
+  }
+
+  .shell.sidebar-collapsed .sidebar .nav-icon {
+    width: 34px;
+  }
+}
+
+@media (max-width: 900px) {
+  .sidebar-header {
+    display: none;
+  }
+}
+
+/* 二级导航最终覆盖：贴合主内容两侧，不做悬浮卡片。 */
+
+/* 默认页面骨架：至少与可视区等高；内容超出时由页面正常滚动。 */
+:root {
+  --page-min-block-size: calc(100dvh - var(--app-topbar-height) - 28px);
+  --page-module-gap: 12px;
+}
+
+/* 横向二级导航属于主内容流，需要连同导航间距一起从页面可用高度中扣除。 */
+.main.has-secondary-nav {
+  --page-min-block-size: calc(100dvh - var(--app-topbar-height) - 48px - 12px - 28px);
+}
+
+.main > [data-page-root].content.vue-native-page {
+  min-height: var(--page-min-block-size);
+  box-sizing: border-box;
+}
+
+.main > [data-page-root].content.vue-native-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-module-gap);
+}
+
+.main > [data-page-root].content.vue-native-page > * {
+  min-width: 0;
+  margin: 0 !important;
+}
+
+/* EVA 优先填满可视区；窗口不足时允许页面继续滚动，不能裁掉底部操作区。 */
+.main > [data-page-root].content.vue-native-page.xiaonan-harness-page {
+  min-block-size: max(620px, var(--page-min-block-size));
+  block-size: max(620px, var(--page-min-block-size));
+  max-block-size: none;
+  overflow: visible;
+}
+
+/* 页头操作区不再在组内压缩：窄空间时整组换行，按钮仍按内容宽度排列。 */
+.main > [data-page-root] > .page-heading.admin-heading {
+  align-items: flex-end !important;
+  flex-wrap: wrap;
+  column-gap: 24px;
+  row-gap: 12px;
+}
+
+.main > [data-page-root] > .page-heading.admin-heading > div:first-child {
+  flex: 1 1 460px;
+  min-width: 0;
+}
+
+.main > [data-page-root] > .page-heading.admin-heading > .admin-inline-tools {
+  flex: 0 0 auto;
+  max-width: 100%;
+  align-items: flex-end;
+}
+
+/* 页头内含筛选标签时，控件与相邻操作按钮统一以底边对齐。 */
+.main > [data-page-root] > :is(.page-heading, .page-head) > :is(.admin-inline-tools, .toolbar-actions, .head-actions, .page-actions) {
+  align-items: flex-end;
+}
+
+.main > [data-page-root] > .page-heading.admin-heading > .admin-inline-tools > .admin-code-input {
+  flex: 0 0 180px;
+}
+
+@media (max-width: 920px) {
+  .main > [data-page-root] > .page-heading.admin-heading > .admin-inline-tools {
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --page-module-gap: 10px;
+  }
+
+  .main > [data-page-root].content.vue-native-page.xiaonan-harness-page {
+    block-size: auto;
+    max-block-size: none;
+    overflow: visible;
+  }
+
+  .main > [data-page-root] > .page-heading.admin-heading > div:first-child {
+    flex-basis: 100%;
+  }
+}
+
+/* 边界页同样采用页面骨架，避免少数提示/守卫页面游离于统一节奏之外。 */
+.main > [data-page-root].vue-boundary-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-module-gap);
+  min-height: var(--page-min-block-size);
+  box-sizing: border-box;
+  padding: 14px 22px 48px;
+}
+
+.main > [data-page-root].vue-boundary-page > * {
+  min-width: 0;
+  margin: 0 !important;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav {
+  width: calc(100% + 44px);
+  height: 48px;
+  margin: 0 -22px 12px;
+  padding: 0 22px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+  background: #fff;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav::after {
+  display: none;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav > b {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  margin: 0 8px 0 0;
+  padding: 0 14px 0 0;
+  border-right: 1px solid var(--line);
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav a {
+  align-self: stretch;
+  border-radius: 0;
+  background: transparent;
+}
+
+.main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav a.active {
+  background: #f5f9ff;
+  box-shadow: inset 0 -3px 0 var(--blue);
+}
+
+@media (max-width: 900px) {
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav {
+    width: calc(100% + 24px);
+    height: 44px;
+    margin: 0 -12px 12px;
+    padding: 0 12px;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+  }
+
+  .main:is(.has-secondary-nav, .has-admin-secondary-nav) > .center-nav > b {
+    padding-right: 10px;
+  }
+}
+
+/* 全页面操作区最终规范：不依赖二级导航，所有页面的按钮都按内容排布并允许换行。 */
+:is(
+  .admin-inline-tools,
+  .head-actions,
+  .toolbar-actions,
+  .admin-row-actions,
+  .admin-form-actions,
+  .page-actions,
+  .row-actions,
+  .panel-actions,
+  .inline-actions,
+  .alert-actions,
+  .footer-actions,
+  .mpi-actions,
+  .template-actions,
+  .prototype-action-row,
+  .scan-preview-actions,
+  .record-row-actions,
+  .review-actions,
+  [class$="-actions"],
+  [class*="-actions "]
+) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+:is(
+  .admin-inline-tools,
+  .head-actions,
+  .toolbar-actions,
+  .admin-row-actions,
+  .admin-form-actions,
+  .page-actions,
+  .row-actions,
+  .panel-actions,
+  .inline-actions,
+  .alert-actions,
+  .footer-actions,
+  .mpi-actions,
+  .template-actions,
+  .prototype-action-row,
+  .scan-preview-actions,
+  .record-row-actions,
+  .review-actions,
+  [class$="-actions"],
+  [class*="-actions "]
+) > :is(.button, .btn, .task-action, button, a):not(.full):not([class*="full"]) {
+  flex: 0 1 auto !important;
+  width: auto !important;
+  min-width: 0;
+  max-width: 100%;
+}
+
+:is(
+  .admin-inline-tools,
+  .head-actions,
+  .toolbar-actions,
+  .admin-row-actions,
+  .admin-form-actions,
+  .page-actions,
+  .row-actions,
+  .panel-actions,
+  .inline-actions,
+  .alert-actions,
+  .footer-actions,
+  .mpi-actions,
+  .template-actions,
+  .prototype-action-row,
+  .scan-preview-actions,
+  .record-row-actions,
+  .review-actions,
+  [class$="-actions"],
+  [class*="-actions "]
+) > :is(.button.full, .btn.full) {
+  flex: 1 1 100%;
+  width: 100% !important;
+  max-width: 100%;
+}
+
+.admin-inline-tools {
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.admin-inline-tools > .admin-code-input {
+  display: grid;
+  flex: 0 1 180px;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.admin-inline-tools > .admin-code-input select,
+.admin-inline-tools > .admin-code-input input {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 720px) {
+  :is(.admin-inline-tools, .head-actions, .toolbar-actions, .admin-row-actions, .admin-form-actions, .page-actions, .row-actions, .panel-actions, .inline-actions, .alert-actions, .footer-actions, .mpi-actions, .template-actions, .prototype-action-row, .scan-preview-actions, .record-row-actions, .review-actions) {
+    width: 100%;
+  }
+
+  .admin-inline-tools {
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+
+  .admin-inline-tools > .admin-code-input {
+    flex: 1 1 180px;
+  }
 }

@@ -40,7 +40,7 @@ function teamName(agent: MedicalAgentFamilyWire) {
 </script>
 
 <template>
-  <aside class="xiaonan-harness-team-rail" :class="{ collapsed }" aria-label="Eva医助团队">
+  <aside class="xiaonan-harness-team-rail" :class="{ collapsed }" aria-label="AI医助 EVA 团队">
     <header>
       <div v-if="!collapsed"><strong>医助团队</strong><span>{{ agents.length }} 组 · 按诊疗任务调用</span></div>
       <button type="button" :aria-label="collapsed ? '展开医助团队' : '折叠医助团队'" :title="collapsed ? '展开医助团队' : '折叠医助团队'" @click="emit('toggle')">{{ collapsed ? '›' : '‹' }}</button>

@@ -4,7 +4,7 @@ import { computed, reactive, ref } from 'vue';
 import type { SurgicalProcedureWire } from '../../generated/contracts';
 import { clinicalContext } from '../../clinical-api';
 import { developmentCopy } from '../../development-copy';
-import { issueExecutionLease, issueExecutionPatientLease, listSurgicalProcedures, scheduleSurgicalProcedure, transitionSurgicalProcedure } from '../../api/execution';
+import { issueExecutionLease, issueExecutionPatientLease, listSurgicalProcedures, scheduleSurgicalProcedure, transitionSurgicalProcedure, verifySurgicalProcedureTimeOut } from '../../api/execution';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import AdminActionDialog from '../components/AdminActionDialog.vue';
 import ExecutionPatientContextBar from '../components/ExecutionPatientContextBar.vue';
@@ -47,7 +47,10 @@ const form = reactive({ procedureName: '', bodySite: 'ABDOMEN' as BodySite, late
 const busy = ref('');
 const notice = ref('');
 const createDialogOpen = ref(false);
+const verificationProcedure = ref<SurgicalProcedureWire | null>(null);
+const verificationNote = ref('');
 
+function fieldId(name: string) { return `surgery-schedule-${name}`; }
 function formatDate(value: string | null | undefined) {
   return value ? new Intl.DateTimeFormat('zh-CN', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value)) : '—';
 }
@@ -83,12 +86,28 @@ async function transition(procedure: SurgicalProcedureWire, action: 'TIME_OUT' |
   } catch (error) { const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`; }
   finally { busy.value = ''; }
 }
+
+function openVerification(procedure: SurgicalProcedureWire) {
+  verificationProcedure.value = procedure; verificationNote.value = '';
+}
+async function verifyTimeOut() {
+  const lease = writeLeaseQuery.data.value; const procedure = verificationProcedure.value;
+  if (!lease || !procedure || busy.value || verificationNote.value.trim().length < 2) return;
+  busy.value = `verify:${procedure.surgical_procedure_id}`; notice.value = '';
+  try {
+    await verifySurgicalProcedureTimeOut(lease, procedure, verificationNote.value.trim());
+    verificationProcedure.value = null;
+    notice.value = '第二人 Time-Out 核验已留痕；请由另一授权账号执行最终安全核查。';
+    await proceduresQuery.refetch();
+  } catch (error) { const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`; }
+  finally { busy.value = ''; }
+}
 </script>
 
 <template>
   <section data-page-root class="content vue-native-page">
     <div class="page-heading">
-      <div><p class="eyebrow">诊疗执行 / 围手术期</p><h1>围手术期排程与安全核查</h1><p>排程 → 安全核查（Time-Out）→ 完成三步闭环，术者与麻醉医生显式登记。</p></div>
+      <div><p class="eyebrow">诊疗执行 / 围手术期</p><h1>围手术期排程与安全核查</h1><p>排程 → 独立第二人核验 → 安全核查（Time-Out）→ 完成，术者与麻醉医生显式登记。</p></div>
       <div class="toolbar-actions"><button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button><button class="button primary" @click="createDialogOpen = true">新增手术排程</button></div>
     </div>
     <ExecutionPatientContextBar />
@@ -106,20 +125,22 @@ async function transition(procedure: SurgicalProcedureWire, action: 'TIME_OUT' |
       </section>
 
       <section class="admin-panel">
-          <header><div><h2>手术排程台账</h2><p>状态机：SCHEDULED → TIME_OUT_COMPLETED → COMPLETED。</p></div><button class="button secondary" @click="proceduresQuery.refetch()">刷新</button></header>
+          <header><div><h2>手术排程台账</h2><p>Time-Out 必须先取得独立第二人核验；核验人与最终执行人不能是同一账号。</p></div><button class="button secondary" @click="proceduresQuery.refetch()">刷新</button></header>
           <div v-if="procedures.length === 0" class="empty-state"><span>术</span><p>当前患者暂无手术排程</p><small>在右侧录入术式开始排程</small></div>
           <div v-else class="admin-table-wrap">
             <table class="admin-table">
-              <thead><tr><th>术式</th><th>部位 / 侧别</th><th>术者 / 麻醉</th><th>排程时间</th><th>核查时间</th><th>状态</th><th>操作</th></tr></thead>
+              <thead><tr><th>术式</th><th>部位 / 侧别</th><th>术者 / 麻醉</th><th>排程时间</th><th>第二人核验</th><th>核查时间</th><th>状态</th><th>操作</th></tr></thead>
               <tbody>
                 <tr v-for="procedure in procedures" :key="procedure.surgical_procedure_id">
                   <td><strong>{{ procedure.procedure_name }}</strong><small>…{{ procedure.surgical_procedure_id.slice(-8) }}</small></td>
                   <td>{{ bodySiteLabels[procedure.body_site] }} · {{ lateralityLabels[procedure.laterality] }}</td>
                   <td><small>术者 …{{ procedure.surgeon_id.slice(-8) }}</small><small>麻醉 …{{ procedure.anesthesiologist_id.slice(-8) }}</small></td>
                   <td>{{ formatDate(procedure.scheduled_at) }}</td>
+                  <td><template v-if="procedure.time_out_verified_at"><small>…{{ procedure.time_out_verified_by?.slice(-8) }}</small><small>{{ formatDate(procedure.time_out_verified_at) }}</small></template><span v-else>待独立核验</span></td>
                   <td>{{ formatDate(procedure.time_out_at) }}</td>
                   <td><span class="admin-status" :class="procedure.status.toLowerCase()">{{ statusLabels[procedure.status] }}</span></td>
                   <td class="admin-actions">
+                    <button v-if="procedure.status === 'SCHEDULED' && !procedure.time_out_verified_at" class="task-action" :disabled="Boolean(busy)" @click="openVerification(procedure)">第二人核验</button>
                     <button v-if="procedure.status === 'SCHEDULED'" class="task-action" :disabled="Boolean(busy)" @click="transition(procedure, 'TIME_OUT')">安全核查</button>
                     <button v-if="procedure.status === 'TIME_OUT_COMPLETED'" class="task-action" :disabled="Boolean(busy)" @click="transition(procedure, 'COMPLETE')">完成</button>
                   </td>
@@ -131,13 +152,16 @@ async function transition(procedure: SurgicalProcedureWire, action: 'TIME_OUT' |
 
       <AdminActionDialog v-model:open="createDialogOpen" title="新增手术排程" description="术式、部位、术者和麻醉医生均需显式登记。" eyebrow="诊疗执行 / 围手术期" size="large" :busy="busy === 'schedule'">
         <form class="admin-form" @submit.prevent="schedule">
-          <label><span>术式名称</span><input v-model="form.procedureName" maxlength="256" required placeholder="例：腹腔镜胆囊切除术" /></label>
-          <label><span>部位</span><select v-model="form.bodySite"><option v-for="site in bodySites" :key="site" :value="site">{{ bodySiteLabels[site] }}</option></select></label>
-          <label><span>侧别</span><select v-model="form.laterality"><option v-for="lat in lateralities" :key="lat" :value="lat">{{ lateralityLabels[lat] }}</option></select></label>
-          <label><span>术者 ID</span><input v-model="form.surgeonId" maxlength="36" required placeholder="UUID" /></label>
-          <label><span>麻醉医生 ID</span><input v-model="form.anesthesiologistId" maxlength="36" required placeholder="UUID" /></label>
+          <label :for="fieldId('procedure-name')"><span>术式名称</span><input :id="fieldId('procedure-name')" v-model="form.procedureName" maxlength="256" required placeholder="例：腹腔镜胆囊切除术" /></label>
+          <label :for="fieldId('body-site')"><span>部位</span><select :id="fieldId('body-site')" v-model="form.bodySite"><option v-for="site in bodySites" :key="site" :value="site">{{ bodySiteLabels[site] }}</option></select></label>
+          <label :for="fieldId('laterality')"><span>侧别</span><select :id="fieldId('laterality')" v-model="form.laterality"><option v-for="lat in lateralities" :key="lat" :value="lat">{{ lateralityLabels[lat] }}</option></select></label>
+          <label :for="fieldId('surgeon-id')"><span>术者 ID</span><input :id="fieldId('surgeon-id')" v-model="form.surgeonId" maxlength="36" required placeholder="UUID" /></label>
+          <label :for="fieldId('anesthesiologist-id')"><span>麻醉医生 ID</span><input :id="fieldId('anesthesiologist-id')" v-model="form.anesthesiologistId" maxlength="36" required placeholder="UUID" /></label>
           <button class="button primary full" :disabled="Boolean(busy)">{{ busy === 'schedule' ? '正在排程…' : '排程手术' }}</button>
         </form>
+      </AdminActionDialog>
+      <AdminActionDialog :open="Boolean(verificationProcedure)" title="独立第二人 Time-Out 核验" description="核验将记录当前登录账号。该账号之后不能执行本台手术的最终 Time-Out 状态迁移。" eyebrow="围手术期 / 双人安全门禁" size="large" :busy="busy.startsWith('verify:')" @update:open="!$event && (verificationProcedure = null)">
+        <form class="admin-form" @submit.prevent="verifyTimeOut"><label class="full" :for="fieldId('verification-note')"><span>核验说明</span><textarea :id="fieldId('verification-note')" v-model="verificationNote" required minlength="2" maxlength="1000" rows="4" placeholder="记录患者身份、术式/部位/侧别、器械和影像资料的独立核对结果" /></label><button class="button primary full" :disabled="Boolean(busy) || verificationNote.trim().length < 2">提交独立核验</button></form>
       </AdminActionDialog>
     </template>
   </section>

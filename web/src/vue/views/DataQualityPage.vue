@@ -126,6 +126,10 @@ function formatDate(value: string | null | undefined) {
   return value ? new Intl.DateTimeFormat('zh-CN', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value)) : '—';
 }
 
+function initiatorLabel(scan: DataQualityScanRunWire) {
+  return scan.initiator_kind === 'SCHEDULED' ? '系统定时扫描' : '人工发起';
+}
+
 async function reload() {
   notice.value = '';
   await Promise.all([rulesQuery.refetch(), allFindingsQuery.refetch()]);
@@ -265,7 +269,7 @@ async function deactivate(rule: DataQualityRuleWire) {
       <div>
         <p class="eyebrow">数据中心 / 数据质量</p>
         <h1>全院数据质量与问题工单</h1>
-        <p>覆盖质量规则、问题队列、整改复核与审计追踪；停用不物理删除，历史证据持续保留。</p>
+        <p>覆盖可执行事实扫描、问题队列、整改复核与审计追踪；未注册扫描器的旧规则已停用，历史证据持续保留。</p>
       </div>
       <div class="admin-inline-tools">
         <label class="admin-code-input"><span>维度筛选</span>
@@ -312,7 +316,7 @@ async function deactivate(rule: DataQualityRuleWire) {
 
       <section class="admin-panel">
           <header>
-            <div><h2>规则台账</h2><p>阈值范围 0–1；默认只展示当前生效的业务规则。</p></div>
+            <div><h2>规则台账</h2><p>阈值范围 0–1；ACTIVE 仅表示已有只读事实扫描器的规则，默认只展示可执行规则。</p></div>
             <label class="admin-code-input"><span>历史</span><input v-model="showInactive" type="checkbox" /> 包含已停用</label>
             <button class="button secondary" @click="rulesQuery.refetch()">刷新</button>
           </header>
@@ -349,9 +353,9 @@ async function deactivate(rule: DataQualityRuleWire) {
         <div v-else-if="scans.length === 0" class="admin-empty" role="status">该规则尚未运行事实扫描。历史人工评估只作旧证据保留，不再作为新的执行入口。</div>
         <div v-else class="admin-table-wrap">
           <table class="admin-table">
-            <thead><tr><th>扫描时间</th><th>样本</th><th>通过</th><th>失败</th><th>质量分</th><th>状态</th><th>操作</th></tr></thead>
+            <thead><tr><th>扫描时间</th><th>发起方式</th><th>样本</th><th>通过</th><th>失败</th><th>质量分</th><th>状态</th><th>操作</th></tr></thead>
             <tbody><tr v-for="scan in scans" :key="scan.data_quality_scan_id">
-              <td>{{ formatDate(scan.started_at) }}</td><td>{{ scan.total_count }}</td><td>{{ scan.passed_count }}</td><td>{{ scan.failed_count }}</td>
+              <td>{{ formatDate(scan.started_at) }}</td><td>{{ initiatorLabel(scan) }}</td><td>{{ scan.total_count }}</td><td>{{ scan.passed_count }}</td><td>{{ scan.failed_count }}</td>
               <td>{{ (scan.score * 100).toFixed(2) }}%</td><td><span class="admin-status" :class="scan.status.toLowerCase()">{{ scan.status === 'NO_DATA' ? '无样本' : '已完成' }}</span></td>
               <td><button class="task-action" @click="selectScan(scan)">进入问题详情</button></td>
             </tr></tbody>
@@ -359,7 +363,7 @@ async function deactivate(rule: DataQualityRuleWire) {
         </div>
 
         <section v-if="selectedScan" class="quality-scan-detail" aria-label="扫描问题详情">
-          <header><div><h3>问题工单 · …{{ selectedScan.data_quality_scan_id.slice(-8) }}</h3><p>详情不展示姓名、证件号或病历正文，仅保留实体引用与原因代码。</p></div><button class="button secondary" :disabled="Boolean(busy)" @click="createTriage">{{ busy === 'triage' ? '分析中…' : '治理助手研判' }}</button></header>
+          <header><div><h3>问题工单 · …{{ selectedScan.data_quality_scan_id.slice(-8) }}</h3><p>{{ initiatorLabel(selectedScan) }}；详情不展示姓名、证件号或病历正文，仅保留实体引用与原因代码。</p></div><button class="button secondary" :disabled="Boolean(busy)" @click="createTriage">{{ busy === 'triage' ? '分析中…' : '治理助手研判' }}</button></header>
           <div v-if="advice" class="quality-agent-advice"><strong>治理候选建议 · {{ advice.risk_level }}</strong><p>{{ advice.summary }}</p><ol><li v-for="action in advice.prioritized_actions" :key="action">{{ action }}</li></ol><small>证据指纹 …{{ advice.evidence_hash.slice(-12) }} · 仅建议，无自动写入权</small></div>
           <div v-if="findingsQuery.isPending.value" class="admin-empty">正在读取问题工单…</div>
           <div v-else-if="findings.length === 0" class="admin-empty">本次扫描未生成失败工单。</div>
@@ -384,7 +388,7 @@ async function deactivate(rule: DataQualityRuleWire) {
       </section>
     </template>
 
-    <AdminActionDialog v-model:open="createOpen" title="新建数据质量规则" description="规则保存后立即参与对应实体的质量评估；规则身份与阈值不可覆盖修改，变更需停用旧规则并创建新版本。" size="large" :busy="busy === 'create'">
+    <AdminActionDialog v-model:open="createOpen" title="新建数据质量规则" description="仅可登记已有只读事实扫描器的规则编码及对应目标实体；不支持的规则不会被错误启用。规则身份与阈值不可覆盖修改，变更需停用旧规则并创建新版本。" size="large" :busy="busy === 'create'">
       <form class="admin-form quality-dialog-form" @submit.prevent="createRule">
         <label><span>规则编码</span><input v-model="form.ruleCode" maxlength="96" required placeholder="例：DQ-PATIENT-NAME" /></label>
         <label><span>规则名称</span><input v-model="form.ruleName" maxlength="256" required placeholder="例：患者姓名完整性" /></label>
@@ -416,14 +420,15 @@ async function deactivate(rule: DataQualityRuleWire) {
 .toolbar-actions { gap: 8px; }
 .quality-operations { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, .8fr); gap: 14px; }
 .quality-work-queue, .quality-safeguards { margin: 0; }
-.quality-queue-list { display: grid; gap: 8px; }
+.quality-queue-list { display: grid; gap: 8px; margin: 14px 16px 0; }
 .quality-queue-row { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: inherit; text-align: left; cursor: pointer; }
 .quality-queue-row > span { display: grid; gap: 3px; min-width: 0; }
 .quality-queue-row small { color: var(--muted); }
 .quality-queue-meta { flex: 0 0 auto; text-align: right; }
-.quality-flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 14px 0 0; padding: 0; list-style: none; }
+.quality-flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 14px 16px 16px; padding: 0; list-style: none; }
 .quality-flow li { padding: 8px 6px; border-radius: 999px; background: var(--blue-50); color: var(--blue); font-size: 11px; font-weight: 700; text-align: center; }
-.quality-refresh { width: 100%; margin-top: 12px; }
+.quality-safeguards > .folder-row { padding: 10px 16px; }
+.quality-refresh { width: calc(100% - 32px); margin: 14px 16px 16px; }
 .quality-scan-console { display: grid; gap: 14px; }
 .quality-scan-console > header { margin-bottom: 0; }
 .quality-scan-detail { display: grid; gap: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-muted, #f8fafc); }

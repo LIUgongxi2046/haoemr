@@ -1,0 +1,14 @@
+{
+  "test_mode": "UI_FIXTURE_NO_MODEL_CALL",
+  "center_actions": "PASS",
+  "reminder_confirmation": "PASS",
+  "emergency_record_review": "PASS",
+  "same_route_review": "PASS",
+  "side_inpatient_review": "PASS",
+  "narrow_button_layout": "PASS",
+  "no_duplicate_submissions": "PASS",
+  "unbound_context": "PASS",
+  "older_answer_review": "PASS",
+  "draft_editor_handoff": "PASS",
+  "errors": []
+}

@@ -176,7 +176,7 @@ async function deactivate(budget: AgentRunBudgetWire) {
   <section data-page-root class="content admin-content vue-native-page">
     <div class="page-heading admin-heading">
       <div>
-        <p class="eyebrow">AI 中心 / 医助运行监测</p>
+        <p class="eyebrow">AI中心 / 医助运行监测</p>
         <h1>医助运行监测</h1>
         <p>查看真实医助任务、模型调用、工具调用、处理耗时与异常，再维护任务额度；页面每 15 秒自动刷新。</p>
       </div>
@@ -207,7 +207,7 @@ async function deactivate(budget: AgentRunBudgetWire) {
           <div><h2>真实医助任务台账</h2><p>来源于医疗医助运行库，不包含仿真工作台结果；患者身份不在管理页展示。</p></div>
           <button class="button secondary" @click="runsQuery.refetch()">刷新任务</button>
         </header>
-        <div v-if="runs.length === 0" class="admin-empty" role="status">当前院区暂无真实医助任务。医生在 Eva 发起任务后，这里会记录模型、工具、耗时与结果状态。</div>
+        <div v-if="runs.length === 0" class="admin-empty" role="status">当前院区暂无真实医助任务。医生在 AI医助 EVA 发起任务后，这里会记录模型、工具、耗时与结果状态。</div>
         <div v-else class="admin-table-wrap">
           <table class="admin-table">
             <thead><tr><th>任务 / 医助</th><th>模型</th><th>运行状态</th><th>模型与工具调用</th><th>用量 / 耗时</th><th>发起时间</th><th>明细</th></tr></thead>
@@ -267,9 +267,9 @@ async function deactivate(budget: AgentRunBudgetWire) {
 
       </div>
 
-      <AdminActionDialog v-model:open="editorOpen" :title="editingBudget ? '编辑处理额度' : '新建处理额度'" description="额度变更会直接约束后续医助任务，已完成任务用量不受影响。" size="large" :busy="Boolean(busy)" @update:open="!$event && resetBudgetForm()">
-          <form class="admin-form ai-center-dialog-form" @submit.prevent="defineBudget">
-            <label><span>方案编码</span><input v-model="defineForm.budgetCode" maxlength="128" required :disabled="Boolean(editingBudget)" placeholder="例：DAILY-STANDARD" /></label>
+      <AdminActionDialog v-model:open="editorOpen" :title="editingBudget ? '编辑处理额度' : '新建处理额度'" description="额度编码必须为 BUDGET_ 加医助编码；服务端会在任务、工具和模型阶段执行硬门，超限任务会阻断而不是重试。" size="large" :busy="Boolean(busy)" @update:open="!$event && resetBudgetForm()">
+        <form class="admin-form ai-center-dialog-form" @submit.prevent="defineBudget">
+            <label><span>方案编码</span><input v-model="defineForm.budgetCode" maxlength="128" pattern="BUDGET_[A-Z0-9_]+" required :disabled="Boolean(editingBudget)" placeholder="例：BUDGET_DOCUMENT_DRAFTER" /><small>与医助编码一一对应，编码不可变。</small></label>
             <label><span>方案名称</span><input v-model="defineForm.budgetName" maxlength="256" required placeholder="例：门诊标准额度" /></label>
             <label><span>最大生成额度</span><input v-model.number="defineForm.maxTokens" type="number" min="0" step="1" required /></label>
             <label><span>最长处理时间（秒）</span><input v-model.number="defineForm.maxDurationSeconds" type="number" min="0" step="1" required /></label>

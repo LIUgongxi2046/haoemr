@@ -5,7 +5,7 @@ export const generatedRouteContract = {
     "docs/design/ui-delivery/route-design-map.csv",
     "prototype/traceability.csv"
   ],
-  "route_count": 199,
+  "route_count": 196,
   "routes": [
     {
       "route_id": "admin",
@@ -984,64 +984,10 @@ export const generatedRouteContract = {
       "artifact_path": "docs/design/ui-delivery/screens/agent-evals.png"
     },
     {
-      "route_id": "ai-action-review",
-      "path": "#/ai-action-review",
-      "screen_id": "HASH-085",
-      "title": "AI 候选动作与审批",
-      "primary_domain": "AI",
-      "roles": [
-        "AUTHORIZED_CLINICAL_OR_AI_GOVERNANCE_ROLE"
-      ],
-      "fr_refs": [
-        "FR-123"
-      ],
-      "ac_refs": [
-        "AC-123"
-      ],
-      "scr_refs": [
-        "#ai-action-review"
-      ],
-      "requirement_refs": [
-        "FR-123",
-        "AC-123",
-        "#ai-action-review"
-      ],
-      "api_refs": [
-        "ContextLease",
-        "AIRun",
-        "AIProposal"
-      ],
-      "states": [
-        "default",
-        "loading",
-        "empty",
-        "partial",
-        "stale",
-        "permission",
-        "timeout",
-        "conflict",
-        "approval",
-        "publishing",
-        "failed",
-        "rollback",
-        "success"
-      ],
-      "guards": [
-        "SESSION",
-        "PURPOSE",
-        "MODEL_POLICY",
-        "AI_USE_CASE"
-      ],
-      "layout": "治理与管理",
-      "source_status": "VERIFIED",
-      "policy_status": "INFERRED_BY_ROUTE_POLICY_V1",
-      "artifact_path": "docs/design/ui-delivery/screens/ai-action-review.png"
-    },
-    {
       "route_id": "ai-assistant",
       "path": "#/ai-assistant",
       "screen_id": "HASH-082",
-      "title": "AI医助 Eva",
+      "title": "AI医助 EVA",
       "primary_domain": "AI",
       "roles": [
         "AUTHORIZED_CLINICAL_OR_AI_GOVERNANCE_ROLE"
@@ -1096,60 +1042,6 @@ export const generatedRouteContract = {
       "source_status": "VERIFIED",
       "policy_status": "INFERRED_BY_ROUTE_POLICY_V1",
       "artifact_path": "docs/design/ui-delivery/screens/ai-assistant.png"
-    },
-    {
-      "route_id": "ai-assistant-policy",
-      "path": "#/ai-assistant-policy",
-      "screen_id": "HASH-086",
-      "title": "AI医助 Eva 工作策略与效果治理",
-      "primary_domain": "AI",
-      "roles": [
-        "AUTHORIZED_CLINICAL_OR_AI_GOVERNANCE_ROLE"
-      ],
-      "fr_refs": [
-        "FR-124"
-      ],
-      "ac_refs": [
-        "AC-124"
-      ],
-      "scr_refs": [
-        "#ai-assistant-policy"
-      ],
-      "requirement_refs": [
-        "FR-124",
-        "AC-124",
-        "#ai-assistant-policy"
-      ],
-      "api_refs": [
-        "ContextLease",
-        "AIRun",
-        "AIProposal"
-      ],
-      "states": [
-        "default",
-        "loading",
-        "empty",
-        "partial",
-        "stale",
-        "permission",
-        "timeout",
-        "conflict",
-        "approval",
-        "publishing",
-        "failed",
-        "rollback",
-        "success"
-      ],
-      "guards": [
-        "SESSION",
-        "PURPOSE",
-        "MODEL_POLICY",
-        "AI_USE_CASE"
-      ],
-      "layout": "治理与管理",
-      "source_status": "VERIFIED",
-      "policy_status": "INFERRED_BY_ROUTE_POLICY_V1",
-      "artifact_path": "docs/design/ui-delivery/screens/ai-assistant-policy.png"
     },
     {
       "route_id": "ai-capture",
@@ -2019,44 +1911,6 @@ export const generatedRouteContract = {
       "source_status": "VERIFIED",
       "policy_status": "INFERRED_BY_ROUTE_POLICY_V1",
       "artifact_path": "docs/design/ui-delivery/screens/clinical.png"
-    },
-    {
-      "route_id": "clinical-specialty-ai",
-      "path": "#/clinical-specialty-ai",
-      "screen_id": "HASH-199",
-      "title": "专科医助复核",
-      "primary_domain": "CLINICAL",
-      "roles": [
-        "AUTHORIZED_ROLE"
-      ],
-      "fr_refs": [],
-      "ac_refs": [],
-      "scr_refs": [],
-      "requirement_refs": [
-        "Prototype SPEC v0.13"
-      ],
-      "api_refs": [
-        "Clinical Core API"
-      ],
-      "states": [
-        "default",
-        "loading",
-        "empty",
-        "permission",
-        "offline",
-        "hard-block",
-        "success",
-        "recovery"
-      ],
-      "guards": [
-        "SESSION",
-        "PATIENT_CONTEXT",
-        "ENCOUNTER_OR_PURPOSE"
-      ],
-      "layout": "核心专科",
-      "source_status": "VERIFIED",
-      "policy_status": "INFERRED_BY_ROUTE_POLICY_V1",
-      "artifact_path": "docs/design/ui-delivery/screens/specialty-center.png"
     },
     {
       "route_id": "clinical-tasks",

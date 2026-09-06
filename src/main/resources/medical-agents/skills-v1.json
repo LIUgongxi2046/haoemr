@@ -1,0 +1,466 @@
+[
+  {
+    "agent_code": "PRE_VISIT_SUMMARIZER",
+    "version": "1.0.0",
+    "title": "诊前资料与待确认问题",
+    "workflow": "按既往资料、当前主诉、开放任务、缺失信息整理诊前简报，区分历史与当次记录。",
+    "handoff_route": "opd-record",
+    "document_draft": false
+  },
+  {
+    "agent_code": "TRIAGE_CONTEXT_SUMMARIZER",
+    "version": "1.0.0",
+    "title": "分诊上下文简报",
+    "workflow": "核对主诉、生命体征、分诊级别及已记录的红旗，输出需立即人工核对项，不自行改变分诊级别。",
+    "handoff_route": "er-triage",
+    "document_draft": false
+  },
+  {
+    "agent_code": "ACTIVE_ENCOUNTER_SUMMARIZER",
+    "version": "1.0.0",
+    "title": "当次就诊摘要",
+    "workflow": "按症状、体征、检查、诊断确定性、已下医嘱、下一步任务组织摘要。",
+    "handoff_route": "patient-timeline",
+    "document_draft": false
+  },
+  {
+    "agent_code": "INPATIENT_DAILY_SUMMARIZER",
+    "version": "1.0.0",
+    "title": "住院每日摘要",
+    "workflow": "按时间比较病情、医嘱变化、待回结果和未完成任务，明确时间和来源。",
+    "handoff_route": "inpatient",
+    "document_draft": false
+  },
+  {
+    "agent_code": "PERIOPERATIVE_CONTEXT_SUMMARIZER",
+    "version": "1.0.0",
+    "title": "围术期上下文",
+    "workflow": "核对手术计划、同意、过敏、麻醉评估与术侧核查的已记录状态；缺项保持待核实。",
+    "handoff_route": "surgery-schedule",
+    "document_draft": false
+  },
+  {
+    "agent_code": "DISCHARGE_READINESS_SUMMARIZER",
+    "version": "1.0.0",
+    "title": "出院准备清单",
+    "workflow": "逐项核对结果、带药、护理计划、随访与开放任务；列出阻塞出院的证据，不自行宣布可以出院。",
+    "handoff_route": "inpatient-discharge",
+    "document_draft": false
+  },
+  {
+    "agent_code": "OUTPATIENT_NOTE_DRAFTER",
+    "version": "1.0.0",
+    "title": "门诊病历草稿",
+    "workflow": "形成主诉、现病史、既往史、过敏史、体格检查、辅助检查、评估、治疗计划和随访段落。",
+    "handoff_route": "record-editor",
+    "document_draft": true
+  },
+  {
+    "agent_code": "EMERGENCY_NOTE_DRAFTER",
+    "version": "1.0.0",
+    "title": "急诊病历草稿",
+    "workflow": "按发病时间、院前处理、分诊与生命体征、抢救经过、检查和去向组织急诊文书，未记录处置不得写成已执行。",
+    "handoff_route": "er-record",
+    "document_draft": true
+  },
+  {
+    "agent_code": "ADMISSION_NOTE_DRAFTER",
+    "version": "1.0.0",
+    "title": "入院记录草稿",
+    "workflow": "整理现病史、既往与过敏史、体格检查、检查证据、初步诊断及已有入院计划。",
+    "handoff_route": "record-editor",
+    "document_draft": true
+  },
+  {
+    "agent_code": "FIRST_COURSE_DRAFTER",
+    "version": "1.0.0",
+    "title": "首次病程草稿",
+    "workflow": "形成病例特点、诊断依据、待排除问题与诊疗计划，保留诊断确定性。",
+    "handoff_route": "inpatient-course",
+    "document_draft": true
+  },
+  {
+    "agent_code": "PROGRESS_NOTE_DRAFTER",
+    "version": "1.0.0",
+    "title": "日常病程草稿",
+    "workflow": "按时间书写新症状、客观变化、检查、当前评估与已记录处理，区分今天和历史。",
+    "handoff_route": "inpatient-course",
+    "document_draft": true
+  },
+  {
+    "agent_code": "WARD_ROUND_NOTE_DRAFTER",
+    "version": "1.0.0",
+    "title": "查房记录草稿",
+    "workflow": "整理本次查房病情、客观证据、已记录意见与待确认计划，不捏造上级医师意见。",
+    "handoff_route": "inpatient-course",
+    "document_draft": true
+  },
+  {
+    "agent_code": "CONSULT_NOTE_DRAFTER",
+    "version": "1.0.0",
+    "title": "会诊意见草稿",
+    "workflow": "围绕会诊目的、临床问题、已提供意见和建议形成草稿，不代签会诊意见。",
+    "handoff_route": "ip-consult",
+    "document_draft": true
+  },
+  {
+    "agent_code": "PERIOPERATIVE_NOTE_DRAFTER",
+    "version": "1.0.0",
+    "title": "围术期记录草稿",
+    "workflow": "整理术前准备、术中记录和术后观察；手术方式、术侧、操作者、并发症无记录时标缺失。",
+    "handoff_route": "inpatient-course",
+    "document_draft": true
+  },
+  {
+    "agent_code": "NURSING_HANDOFF_DRAFTER",
+    "version": "1.0.0",
+    "title": "护理交班草稿",
+    "workflow": "按病情、管路、用药执行、风险、待办与责任交接组织交班，不把计划写成执行。",
+    "handoff_route": "er-handoff",
+    "document_draft": true
+  },
+  {
+    "agent_code": "DISCHARGE_NOTE_DRAFTER",
+    "version": "1.0.0",
+    "title": "出院记录草稿",
+    "workflow": "形成入院情况、诊疗经过、出院时状态、已确认带药及随访，未确认剂量和日期标待核实。",
+    "handoff_route": "inpatient-discharge",
+    "document_draft": true
+  },
+  {
+    "agent_code": "WRITING_QC_REVIEWER",
+    "version": "1.0.0",
+    "title": "书写中质控",
+    "workflow": "检查必填段落、语义遗漏、内部矛盾、日期和单位，逐条定位字段并提出改写建议。",
+    "handoff_route": "record-editor",
+    "document_draft": false
+  },
+  {
+    "agent_code": "PRE_SIGN_QC_REVIEWER",
+    "version": "1.0.0",
+    "title": "签署前质控",
+    "workflow": "先解释确定性质控结果，再检查诊断依据、过敏与用药叙述冲突；不得解除规则阻断。",
+    "handoff_route": "record-qc",
+    "document_draft": false
+  },
+  {
+    "agent_code": "ACTIVE_RECORD_QC_REVIEWER",
+    "version": "1.0.0",
+    "title": "运行病历质控",
+    "workflow": "检查当前版本文书与医嘱、结果、病程的时序一致性，按严重性列问题和修复建议。",
+    "handoff_route": "record-qc",
+    "document_draft": false
+  },
+  {
+    "agent_code": "TERMINAL_RECORD_QC_REVIEWER",
+    "version": "1.0.0",
+    "title": "终末病历质控",
+    "workflow": "核对入院、病程、出院记录间的一致性、完成情况及来源，未见签署证据不能宣布归档合格。",
+    "handoff_route": "record-qc",
+    "document_draft": false
+  },
+  {
+    "agent_code": "CORRECTION_CONSISTENCY_REVIEWER",
+    "version": "1.0.0",
+    "title": "更正一致性复核",
+    "workflow": "核对更正内容与当前版本、时间和下游引用，列出可能受影响的文书与待核实项。",
+    "handoff_route": "record-versions",
+    "document_draft": false
+  },
+  {
+    "agent_code": "NEW_RESULT_INTAKE_AGENT",
+    "version": "1.0.0",
+    "title": "新结果解读",
+    "workflow": "识别结果项目、时间、单位、异常标记、当前医嘱及需要医生解释的变化，不把异常标记等同诊断。",
+    "handoff_route": "opd-results",
+    "document_draft": false
+  },
+  {
+    "agent_code": "RESULT_TREND_REVIEWER",
+    "version": "1.0.0",
+    "title": "结果趋势分析",
+    "workflow": "只比较同项目、同单位且时间明确的结果，展示原值和方向，不能换算时明确不可比。",
+    "handoff_route": "opd-results",
+    "document_draft": false
+  },
+  {
+    "agent_code": "CRITICAL_RESULT_CONTEXT_AGENT",
+    "version": "1.0.0",
+    "title": "危急值处置上下文",
+    "workflow": "优先列危急标记、结果时间、通知与确认状态、责任人及未闭环环节，不降低危急级别。",
+    "handoff_route": "opd-results",
+    "document_draft": false
+  },
+  {
+    "agent_code": "PENDING_RESULT_TRACKER",
+    "version": "1.0.0",
+    "title": "待回结果跟踪",
+    "workflow": "对照医嘱与结果识别尚未回报和时间不明项，提出联系对象和跟踪任务，不声称已经催办。",
+    "handoff_route": "opd-results",
+    "document_draft": false
+  },
+  {
+    "agent_code": "FOLLOWUP_TASK_PLANNER",
+    "version": "1.0.0",
+    "title": "结果随访任务规划",
+    "workflow": "为需复核的结果提供可执行任务标题、原因、建议责任角色、时间要求；未给具体日期时保持待确定。",
+    "handoff_route": "clinical-tasks",
+    "document_draft": false
+  },
+  {
+    "agent_code": "CORRECTED_RESULT_RECONCILER",
+    "version": "1.0.0",
+    "title": "更正结果影响复核",
+    "workflow": "对照更正标记、版本、临床文书与已记录处置，列出需通知与重新核对的依赖项。",
+    "handoff_route": "opd-results",
+    "document_draft": false
+  },
+  {
+    "agent_code": "CONSULT_PREPARATION_AGENT",
+    "version": "1.0.0",
+    "title": "会诊准备",
+    "workflow": "围绕会诊问题收集病史、结果与已处理事项，列资料缺口与建议提问，供发起会诊使用。",
+    "handoff_route": "ip-consult",
+    "document_draft": false
+  },
+  {
+    "agent_code": "MDT_BRIEF_AGENT",
+    "version": "1.0.0",
+    "title": "MDT 病例简报",
+    "workflow": "按问题、关键证据、各学科已记录意见和待决事项组织，不编造学科共识。",
+    "handoff_route": "ip-consult",
+    "document_draft": false
+  },
+  {
+    "agent_code": "TRANSFER_HANDOFF_AGENT",
+    "version": "1.0.0",
+    "title": "转科交接准备",
+    "workflow": "汇总病情、当前医嘱、过敏、护理风险和待办，区分建议接收方与已确认接收方。",
+    "handoff_route": "clinical-tasks",
+    "document_draft": false
+  },
+  {
+    "agent_code": "DISCHARGE_TRANSITION_AGENT",
+    "version": "1.0.0",
+    "title": "出院衔接计划",
+    "workflow": "核对带药重整、待回结果、居家护理和复诊责任，形成交接清单而非完成声明。",
+    "handoff_route": "inpatient-discharge",
+    "document_draft": false
+  },
+  {
+    "agent_code": "FOLLOWUP_COORDINATION_AGENT",
+    "version": "1.0.0",
+    "title": "随访协调计划",
+    "workflow": "明确随访目标、需收集问题、已有任务与未确定安排，给出人工触达草稿，不声称已联系。",
+    "handoff_route": "clinical-tasks",
+    "document_draft": false
+  },
+  {
+    "agent_code": "TASK_RECONCILIATION_AGENT",
+    "version": "1.0.0",
+    "title": "任务核对",
+    "workflow": "依据任务状态核对重复、冲突、过期与责任空缺，引用任务 ID，不能自动关闭任务。",
+    "handoff_route": "clinical-tasks",
+    "document_draft": false
+  },
+  {
+    "agent_code": "INFECTION_CASE_REVIEWER",
+    "version": "1.0.0",
+    "title": "院感个案审阅",
+    "workflow": "对照感染事件、症状记录、检验与操作时间，区分监测线索和已确认感染，列复核资料。",
+    "handoff_route": "infection-events",
+    "document_draft": false
+  },
+  {
+    "agent_code": "OUTBREAK_ALERT_ASSESSOR",
+    "version": "1.0.0",
+    "title": "聚集线索审阅",
+    "workflow": "只分析提供且获授权的事件范围；单患者数据不能推断全院暴发，缺少群体数据时明确边界。",
+    "handoff_route": "infection-events",
+    "document_draft": false
+  },
+  {
+    "agent_code": "NOTIFIABLE_REPORT_ASSISTANT",
+    "version": "1.0.0",
+    "title": "报告准备清单",
+    "workflow": "依据已记录感染事件与有效知识内容整理报告所需信息和待确认字段，不声称已经法定直报。",
+    "handoff_route": "infection-events",
+    "document_draft": false
+  },
+  {
+    "agent_code": "DRG_CODING_REVIEWER",
+    "version": "1.0.0",
+    "title": "诊断编码复核",
+    "workflow": "核对当前诊断编码、文书证据、主要次要诊断与收费依据；无本地分组器或规则时不得编造 DRG 分组和支付金额。",
+    "handoff_route": "billing",
+    "document_draft": false
+  },
+  {
+    "agent_code": "CHARGE_RATIONALITY_REVIEWER",
+    "version": "1.0.0",
+    "title": "收费合理性复核",
+    "workflow": "逐项对照费用、医嘱、执行记录，指出缺依据或重复候选，不把规则未知项判断为违规。",
+    "handoff_route": "billing",
+    "document_draft": false
+  },
+  {
+    "agent_code": "EXAM_SLOT_PLANNER",
+    "version": "1.0.0",
+    "title": "检查预约方案",
+    "workflow": "依据当前预约、项目与资源记录整理可行安排和冲突候选；没有可用号源时不给虚构时间。",
+    "handoff_route": "imaging-workbench",
+    "document_draft": false
+  },
+  {
+    "agent_code": "EQUIPMENT_UTILIZATION_REVIEWER",
+    "version": "1.0.0",
+    "title": "设备安排复核",
+    "workflow": "核对当前患者设备使用与预约时段冲突，缺少全院资源数据时不计算全院利用率。",
+    "handoff_route": "imaging-workbench",
+    "document_draft": false
+  },
+  {
+    "agent_code": "COHORT_ENROLLMENT_ASSISTANT",
+    "version": "1.0.0",
+    "title": "研究纳排核对",
+    "workflow": "逐条比较提供的纳排条件和当前患者事实，输出满足、不满足、未知；不得自动入组或虚构研究同意。",
+    "handoff_route": "cohort-builder",
+    "document_draft": false
+  },
+  {
+    "agent_code": "OUTCOME_COLLECTION_ASSISTANT",
+    "version": "1.0.0",
+    "title": "结局采集清单",
+    "workflow": "对照研究条件、当前结果与随访记录，列出可提取结局及缺失字段，不推断未随访结局。",
+    "handoff_route": "research",
+    "document_draft": false
+  },
+  {
+    "agent_code": "DISCHARGE_MEDICATION_GUIDE",
+    "version": "1.0.0",
+    "title": "出院用药宣教",
+    "workflow": "仅解释已有确认医嘱中的药品、用法与注意事项，未知剂量写待医师确认，不生成新处方。",
+    "handoff_route": "inpatient-discharge",
+    "document_draft": false
+  },
+  {
+    "agent_code": "FOLLOWUP_REMINDER_ASSISTANT",
+    "version": "1.0.0",
+    "title": "复诊提醒草稿",
+    "workflow": "基于现有随访计划写患者能理解的提醒，区分已确认与待预约时间，保留人工核对。",
+    "handoff_route": "clinical-tasks",
+    "document_draft": false
+  },
+  {
+    "agent_code": "ADMISSION_GLUCOSE_ASSESSOR",
+    "version": "1.0.0",
+    "title": "入院血糖资料审阅",
+    "workflow": "整理血糖时间与进食状态、既往糖尿病及用药、肾功能和低血糖记录，缺失信息逐项说明。",
+    "handoff_route": "clinical-specialty-ai",
+    "document_draft": false
+  },
+  {
+    "agent_code": "INSULIN_DOSE_ADVISOR",
+    "version": "1.0.0",
+    "title": "胰岛素方案复核",
+    "workflow": "核对现有方案与血糖、进食、体重、肾功能和低血糖；只有提供有效院内算法和完整输入时才计算调整候选并展示依据，否则不给个体化剂量。",
+    "handoff_route": "clinical-specialty-ai",
+    "document_draft": false
+  },
+  {
+    "agent_code": "HYPOGLYCEMIA_GUARD",
+    "version": "1.0.0",
+    "title": "低血糖风险核对",
+    "workflow": "优先查看低值、症状、进食与胰岛素执行时间，提示需人工立即复核的证据，不编造已处置记录。",
+    "handoff_route": "clinical-specialty-ai",
+    "document_draft": false
+  },
+  {
+    "agent_code": "DISCHARGE_GLUCOSE_PLAN",
+    "version": "1.0.0",
+    "title": "出院血糖管理草稿",
+    "workflow": "根据已确认治疗计划组织监测、用药核对、低血糖教育和复诊待办，不新增剂量方案。",
+    "handoff_route": "clinical-specialty-ai",
+    "document_draft": false
+  },
+  {
+    "agent_code": "CHEST_PAIN_TRIAGE",
+    "version": "1.0.0",
+    "title": "胸痛资料核对",
+    "workflow": "优先核对发作时间、血流动力学、心电和标志物、已有分诊状态，不能用资料缺失排除急症或改变抢救优先级。",
+    "handoff_route": "clinical-specialty-ai",
+    "document_draft": false
+  },
+  {
+    "agent_code": "ANTICOAGULATION_ADVISOR",
+    "version": "1.0.0",
+    "title": "抗凝方案复核",
+    "workflow": "核对适应证、药物、剂量、肾功能、体重、出血记录与其他用药，缺完整评分输入或有效规则不虚构风险分数。",
+    "handoff_route": "clinical-specialty-ai",
+    "document_draft": false
+  },
+  {
+    "agent_code": "HEART_FAILURE_FOLLOWUP",
+    "version": "1.0.0",
+    "title": "心衰随访准备",
+    "workflow": "整理症状、体重、体征、肾功能电解质、已确认用药和复查任务，区分趋势与单点数值。",
+    "handoff_route": "clinical-specialty-ai",
+    "document_draft": false
+  },
+  {
+    "agent_code": "SYNDROME_DIFFERENTIATION",
+    "version": "1.0.0",
+    "title": "中医辨证资料整理",
+    "workflow": "基于已提供四诊、舌脉及既有证候组织辨证依据和不确定性，缺四诊不得补造。",
+    "handoff_route": "tcm-record",
+    "document_draft": false
+  },
+  {
+    "agent_code": "HERBAL_FORMULA_ADVISOR",
+    "version": "1.0.0",
+    "title": "中药方剂审阅",
+    "workflow": "只核对已提供处方的药味剂量、证候依据和已发布规则；缺处方或规则不得自行开方。",
+    "handoff_route": "tcm-record",
+    "document_draft": false
+  },
+  {
+    "agent_code": "HERB_INTERACTION_GUARD",
+    "version": "1.0.0",
+    "title": "中西药同用核对",
+    "workflow": "核对已列中西药、过敏、肝肾功能及有效知识中的风险依据，未知相互作用不宣称安全。",
+    "handoff_route": "tcm-record",
+    "document_draft": false
+  },
+  {
+    "agent_code": "DECOCTION_GUIDE",
+    "version": "1.0.0",
+    "title": "煎服宣教草稿",
+    "workflow": "依据已确认方药和明确煎服要求生成说明；先煎后下等要求无依据时标待药师确认。",
+    "handoff_route": "tcm-record",
+    "document_draft": false
+  },
+  {
+    "agent_code": "SEPSIS_RISK_ASSESSOR",
+    "version": "1.0.0",
+    "title": "脓毒症风险资料核对",
+    "workflow": "整理感染证据、生命体征和器官功能变化，只有完整输入及有效标准才给评分，不能把筛查等同确诊。",
+    "handoff_route": "clinical-specialty-ai",
+    "document_draft": false
+  },
+  {
+    "agent_code": "DETERIORATION_MONITOR",
+    "version": "1.0.0",
+    "title": "病情恶化趋势复核",
+    "workflow": "按时序比较体征、意识及检查，列出异常变化、记录缺口和人工复核优先项。",
+    "handoff_route": "clinical-specialty-ai",
+    "document_draft": false
+  },
+  {
+    "agent_code": "ICU_HANDOFF_SUMMARIZER",
+    "version": "1.0.0",
+    "title": "重症交班摘要",
+    "workflow": "按器官支持、病情趋势、用药、管路和未完成任务组织交班，明确数据时间和未知事项。",
+    "handoff_route": "clinical-specialty-ai",
+    "document_draft": false
+  }
+]

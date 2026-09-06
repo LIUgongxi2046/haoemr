@@ -35,7 +35,7 @@
 窄测试：
 
 ```text
-./gradlew test --tests org.openemr2026.configuration.ProductionEnvironmentPostProcessorTest
+./gradlew test --tests org.haoemr.configuration.ProductionEnvironmentPostProcessorTest
 11 tests, 0 failures, 0 errors, 0 skipped
 ```
 

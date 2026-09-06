@@ -2,12 +2,12 @@
 set -euo pipefail
 
 action="${1:-status}"
-pg_bin="${OPENEMR2026_PG_BIN:-/usr/local/opt/postgresql@18/bin}"
-pg_data="${OPENEMR2026_PG_DATA:-/private/tmp/openemr2026-pg18-data}"
-pg_socket="${OPENEMR2026_PG_SOCKET:-/private/tmp}"
-pg_port="${OPENEMR2026_PG_PORT:-55432}"
-pg_log="${OPENEMR2026_PG_LOG:-/private/tmp/openemr2026-pg18.log}"
-pg_database="${OPENEMR2026_PG_DATABASE:-openemr2026_dev}"
+pg_bin="${HAOEMR_PG_BIN:-/usr/local/opt/postgresql@18/bin}"
+pg_data="${HAOEMR_PG_DATA:-/private/tmp/haoemr-pg18-data}"
+pg_socket="${HAOEMR_PG_SOCKET:-/private/tmp}"
+pg_port="${HAOEMR_PG_PORT:-55432}"
+pg_log="${HAOEMR_PG_LOG:-/private/tmp/haoemr-pg18.log}"
+pg_database="${HAOEMR_PG_DATABASE:-haoemr_dev}"
 
 case "$action" in
   start)

@@ -1,0 +1,43 @@
+{
+  "run_at": "2026-09-05T13:51:37.738Z",
+  "config_key": "e2e-treatment-task-sla-1788616297738",
+  "checks": [
+    {
+      "name": "author-creates-valid-short-sla-rule-and-submits-for-independent-approval",
+      "status": "PASS",
+      "detail": "页面创建 2 分钟到期、1 分钟升级的治疗执行规则，并提交独立审批。"
+    },
+    {
+      "name": "independent-approver-publishes-rule-then-a-real-signed-order-freezes-it-on-task",
+      "status": "PASS",
+      "detail": "独立审批发布后，真实门诊治疗医嘱签署生成执行任务 817159ce-609b-437a-af07-f8378bca37e3。"
+    },
+    {
+      "name": "scheduler-escalates-and-expires-without-a-browser-command-and-history-remains-readable",
+      "status": "PASS",
+      "detail": "后台调度器自动写入 ESCALATED 后再写入 EXPIRED；页面切换只读历史后仍可查看来源和审计证据。"
+    }
+  ],
+  "findings": [],
+  "evidence": {
+    "draft": {
+      "config_id": "26aa7a9a-203c-417f-8b23-4725c32db5c9",
+      "validation_state": "VALID",
+      "pending_status": "PENDING_APPROVAL"
+    },
+    "published": {
+      "status": "ACTIVE",
+      "row_version": 5
+    },
+    "order": {
+      "order_id": "a9fe1355-d13b-4d42-929a-59cdcf23e20b",
+      "execution_task_id": "817159ce-609b-437a-af07-f8378bca37e3"
+    },
+    "lifecycle": {
+      "escalated": true,
+      "expired": true
+    }
+  },
+  "passed": 3,
+  "failed": 0
+}

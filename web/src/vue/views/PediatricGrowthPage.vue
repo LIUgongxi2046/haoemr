@@ -5,6 +5,7 @@ import type { PediatricGrowthRecordWire } from '../../generated/contracts';
 import { createPediatricGrowthRecord, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listPediatricGrowthRecords } from '../../api/specialty-layers';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { localDateTimeInputValue } from '../date-input';
 
 const patientLeaseQuery = useQuery({
   queryKey: ['specialty-layers', 'pediatrics-care', 'patient-lease'],
@@ -36,7 +37,7 @@ const form = reactive({
   heightCm: 0,
   weightKg: 0,
   headCircumferenceCm: '',
-  measuredAt: new Date().toISOString(),
+  measuredAt: localDateTimeInputValue(),
 });
 const busy = ref('');
 const notice = ref('');
@@ -76,7 +77,7 @@ async function createRecord() {
       <div>
         <p class="eyebrow">专科其余层 / 儿科 · 照护</p>
         <h1>生长发育记录</h1>
-        <p>身高、体重、头围与测量时间登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记身高、体重、头围与测量时间。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>

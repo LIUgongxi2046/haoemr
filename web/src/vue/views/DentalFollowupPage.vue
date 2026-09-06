@@ -79,9 +79,9 @@ async function createRecord() {
   <section data-page-root class="content admin-content vue-native-page">
     <div class="page-heading admin-heading">
       <div>
-        <p class="eyebrow">专科其余层 / 儿科 · 随访</p>
+        <p class="eyebrow">专科其余层 / 口腔 · 随访</p>
         <h1>随访记录</h1>
-        <p>随访原因、预约日期、是否到访与结局备注登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记随访原因、预约日期、是否到访与结局备注。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>
@@ -97,7 +97,7 @@ async function createRecord() {
       <div class="admin-layout">
         <section class="admin-panel">
           <header>
-            <div><h2>随访记录台账</h2><p>当前患者儿科随访档案。</p></div>
+            <div><h2>随访记录台账</h2><p>当前患者口腔随访档案。</p></div>
           </header>
           <div v-if="records.length === 0" class="admin-empty" role="status">暂无随访记录，可在右侧新增。</div>
           <div v-else class="admin-table-wrap">

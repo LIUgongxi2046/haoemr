@@ -5,7 +5,7 @@ import { chromium } from 'playwright';
 
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const outputDir = resolve(webDir, '../output/playwright/inpatient-nested-crud');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4178').replace(/\/$/, '');
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4178').replace(/\/$/, '');
 const stamp = Date.now().toString().slice(-8);
 const batch = `IP-BATCH-${stamp}`;
 const correctedBatch = `${batch}-R1`;
@@ -40,7 +40,7 @@ async function check(name, action) {
 async function login() {
   await page.goto(`${baseUrl}/#/login`, { waitUntil: 'domcontentloaded' });
   await page.getByLabel('用户名').fill('linwei');
-  await page.getByLabel('密码', { exact: true }).fill('OpenEMR2026-dev!');
+  await page.getByLabel('密码', { exact: true }).fill('HaoEMR-dev!');
   await page.getByRole('button', { name: '登录系统', exact: true }).click();
   await page.waitForURL(/#\/clinical$/, { timeout: 20_000 });
 }
@@ -101,9 +101,10 @@ try {
     await assertDialog('办理新入院');
 
     await go(routes[1]);
-    const fill = page.getByRole('button', { name: '填入合成验收内容', exact: true });
-    if (await fill.count() && !(await fill.isDisabled())) {
-      await fill.click();
+    const field = page.locator('.inpatient-section-form textarea:not([readonly])').first();
+    if (await field.count()) {
+      const previous = await field.inputValue();
+      await field.fill(`${previous}\n合成浏览器验收内容-${stamp}`);
       await assertDialog('保存新版本');
     }
 

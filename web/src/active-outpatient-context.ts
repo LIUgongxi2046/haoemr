@@ -7,7 +7,7 @@ export interface ActiveOutpatientContext {
   selectedAt: string;
 }
 
-const STORAGE_KEY = 'openemr2026.active-outpatient-context.v1';
+const STORAGE_KEY = 'haoemr.active-outpatient-context.v1';
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function validUuid(value: unknown): value is string {

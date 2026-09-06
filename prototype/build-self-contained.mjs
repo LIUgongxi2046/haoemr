@@ -21,7 +21,7 @@ const html = `<!doctype html>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="prototype-version" content="0.13.0">
-  <title>openemr2026 核心临床原型 v0.13</title>
+  <title>HaoEMR 核心临床原型 v0.13</title>
   <link rel="icon" href="data:,">
   <style>${css}</style>
 </head>

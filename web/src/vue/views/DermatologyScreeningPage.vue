@@ -5,6 +5,7 @@ import type { DermatologyBiologicScreeningWire } from '../../generated/contracts
 import { createDermatologyBiologicScreening, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listDermatologyBiologicScreenings } from '../../api/specialty-layers';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { localDateTimeInputValue } from '../date-input';
 
 const patientLeaseQuery = useQuery({
   queryKey: ['specialty-layers', 'dermatology-treatment', 'patient-lease'],
@@ -36,7 +37,7 @@ const form = reactive({
   biologicName: '',
   tbScreeningResult: 'NEGATIVE' as DermatologyBiologicScreeningWire['tb_screening_result'],
   hepatitisScreeningResult: 'NEGATIVE' as DermatologyBiologicScreeningWire['hepatitis_screening_result'],
-  screenedAt: new Date().toISOString(),
+  screenedAt: localDateTimeInputValue(),
 });
 const busy = ref('');
 const notice = ref('');

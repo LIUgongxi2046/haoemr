@@ -1,6 +1,6 @@
 # AI 医助小南 v2 设计系统增量
 
-> 基线：[openemr2026 UI 设计系统 v1.0](../design-system.md) 与 [全局 Token](../tokens.json)。本文件只定义小南 v2 的增量契约；冲突时以患者安全、PRD 和全局设计系统为先。
+> 基线：[haoemr UI 设计系统 v1.0](../design-system.md) 与 [全局 Token](../tokens.json)。本文件只定义小南 v2 的增量契约；冲突时以患者安全、PRD 和全局设计系统为先。
 
 ## 1. 视觉方向
 

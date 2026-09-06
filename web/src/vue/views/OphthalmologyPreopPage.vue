@@ -79,7 +79,7 @@ async function createRecord() {
       <div>
         <p class="eyebrow">专科其余层 / 眼科 · 治疗</p>
         <h1>术前核对</h1>
-        <p>手术眼别与见证者双人核对登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记手术眼别及见证者双人核对结果。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>

@@ -39,7 +39,7 @@ scripts/verify.sh → VERIFY_EXIT=0
 
 - **迁移 V120**：`ophthalmology_postop_followup`（租户/患者/就诊/院区/术眼/随访日期/眼压/并发症/记录者/记录时间/row_version）；`surgical_eye` 枚举、眼压范围、高眼压并发症联动三条显式命名约束；身份不可变触发器；患者+日期索引。
 - **契约**：新增 `OphthalmologyPostopFollowup`、`OphthalmologyPostopFollowupCreateRequest` 两 Schema 与 `GET/POST /ophthalmology-postop-followups` 两端点。
-- **模块**：`org.openemr2026.ophthalmology` 下 `OphthalmologyPostopFollowupService`（record/list + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
+- **模块**：`org.haoemr.ophthalmology` 下 `OphthalmologyPostopFollowupService`（record/list + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
 - **测试**：`OphthalmologyPostopFollowupApiTest` 5 用例覆盖记录成功、高眼压附说明接受、高眼压缺说明拒绝、眼压越界拒绝、篡改被数据库拒绝。
 
 ## 5. 未关闭风险

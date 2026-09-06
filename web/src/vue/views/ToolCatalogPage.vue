@@ -86,7 +86,7 @@ async function register() {
         tool_code: form.toolCode.trim(), tool_name: form.toolName.trim(),
         tool_version: form.toolVersion.trim(), tool_type: form.toolType,
       });
-      notice.value = '医助工具已登记，版本记录和操作留痕已同步更新。';
+      notice.value = '医助tool已登记，版本记录和操作留痕已同步更新。';
     }
     resetForm();
     editorOpen.value = false;
@@ -102,7 +102,7 @@ async function deactivate(tool: ToolRegistryWire) {
   busy.value = tool.tool_registry_id; notice.value = '';
   try {
     await deactivateTool(lease, tool);
-    notice.value = `医助工具“${tool.tool_name}”已停用。`;
+    notice.value = `医助tool“${tool.tool_name}”已停用。`;
     await toolsQuery.refetch();
     deactivateTarget.value = null;
   } catch (error) {
@@ -115,17 +115,17 @@ async function deactivate(tool: ToolRegistryWire) {
   <section data-page-root class="content admin-content vue-native-page">
     <div class="page-heading admin-heading">
       <div>
-        <p class="eyebrow">AI 中心 / 医助工具管理</p>
-        <h1>医助工具库</h1>
+        <p class="eyebrow">AI中心 / 医助tool管理</p>
+        <h1>医助tool库</h1>
         <p>管理院内系统查询、临床数据读取和业务操作工具；所有变更保留版本和操作记录，高风险操作需人工审批。</p>
       </div>
     </div>
 
-    <ClinicalPageState v-if="leaseQuery.isPending.value || toolsQuery.isPending.value" kind="loading" message="正在读取医助工具库" />
+    <ClinicalPageState v-if="leaseQuery.isPending.value || toolsQuery.isPending.value" kind="loading" message="正在读取医助tool库" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="reload" />
 
     <template v-else>
-      <section class="admin-metrics" aria-label="医助工具统计">
+      <section class="admin-metrics" aria-label="医助tool统计">
         <article><span>工具总数</span><strong>{{ tools.length }}</strong><small>全部登记</small></article>
         <article><span>可用工具</span><strong>{{ activeCount }}</strong><small>当前已启用</small></article>
         <article><span>调用鉴权</span><strong>逐次校验</strong><small>按患者与岗位范围</small></article>
@@ -136,10 +136,10 @@ async function deactivate(tool: ToolRegistryWire) {
       <div>
         <section class="admin-panel">
           <header>
-            <div><h2>医助工具版本台账</h2><p>编码与版本不可变；停用后保留历史记录。</p></div>
-            <div class="admin-row-actions"><button class="button secondary" @click="toolsQuery.refetch()">刷新</button><button class="button primary" @click="openCreate">新建医助工具</button></div>
+            <div><h2>医助tool版本台账</h2><p>编码与版本不可变；停用后保留历史记录。</p></div>
+            <div class="admin-row-actions"><button class="button secondary" @click="toolsQuery.refetch()">刷新</button><button class="button primary" @click="openCreate">新建医助tool</button></div>
           </header>
-          <div v-if="tools.length === 0" class="admin-empty" role="status">暂无医助工具，请点击“新建医助工具”。</div>
+          <div v-if="tools.length === 0" class="admin-empty" role="status">暂无医助tool，请点击“新建医助tool”。</div>
           <div v-else class="admin-table-wrap">
             <table class="admin-table">
               <thead><tr><th>名称</th><th>编码</th><th>类型</th><th>版本</th><th>状态</th><th>操作</th></tr></thead>
@@ -159,7 +159,7 @@ async function deactivate(tool: ToolRegistryWire) {
 
       </div>
 
-      <AdminActionDialog v-model:open="editorOpen" :title="editingTool ? '编辑并发布工具新版本' : '新建医助工具'" :description="editingTool ? '编码保持不变；新版本可调整名称、版本和工具类型。' : '登记后可供授权医助团队调用。'" size="large" :busy="Boolean(busy)" @update:open="!$event && resetForm()">
+      <AdminActionDialog v-model:open="editorOpen" :title="editingTool ? '编辑并发布工具新版本' : '新建医助tool'" :description="editingTool ? '编码保持不变；新版本可调整名称、版本和工具类型。' : '登记后可供授权医助agent调用。'" size="large" :busy="Boolean(busy)" @update:open="!$event && resetForm()">
           <form class="admin-form ai-center-dialog-form" @submit.prevent="register">
             <label><span>工具编码</span><input v-model="form.toolCode" maxlength="128" required :disabled="Boolean(editingTool)" placeholder="例：DRUG-INTERACTION" /></label>
             <label><span>工具名称</span><input v-model="form.toolName" maxlength="256" required placeholder="例：药物相互作用查询" /></label>
@@ -168,7 +168,7 @@ async function deactivate(tool: ToolRegistryWire) {
             <div class="admin-form-actions"><button class="button secondary" type="button" :disabled="Boolean(busy)" @click="editorOpen = false">取消</button><button class="button primary" :disabled="Boolean(busy)">{{ busy === 'create' ? '正在保存…' : editingTool ? '发布新版本' : '登记并生效' }}</button></div>
           </form>
       </AdminActionDialog>
-      <AdminConfirmDialog :open="Boolean(deactivateTarget)" :title="`删除医助工具 ${deactivateTarget?.tool_name ?? ''}`" description="删除将以安全停用方式执行；新任务不再调用该工具，历史任务和审计记录继续保留。" confirm-label="确认删除并停用" :busy="Boolean(busy)" @update:open="!$event && (deactivateTarget = null)" @confirm="deactivateTarget && deactivate(deactivateTarget)"><div v-if="deactivateTarget" class="admin-impact-grid"><div><span>工具编码</span><b>{{ deactivateTarget.tool_code }}</b></div><div><span>当前版本</span><b>{{ deactivateTarget.tool_version }}</b></div><div><span>工具类型</span><b>{{ toolTypeLabels[deactivateTarget.tool_type] }}</b></div><div><span>流程影响</span><b>停止新任务调用</b></div></div></AdminConfirmDialog>
+      <AdminConfirmDialog :open="Boolean(deactivateTarget)" :title="`删除医助tool ${deactivateTarget?.tool_name ?? ''}`" description="删除将以安全停用方式执行；新任务不再调用该工具，历史任务和审计记录继续保留。" confirm-label="确认删除并停用" :busy="Boolean(busy)" @update:open="!$event && (deactivateTarget = null)" @confirm="deactivateTarget && deactivate(deactivateTarget)"><div v-if="deactivateTarget" class="admin-impact-grid"><div><span>工具编码</span><b>{{ deactivateTarget.tool_code }}</b></div><div><span>当前版本</span><b>{{ deactivateTarget.tool_version }}</b></div><div><span>工具类型</span><b>{{ toolTypeLabels[deactivateTarget.tool_type] }}</b></div><div><span>流程影响</span><b>停止新任务调用</b></div></div></AdminConfirmDialog>
     </template>
   </section>
 </template>

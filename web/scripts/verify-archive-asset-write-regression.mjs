@@ -5,9 +5,9 @@ import { chromium } from 'playwright';
 
 const webDir=resolve(fileURLToPath(new URL('..',import.meta.url))),projectDir=resolve(webDir,'..');
 const outputDir=resolve(projectDir,'output/playwright/archive-asset-write-regression');
-const baseUrl=(process.env.OPENEMR2026_BROWSER_BASE_URL||'http://127.0.0.1:4173').replace(/\/$/,'');
-const username=process.env.OPENEMR2026_BROWSER_USERNAME||'shulan.tian';
-const password=process.env.OPENEMR2026_BROWSER_PASSWORD||'OpenEMR2026-dev!';
+const baseUrl=(process.env.HAOEMR_BROWSER_BASE_URL||'http://127.0.0.1:4173').replace(/\/$/,'');
+const username=process.env.HAOEMR_BROWSER_USERNAME||'shulan.tian';
+const password=process.env.HAOEMR_BROWSER_PASSWORD||'HaoEMR-dev!';
 const runId=`ARCHIVE-E2E-${Date.now()}`,checks=[],findings=[];
 await mkdir(outputDir,{recursive:true});
 const browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width:1440,height:1000}});

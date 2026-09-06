@@ -42,7 +42,7 @@ function shortId(value: string | null) {
     <section class="xiaonan-patient-scope">
       <span>当前可用数据</span>
       <div><b>病历与文书</b><b>医嘱与执行</b><b>检验检查</b><b>任务与随访</b></div>
-      <p>切换患者会建立新的诊疗上下文，并清空未发送内容。</p>
+      <p>切换患者后，未发送的内容将被清空。</p>
     </section>
   </aside>
 </template>

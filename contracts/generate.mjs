@@ -280,7 +280,7 @@ function javaRecord(name, schema) {
   const enums = [...nestedEnums].map(([enumName, values]) =>
     `    public enum ${enumName} { ${values.join(', ')} }`,
   ).join('\n\n');
-  return `// Generated from contracts/openapi.json. Do not edit.\npackage org.openemr2026.contracts;\n\nimport com.fasterxml.jackson.annotation.JsonProperty;\nimport java.time.Instant;\nimport java.time.LocalDate;\nimport java.util.List;\nimport java.util.Map;\nimport java.util.UUID;\n\npublic record ${name}Wire(\n${fields.join(',\n')}\n) {\n${enums ? `${enums}\n` : ''}}\n`;
+  return `// Generated from contracts/openapi.json. Do not edit.\npackage org.haoemr.contracts;\n\nimport com.fasterxml.jackson.annotation.JsonProperty;\nimport java.time.Instant;\nimport java.time.LocalDate;\nimport java.util.List;\nimport java.util.Map;\nimport java.util.UUID;\n\npublic record ${name}Wire(\n${fields.join(',\n')}\n) {\n${enums ? `${enums}\n` : ''}}\n`;
 }
 
 function zodExpression(schema) {
@@ -337,7 +337,7 @@ const outputs = new Map();
 const generatedRouteContract = await routeContract();
 for (const [name, schema] of Object.entries(schemas)) {
   outputs.set(
-    resolve(projectDir, 'build/generated/contracts/java/org/openemr2026/contracts', `${name}Wire.java`),
+    resolve(projectDir, 'build/generated/contracts/java/org/haoemr/contracts', `${name}Wire.java`),
     javaRecord(name, schema),
   );
 }

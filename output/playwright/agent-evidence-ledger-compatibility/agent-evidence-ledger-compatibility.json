@@ -1,0 +1,13 @@
+{
+  "run_at": "2026-09-05T10:04:11.413Z",
+  "checks": [
+    {
+      "name": "historical-agent-route-reuses-the-real-medical-agent-evidence-ledger",
+      "status": "PASS",
+      "detail": "两个 URL 的真实运行台账一致：10 条运行记录；未出现 legacy AIRunSnapshot 或前端模拟记录"
+    }
+  ],
+  "findings": [],
+  "passed": 1,
+  "failed": 0
+}

@@ -5,6 +5,7 @@ import type { MentalHealthCrisisHandoverWire } from '../../generated/contracts';
 import { createMentalHealthCrisisHandover, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listMentalHealthCrisisHandovers } from '../../api/specialty-layers';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { localDateTimeInputValue } from '../date-input';
 
 const patientLeaseQuery = useQuery({
   queryKey: ['specialty-layers', 'mental-care', 'patient-lease'],
@@ -37,7 +38,7 @@ const form = reactive({
   crisisReason: '',
   riskLevel: 'LOW' as MentalHealthCrisisHandoverWire['risk_level'],
   protectiveMeasures: '',
-  handedOverAt: new Date().toISOString(),
+  handedOverAt: localDateTimeInputValue(),
 });
 const busy = ref('');
 const notice = ref('');

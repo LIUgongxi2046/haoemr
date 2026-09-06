@@ -38,7 +38,7 @@ scripts/verify.sh → VERIFY_EXIT=0
 
 - **迁移 V130**：`source_field_mapping`（源系统/源字段/目标实体/目标字段/状态/注册人/注册时间/row_version）；映射唯一约束、身份不可变触发器、源系统索引。
 - **契约**：新增 `SourceFieldMapping`、`SourceFieldMappingRegisterRequest`、`SourceFieldMappingDeactivateRequest` 三 Schema 与 3 端点（list/register/deactivate）。
-- **模块**：`org.openemr2026.archive` 下 `SourceFieldMappingService`（映射登记 + 仅已配置源硬门 + 停用 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
+- **模块**：`org.haoemr.archive` 下 `SourceFieldMappingService`（映射登记 + 仅已配置源硬门 + 停用 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
 - **测试**：`SourceFieldMappingApiTest` 5 用例覆盖登记、重复拒绝、未配置源拒绝、停用、篡改拒绝。
 
 ## 5. 未关闭风险

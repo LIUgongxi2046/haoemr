@@ -1,0 +1,61 @@
+{
+  "run_at": "2026-09-06T06:01:21.288Z",
+  "scope": "Local application API, no patient context; no deployment changes",
+  "results": [
+    {
+      "agent": "ENCOUNTER_SUMMARIZER",
+      "display_name": "就诊摘要主 Agent",
+      "stage": "PRE_VISIT",
+      "http_status": 202,
+      "body": {
+        "run_id": "511399dc-8683-49fe-affd-a13251ae8172",
+        "context_lease_id": "01a0754e-9ab7-7c42-8f82-b53b41a97d4c",
+        "root_agent_code": "ENCOUNTER_SUMMARIZER",
+        "root_agent_version": "1.0.1",
+        "composition_code": "ENCOUNTER_SUMMARIZER_DEFAULT",
+        "composition_version": "1.0.1",
+        "requested_stage": "PRE_VISIT",
+        "patient_id": null,
+        "encounter_id": null,
+        "target_type": null,
+        "target_id": null,
+        "objective": "合成测试：仅检查当前模型可用性，不读取患者、不执行临床动作。",
+        "state": "QUEUED",
+        "sequence": 1,
+        "output": {},
+        "created_at": "2026-09-06T06:01:20.975114Z",
+        "completed_at": null,
+        "row_version": 2,
+        "attempt": 0,
+        "max_attempts": 3,
+        "cancel_requested_at": null,
+        "failure_code": null,
+        "child_runs": [],
+        "events": [
+          {
+            "sequence": 1,
+            "event_type": "RunCreated",
+            "child_run_id": null,
+            "payload": {
+              "stage_code": "PRE_VISIT",
+              "candidate_only": true,
+              "context_scopes": [
+                "RECORDS"
+              ],
+              "root_agent_code": "ENCOUNTER_SUMMARIZER",
+              "model_display_name": "DeepSeek 医疗模型",
+              "authorization_level": "READ_ONLY",
+              "model_deployment_id": "b8c7efa5-f43c-45b0-a65d-ccf08d223290",
+              "assistant_policy_hash": "462da12927fed2a2f2d7769d5084613d4a4d9701126e19f20cd464eb5a7516ca",
+              "assistant_policy_config_id": "018f0000-0000-7000-8000-00000000c108",
+              "assistant_policy_environment": "tertiary-hospital-simulation",
+              "assistant_policy_row_version": 1,
+              "external_processing_approval_id": "cb98560d-d8d9-4c87-95b8-1f6a9a760fae"
+            },
+            "occurred_at": "2026-09-06T06:01:20.975114Z"
+          }
+        ]
+      }
+    }
+  ]
+}

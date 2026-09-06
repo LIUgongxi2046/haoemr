@@ -5,6 +5,7 @@ import type { EntAirwayRiskHandoverWire } from '../../generated/contracts';
 import { createEntAirwayRiskHandover, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listEntAirwayRiskHandovers } from '../../api/specialty-layers';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { localDateTimeInputValue } from '../date-input';
 
 const patientLeaseQuery = useQuery({
   queryKey: ['specialty-layers', 'ent-care', 'patient-lease'],
@@ -36,7 +37,7 @@ const form = reactive({
   airwayRiskLevel: 'MODERATE' as EntAirwayRiskHandoverWire['airway_risk_level'],
   airwayPrecautions: '',
   toProviderId: '',
-  handedOverAt: new Date().toISOString(),
+  handedOverAt: localDateTimeInputValue(),
 });
 const busy = ref('');
 const notice = ref('');
@@ -76,7 +77,7 @@ async function createRecord() {
       <div>
         <p class="eyebrow">专科其余层 / 耳鼻喉 · 照护</p>
         <h1>气道风险交接</h1>
-        <p>气道风险等级、气道注意事项与接诊提供者登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记气道风险等级、注意事项与接诊人员。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>

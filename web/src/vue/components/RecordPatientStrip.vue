@@ -25,3 +25,38 @@ import { developmentCopy } from '../../development-copy';
     <RouterLink class="btn sm record-patient-switch" to="/outpatient">切换门诊患者</RouterLink>
   </section>
 </template>
+
+<style scoped>
+@media (max-width: 820px) {
+  .record-prototype-patient {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+  }
+
+  .record-prototype-patient > div:not(.divider) {
+    flex: 1 1 150px;
+    min-width: 0;
+  }
+
+  .record-prototype-patient .divider {
+    display: none;
+  }
+
+  .record-prototype-patient b,
+  .record-prototype-patient .meta {
+    overflow-wrap: anywhere;
+  }
+
+  .record-prototype-patient .risk {
+    flex: 0 1 auto;
+    white-space: normal;
+  }
+
+  .record-prototype-patient .record-patient-switch {
+    flex: 1 0 100%;
+    width: 100%;
+    margin-left: 0;
+  }
+}
+</style>

@@ -1,0 +1,291 @@
+{
+  "run_at": "2026-09-05T04:49:44.907Z",
+  "routes": 15,
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 800,
+      "label": "1280x800"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "390x844"
+    }
+  ],
+  "route_viewports": 30,
+  "verified_route_viewports": 30,
+  "findings": [],
+  "observations": [
+    {
+      "route": "agent-compose",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医助团队与能力工具编排",
+      "routeId": "agent-compose",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1564
+    },
+    {
+      "route": "agent-context",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医助诊疗范围策略",
+      "routeId": "agent-context",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1042
+    },
+    {
+      "route": "agent-evals",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医助评测与发布审核",
+      "routeId": "agent-evals",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 2044
+    },
+    {
+      "route": "ai-action-review",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "临床操作确认与执行核验",
+      "routeId": "ai-action-review",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 535
+    },
+    {
+      "route": "ai-assistant",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "AI医助 Eva",
+      "routeId": "ai-assistant",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1689
+    },
+    {
+      "route": "ai-assistant-policy",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "AI医助 Eva 工作策略",
+      "routeId": "ai-assistant-policy",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 554
+    },
+    {
+      "route": "ai-capture",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医助运行证据采集",
+      "routeId": "ai-capture",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1791
+    },
+    {
+      "route": "ai-center",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "ai-center",
+      "routeId": "ai-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 642
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "主动提醒详情",
+      "routeId": "ai-reminder-detail",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 500
+    },
+    {
+      "route": "aiops",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "医助运行监测",
+      "routeId": "aiops",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3916
+    },
+    {
+      "route": "anesthesia-workbench",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "麻醉",
+      "routeId": "anesthesia-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3463
+    },
+    {
+      "route": "appointment-registration",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "预约挂号与就诊队列",
+      "routeId": "appointment-registration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1731
+    },
+    {
+      "route": "archive-assets",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "病案资产与共享文档中心",
+      "routeId": "archive-assets",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 719
+    },
+    {
+      "route": "archive-borrow",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "病案借阅、复制与对外提供",
+      "routeId": "archive-borrow",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 596
+    },
+    {
+      "route": "archive-catalog",
+      "viewport": "1280x800",
+      "issues": [],
+      "h1": "病案目录与完整性",
+      "routeId": "archive-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 525
+    },
+    {
+      "route": "agent-compose",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助团队与能力工具编排",
+      "routeId": "agent-compose",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1331
+    },
+    {
+      "route": "agent-context",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助诊疗范围策略",
+      "routeId": "agent-context",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 809
+    },
+    {
+      "route": "agent-evals",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助评测与发布审核",
+      "routeId": "agent-evals",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1811
+    },
+    {
+      "route": "ai-action-review",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "临床操作确认与执行核验",
+      "routeId": "ai-action-review",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 302
+    },
+    {
+      "route": "ai-assistant",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "AI医助 Eva",
+      "routeId": "ai-assistant",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1456
+    },
+    {
+      "route": "ai-assistant-policy",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "AI医助 Eva 工作策略",
+      "routeId": "ai-assistant-policy",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 321
+    },
+    {
+      "route": "ai-capture",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助运行证据采集",
+      "routeId": "ai-capture",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1558
+    },
+    {
+      "route": "ai-center",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "ai-center",
+      "routeId": "ai-center",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 409
+    },
+    {
+      "route": "ai-reminder-detail",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "主动提醒详情",
+      "routeId": "ai-reminder-detail",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 267
+    },
+    {
+      "route": "aiops",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "医助运行监测",
+      "routeId": "aiops",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3683
+    },
+    {
+      "route": "anesthesia-workbench",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "麻醉",
+      "routeId": "anesthesia-workbench",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 3230
+    },
+    {
+      "route": "appointment-registration",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "预约挂号与就诊队列",
+      "routeId": "appointment-registration",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 1498
+    },
+    {
+      "route": "archive-assets",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病案资产与共享文档中心",
+      "routeId": "archive-assets",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 486
+    },
+    {
+      "route": "archive-borrow",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病案借阅、复制与对外提供",
+      "routeId": "archive-borrow",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 363
+    },
+    {
+      "route": "archive-catalog",
+      "viewport": "390x844",
+      "issues": [],
+      "h1": "病案目录与完整性",
+      "routeId": "archive-catalog",
+      "aiLauncherTag": "BUTTON",
+      "bodyTextLength": 292
+    }
+  ]
+}

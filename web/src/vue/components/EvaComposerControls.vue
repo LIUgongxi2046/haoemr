@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import type { ModelDeploymentWire } from '../../generated/contracts';
 
 type AuthorizationLevel = 'READ_ONLY' | 'STANDARD' | 'EXTENDED';
-type ContextScope = 'RECORDS' | 'ORDERS' | 'RESULTS' | 'TASKS' | 'ATTACHMENTS';
+type ContextScope = 'RECORDS' | 'ORDERS' | 'RESULTS' | 'TASKS' | 'ATTACHMENTS' | 'CONFIGURATION';
 type Panel = 'context' | 'mode' | 'model' | null;
 
 const props = defineProps<{
@@ -25,6 +25,7 @@ const openPanel = ref<Panel>(null);
 const root = ref<HTMLElement | null>(null);
 
 const scopeOptions: Array<{ code: ContextScope; label: string; description: string }> = [
+  { code: 'CONFIGURATION', label: '知识与规则', description: '已发布知识、文书模板和业务规则' },
   { code: 'RECORDS', label: '病历文书', description: '当前就诊已确认文书及版本' },
   { code: 'ORDERS', label: '医嘱执行', description: '医嘱、执行状态与异常' },
   { code: 'RESULTS', label: '检查检验', description: '报告、结果版本与危急值' },
@@ -73,7 +74,7 @@ onBeforeUnmount(() => { document.removeEventListener('click', onDocumentClick); 
         <b>{{ contextScopes.length }}</b>
       </button>
       <section v-if="openPanel === 'context'" class="eva-popover" @click.stop>
-        <header><strong>选择诊疗数据范围</strong><span>Eva 仅访问勾选范围</span></header>
+        <header><strong>选择诊疗数据范围</strong><span>AI医助 EVA 仅访问勾选范围</span></header>
         <button v-for="item in scopeOptions" :key="item.code" type="button" :aria-pressed="contextScopes.includes(item.code)" @click="toggleScope(item.code)">
           <i>{{ contextScopes.includes(item.code) ? '✓' : '' }}</i><span><b>{{ item.label }}</b><small>{{ item.description }}</small></span>
         </button>
@@ -87,7 +88,7 @@ onBeforeUnmount(() => { document.removeEventListener('click', onDocumentClick); 
         <b>{{ authorizationShort }}</b>
       </button>
       <section v-if="openPanel === 'mode'" class="eva-popover" @click.stop>
-        <header><strong>授权与运行模式</strong><span>影响 Eva 可执行的操作范围</span></header>
+        <header><strong>授权与运行模式</strong><span>影响 AI医助 EVA 可执行的操作范围</span></header>
         <button v-for="mode in modeOptions" :key="mode.code" type="button" :aria-pressed="authorizationLevel === mode.code" @click="selectMode(mode.code)">
           <i>{{ authorizationLevel === mode.code ? '✓' : '' }}</i><span><b>{{ mode.label }}</b><small>{{ mode.description }}</small></span>
         </button>

@@ -79,7 +79,7 @@ async function createRecord() {
       <div>
         <p class="eyebrow">专科其余层 / 中医 · 证据</p>
         <h1>四诊记录</h1>
-        <p>望、闻、问、切四诊信息与检查时间登记；写入采用患者+就诊上下文租约。</p>
+        <p>登记望、闻、问、切四诊信息与检查时间。</p>
       </div>
       <div class="admin-inline-tools">
         <button class="button secondary" :disabled="Boolean(busy)" @click="reload">刷新</button>

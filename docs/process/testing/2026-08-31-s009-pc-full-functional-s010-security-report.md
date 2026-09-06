@@ -1,4 +1,4 @@
-# OpenEMR2026 PC 全功能、多角色链路与 S010 安全验收报告
+# HaoEMR PC 全功能、多角色链路与 S010 安全验收报告
 
 - 执行日期：2026-08-31（Asia/Shanghai）
 - 测试冻结提交：`c50c7f880b6bfefb8181fc6df9f0f75cb761f29d`
@@ -40,7 +40,7 @@
 
 Java 7 项失败的归因：
 
-- 5 项 `ProdSecurityApiTest` 首轮因 `openemr2026.archive.storage-root` 缺失而上下文启动失败；补充临时安全目录后 5/5 通过，归类为环境配置。
+- 5 项 `ProdSecurityApiTest` 首轮因 `haoemr.archive.storage-root` 缺失而上下文启动失败；补充临时安全目录后 5/5 通过，归类为环境配置。
 - 2 项 `TertiaryBusinessConfigurationImportTest` 定向复跑仍失败。实际汇总为 `models=1, skills=24, tools=28, evaluations=5`，测试仍期望 `models=6, skills=24, tools=24, evaluations=10`。这是当前数据/测试口径的稳定不一致，不是偶发错误。
 - 编译另有 5 条 Jackson 过时 API 警告，归为 P2 工程债。
 

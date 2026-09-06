@@ -59,57 +59,57 @@ const metricLeaseQuery = useQuery({
 });
 
 const connectorsQuery = useQuery({
-  queryKey: ['data-center', 'overview', 'integration', 'connectors'],
+  queryKey: computed(() => ['data-center', 'overview', 'integration', 'connectors', configLeaseQuery.data.value?.lease_id]),
   queryFn: () => listConfigurations(configLeaseQuery.data.value!, 'INTEGRATION_CONNECTOR'),
   enabled: () => Boolean(configLeaseQuery.data.value), retry: false,
 });
 const incidentsQuery = useQuery({
-  queryKey: ['data-center', 'overview', 'integration', 'incidents'],
+  queryKey: computed(() => ['data-center', 'overview', 'integration', 'incidents', configLeaseQuery.data.value?.lease_id]),
   queryFn: () => listConfigurations(configLeaseQuery.data.value!, 'INTEGRATION_INCIDENT'),
   enabled: () => Boolean(configLeaseQuery.data.value), retry: false,
 });
 const devicesQuery = useQuery({
-  queryKey: ['data-center', 'overview', 'devices'],
+  queryKey: computed(() => ['data-center', 'overview', 'devices', configLeaseQuery.data.value?.lease_id]),
   queryFn: () => listConfigurations(configLeaseQuery.data.value!, 'DEVICE_CATALOG'),
   enabled: () => Boolean(configLeaseQuery.data.value), retry: false,
 });
 const projectsQuery = useQuery({
-  queryKey: ['data-center', 'overview', 'projects'],
+  queryKey: computed(() => ['data-center', 'overview', 'projects', configLeaseQuery.data.value?.lease_id]),
   queryFn: () => listConfigurations(configLeaseQuery.data.value!, 'RESEARCH_PROJECT'),
   enabled: () => Boolean(configLeaseQuery.data.value), retry: false,
 });
 const sourcesQuery = useQuery({
-  queryKey: ['data-center', 'overview', 'sources'],
+  queryKey: computed(() => ['data-center', 'overview', 'sources', governanceLeaseQuery.data.value?.lease_id]),
   queryFn: () => listSourceSystems(governanceLeaseQuery.data.value!),
   enabled: () => Boolean(governanceLeaseQuery.data.value), retry: false,
 });
 const batchesQuery = useQuery({
-  queryKey: ['data-center', 'overview', 'batches'],
+  queryKey: computed(() => ['data-center', 'overview', 'batches', governanceLeaseQuery.data.value?.lease_id]),
   queryFn: () => listHistoricalMigrationBatches(governanceLeaseQuery.data.value!),
   enabled: () => Boolean(governanceLeaseQuery.data.value), retry: false,
 });
 const rulesQuery = useQuery({
-  queryKey: ['data-center', 'overview', 'rules'],
+  queryKey: computed(() => ['data-center', 'overview', 'rules', qualityLeaseQuery.data.value?.lease_id]),
   queryFn: () => listDataQualityRules(qualityLeaseQuery.data.value!),
   enabled: () => Boolean(qualityLeaseQuery.data.value), retry: false,
 });
 const findingsQuery = useQuery({
-  queryKey: ['data-center', 'overview', 'findings'],
+  queryKey: computed(() => ['data-center', 'overview', 'findings', qualityLeaseQuery.data.value?.lease_id]),
   queryFn: () => listDataQualityFindings(qualityLeaseQuery.data.value!),
   enabled: () => Boolean(qualityLeaseQuery.data.value), retry: false,
 });
 const cohortsQuery = useQuery({
-  queryKey: ['data-center', 'overview', 'cohorts'],
+  queryKey: computed(() => ['data-center', 'overview', 'cohorts', cohortLeaseQuery.data.value?.lease_id]),
   queryFn: () => listResearchCohorts(cohortLeaseQuery.data.value!),
   enabled: () => Boolean(cohortLeaseQuery.data.value), retry: false,
 });
 const requestsQuery = useQuery({
-  queryKey: ['data-center', 'overview', 'requests'],
+  queryKey: computed(() => ['data-center', 'overview', 'requests', datasetLeaseQuery.data.value?.lease_id]),
   queryFn: () => listResearchDatasetRequests(datasetLeaseQuery.data.value!),
   enabled: () => Boolean(datasetLeaseQuery.data.value), retry: false,
 });
 const coreFactsQuery = useQuery({
-  queryKey: ['data-center', 'overview', 'core-facts'],
+  queryKey: computed(() => ['data-center', 'overview', 'core-facts', metricLeaseQuery.data.value?.lease_id]),
   queryFn: () => listMetricSnapshots(metricLeaseQuery.data.value!, 'DATA_CENTER'),
   enabled: () => Boolean(metricLeaseQuery.data.value), retry: false,
 });
@@ -118,7 +118,8 @@ const refreshing = ref(false);
 const computingFacts = ref(false);
 const coreFactNotice = ref('');
 
-const booting = computed(() => [
+const overviewError = computed(() => [configLeaseQuery, governanceLeaseQuery, qualityLeaseQuery, cohortLeaseQuery, datasetLeaseQuery, metricLeaseQuery, connectorsQuery, incidentsQuery, devicesQuery, projectsQuery, sourcesQuery, batchesQuery, rulesQuery, findingsQuery, cohortsQuery, requestsQuery, coreFactsQuery].find(query => query.error.value)?.error.value);
+const booting = computed(() => !overviewError.value && [
   configLeaseQuery, governanceLeaseQuery, qualityLeaseQuery, cohortLeaseQuery,
   datasetLeaseQuery, metricLeaseQuery,
 ].some((query) => query.isPending.value));
@@ -129,8 +130,9 @@ const overviewReady = computed(() => [
 ].every((query) => !query.isPending.value));
 
 function issueText(error: unknown): string | null {
+  if (error == null) return null;
   const issue = toClinicalIssue(error);
-  return issue ? `${issue.code}：${issue.message}` : null;
+  return `${issue.code}：${issue.message}`;
 }
 
 function text(item: ConfigurationItemWire, key: string): string {
@@ -170,6 +172,7 @@ const mismatchBatches = computed(() => batches.value.filter((batch) => batch.mis
 // ── 数据质量 ────────────────────────────────────────────────
 const rules = computed(() => (rulesQuery.data.value ?? []).filter((rule) => rule.status === 'ACTIVE'));
 const findings = computed(() => findingsQuery.data.value ?? []);
+const openFindings = computed(() => findings.value.filter(finding => finding.status !== 'CLOSED'));
 const blockingFindings = computed(() => findings.value
   .filter((finding) => finding.status !== 'CLOSED' && finding.severity === 'BLOCKING'));
 const warningFindings = computed(() => findings.value
@@ -210,12 +213,12 @@ const coreFactDate = computed(() => {
 
 // ── 跨域需关注汇总 ───────────────────────────────────────────
 const attentionTotal = computed(() => openIncidents.value.length
-  + mismatchBatches.value.length + blockingFindings.value.length
+  + mismatchBatches.value.length + openFindings.value.length
   + deviceAttention.value.length + requestedRequests.value.length);
 const attentionChips = computed(() => [
   { label: '集成对账差异', count: openIncidents.value.length, to: '/integration-messages' },
   { label: '迁移差异批次', count: mismatchBatches.value.length, to: '/migration' },
-  { label: '质量阻断问题', count: blockingFindings.value.length, to: '/data-quality' },
+  { label: '数据质量待处理', count: openFindings.value.length, to: '/data-quality' },
   { label: '设备校准超限', count: deviceAttention.value.length, to: '/devices' },
   { label: '科研申请待审', count: requestedRequests.value.length, to: '/research-dataset' },
 ]);
@@ -253,7 +256,7 @@ const domainCards = computed<DomainCard[]>(() => {
   const integration: DomainCard = {
     key: 'integration', icon: '接', title: '集成交换', subtitle: '业务系统互联与对账差异',
     to: '/integration', loading: integrationLoading, error: integrationError,
-    retry: () => { void connectorsQuery.refetch(); void incidentsQuery.refetch(); },
+    retry: () => { void refreshAll(); },
     absent: connectors.value.length === 0 && openIncidents.value.length === 0,
     absentHint: '暂无已发布集成连接器或对账差异，可进入集成交换新建并发布连接器。',
     rows: [
@@ -270,7 +273,7 @@ const domainCards = computed<DomainCard[]>(() => {
   const migration: DomainCard = {
     key: 'migration', icon: '迁', title: '历史迁移', subtitle: '历史数据迁移与对账上线',
     to: '/migration', loading: migrationLoading, error: migrationError,
-    retry: () => { void sourcesQuery.refetch(); void batchesQuery.refetch(); },
+    retry: () => { void refreshAll(); },
     absent: sources.value.length === 0 && batches.value.length === 0,
     absentHint: '暂无迁移源系统与批次，进入历史迁移完成源系统盘点后开始迁移。',
     rows: [
@@ -292,7 +295,7 @@ const domainCards = computed<DomainCard[]>(() => {
   const quality: DomainCard = {
     key: 'quality', icon: '质', title: '数据质量', subtitle: '质量规则与问题整改闭环',
     to: '/data-quality', loading: qualityLoading, error: qualityError,
-    retry: () => { void rulesQuery.refetch(); void findingsQuery.refetch(); },
+    retry: () => { void refreshAll(); },
     absent: rules.value.length === 0 && findings.value.length === 0,
     absentHint: '暂无质量规则与问题记录，进入数据质量登记规则并运行质量核查扫描。',
     rows: [
@@ -315,7 +318,7 @@ const domainCards = computed<DomainCard[]>(() => {
   const devices: DomainCard = {
     key: 'devices', icon: '备', title: '设备接入', subtitle: '医疗设备接入与可信状态',
     to: '/devices', loading: deviceLoading, error: deviceError,
-    retry: () => { void devicesQuery.refetch(); },
+    retry: () => { void refreshAll(); },
     absent: publishedDevices.value.length === 0,
     absentHint: '暂无已接入的医疗设备，进入设备接入登记设备身份、网关与绑定策略。',
     rows: [
@@ -330,7 +333,7 @@ const domainCards = computed<DomainCard[]>(() => {
   const research: DomainCard = {
     key: 'research', icon: '研', title: '科研统计', subtitle: '临床科研项目与数据申请',
     to: '/research', loading: researchLoading, error: researchError,
-    retry: () => { void projectsQuery.refetch(); void cohortsQuery.refetch(); void requestsQuery.refetch(); },
+    retry: () => { void refreshAll(); },
     absent: activeProjects.value.length === 0 && activeCohorts.value.length === 0,
     absentHint: '暂无在研项目或活动队列，进入科研统计提交科研项目申请。',
     rows: [
@@ -375,9 +378,18 @@ async function refreshAll() {
   refreshing.value = true;
   try {
     await Promise.allSettled([
-      connectorsQuery.refetch(), incidentsQuery.refetch(), devicesQuery.refetch(), projectsQuery.refetch(),
-      sourcesQuery.refetch(), batchesQuery.refetch(), rulesQuery.refetch(), findingsQuery.refetch(),
-      cohortsQuery.refetch(), requestsQuery.refetch(), coreFactsQuery.refetch(),
+      configLeaseQuery.refetch(), governanceLeaseQuery.refetch(), qualityLeaseQuery.refetch(),
+      cohortLeaseQuery.refetch(), datasetLeaseQuery.refetch(), metricLeaseQuery.refetch(),
+    ]);
+    await Promise.allSettled([
+      ...(configLeaseQuery.data.value
+        ? [connectorsQuery.refetch(), incidentsQuery.refetch(), devicesQuery.refetch(), projectsQuery.refetch()]
+        : []),
+      ...(governanceLeaseQuery.data.value ? [sourcesQuery.refetch(), batchesQuery.refetch()] : []),
+      ...(qualityLeaseQuery.data.value ? [rulesQuery.refetch(), findingsQuery.refetch()] : []),
+      ...(cohortLeaseQuery.data.value ? [cohortsQuery.refetch()] : []),
+      ...(datasetLeaseQuery.data.value ? [requestsQuery.refetch()] : []),
+      ...(metricLeaseQuery.data.value ? [coreFactsQuery.refetch()] : []),
     ]);
   } finally {
     refreshing.value = false;
@@ -390,19 +402,19 @@ async function refreshAll() {
     <div class="page-head">
       <div class="page-title">
         <h1>数据总览</h1>
-        <p>面向医院信息平台的数据治理视图：集成交换、历史迁移、数据质量、设备接入与科研统计五大专业域分别呈现运行状态；页内数字均取自各域已发布记录与固化指标快照，可回源核对。</p>
+        <p>查看集成交换、历史迁移、数据质量、设备接入和科研统计的运行情况。</p>
       </div>
       <div class="head-actions">
         <button class="btn" type="button" :disabled="refreshing" @click="refreshAll">{{ refreshing ? '刷新中…' : '刷新数据' }}</button>
-        <RouterLink class="btn primary" to="/clinical-tasks">查看全部待办</RouterLink>
       </div>
     </div>
 
     <div v-if="booting" class="overview-state">正在核对数据中心各域数据，请稍候…</div>
 
     <template v-else>
-      <section class="overview-alert" aria-label="跨域需关注事项">
-        <template v-if="overviewReady">
+      <section id="data-attention" class="overview-alert" aria-label="跨域需关注事项">
+        <span v-if="overviewError" role="alert">待办统计暂不可用：{{ issueText(overviewError) }}。请刷新重试。</span>
+        <template v-else-if="overviewReady">
           <template v-if="attentionTotal === 0">
             <b>当前状态</b>
             <span class="all-clear">各域台账暂无开放阻断与待办，运行正常</span>

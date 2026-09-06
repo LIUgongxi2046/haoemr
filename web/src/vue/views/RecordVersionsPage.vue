@@ -189,7 +189,7 @@ function statusLabel(status: string) {
 
 <template>
   <section data-page-root class="content vue-native-page">
-    <div class="page-heading"><div><h1>病历版本与法律证据</h1><p>草稿、签署、更正、归档和传播状态构成不可覆盖的版本链</p></div><div class="toolbar-actions"><button class="btn" type="button" :disabled="busy" @click="verifyAllSignatures">{{ busy ? '验证中…' : '批量验签' }}</button><RouterLink v-if="versionsQuery.data.value && versionsQuery.data.value.versions.length >= 2" class="btn primary" :to="diffRoute(versionsQuery.data.value.versions)">比较最近两个版本</RouterLink></div></div>
+    <div class="page-heading"><div><h1>病历版本与法律证据</h1><p>草稿、签署、更正、归档和传播状态构成不可覆盖的版本链</p></div><div class="toolbar-actions"><button class="btn" type="button" :disabled="busy || versionsQuery.isFetching.value || !versionsQuery.data.value?.selected || !versionsQuery.data.value.versions.length" @click="verifyAllSignatures">{{ busy ? '验证中…' : '批量验签' }}</button><RouterLink v-if="versionsQuery.data.value && versionsQuery.data.value.versions.length >= 2" class="btn primary" :to="diffRoute(versionsQuery.data.value.versions)">比较最近两个版本</RouterLink></div></div>
     <RecordPatientStrip />
     <ClinicalPageState v-if="versionsQuery.isPending.value" kind="loading" message="正在读取病历文书、治理证据与更正台账" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="versionsQuery.refetch()" />

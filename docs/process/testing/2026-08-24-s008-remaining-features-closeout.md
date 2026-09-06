@@ -44,8 +44,8 @@
 
 ## Git 基线
 
-`R0-BASE-01` 已完成：用户明确选择在当前目录初始化新仓库，并授权推送至 `https://github.com/LIUgongxi2046/openemr2026` 的 `main`。本报告记录的功能、测试与安全门禁构成首个可回滚版本基线。
+`R0-BASE-01` 已完成：用户明确选择在当前目录初始化新仓库，并授权推送至 `https://github.com/LIUgongxi2046/haoemr` 的 `main`。本报告记录的功能、测试与安全门禁构成首个可回滚版本基线。
 
 ## 安全回退
 
-开发前文件快照：`/private/tmp/openemr2026-pre-s008-20260824-01.tgz`，SHA-256：`03ec9bc6162459ea3a35279fae175b456d8b2670856df40c35edb5944aa6d602`。该快照位于临时目录，不替代正式版本库。
+开发前文件快照：`/private/tmp/haoemr-pre-s008-20260824-01.tgz`，SHA-256：`03ec9bc6162459ea3a35279fae175b456d8b2670856df40c35edb5944aa6d602`。该快照位于临时目录，不替代正式版本库。

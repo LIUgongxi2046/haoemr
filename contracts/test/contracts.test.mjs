@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const openApiUrl = new URL('../openapi.json', import.meta.url);
-const javaUrl = new URL('../../build/generated/contracts/java/org/openemr2026/contracts/ContextLeaseWire.java', import.meta.url);
+const javaUrl = new URL('../../build/generated/contracts/java/org/haoemr/contracts/ContextLeaseWire.java', import.meta.url);
 const tsUrl = new URL('../../web/src/generated/contracts.ts', import.meta.url);
 const routeTsUrl = new URL('../../web/src/generated/route-contract.ts', import.meta.url);
 const generatedUrl = (name) => new URL(`../generated/${name}`, import.meta.url);
@@ -103,10 +103,10 @@ test('generated governance artifacts are complete, unique, and mutually referent
     for (const errorCode of tool.error_codes) assert.ok(errorCodes.has(errorCode), `${tool.tool_id} references unknown ${errorCode}`);
   }
 
-  assert.equal(routeContract.route_count, 198);
-  assert.equal(routeContract.routes.length, 198);
-  assert.equal(new Set(routeContract.routes.map((route) => route.route_id)).size, 198);
-  assert.equal(new Set(routeContract.routes.flatMap((route) => route.fr_refs)).size, 138);
+  assert.equal(routeContract.route_count, 196);
+  assert.equal(routeContract.routes.length, 196);
+  assert.equal(new Set(routeContract.routes.map((route) => route.route_id)).size, 196);
+  assert.equal(new Set(routeContract.routes.flatMap((route) => route.fr_refs)).size, 136);
   for (const route of routeContract.routes) {
     assert.ok(route.title && route.primary_domain && route.roles.length && route.requirement_refs.length && route.states.length && route.guards.length);
     assert.ok(['CLINICAL', 'RECORD', 'QUALITY', 'COLLABORATION', 'DATA', 'AI', 'CONFIG', 'ADMIN'].includes(route.primary_domain));

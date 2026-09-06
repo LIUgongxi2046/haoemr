@@ -1,6 +1,6 @@
-# openemr2026 施工单 001：门诊病历生命周期与 AI 质控纵向切片
+# HaoEMR 施工单 001：门诊病历生命周期与 AI 质控纵向切片
 
-> v1.0 完整主 Backlog：`docs/process/planning/2026-08-14-openemr2026-v1.0-implementation-backlog.md`。本文件只保留已执行的施工单 001 及其真实证据。
+> v1.0 完整主 Backlog：`docs/process/planning/2026-08-14-haoemr-v1.0-implementation-backlog.md`。本文件只保留已执行的施工单 001 及其真实证据。
 
 > 状态：`FIRST_VERTICAL_SLICE_IMPLEMENTED_WITH_PRODUCTION_GATES`  
 > 目标：交付第一个真实可运行纵切，而不是继续扩展静态原型。范围严格限定为“患者→门诊就诊→病历草稿→确定性质控/AI 候选→签署→审计与 Outbox→恢复验真”。
@@ -9,10 +9,10 @@
 
 ### 0.1 强制上下文
 
-- PRD：`docs/product/prd/2026-08-11-openemr2026-v1.0-prd.md`，重点读取患者、门诊、病历、质控、签署、AI、审计、备份恢复及 AC。
-- 架构：`docs/design/architecture/2026-08-14-openemr2026-hld.md`。
-- LLD：`docs/design/architecture/2026-08-14-openemr2026-lld-data.md`、`...-back.md`、`...-agent.md`、`...-front.md`。
-- TRB：`docs/process/reviews/2026-08-14-openemr2026-trb-review.md`，ACT-001–004 为本切片阻断项。
+- PRD：`docs/product/prd/2026-08-11-haoemr-v1.0-prd.md`，重点读取患者、门诊、病历、质控、签署、AI、审计、备份恢复及 AC。
+- 架构：`docs/design/architecture/2026-08-14-haoemr-hld.md`。
+- LLD：`docs/design/architecture/2026-08-14-haoemr-lld-data.md`、`...-back.md`、`...-agent.md`、`...-front.md`。
+- TRB：`docs/process/reviews/2026-08-14-haoemr-trb-review.md`，ACT-001–004 为本切片阻断项。
 - 视觉：`docs/design/ui-delivery/tokens.json`、`docs/design/ui-delivery/design-system.md`、`docs/design/ui-delivery/state-matrix.md`。
 - 页面锚点：`docs/design/ui-delivery/screens/outpatient.png`、`opd-record.png`、`record-editor.png`、`record-qc.png`、`record-sign.png`、`ai-assistant.png`、`ai-action-review.png`。
 - 数据：`samples/data/synthetic-clinical-golden-v1.json`；仅允许合成数据进入开发环境。

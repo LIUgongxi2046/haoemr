@@ -1,8 +1,12 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "openemr2026 clinical contract",
-    "version": "0.1.0"
+    "title": "HaoEMR clinical contract",
+    "version": "0.1.0",
+    "license": {
+      "name": "GNU Affero General Public License v3.0 only",
+      "identifier": "AGPL-3.0-only"
+    }
   },
   "servers": [
     {
@@ -704,6 +708,20 @@
             "description": "deterministic quality findings"
           }
         }
+      }
+    },
+    "/encounters/{encounter_id}/record-quality": {
+      "get": {
+        "operationId": "getEncounterRecordQuality",
+        "parameters": [
+          { "name": "encounter_id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
+          { "name": "X-Organization-Context", "in": "header", "required": true, "schema": { "type": "string", "format": "uuid" } },
+          { "name": "X-Facility-Context", "in": "header", "required": true, "schema": { "type": "string", "format": "uuid" } },
+          { "name": "X-Patient-Context", "in": "header", "required": true, "schema": { "type": "string", "format": "uuid" } },
+          { "name": "X-Encounter-Context", "in": "header", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": { "200": { "description": "Current document quality summaries; not a terminal clearance or cross-document semantic review",
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/EncounterRecordQuality" } } } } }
       }
     },
     "/documents/{document_id}/governance": {
@@ -2518,6 +2536,61 @@
         }
       }
     },
+    "/settlements": {
+      "get": {
+        "operationId": "getEncounterSettlement",
+        "parameters": [
+          {
+            "name": "encounter_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "derived encounter settlement and immutable external receipts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EncounterSettlement"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/settlements/receipts": {
+      "post": {
+        "operationId": "recordSettlementReceipt",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettlementReceiptCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "external settlement receipt recorded without simulating payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettlementReceipt"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/lab-specimens": {
       "get": {
         "operationId": "listLabSpecimens",
@@ -3311,6 +3384,35 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ResearchDatasetRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/research-dataset-requests/{request_id}/exports/file": {
+      "get": {
+        "operationId": "downloadResearchDatasetExport",
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "watermarked de-identified CSV export for an exported request",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }
@@ -5996,6 +6098,44 @@
         }
       }
     },
+    "/surgical-procedures/{surgical_procedure_id}/time-out-verifications": {
+      "post": {
+        "operationId": "verifySurgicalProcedureTimeOut",
+        "parameters": [
+          {
+            "name": "surgical_procedure_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SurgicalTimeOutVerificationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "independent time-out verification recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurgicalProcedure"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/infection-monitoring-events": {
       "get": {
         "operationId": "listInfectionMonitoringEvents",
@@ -7297,6 +7437,44 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ResearchCohort"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/research-cohorts/{research_cohort_id}/recomputations": {
+      "post": {
+        "operationId": "recomputeResearchCohort",
+        "parameters": [
+          {
+            "name": "research_cohort_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResearchCohortRecomputeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "all active patients evaluated and a cohort snapshot recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResearchCohortRecomputeResult"
                 }
               }
             }
@@ -9870,6 +10048,62 @@
         }
       }
     },
+    "/source-patient-match-candidate-imports": {
+      "get": {
+        "operationId": "listSourcePatientMatchCandidateImports",
+        "parameters": [
+          {
+            "name": "source_system_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "immutable controlled source imports for the governed source system",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HistoricalMigrationSourceImport"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "importSourcePatientMatchCandidatesCsv",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SourcePatientMatchCandidateCsvImportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "controlled CSV source import persisted and staged for a migration batch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoricalMigrationSourceImport"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/source-field-mappings": {
       "get": {
         "operationId": "listSourceFieldMappings",
@@ -10381,6 +10615,82 @@
         "responses": {
           "200": {
             "description": "historical migration batch rolled back",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoricalMigrationBatch"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/historical-migration-batches/{batch_id}/observations": {
+      "post": {
+        "operationId": "startHistoricalMigrationObservation",
+        "parameters": [
+          {
+            "name": "batch_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HistoricalMigrationBatchObservationStartRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "historical migration batch entered its controlled observation period",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoricalMigrationBatch"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/historical-migration-batches/{batch_id}/archives": {
+      "post": {
+        "operationId": "archiveHistoricalMigrationBatch",
+        "parameters": [
+          {
+            "name": "batch_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HistoricalMigrationBatchArchiveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "historical migration observation closed and evidence archived",
             "content": {
               "application/json": {
                 "schema": {
@@ -16894,6 +17204,48 @@
         }
       }
     },
+    "/development-acceptance-settings": {
+      "get": {
+        "operationId": "getDevelopmentAcceptanceSettings",
+        "responses": {
+          "200": {
+            "description": "development-synthetic acceptance settings available only to system administrators",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DevelopmentAcceptanceSettings"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateDevelopmentAcceptanceSettings",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DevelopmentAcceptanceSettingsUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "audited development-synthetic acceptance settings updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DevelopmentAcceptanceSettings"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/configurations": {
       "get": {
         "operationId": "listConfigurations",
@@ -18495,7 +18847,7 @@
         },
         "responses": {
           "200": {
-            "description": "messages collected from deterministic mock interface and persisted",
+            "description": "messages collected into a deterministic simulation reconciliation ledger; this endpoint never creates or modifies clinical facts",
             "content": {
               "application/json": {
                 "schema": {
@@ -18568,6 +18920,23 @@
                   "items": {
                     "$ref": "#/components/schemas/IntegrationReconciliation"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/outbox/reconciliation": {
+      "get": {
+        "operationId": "getOutboxReconciliation",
+        "responses": {
+          "200": {
+            "description": "tenant-scoped hospital outbox delivery configuration and reconciliation state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OutboxReconciliation"
                 }
               }
             }
@@ -18653,6 +19022,156 @@
                   "items": {
                     "$ref": "#/components/schemas/DeviceStatus"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/device-statuses/{device_code}/bindings": {
+      "post": {
+        "operationId": "bindDeviceStatusToEncounter",
+        "parameters": [
+          {
+            "name": "device_code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceStatusBindingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "device bound to the verified patient encounter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/device-statuses/{device_code}/unbindings": {
+      "post": {
+        "operationId": "unbindDeviceStatusFromEncounter",
+        "parameters": [
+          {
+            "name": "device_code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceStatusUnbindingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "active device binding closed while historical telemetry remains attributable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/device-alerts": {
+      "get": {
+        "operationId": "listDeviceAlerts",
+        "parameters": [
+          {
+            "name": "device_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_closed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "device alarms with accountable handling state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeviceAlert"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/device-alerts/{device_alert_id}/transitions": {
+      "post": {
+        "operationId": "transitionDeviceAlert",
+        "parameters": [
+          {
+            "name": "device_alert_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceAlertTransitionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "device alarm state transitioned with immutable evidence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceAlert"
                 }
               }
             }
@@ -18847,6 +19366,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ResearchProject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge-graph/imports": {
+      "post": {
+        "operationId": "importKnowledgeGraph",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KnowledgeGraphImportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "controlled graph import completed with source provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KnowledgeGraphImportBatch"
                 }
               }
             }
@@ -19602,6 +20148,58 @@
           },
           "verification": {
             "type": "string"
+          }
+        }
+      },
+      "DevelopmentAcceptanceSettings": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "inpatient_role_simulation_enabled",
+          "row_version",
+          "updated_by",
+          "updated_at"
+        ],
+        "properties": {
+          "inpatient_role_simulation_enabled": {
+            "type": "boolean"
+          },
+          "row_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "updated_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "DevelopmentAcceptanceSettingsUpdateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "inpatient_role_simulation_enabled",
+          "expected_row_version"
+        ],
+        "properties": {
+          "inpatient_role_simulation_enabled": {
+            "type": "boolean"
+          },
+          "expected_row_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
           }
         }
       },
@@ -21232,7 +21830,8 @@
               "DIAGNOSIS",
               "ORDER",
               "RESULT",
-              "TASK"
+              "TASK",
+              "DEVICE"
             ]
           },
           "state": {
@@ -21288,7 +21887,8 @@
               "DIAGNOSIS",
               "ORDER",
               "RESULT",
-              "TASK"
+              "TASK",
+              "DEVICE"
             ]
           },
           "resource_id": {
@@ -21887,6 +22487,14 @@
           "sections": {
             "type": "object",
             "additionalProperties": true
+          },
+          "source_medical_agent_run_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Optional medical-agent candidate provenance. Must match this patient, encounter and current document version; retained with the new draft."
           }
         }
       },
@@ -21981,6 +22589,10 @@
           "document_version_id"
         ],
         "properties": {
+          "trigger_stage": {
+            "type": "string",
+            "enum": ["MANUAL", "POST_SAVE", "PRE_SIGN", "TERMINAL"]
+          },
           "organization_id": {
             "type": "string",
             "format": "uuid"
@@ -26303,6 +26915,174 @@
           }
         }
       },
+      "SettlementReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "settlement_receipt_id",
+          "patient_id",
+          "encounter_id",
+          "facility_id",
+          "amount",
+          "payment_method_code",
+          "channel_code",
+          "external_receipt_no",
+          "received_at",
+          "received_by"
+        ],
+        "properties": {
+          "settlement_receipt_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "payment_method_code": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "channel_code": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "external_receipt_no": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "received_by": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "EncounterSettlement": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "patient_id",
+          "encounter_id",
+          "facility_id",
+          "charge_amount",
+          "settled_amount",
+          "outstanding_amount",
+          "status",
+          "receipts"
+        ],
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "charge_amount": {
+            "type": "number",
+            "minimum": 0
+          },
+          "settled_amount": {
+            "type": "number",
+            "minimum": 0
+          },
+          "outstanding_amount": {
+            "type": "number",
+            "minimum": 0
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "NOT_REQUIRED",
+              "UNSETTLED",
+              "PARTIALLY_SETTLED",
+              "SETTLED"
+            ]
+          },
+          "receipts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SettlementReceipt"
+            }
+          }
+        }
+      },
+      "SettlementReceiptCreateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organization_id",
+          "facility_id",
+          "patient_id",
+          "encounter_id",
+          "amount",
+          "payment_method_code",
+          "channel_code",
+          "external_receipt_no",
+          "received_at"
+        ],
+        "properties": {
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "payment_method_code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "channel_code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "external_receipt_no": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "ChargeItemReverseRequest": {
         "type": "object",
         "additionalProperties": false,
@@ -27173,8 +27953,10 @@
           "provider_code",
           "display_name",
           "residency_policy",
+          "test_only",
           "status",
           "evaluation_status",
+          "release_evidence_ready",
           "credential_configured",
           "credential_hint",
           "connection_status",
@@ -27208,6 +27990,10 @@
               "CLOUD_ALLOWED"
             ]
           },
+          "test_only": {
+            "type": "boolean",
+            "description": "Development-synthetic connection-test deployment; never publishable or clinical-runtime eligible."
+          },
           "endpoint_url": {
             "type": [
               "string",
@@ -27229,6 +28015,10 @@
               "APPROVED",
               "REJECTED"
             ]
+          },
+          "release_evidence_ready": {
+            "type": "boolean",
+            "description": "Whether at least one immutable PASSED model evaluation is retained for runtime eligibility."
           },
           "credential_configured": {
             "type": "boolean"
@@ -27567,6 +28357,14 @@
             ],
             "maxLength": 256
           },
+          "research_cohort_snapshot_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "immutable cohort member snapshot bound to this request"
+          },
           "destroyed_at": {
             "type": [
               "string",
@@ -27595,7 +28393,8 @@
           "organization_id",
           "facility_id",
           "purpose",
-          "scope_description"
+          "scope_description",
+          "research_cohort_snapshot_id"
         ],
         "properties": {
           "organization_id": {
@@ -27615,6 +28414,10 @@
             "type": "string",
             "minLength": 4,
             "maxLength": 4000
+          },
+          "research_cohort_snapshot_id": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -28667,6 +29470,14 @@
               "null"
             ],
             "format": "uuid"
+          },
+          "source_medical_agent_run_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Human-confirmed live medical-agent candidate source, restricted to the same patient and encounter."
           }
         }
       },
@@ -30204,6 +31015,7 @@
           "patient_id",
           "encounter_id",
           "facility_id",
+          "crisis_handover_id",
           "followup_date",
           "risk_level",
           "data_classification",
@@ -30225,6 +31037,10 @@
             "format": "uuid"
           },
           "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crisis_handover_id": {
             "type": "string",
             "format": "uuid"
           },
@@ -30278,6 +31094,7 @@
           "facility_id",
           "patient_id",
           "encounter_id",
+          "crisis_handover_id",
           "followup_date",
           "risk_level",
           "recorded_at"
@@ -30296,6 +31113,10 @@
             "format": "uuid"
           },
           "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crisis_handover_id": {
             "type": "string",
             "format": "uuid"
           },
@@ -31453,6 +32274,7 @@
           "patient_id",
           "encounter_id",
           "facility_id",
+          "preop_verification_id",
           "surgical_eye",
           "followup_date",
           "iop_mmhg",
@@ -31474,6 +32296,10 @@
             "format": "uuid"
           },
           "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "preop_verification_id": {
             "type": "string",
             "format": "uuid"
           },
@@ -31524,6 +32350,7 @@
           "facility_id",
           "patient_id",
           "encounter_id",
+          "preop_verification_id",
           "surgical_eye",
           "followup_date",
           "iop_mmhg",
@@ -31543,6 +32370,10 @@
             "format": "uuid"
           },
           "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "preop_verification_id": {
             "type": "string",
             "format": "uuid"
           },
@@ -33128,6 +33959,27 @@
             ],
             "format": "date-time"
           },
+          "time_out_verified_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "time_out_verified_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "time_out_verification_note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000
+          },
           "completed_at": {
             "type": [
               "string",
@@ -33254,6 +34106,46 @@
               "TIME_OUT",
               "COMPLETE"
             ]
+          }
+        }
+      },
+      "SurgicalTimeOutVerificationRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organization_id",
+          "facility_id",
+          "patient_id",
+          "encounter_id",
+          "expected_procedure_row_version",
+          "verification_note"
+        ],
+        "properties": {
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_procedure_row_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "verification_note": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 1000
           }
         }
       },
@@ -34143,6 +35035,7 @@
           "failed_count",
           "score",
           "started_by",
+          "initiator_kind",
           "started_at",
           "completed_at",
           "row_version"
@@ -34189,8 +35082,18 @@
             "maximum": 1
           },
           "started_by": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uuid"
+          },
+          "initiator_kind": {
+            "type": "string",
+            "enum": [
+              "MANUAL",
+              "SCHEDULED"
+            ]
           },
           "started_at": {
             "type": "string",
@@ -34867,6 +35770,24 @@
             ],
             "format": "date-time"
           },
+          "source_medical_agent_run_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "source_payload_hash": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "source_reference_count": {
+            "type": "integer",
+            "minimum": 0
+          },
           "row_version": {
             "type": "integer",
             "format": "int64",
@@ -35342,6 +36263,72 @@
           }
         }
       },
+      "ResearchCohortRecomputeRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organization_id",
+          "facility_id",
+          "computed_at"
+        ],
+        "properties": {
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "computed_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ResearchCohortRecomputeResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "research_cohort_id",
+          "evaluated_count",
+          "matched_count",
+          "new_member_count",
+          "snapshot_id",
+          "member_count",
+          "computed_at"
+        ],
+        "properties": {
+          "research_cohort_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "evaluated_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "matched_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "new_member_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "snapshot_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "computed_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "ResearchCohortSnapshot": {
         "type": "object",
         "additionalProperties": false,
@@ -35352,6 +36339,7 @@
           "criteria_hash",
           "computed_at",
           "computed_by",
+          "member_snapshot_materialized",
           "row_version"
         ],
         "properties": {
@@ -35379,6 +36367,10 @@
           "computed_by": {
             "type": "string",
             "format": "uuid"
+          },
+          "member_snapshot_materialized": {
+            "type": "boolean",
+            "description": "whether immutable member attributes were materialized for controlled research export"
           },
           "row_version": {
             "type": "integer",
@@ -39234,6 +40226,85 @@
           }
         }
       },
+      "SourcePatientMatchCandidateCsvImportRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organization_id",
+          "facility_id",
+          "source_system_id",
+          "file_name",
+          "csv_content"
+        ],
+        "properties": {
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_system_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "file_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "csv_content": {
+            "type": "string",
+            "minLength": 24,
+            "maxLength": 1048576
+          }
+        }
+      },
+      "HistoricalMigrationSourceImport": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_import_id",
+          "source_system_id",
+          "file_name",
+          "content_hash",
+          "row_count",
+          "imported_by",
+          "imported_at"
+        ],
+        "properties": {
+          "source_import_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_system_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "file_name": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "content_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "row_count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "imported_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "imported_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "SourceFieldMapping": {
         "type": "object",
         "additionalProperties": false,
@@ -39609,12 +40680,21 @@
             "minLength": 2,
             "maxLength": 64
           },
+          "source_import_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
           "batch_status": {
             "type": "string",
             "enum": [
               "TRIAL",
               "RECONCILED",
               "SWITCHED",
+              "OBSERVING",
+              "ARCHIVED",
               "ROLLED_BACK"
             ]
           },
@@ -39631,6 +40711,35 @@
             "format": "date-time"
           },
           "completed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "observation_started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "observation_completed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "observation_summary": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 10,
+            "maxLength": 1000
+          },
+          "archived_at": {
             "type": [
               "string",
               "null"
@@ -39671,6 +40780,13 @@
             "type": "string",
             "minLength": 2,
             "maxLength": 64
+          },
+          "source_import_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
           },
           "record_count": {
             "type": "integer",
@@ -39753,6 +40869,60 @@
           "expected_row_version": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "HistoricalMigrationBatchObservationStartRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organization_id",
+          "facility_id",
+          "expected_row_version"
+        ],
+        "properties": {
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_row_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          }
+        }
+      },
+      "HistoricalMigrationBatchArchiveRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organization_id",
+          "facility_id",
+          "observation_summary",
+          "expected_row_version"
+        ],
+        "properties": {
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "observation_summary": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 1000
+          },
+          "expected_row_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
           }
         }
       },
@@ -40109,7 +41279,9 @@
               "CONSULTATION",
               "PATHWAY",
               "DISCHARGE_REMEDIATION",
-              "AI_APPROVAL"
+              "AI_APPROVAL",
+              "REMINDER",
+              "SPECIALTY_QC_REVIEW"
             ]
           },
           "source_id": {
@@ -40877,6 +42049,14 @@
           "executed_at"
         ],
         "properties": {
+          "trigger_stage": {
+            "type": ["string", "null"],
+            "enum": ["MANUAL", "POST_SAVE", "PRE_SIGN", "TERMINAL", null]
+          },
+          "finding_snapshots": {
+            "type": ["array", "null"],
+            "items": { "$ref": "#/components/schemas/QualityFinding" }
+          },
           "quality_run_id": {
             "type": "string",
             "format": "uuid"
@@ -41079,6 +42259,31 @@
           }
         }
       },
+      "EncounterRecordQualityItem": {
+        "type": "object", "additionalProperties": false,
+        "required": ["document_id", "document_version_id", "content_hash", "document_type_code", "document_status", "quality_state", "open_finding_count", "blocking_count"],
+        "properties": {
+          "document_id": { "type": "string", "format": "uuid" },
+          "document_version_id": { "type": "string", "format": "uuid" },
+          "content_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "document_type_code": { "type": "string" },
+          "document_status": { "type": "string", "enum": ["DRAFT", "READY_TO_SIGN", "SIGNED", "CORRECTED", "VOID"] },
+          "quality_state": { "type": "string", "enum": ["NOT_RUN", "STALE", "PASSED", "WARNING", "BLOCKED"] },
+          "open_finding_count": { "type": "integer", "minimum": 0 },
+          "blocking_count": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "EncounterRecordQuality": {
+        "type": "object", "additionalProperties": false,
+        "required": ["patient_id", "encounter_id", "documents", "total_documents", "has_more"],
+        "properties": {
+          "patient_id": { "type": "string", "format": "uuid" },
+          "encounter_id": { "type": "string", "format": "uuid" },
+          "documents": { "type": "array", "maxItems": 100, "items": { "$ref": "#/components/schemas/EncounterRecordQualityItem" } },
+          "total_documents": { "type": "integer", "minimum": 0 },
+          "has_more": { "type": "boolean" }
+        }
+      },
       "DocumentGovernanceSnapshot": {
         "type": "object",
         "additionalProperties": false,
@@ -41093,6 +42298,11 @@
           "data_watermark"
         ],
         "properties": {
+          "quality_run_history": {
+            "type": "array",
+            "maxItems": 20,
+            "items": { "$ref": "#/components/schemas/DocumentQualityRunEvidence" }
+          },
           "document_id": {
             "type": "string",
             "format": "uuid"
@@ -42597,7 +43807,7 @@
               "string",
               "null"
             ],
-            "description": "\u9762\u5411\u533b\u751f\u7684\u4e00\u53e5\u8bdd\u80fd\u529b\u7b80\u4ecb\uff08\u4e3b\u533b\u52a9\u6709\u503c\uff0c\u5b50\u533b\u52a9\u4e3a\u7a7a\uff09\u3002"
+            "description": "面向医生的一句话能力简介（主医助有值，子医助为空）。"
           },
           "category": {
             "type": [
@@ -42611,7 +43821,7 @@
               "CARE",
               null
             ],
-            "description": "\u4e3b\u533b\u52a9\u5206\u7c7b\uff1a\u4e34\u5e8a\u8bca\u7597 / \u4e13\u79d1\u533b\u52a9 / \u6cbb\u7406\u4e0e\u8fd0\u8425 / \u968f\u8bbf\u4e0e\u5ba3\u6559\uff1b\u5b50\u533b\u52a9\u4e3a\u7a7a\u3002"
+            "description": "主医助分类：临床诊疗 / 专科医助 / 治理与运营 / 随访与宣教；子医助为空。"
           },
           "display_role": {
             "type": "string"
@@ -42654,7 +43864,7 @@
           "usage_count": {
             "type": "integer",
             "minimum": 0,
-            "description": "\u8be5\u533b\u52a9\u56e2\u961f\u5728\u5f53\u524d\u9662\u533a\u5df2\u88ab\u4f7f\u7528\u7684\u8fd0\u884c\u6b21\u6570\u3002"
+            "description": "该医助团队在当前院区已被使用的运行次数。"
           }
         }
       },
@@ -42717,7 +43927,7 @@
               "null"
             ],
             "format": "uuid",
-            "description": "\u53ef\u7a7a\uff1b\u672a\u7ed1\u5b9a\u60a3\u8005\u65f6\u8fdb\u884c\u901a\u7528\u95ee\u7b54\u3002"
+            "description": "可空；未绑定患者时进行通用问答。"
           },
           "encounter_id": {
             "type": [
@@ -42725,7 +43935,7 @@
               "null"
             ],
             "format": "uuid",
-            "description": "\u53ef\u7a7a\uff1b\u672a\u7ed1\u5b9a\u5c31\u8bca\u65f6\u8fdb\u884c\u901a\u7528\u95ee\u7b54\u3002"
+            "description": "可空；未绑定就诊时进行通用问答。"
           },
           "context_lease_id": {
             "type": "string",
@@ -42736,21 +43946,21 @@
               "string",
               "null"
             ],
-            "description": "\u53ef\u7a7a\uff1b\u7f3a\u7701\u65f6\u7531\u540e\u7aef AgentOrchestrator \u6309 source_route \u52a8\u6001\u7f16\u6392\u3002"
+            "description": "可空；缺省时由后端 AgentOrchestrator 按 source_route 动态编排。"
           },
           "stage_code": {
             "type": [
               "string",
               "null"
             ],
-            "description": "\u53ef\u7a7a\uff1b\u7f3a\u7701\u65f6\u7531\u540e\u7aef AgentOrchestrator \u6309 source_route \u52a8\u6001\u7f16\u6392\u3002"
+            "description": "可空；缺省时由后端 AgentOrchestrator 按 source_route 动态编排。"
           },
           "source_route": {
             "type": [
               "string",
               "null"
             ],
-            "description": "\u53d1\u8d77\u7f16\u6392\u7684\u524d\u7aef\u8def\u7531\u6807\u8bc6\uff0c\u7528\u4e8e\u540e\u7aef\u52a8\u6001\u8def\u7531\u89e3\u6790\u3002"
+            "description": "发起编排的前端路由标识，用于后端动态路由解析。"
           },
           "target_type": {
             "type": [
@@ -42765,7 +43975,7 @@
               "CARE_PLAN",
               null
             ],
-            "description": "\u53ef\u7a7a\uff1b\u901a\u7528\u95ee\u7b54\u65f6\u65e0\u5177\u4f53\u8bca\u7597\u76ee\u6807\u3002"
+            "description": "可空；通用问答时无具体诊疗目标。"
           },
           "target_id": {
             "type": [
@@ -42773,7 +43983,7 @@
               "null"
             ],
             "format": "uuid",
-            "description": "\u53ef\u7a7a\uff1b\u901a\u7528\u95ee\u7b54\u65f6\u65e0\u5177\u4f53\u8bca\u7597\u76ee\u6807\u3002"
+            "description": "可空；通用问答时无具体诊疗目标。"
           },
           "objective": {
             "type": "string",
@@ -44390,7 +45600,7 @@
             "type": "string",
             "minLength": 2,
             "maxLength": 256,
-            "description": "\u9762\u5411\u7ba1\u7406\u5458\u663e\u793a\u7684\u4e2d\u6587\u7b56\u7565\u540d\u79f0"
+            "description": "面向管理员显示的中文策略名称"
           },
           "version_no": {
             "type": "integer"
@@ -44542,7 +45752,7 @@
             "type": "string",
             "minLength": 2,
             "maxLength": 256,
-            "description": "\u9762\u5411\u7ba1\u7406\u5458\u663e\u793a\u7684\u4e2d\u6587\u7b56\u7565\u540d\u79f0"
+            "description": "面向管理员显示的中文策略名称"
           },
           "version_no": {
             "type": "integer"
@@ -46927,6 +48137,7 @@
           "reviewed_record_type",
           "reviewed_record_id",
           "review_conclusion",
+          "data_classification",
           "reviewed_by",
           "reviewed_at",
           "row_version"
@@ -46972,6 +48183,12 @@
               "null"
             ],
             "minLength": 2
+          },
+          "data_classification": {
+            "type": "string",
+            "enum": [
+              "RESTRICTED"
+            ]
           },
           "reviewed_by": {
             "type": "string",
@@ -47720,6 +48937,7 @@
           "patient_id",
           "encounter_id",
           "facility_id",
+          "airway_handover_id",
           "followup_reason",
           "scheduled_date",
           "attended",
@@ -47741,6 +48959,10 @@
             "format": "uuid"
           },
           "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "airway_handover_id": {
             "type": "string",
             "format": "uuid"
           },
@@ -47791,6 +49013,7 @@
           "facility_id",
           "patient_id",
           "encounter_id",
+          "airway_handover_id",
           "followup_reason",
           "scheduled_date",
           "attended",
@@ -47810,6 +49033,10 @@
             "format": "uuid"
           },
           "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "airway_handover_id": {
             "type": "string",
             "format": "uuid"
           },
@@ -48916,6 +50143,7 @@
           "assessment",
           "intervention",
           "risk_flag",
+          "data_classification",
           "recorded_at",
           "row_version"
         ],
@@ -48946,6 +50174,12 @@
           },
           "risk_flag": {
             "type": "boolean"
+          },
+          "data_classification": {
+            "type": "string",
+            "enum": [
+              "RESTRICTED"
+            ]
           },
           "recorded_at": {
             "type": "string",
@@ -49616,6 +50850,7 @@
           "assessment",
           "intervention",
           "risk_flag",
+          "data_classification",
           "recorded_at",
           "row_version"
         ],
@@ -49646,6 +50881,12 @@
           },
           "risk_flag": {
             "type": "boolean"
+          },
+          "data_classification": {
+            "type": "string",
+            "enum": [
+              "RESTRICTED"
+            ]
           },
           "recorded_at": {
             "type": "string",
@@ -52475,6 +53716,64 @@
           }
         }
       },
+      "OutboxReconciliation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "external_delivery_configured",
+          "scheduled_dispatch_enabled",
+          "pending",
+          "in_flight",
+          "published",
+          "external_delivery_accepted",
+          "closed_without_external_evidence",
+          "dead_letter",
+          "oldest_pending_seconds"
+        ],
+        "properties": {
+          "external_delivery_configured": {
+            "type": "boolean"
+          },
+          "scheduled_dispatch_enabled": {
+            "type": "boolean"
+          },
+          "pending": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "in_flight": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "published": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "external_delivery_accepted": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "closed_without_external_evidence": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "dead_letter": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "oldest_pending_seconds": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          }
+        }
+      },
       "IntegrationMessageReconcileRequest": {
         "type": "object",
         "additionalProperties": false,
@@ -52490,6 +53789,228 @@
           "facility_id": {
             "type": "string",
             "format": "uuid"
+          }
+        }
+      },
+      "DeviceAlert": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "device_alert_id",
+          "device_code",
+          "metric",
+          "alarm_level",
+          "state",
+          "summary",
+          "opened_at",
+          "row_version"
+        ],
+        "properties": {
+          "device_alert_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_code": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "observation_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "metric": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "alarm_level": {
+            "type": "string",
+            "enum": [
+              "MEDIUM",
+              "HIGH"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "ACKNOWLEDGED",
+              "ESCALATED",
+              "CLOSED"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "acknowledged_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "acknowledged_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "escalated_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "escalated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "closed_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "closed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "resolution_note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000
+          },
+          "row_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          }
+        }
+      },
+      "DeviceAlertTransitionRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organization_id",
+          "facility_id",
+          "expected_row_version",
+          "action",
+          "note"
+        ],
+        "properties": {
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_row_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "ACKNOWLEDGE",
+              "ESCALATE",
+              "CLOSE"
+            ]
+          },
+          "note": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 1000
+          }
+        }
+      },
+      "DeviceStatusBindingRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organization_id",
+          "facility_id",
+          "patient_id",
+          "encounter_id",
+          "expected_row_version",
+          "verification_method"
+        ],
+        "properties": {
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_row_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "verification_method": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 256
+          }
+        }
+      },
+      "DeviceStatusUnbindingRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organization_id",
+          "facility_id",
+          "expected_row_version",
+          "reason"
+        ],
+        "properties": {
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_row_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 1000
           }
         }
       },
@@ -53073,6 +54594,193 @@
           "facility_id": {
             "type": "string",
             "format": "uuid"
+          }
+        }
+      },
+      "KnowledgeGraphConceptImport": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "system",
+          "code",
+          "display"
+        ],
+        "properties": {
+          "system": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 64
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "display": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 512
+          },
+          "source_type": {
+            "type": "string",
+            "enum": [
+              "DICTIONARY",
+              "EXTRACTED"
+            ]
+          }
+        }
+      },
+      "KnowledgeGraphRelationImport": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "from_system",
+          "from_code",
+          "to_system",
+          "to_code",
+          "relation_type"
+        ],
+        "properties": {
+          "from_system": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 64
+          },
+          "from_code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "to_system": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 64
+          },
+          "to_code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "relation_type": {
+            "type": "string",
+            "enum": [
+              "MAPS_TO",
+              "MENTIONS",
+              "SUPPORTED_BY",
+              "CONSTRAINS"
+            ]
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 64
+          }
+        }
+      },
+      "KnowledgeGraphImportRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "organization_id",
+          "facility_id",
+          "source_id",
+          "concepts",
+          "relations"
+        ],
+        "properties": {
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_document_version_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "concepts": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1000,
+            "items": {
+              "$ref": "#/components/schemas/KnowledgeGraphConceptImport"
+            }
+          },
+          "relations": {
+            "type": "array",
+            "maxItems": 2000,
+            "items": {
+              "$ref": "#/components/schemas/KnowledgeGraphRelationImport"
+            }
+          }
+        }
+      },
+      "KnowledgeGraphImportBatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "graph_import_batch_id",
+          "source_id",
+          "manifest_hash",
+          "imported_concept_count",
+          "imported_relation_count",
+          "status",
+          "imported_by",
+          "imported_at"
+        ],
+        "properties": {
+          "graph_import_batch_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_document_version_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "manifest_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "imported_concept_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "imported_relation_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "COMPLETED",
+              "REJECTED"
+            ]
+          },
+          "imported_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "imported_at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

@@ -1,0 +1,25 @@
+{
+  "run_at": "2026-09-05T09:01:41.631Z",
+  "purpose": "E2E 去标识研究数据集 1788598901631",
+  "cohort_code": "E2E-DATASET-1788598901631",
+  "checks": [
+    {
+      "name": "create-request-bound-to-materialized-cohort-snapshot",
+      "status": "PASS",
+      "detail": "通过页面新建并物化 E2E-DATASET-1788598901631，再将研究数据申请绑定其成员快照并保持 REQUESTED 状态"
+    },
+    {
+      "name": "approve-export-and-download-deidentified-watermarked-csv",
+      "status": "PASS",
+      "detail": "批准后受控导出并实际下载 CSV；文件包含水印和伪名字段，未出现患者姓名或 patient_id"
+    },
+    {
+      "name": "destroy-export-and-retain-terminal-audit-ledger",
+      "status": "PASS",
+      "detail": "销毁后请求仅在历史台账可见，下载入口被禁用，终态审计证据保留"
+    }
+  ],
+  "findings": [],
+  "passed": 3,
+  "failed": 0
+}

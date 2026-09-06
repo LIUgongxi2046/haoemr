@@ -22,7 +22,6 @@ const pendingEmergencyReviews = computed(() => (snapshot.value?.emergencyAccess 
 const configurations = computed(() => [...(snapshot.value?.masterData ?? []), ...(snapshot.value?.parameters ?? []), ...(snapshot.value?.jobs ?? [])]);
 const pendingConfigurations = computed(() => configurations.value.filter((item) => item.status !== 'ACTIVE').length);
 const invalidJobs = computed(() => (snapshot.value?.jobs ?? []).filter((item) => item.validation_state === 'INVALID').length);
-
 const metrics = computed(() => [
   ['待审批管理变更', String(pendingPolicies.value + pendingConfigurations.value), `${pendingPolicies.value} 条权限策略 · ${pendingConfigurations.value} 条配置版本`, ''],
   ['当前活跃账户', String(activeAccounts.value), `对应 ${activePeople.value} 个有效人员主档`, '',],
@@ -76,12 +75,13 @@ function formatDateTime(value: string | null | undefined) { return value ? new I
 
 <template>
   <section data-page-root class="content admin-content vue-native-page admin-overview-page">
-    <div class="page-head"><div class="page-title"><h1>系统管理工作台</h1><p>江城大学附属医院 · 数据实时汇总自系统管理接口、业务数据库和防篡改审计链</p></div><div class="head-actions"><button class="btn" type="button" :disabled="query.isFetching.value" @click="query.refetch()">{{ query.isFetching.value ? '刷新中…' : '刷新数据' }}</button><RouterLink class="btn" to="/admin-audit">管理员审计</RouterLink><RouterLink class="btn primary" to="/config-release">创建管理变更单</RouterLink></div></div>
+    <div class="page-head"><div class="page-title"><h1>系统管理工作台</h1><p>查看机构、账户、权限和系统运行情况。</p></div><div class="head-actions"><button class="btn" type="button" :disabled="query.isFetching.value" @click="query.refetch()">{{ query.isFetching.value ? '刷新中…' : '刷新数据' }}</button><RouterLink class="btn" to="/admin-audit">管理员审计</RouterLink><RouterLink class="btn primary" to="/config-release">创建管理变更单</RouterLink></div></div>
     <ClinicalPageState v-if="query.isPending.value" kind="loading" message="正在聚合系统管理数据" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="query.refetch()" />
     <template v-else>
       <section class="metric-grid" aria-label="系统管理指标"><article v-for="item in metrics" :key="item[0]" class="metric"><div class="name">{{ item[0] }}</div><div class="value" :class="item[3]">{{ item[1] }}</div><div class="trend">{{ item[2] }}</div></article></section>
       <section class="admin-module-grid" aria-label="系统管理模块"><RouterLink v-for="item in modules" :key="item[3]" class="admin-module" :to="`/${item[3]}`"><div><b>{{ item[0] }}</b><span>{{ item[1] }}</span></div><em class="status" :class="item[4]">{{ item[2] }}</em><i aria-hidden="true">→</i></RouterLink></section>
+
       <div class="grid admin-overview">
         <section class="card"><div class="card-head">高优先级管理待办</div><div class="admin-table-wrap"><table class="table"><thead><tr><th>风险/任务</th><th>对象</th><th>责任人</th><th>时限</th><th>状态</th></tr></thead><tbody><tr v-for="item in tasks" :key="`${item[0]}-${item[1]}`"><td><b>{{ item[0] }}</b></td><td>{{ item[1] }}</td><td>{{ item[2] }}</td><td>{{ item[3] }}</td><td><span class="status" :class="item[5]">{{ item[4] }}</span></td></tr></tbody></table></div></section>
         <aside class="card"><div class="card-head">最近发布与回滚</div><div class="card-body"><div v-if="!releases.length" class="admin-empty">审计链中暂无发布或回退事件。</div><div v-for="item in releases" :key="`${item[0]}-${item[1]}`" class="admin-release-item"><span>{{ item[0] }}</span><i :class="item[3]"></i><div><b>{{ item[1] }}</b><p>{{ item[2] }}</p></div></div><div class="notice info"><div class="notice-title">管理与配置分域</div>本域管理身份、主数据和运行参数；临床流程、表单、规则与接口映射进入业务配置域。</div></div></aside>
@@ -92,6 +92,7 @@ function formatDateTime(value: string | null | undefined) { return value ? new I
 
 <style scoped>
 .admin-overview-page { padding-top: 0; }.admin-module { color: inherit; text-decoration: none; }.value.danger { color: var(--red); }
+.development-acceptance-configuration { margin: 0 0 13px; border-color: #e6cd9d; }.development-acceptance-configuration .card-body { display: flex; align-items: center; justify-content: space-between; gap: 20px; }.development-acceptance-configuration b { display: block; color: var(--ink); font-size: 12px; }.development-acceptance-configuration p { max-width: 700px; margin: 5px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }.development-acceptance-notice { color: var(--green) !important; }.development-acceptance-notice.error { color: var(--red) !important; }.development-acceptance-toggle { display: flex; align-items: center; gap: 8px; min-width: 92px; color: #775111; font-size: 11px; font-weight: 700; white-space: nowrap; }.development-acceptance-toggle input { width: 16px; height: 16px; accent-color: var(--amber); }
 .admin-release-item { display: grid; grid-template-columns: 58px 10px minmax(0,1fr); gap: 8px; align-items: start; padding: 8px 0; }.admin-release-item > span { color: var(--muted); font-size: 9px; }.admin-release-item > i { width: 7px; height: 7px; margin-top: 3px; border-radius: 50%; background: #9ba9b8; }.admin-release-item > i.green { background: var(--green); }.admin-release-item > i.blue { background: var(--blue); }.admin-release-item > i.amber { background: var(--amber); }.admin-release-item b { font-size: 11px; }.admin-release-item p { margin: 3px 0 0; color: var(--muted); font-size: 9px; }
-@media(max-width:1100px){.admin-overview{grid-template-columns:minmax(0,1fr)}.admin-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.admin-module-grid,.metric-grid{grid-template-columns:minmax(0,1fr)}.page-head{align-items:flex-start;flex-direction:column}.head-actions{width:100%}}
+@media(max-width:1100px){.admin-overview{grid-template-columns:minmax(0,1fr)}.admin-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.admin-module-grid,.metric-grid{grid-template-columns:minmax(0,1fr)}.page-head{align-items:flex-start;flex-direction:column}.head-actions{width:100%}.development-acceptance-configuration .card-body{align-items:flex-start;flex-direction:column}.development-acceptance-toggle{min-width:0}}
 </style>

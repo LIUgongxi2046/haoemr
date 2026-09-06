@@ -58,7 +58,7 @@ function formatDate(value: string | null | undefined) {
       <div class="admin-layout">
         <section class="admin-panel">
           <header><div><h2>医助任务列表</h2><p>按任务创建时间倒序展示。</p></div></header>
-          <div v-if="runs.length === 0" class="empty-state"><span>医</span><p>暂无医助任务</p><small>通过AI医助 Eva 或医助团队发起任务后在此查看</small></div>
+          <div v-if="runs.length === 0" class="empty-state"><span>医</span><p>暂无医助任务</p><small>通过 AI医助 EVA 或医助团队发起任务后在此查看</small></div>
           <div v-else class="admin-table-wrap">
             <table class="admin-table">
               <thead><tr><th>任务编号</th><th>状态</th><th>处理序号</th><th>数据版本</th><th>更新时间</th></tr></thead>

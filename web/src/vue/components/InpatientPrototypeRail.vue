@@ -42,11 +42,11 @@ const completion = computed(() => {
       <div class="card-head">{{ bedLabel }}床 · {{ patientName }} <span class="risk red">重点</span></div>
       <div class="card-body prototype-rail-body">
         <div class="section-title">病情与任务摘要</div>
-        <p class="prototype-summary">{{ wardName }}当前在院患者，今日诊疗任务已按时限和风险排序。所有处置均会重新校验当前患者租约。</p>
+        <p class="prototype-summary">{{ wardName }}当前在院患者，今日诊疗任务已按时限和风险排序。处置前请确认当前患者。</p>
         <div v-if="overdueCount" class="notice hard"><div class="notice-title">已超时 {{ overdueCount }} 项</div>请优先完成逾期文书及审签，逾期事实会永久留痕。</div>
         <div v-else class="notice info"><div class="notice-title">当前无逾期文书</div>继续关注新结果、医嘱变更和会诊意见。</div>
         <div class="section-title">近 12 小时变化</div>
-        <div class="prototype-timeline"><div><i></i><span><b>文书待办 {{ pendingCount }} 项</b><small>服务端时限实时重算</small></span></div><div><i></i><span><b>当前岗位上下文已校验</b><small>患者、住院和病区范围一致</small></span></div><div><i></i><span><b>数据水印已刷新</b><small>防止使用过期快照处置</small></span></div></div>
+        <div class="prototype-timeline"><div><i></i><span><b>文书待办 {{ pendingCount }} 项</b><small>时限会自动更新</small></span></div><div><i></i><span><b>当前岗位已确认</b><small>请核对患者和病区</small></span></div><div><i></i><span><b>数据已更新</b><small>请以最新信息处理</small></span></div></div>
         <RouterLink class="button primary prototype-rail-action" to="/inpatient-overview">打开住院患者总览</RouterLink>
       </div>
     </template>

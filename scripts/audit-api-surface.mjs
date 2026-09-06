@@ -29,8 +29,8 @@ const openapiOperations = Object.entries(openapi.paths ?? {}).flatMap(([path, me
 );
 if (openapiOperations.length !== apiIndex.operations.length) staticFailures.push({ issue: 'OPERATION_COUNT_DRIFT', openapi: openapiOperations.length, api_index: apiIndex.operations.length });
 
-const liveBase = process.env.OPENEMR2026_API_BASE_URL?.replace(/\/$/, '');
-const securityMode = process.env.OPENEMR2026_API_SECURITY_MODE || 'prod';
+const liveBase = process.env.HAOEMR_API_BASE_URL?.replace(/\/$/, '');
+const securityMode = process.env.HAOEMR_API_SECURITY_MODE || 'prod';
 const live = [];
 const fillPath = (path) => path.replaceAll(/\{[^}]+\}/g, '00000000-0000-7000-8000-000000000001');
 if (liveBase) {

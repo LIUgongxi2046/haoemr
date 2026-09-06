@@ -6,7 +6,7 @@ const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
 const source = JSON.parse(await readFile(resolve(projectDir, 'contracts/generated/route-contract.generated.json'), 'utf8'));
 
-const configurationRoutes = new Set(['workflow','form-designer','rule-center','scope-designer','agent-compose','agent-context','agent-evals','ai-assistant-policy','config-release','config-upgrade','admin-master-data','admin-parameters','admin-jobs','backup','install','operations','release-gates']);
+const configurationRoutes = new Set(['workflow','form-designer','rule-center','scope-designer','agent-compose','agent-context','agent-evals','config-release','config-upgrade','admin-master-data','admin-parameters','admin-jobs','backup','install','operations','release-gates']);
 const metricRoutes = new Set(['data-center','research','research-stats','department-qc','quality-center']);
 const simulationRoutes = new Set(['admin-auth','ai-capture','model-connection','model-routing','devices','device-monitoring','integration-connectors','integration-messages','archive-scan','archive-preservation','pathology-workbench','anesthesia-workbench','therapy-workbench']);
 

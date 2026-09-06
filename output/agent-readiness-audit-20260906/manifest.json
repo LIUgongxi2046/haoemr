@@ -1,0 +1,7 @@
+{
+  "commit": "754fed9096c4ebfa3a928458fa4e1b6a9631c180",
+  "worktree_dirty": true,
+  "dataset_sha256": "f27abeaf20af55f67fd64b77e31a1cd9830247dbdaca10bb72264a62d9cf57b8",
+  "clinical_efficacy_score": null,
+  "note": "Provider tests use synthetic placeholder sections. Historical coverage is before this audit. Application probe used no patient and ended PARTIAL before model execution."
+}

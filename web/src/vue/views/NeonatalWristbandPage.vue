@@ -5,6 +5,7 @@ import type { NeonatalWristbandVerificationWire } from '../../generated/contract
 import { createNeonatalWristbandVerification, issueSpecialtyEncounterLease, issueSpecialtyPatientLease, listNeonatalWristbandVerifications } from '../../api/specialty-layers';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { localDateTimeInputValue } from '../date-input';
 
 const patientLeaseQuery = useQuery({
   queryKey: ['specialty-layers', 'neonatal-care', 'patient-lease'],
@@ -37,7 +38,7 @@ const form = reactive({
   wristbandCode: '',
   specimenCode: '',
   witnessedBy: '',
-  verifiedAt: new Date().toISOString(),
+  verifiedAt: localDateTimeInputValue(),
 });
 const busy = ref('');
 const notice = ref('');

@@ -1,0 +1,82 @@
+{
+  "run_at": "2026-09-05T12:44:54.927Z",
+  "checks": [
+    {
+      "name": "ent-qc-real-airway-handover",
+      "status": "PASS",
+      "detail": "耳鼻喉气道风险交接 的真实来源已在质控页面出现并成功创建 PASS 复核"
+    },
+    {
+      "name": "dental-qc-real-treatment-record",
+      "status": "PASS",
+      "detail": "口腔治疗记录 的真实来源已在质控页面出现并成功创建 PASS 复核"
+    },
+    {
+      "name": "dermatology-qc-real-biologic-screening",
+      "status": "PASS",
+      "detail": "皮肤生物制剂筛查 的真实来源已在质控页面出现并成功创建 PASS 复核"
+    },
+    {
+      "name": "neonatal-qc-real-wristband-verification",
+      "status": "PASS",
+      "detail": "新生儿腕带核对 的真实来源已在质控页面出现并成功创建 PASS 复核"
+    },
+    {
+      "name": "obstetric-qc-real-antenatal-exam",
+      "status": "PASS",
+      "detail": "妇产产前检查 的真实来源已在质控页面出现并成功创建 PASS 复核"
+    },
+    {
+      "name": "pediatric-qc-real-growth-record",
+      "status": "PASS",
+      "detail": "儿科生长发育记录 的真实来源已在质控页面出现并成功创建 PASS 复核"
+    },
+    {
+      "name": "reproductive-qc-real-art-cycle",
+      "status": "PASS",
+      "detail": "生殖 ART 周期 的真实来源已在质控页面出现并成功创建 PASS 复核"
+    },
+    {
+      "name": "tcm-qc-real-herbal-prescription",
+      "status": "PASS",
+      "detail": "中医草药处方 的真实来源已在质控页面出现并成功创建 PASS 复核"
+    }
+  ],
+  "findings": [],
+  "evidence": {
+    "耳鼻喉气道风险交接": {
+      "source_id": "043d7e2a-00bb-48d4-81a7-e901cbe6c047",
+      "review_id": "1c2adfa0-eed8-41c6-8b96-84153f589bf9"
+    },
+    "口腔治疗记录": {
+      "source_id": "6faf0345-aa85-403a-8a23-09b3fc36e56c",
+      "review_id": "e4312525-a816-4bde-a122-f02fe5a55a0a"
+    },
+    "皮肤生物制剂筛查": {
+      "source_id": "239ab2d5-1c30-45fc-afe3-cc93dd3e323f",
+      "review_id": "33501e57-c104-4f99-8d6c-f1a44c134c00"
+    },
+    "新生儿腕带核对": {
+      "source_id": "ea82105b-6bca-47ff-8ea9-3eda30d91ca1",
+      "review_id": "fb6f1e17-a216-49fd-86f0-56f6711cc1f8"
+    },
+    "妇产产前检查": {
+      "source_id": "fc95cf07-2af0-41e2-b6fb-f5e42c94254f",
+      "review_id": "0c15241b-fb66-4cd9-a7ae-02d0c67ce2d8"
+    },
+    "儿科生长发育记录": {
+      "source_id": "0506a2d4-366c-4cb0-ac10-8d8400739eec",
+      "review_id": "55ca55c8-c041-4233-a0a9-80e2040612e7"
+    },
+    "生殖 ART 周期": {
+      "source_id": "a770992a-50dd-4865-b520-556d2677a8d9",
+      "review_id": "f3e65db1-054f-4a9a-80ec-d2f3bf2ca855"
+    },
+    "中医草药处方": {
+      "source_id": "05f95a01-9905-482e-9e09-9d622855dc92",
+      "review_id": "c304b591-0800-4a66-845f-35b3aeee8830"
+    }
+  },
+  "passed": 8,
+  "failed": 0
+}

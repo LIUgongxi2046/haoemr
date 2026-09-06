@@ -1,0 +1,22 @@
+{"phase":"configured-model-compatibility","eval_id":"clinical-ai-001","model":"deepseek-chat","response_model":"deepseek-v4-flash","http_status":200,"request_id":"da163569-2982-4be1-a5de-e0f3bb064e93","usage":{"prompt_tokens":318,"completion_tokens":105,"total_tokens":423,"prompt_tokens_details":{"cached_tokens":0},"prompt_cache_hit_tokens":0,"prompt_cache_miss_tokens":318},"duration_ms":2572,"finish_reason":"stop","schema_valid":true,"expected_missing":["chief_complaint"],"detected_missing":["chief_complaint"],"missing_recall_pass":true}
+{"phase":"case","id":"clinical-ai-001","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1247}
+{"phase":"case","id":"clinical-ai-002","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1436}
+{"phase":"case","id":"clinical-ai-003","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1279}
+{"phase":"case","id":"clinical-ai-004","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1511}
+{"phase":"case","id":"clinical-ai-005","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1307}
+{"phase":"case","id":"clinical-ai-006","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1410}
+{"phase":"case","id":"clinical-ai-007","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1511}
+{"phase":"case","id":"clinical-ai-008","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1768}
+{"phase":"case","id":"clinical-ai-009","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1165}
+{"phase":"case","id":"clinical-ai-010","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1404}
+{"phase":"case","id":"clinical-ai-011","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1644}
+{"phase":"case","id":"clinical-ai-012","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1292}
+{"phase":"case","id":"clinical-ai-013","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1434}
+{"phase":"case","id":"clinical-ai-014","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1517}
+{"phase":"case","id":"clinical-ai-016","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":974}
+{"phase":"case","id":"clinical-ai-015","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":2095}
+{"phase":"case","id":"clinical-ai-017","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1729}
+{"phase":"case","id":"clinical-ai-018","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1931}
+{"phase":"case","id":"clinical-ai-019","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1045}
+{"phase":"case","id":"clinical-ai-020","status":200,"schema_valid":true,"missing_recall_pass":true,"duration_ms":1358}
+{"run_at":"2026-09-06T05:56:19.698Z","scope":"Direct provider only; NOT application end-to-end, NOT all-agent or clinical efficacy evaluation","dataset":"clinical-ai-golden-v1 first 20","model":"deepseek-v4-flash","count":20,"http_success":20,"schema_valid":20,"missing_recall_pass":20,"p50_ms":1410,"p95_ms":1931,"tokens":8744,"clinical_factuality":null,"citation_accuracy":null,"timeout_recovery":null,"cancellation_recovery":null,"unauthorized_side_effects":null}

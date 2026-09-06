@@ -1,4 +1,4 @@
-# openemr2026 剩余任务清单
+# HaoEMR 剩余任务清单
 
 > 日期：2026-08-23（四层收尾后）
 > 基线：可用菜单 **194/194**，`NOT_AVAILABLE` 清零；`npm run build` + `vue-tsc` + `vitest` 17/17 + 浏览器审计 194/194 + 契约 check 全绿。

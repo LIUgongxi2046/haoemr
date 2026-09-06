@@ -40,7 +40,7 @@ scripts/verify.sh → VERIFY_EXIT=0
 
 - **迁移 V132**：`agent_run_budget_consumption`（预算/运行/消耗 token/消耗时长/记录人/记录时间/row_version）；消耗非负约束、同运行同预算唯一、不可变触发器、预算索引。
 - **契约**：新增 `AgentRunBudgetConsumption`、`AgentRunBudgetConsumptionRecordRequest`、`AgentRunBudgetSummary` 三 Schema 与 3 端点（list/record/summary）。
-- **模块**：`org.openemr2026.agent` 下 `AgentRunBudgetConsumptionService`（消耗记录 + 锁预算累计校验 + 汇总 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
+- **模块**：`org.haoemr.agent` 下 `AgentRunBudgetConsumptionService`（消耗记录 + 锁预算累计校验 + 汇总 + 幂等 + 审计/Outbox）、`Controller`、`Exception`、`ExceptionHandler`。
 - **测试**：`AgentRunBudgetConsumptionApiTest` 6 用例覆盖记录、累计汇总、token 超限、时长超限、非活动预算拒绝、篡改拒绝。
 
 ## 5. 未关闭风险

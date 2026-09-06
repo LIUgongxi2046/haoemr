@@ -37,7 +37,7 @@ function formatDate(value: string) { return new Intl.DateTimeFormat('zh-CN', { d
 </script>
 
 <template>
-  <section data-page-root class="content vue-native-page"><div class="page-heading"><div><p class="eyebrow">病历主轴 / 服务端比较</p><h1>病历版本差异</h1></div><RouterLink class="button secondary" to="/record-versions">返回版本链</RouterLink></div><p class="record-center-intro">按结构化字段比较两个不可变版本；差异结果不会写回任何一版。</p>
+  <section data-page-root class="content vue-native-page"><div class="page-heading"><div><p class="eyebrow">病历主轴 / 版本比较</p><h1>病历版本差异</h1><p>对比两个病历版本，快速查看字段变化。</p></div><RouterLink class="button secondary" to="/record-versions">返回版本链</RouterLink></div><p class="record-center-intro">按结构化字段比较两个不可变版本；差异结果不会写回任何一版。</p>
     <ClinicalPageState v-if="diffQuery.isPending.value" kind="loading" message="正在服务端计算版本差异" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="diffQuery.refetch()" />
     <div v-else-if="diffQuery.data.value?.kind === 'empty'" class="record-evidence-empty"><h2>暂无可比较版本</h2><p>{{ diffQuery.data.value.message }}</p><RouterLink class="button primary" to="/record-versions">查看版本链</RouterLink></div>

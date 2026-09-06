@@ -5,7 +5,7 @@ import { chromium } from 'playwright';
 
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
-const baseUrl = (process.env.OPENEMR2026_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
+const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
 const outputPath = resolve(projectDir, 'output/playwright/topbar-interactions-audit.json');
 await mkdir(resolve(projectDir, 'output/playwright'), { recursive: true });
 
@@ -49,9 +49,9 @@ async function verify(viewport, label) {
   await step('brand-link', async () => {
     await page.goto(`${baseUrl}/#/patient-registry`, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => document.documentElement.dataset.routeId === 'patient-registry', null, { timeout: 8_000 });
-    await page.getByRole('link', { name: 'OpenEMR2026 首页' }).click();
+    await page.getByRole('link', { name: 'HaoEMR 首页' }).click();
     await page.waitForFunction(() => document.documentElement.dataset.routeId === 'clinical', null, { timeout: 8_000 });
-    const productName = page.getByText('OpenEMR2026', { exact: true });
+    const productName = page.getByText('HaoEMR', { exact: true });
     await productName.waitFor({ state: 'attached' });
     if (viewport.width >= 700) await productName.waitFor({ state: 'visible' });
   });
@@ -61,11 +61,9 @@ async function verify(viewport, label) {
   });
 
   if (viewport.width >= 700) {
-    await step('hospital-selector', async () => {
-      const trigger = page.getByRole('button', { name: '选择医院' });
-      await trigger.click();
-      await page.getByRole('menu', { name: '医院列表' }).getByRole('menuitemradio', { name: '江城第二医院' }).click();
-      if (!(await trigger.textContent())?.includes('江城第二医院')) throw new Error('医院切换后顶栏未更新');
+    await step('hospital-display', async () => {
+      await page.getByLabel('当前医院', { exact: true }).waitFor({ state: 'visible' });
+      if (await page.getByRole('button', { name: '选择医院' }).count()) throw new Error('示例医院切换入口仍存在');
     });
 
     await step('role-selector', async () => {
@@ -75,9 +73,9 @@ async function verify(viewport, label) {
       if (!(await trigger.textContent())?.includes('质控管理员')) throw new Error('角色切换后顶栏未更新');
     });
 
-    await step('global-search', async () => {
-      await page.getByRole('searchbox', { name: '全局搜索' }).fill('张三');
-      await page.getByRole('button', { name: '提交全局搜索' }).click();
+    await step('patient-search', async () => {
+      await page.getByRole('searchbox', { name: '搜索患者' }).fill('张三');
+      await page.getByRole('button', { name: '提交患者搜索' }).click();
       await page.waitForFunction(() => document.documentElement.dataset.routeId === 'patient-registry');
       if (!new URL(page.url()).hash.includes('q=%E5%BC%A0%E4%B8%89')) throw new Error(`搜索词未写入目标 URL：${page.url()}`);
       await page.goto(`${baseUrl}/#/clinical`, { waitUntil: 'domcontentloaded' });
@@ -144,36 +142,17 @@ async function verify(viewport, label) {
     await dialog.waitFor({ state: 'detached' });
   });
 
-  await step('notifications', async () => {
-    const trigger = page.getByRole('button', { name: /通知/ });
-    if (await trigger.locator('svg').count() !== 1) throw new Error('通知按钮缺少 SVG 图标');
-    await trigger.click();
-    let menu = page.getByRole('region', { name: '通知中心' });
-    await menu.waitFor({ state: 'visible' });
-    const notificationBox = await menu.boundingBox();
-    if (!notificationBox || notificationBox.x < 0 || notificationBox.x + notificationBox.width > viewport.width + 1) throw new Error('通知中心超出视口');
-    await page.screenshot({ path: resolve(projectDir, `output/playwright/notification-center-${label}.png`), fullPage: false });
-    await menu.getByRole('tab', { name: /未读/ }).click();
-    await menu.getByRole('button', { name: '标记危急值待确认为已读' }).click();
-    if ((await trigger.getAttribute('aria-label')) !== '通知，2 条未读') throw new Error('单条已读后未读数未更新');
-    await menu.locator('.notification-main').filter({ hasText: '会诊即将超时' }).click();
-    await page.waitForFunction(() => document.documentElement.dataset.routeId === 'clinical-tasks');
-    await page.goto(`${baseUrl}/#/clinical`, { waitUntil: 'domcontentloaded' });
-    await trigger.click();
-    menu = page.getByRole('region', { name: '通知中心' });
-    await menu.getByRole('button', { name: '全部标为已读' }).click();
-    if ((await trigger.getAttribute('aria-label')) !== '通知，无未读') throw new Error('清除未读后通知状态未更新');
-    await menu.getByRole('tab', { name: /未读/ }).click();
-    await menu.getByText('没有未读通知', { exact: true }).waitFor({ state: 'visible' });
+  await step('sample-notifications-removed', async () => {
+    if (await page.locator('.notification-trigger').count()) throw new Error('示例通知按钮仍存在');
+    if (await page.getByRole('region', { name: '通知中心' }).count()) throw new Error('示例通知面板仍存在');
   });
 
   await step('account-and-permission-entry', async () => {
     await page.getByRole('button', { name: '用户登录与账户' }).click();
     const menu = page.getByRole('region', { name: '用户账户' });
     if (viewport.width < 700) {
-      await menu.getByLabel('账户菜单选择医院').selectOption('江城儿童医学中心');
+      if (await menu.getByLabel('账户菜单选择医院').count()) throw new Error('账户菜单仍允许切换示例医院');
       await menu.getByLabel('账户菜单选择角色').selectOption('系统管理员 · 平台治理');
-      if ((await menu.getByLabel('账户菜单选择医院').inputValue()) !== '江城儿童医学中心') throw new Error('移动端医院切换失败');
       if ((await menu.getByLabel('账户菜单选择角色').inputValue()) !== '系统管理员 · 平台治理') throw new Error('移动端角色切换失败');
     }
     await menu.getByRole('link', { name: '账号与权限' }).click();
@@ -183,6 +162,49 @@ async function verify(viewport, label) {
   await step('topbar-no-overflow', async () => {
     const overflow = await page.locator('.topbar').evaluate((element) => element.scrollWidth > element.clientWidth + 1);
     if (overflow) throw new Error('顶栏存在横向溢出');
+  });
+
+  await step('fixed-navigation-preserves-page-scroll', async () => {
+    await page.goto(`${baseUrl}/#/specialty-coverage`, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => document.documentElement.dataset.routeId === 'specialty-coverage', { timeout: 8_000 });
+    const initial = await page.evaluate(() => {
+      const topbar = document.querySelector('.topbar');
+      const secondary = document.querySelector('.main > .center-nav');
+      const title = document.querySelector('main h1');
+      if (!topbar || !secondary || !title) throw new Error('页面缺少顶栏、二级导航或标题');
+      const topbarRect = topbar.getBoundingClientRect();
+      const secondaryRect = secondary.getBoundingClientRect();
+      const titleRect = title.getBoundingClientRect();
+      return {
+        topbarTop: topbarRect.top,
+        topbarBottom: topbarRect.bottom,
+        secondaryTop: secondaryRect.top,
+        secondaryBottom: secondaryRect.bottom,
+        titleTop: titleRect.top,
+        maxScroll: document.documentElement.scrollHeight - window.innerHeight,
+      };
+    });
+    if (initial.secondaryTop < initial.topbarBottom - 1) throw new Error(`二级导航覆盖顶栏：${initial.secondaryTop} < ${initial.topbarBottom}`);
+    if (initial.titleTop < initial.secondaryBottom - 1) throw new Error(`二级导航覆盖页面标题：${initial.titleTop} < ${initial.secondaryBottom}`);
+    if (initial.maxScroll < 40) throw new Error(`长页面没有形成页面滚动：${initial.maxScroll}`);
+
+    await page.evaluate(() => window.scrollTo(0, Math.min(420, document.documentElement.scrollHeight - window.innerHeight)));
+    await page.waitForTimeout(100);
+    const scrolled = await page.evaluate(() => {
+      const topbarRect = document.querySelector('.topbar')?.getBoundingClientRect();
+      const secondaryRect = document.querySelector('.main > .center-nav')?.getBoundingClientRect();
+      return { scrollY: window.scrollY, topbarTop: topbarRect?.top, topbarBottom: topbarRect?.bottom, secondaryTop: secondaryRect?.top };
+    });
+    if (scrolled.scrollY < 1) throw new Error('页面滚动未生效');
+    if (Math.abs(scrolled.topbarTop ?? 999) > 1) throw new Error(`顶栏滚动后未固定：${scrolled.topbarTop}`);
+    if (Math.abs((scrolled.secondaryTop ?? 999) - (scrolled.topbarBottom ?? 0)) > 1) throw new Error(`二级导航未紧贴顶栏固定：${scrolled.secondaryTop} != ${scrolled.topbarBottom}`);
+
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await page.waitForTimeout(100);
+    const bottomReached = await page.evaluate(() => window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2);
+    if (!bottomReached) throw new Error('页面底部无法滚动到达');
+    await page.screenshot({ path: resolve(projectDir, `output/playwright/fixed-navigation-scroll-${label}.png`), fullPage: false });
+    return { initial, scrolled };
   });
 
   await page.goto(`${baseUrl}/#/clinical`, { waitUntil: 'domcontentloaded' });

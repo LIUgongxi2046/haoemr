@@ -6,7 +6,6 @@ defineProps<{
   description: string;
   metrics: QualityOverviewMetric[];
   rows: QualityOverviewRow[];
-  workflow: string[];
   warning: string;
   safetyText: string;
   exportLabel: string;
@@ -37,13 +36,11 @@ defineEmits<{ export: []; primary: []; detail: []; retry: [] }>();
         <div class="quality-workbench card">
           <header><b>当前工作队列</b><span>实时业务数据</span></header>
           <div class="quality-table-wrap"><table><thead><tr><th>对象</th><th>关键资料</th><th>进度/来源</th><th>状态</th></tr></thead><tbody><tr v-for="row in rows" :key="row.object"><td><b>{{ row.object }}</b></td><td>{{ row.keyData }}</td><td>{{ row.progress }}</td><td><span class="status" :class="row.tone">{{ row.status }}</span></td></tr></tbody></table></div>
-          <div class="quality-workflow" aria-label="处理流程"><template v-for="(step, index) in workflow" :key="step"><article><span>{{ index + 1 }}</span><b>{{ step }}</b></article><i v-if="index < workflow.length - 1">›</i></template></div>
         </div>
 
         <aside class="quality-safety card">
-          <header><b>安全与恢复</b></header>
+          <header><b>待核验事项</b></header>
           <div class="quality-warning"><b>{{ warning }}</b><p>{{ safetyText }}</p></div>
-          <dl><div><dt>责任角色</dt><dd>已按岗位授权</dd></div><div><dt>当前范围</dt><dd>本机构 / 当前业务对象</dd></div><div><dt>版本</dt><dd>v2026.08</dd></div><div><dt>审计</dt><dd>完整</dd></div><div><dt>失败恢复</dt><dd>可重试/回退</dd></div></dl>
           <button class="btn primary quality-detail-button" type="button" @click="$emit('detail')">{{ detailLabel }}</button>
         </aside>
       </section>

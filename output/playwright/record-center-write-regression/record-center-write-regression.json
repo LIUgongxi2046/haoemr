@@ -1,6 +1,6 @@
 {
-  "run_at": "2026-09-02T08:47:10.081Z",
-  "run_id": "E2E-20260902084647",
+  "run_at": "2026-09-06T12:48:24.994Z",
+  "run_id": "E2E-20260906124437",
   "routes": [
     "record",
     "record-editor",
@@ -15,19 +15,19 @@
     "record-versions",
     "record-diff"
   ],
-  "checks": 34,
+  "checks": 50,
   "passed": 34,
-  "failed": 0,
+  "failed": 16,
   "observations": [
     {
       "route": "record",
       "name": "record-create",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents",
+      "url": "http://127.0.0.1:4192/api/v1/documents",
       "payload": {
-        "document_id": "f37eb97c-605d-4aea-b28a-9843114d824c",
-        "document_version_id": "4ed6ecc6-df50-499a-a8a7-5fb3f61f5fee",
+        "document_id": "d783739f-b692-4fa7-a25c-16840e300c51",
+        "document_version_id": "36a7cb80-d906-4869-ae33-9ce38cfdbddf",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
         "template_version_id": "5ae9203a-1b09-3a6d-a543-e9228bda82cf",
         "template_version_no": 1,
@@ -35,19 +35,19 @@
         "status": "DRAFT",
         "document_type_code": "WS445.2.OUTPATIENT_RECORD",
         "sections": {
-          "chief_complaint": "E2E-20260902084647 主诉 初始",
-          "present_illness": "E2E-20260902084647 现病史完整 初始",
-          "past_history": "E2E-20260902084647 既往史 初始",
+          "chief_complaint": "E2E-20260906124437 主诉 初始",
+          "present_illness": "E2E-20260906124437 现病史完整 初始",
+          "past_history": "E2E-20260906124437 既往史 初始",
           "allergy_history": "否认已知药物过敏",
-          "physical_exam": "E2E-20260902084647 体格检查 初始",
-          "auxiliary_exam": "E2E-20260902084647 辅助检查待引用来源 初始",
-          "assessment": "E2E-20260902084647 评估完整 初始",
-          "treatment_plan": "E2E-20260902084647 治疗计划完整 初始",
-          "followup_plan": "E2E-20260902084647 随访计划 初始"
+          "physical_exam": "E2E-20260906124437 体格检查 初始",
+          "auxiliary_exam": "E2E-20260906124437 辅助检查待引用来源 初始",
+          "assessment": "E2E-20260906124437 评估完整 初始",
+          "treatment_plan": "E2E-20260906124437 治疗计划完整 初始",
+          "followup_plan": "E2E-20260906124437 随访计划 初始"
         },
-        "content_hash": "e7dae62dd7efdde510faf919ec4237afb165380bc9dc60261c1160c1bfeeeb17",
+        "content_hash": "fd897d7702f6f0efbd0ef129079cf484a9e60e8e9af7fd17d9e6c10389850df5",
         "row_version": 1,
-        "created_at": "2026-09-02T08:46:50.660401Z"
+        "created_at": "2026-09-06T12:45:05.976303Z"
       }
     },
     {
@@ -55,10 +55,10 @@
       "name": "record-edit",
       "status": 200,
       "method": "PUT",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/draft",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/draft",
       "payload": {
-        "document_id": "f37eb97c-605d-4aea-b28a-9843114d824c",
-        "document_version_id": "9e709b20-18a3-4935-8abd-31951b74afe8",
+        "document_id": "d783739f-b692-4fa7-a25c-16840e300c51",
+        "document_version_id": "22b8923b-11ff-4ee1-8e83-8274192e7c00",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
         "template_version_id": "5ae9203a-1b09-3a6d-a543-e9228bda82cf",
         "template_version_no": 1,
@@ -66,19 +66,19 @@
         "status": "DRAFT",
         "document_type_code": "WS445.2.OUTPATIENT_RECORD",
         "sections": {
-          "chief_complaint": "E2E-20260902084647 主诉 初始",
-          "present_illness": "E2E-20260902084647 现病史完整 初始",
-          "past_history": "E2E-20260902084647 既往史 初始",
+          "chief_complaint": "E2E-20260906124437 主诉 初始",
+          "present_illness": "E2E-20260906124437 现病史完整 初始",
+          "past_history": "E2E-20260906124437 既往史 初始",
           "allergy_history": "否认已知药物过敏",
-          "physical_exam": "E2E-20260902084647 体格检查 初始",
-          "auxiliary_exam": "E2E-20260902084647 辅助检查待引用来源 初始",
-          "assessment": "E2E-20260902084647 工作台编辑后的完整评估",
-          "treatment_plan": "E2E-20260902084647 治疗计划完整 初始",
-          "followup_plan": "E2E-20260902084647 随访计划 初始"
+          "physical_exam": "E2E-20260906124437 体格检查 初始",
+          "auxiliary_exam": "E2E-20260906124437 辅助检查待引用来源 初始",
+          "assessment": "E2E-20260906124437 工作台编辑后的完整评估",
+          "treatment_plan": "E2E-20260906124437 治疗计划完整 初始",
+          "followup_plan": "E2E-20260906124437 随访计划 初始"
         },
-        "content_hash": "e25153ca5113a063b28e4d597d327f2e3809d9fbdd25c65b6e1e40fd97cf50b8",
+        "content_hash": "d651ba150187c4844fc96b80cb19ccda2379d2e3716328487fd21413211d838e",
         "row_version": 2,
-        "created_at": "2026-09-02T08:46:51.225228Z"
+        "created_at": "2026-09-06T12:45:11.597953Z"
       }
     },
     {
@@ -86,10 +86,10 @@
       "name": "editor-save",
       "status": 200,
       "method": "PUT",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/draft",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/draft",
       "payload": {
-        "document_id": "f37eb97c-605d-4aea-b28a-9843114d824c",
-        "document_version_id": "b390f7f9-ba3f-40b1-a62d-cffa3af51195",
+        "document_id": "d783739f-b692-4fa7-a25c-16840e300c51",
+        "document_version_id": "d268e656-55f0-4d25-a71b-28a9b3bf9cf4",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
         "template_version_id": "5ae9203a-1b09-3a6d-a543-e9228bda82cf",
         "template_version_no": 1,
@@ -97,19 +97,19 @@
         "status": "DRAFT",
         "document_type_code": "WS445.2.OUTPATIENT_RECORD",
         "sections": {
-          "assessment": "E2E-20260902084647 工作台编辑后的完整评估",
-          "past_history": "E2E-20260902084647 既往史 初始",
-          "followup_plan": "E2E-20260902084647 随访计划 初始",
-          "physical_exam": "E2E-20260902084647 体格检查 初始",
-          "auxiliary_exam": "E2E-20260902084647 辅助检查待引用来源 初始",
-          "treatment_plan": "E2E-20260902084647 治疗计划完整 初始",
+          "assessment": "E2E-20260906124437 工作台编辑后的完整评估",
+          "past_history": "E2E-20260906124437 既往史 初始",
+          "followup_plan": "E2E-20260906124437 随访计划 初始",
+          "physical_exam": "E2E-20260906124437 体格检查 初始",
+          "auxiliary_exam": "E2E-20260906124437 辅助检查待引用来源 初始",
+          "treatment_plan": "E2E-20260906124437 治疗计划完整 初始",
           "allergy_history": "否认已知药物过敏",
-          "chief_complaint": "E2E-20260902084647 编辑器再次修改的主诉",
-          "present_illness": "E2E-20260902084647 现病史完整 初始"
+          "chief_complaint": "E2E-20260906124437 编辑器再次修改的主诉",
+          "present_illness": "E2E-20260906124437 现病史完整 初始"
         },
-        "content_hash": "c8cfd81193231ae2a9fed9ab36c006d4890c88239f32f3674751e32bca681003",
+        "content_hash": "dfedece1acdec67e47489604861780ecdcd2e05c05b7382329a04955772500b2",
         "row_version": 3,
-        "created_at": "2026-09-02T08:46:52.369487Z"
+        "created_at": "2026-09-06T12:45:18.342251Z"
       }
     },
     {
@@ -117,11 +117,11 @@
       "name": "editor-quality-check",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/quality-checks",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/quality-checks",
       "payload": [
         {
-          "finding_id": "335ef75b-7f0f-417a-b85d-8dd47aed40e9",
-          "document_version_id": "b390f7f9-ba3f-40b1-a62d-cffa3af51195",
+          "finding_id": "02d18d21-4fac-4c6a-83b7-f22e2d1b93eb",
+          "document_version_id": "d268e656-55f0-4d25-a71b-28a9b3bf9cf4",
           "rule_code": "DOC-AUXILIARY-EXAM-SOURCE-REQUIRED",
           "severity": "WARNING",
           "message": "辅助检查已录入，但当前版本未绑定 LIS/PACS 或其他来源证据",
@@ -135,22 +135,22 @@
       "name": "attachment-create",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/attachments",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/attachments",
       "payload": {
-        "attachment_id": "f7760a57-caf5-41a2-91b5-117171fa8c55",
-        "document_id": "f37eb97c-605d-4aea-b28a-9843114d824c",
-        "document_version_id": "b390f7f9-ba3f-40b1-a62d-cffa3af51195",
-        "original_filename": "E2E-20260902084647-original.txt",
+        "attachment_id": "5da8aba0-0b2e-4b7c-9688-65118d5146b8",
+        "document_id": "d783739f-b692-4fa7-a25c-16840e300c51",
+        "document_version_id": "d268e656-55f0-4d25-a71b-28a9b3bf9cf4",
+        "original_filename": "E2E-20260906124437-original.txt",
         "media_type": "text/plain",
         "byte_size": 38,
-        "content_hash": "b7627e882fba7babe53c51a2c6be6ea6e88f4b1d0ef91818e1e52851558835e5",
+        "content_hash": "d124fce17749a49cb48f81f012c3466df4efb94c0945144017b161c160e8f9c5",
         "storage_status": "AVAILABLE",
         "malware_scan_status": "PASSED",
         "evidence_state": "ACTIVE",
         "superseded_by_attachment_id": null,
         "lifecycle_reason": null,
         "uploaded_by": "018f0000-0000-7000-8000-00000000aa04",
-        "created_at": "2026-09-02T08:46:52.907762Z"
+        "created_at": "2026-09-06T12:45:22.610825Z"
       }
     },
     {
@@ -158,22 +158,22 @@
       "name": "attachment-replace",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/attachments",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/attachments",
       "payload": {
-        "attachment_id": "871819f1-7a2a-4669-88d6-75d546603ac3",
-        "document_id": "f37eb97c-605d-4aea-b28a-9843114d824c",
-        "document_version_id": "b390f7f9-ba3f-40b1-a62d-cffa3af51195",
-        "original_filename": "E2E-20260902084647-replacement.txt",
+        "attachment_id": "fdcac93b-de61-44c5-a169-40d51165baf2",
+        "document_id": "d783739f-b692-4fa7-a25c-16840e300c51",
+        "document_version_id": "d268e656-55f0-4d25-a71b-28a9b3bf9cf4",
+        "original_filename": "E2E-20260906124437-replacement.txt",
         "media_type": "text/plain",
         "byte_size": 41,
-        "content_hash": "bdaefd34878b812b1d92996bdc454df7aae6eb189f79c1bf2f9975efa665e21c",
+        "content_hash": "710aa9b2878622488885dacba7d5538f0cf2402008222db352bd320bbd382f33",
         "storage_status": "AVAILABLE",
         "malware_scan_status": "PASSED",
         "evidence_state": "ACTIVE",
         "superseded_by_attachment_id": null,
         "lifecycle_reason": null,
         "uploaded_by": "018f0000-0000-7000-8000-00000000aa04",
-        "created_at": "2026-09-02T08:46:53.332586Z"
+        "created_at": "2026-09-06T12:45:25.256513Z"
       }
     },
     {
@@ -181,22 +181,22 @@
       "name": "attachment-void",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/attachments/871819f1-7a2a-4669-88d6-75d546603ac3/voids",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/attachments/fdcac93b-de61-44c5-a169-40d51165baf2/voids",
       "payload": {
-        "attachment_id": "871819f1-7a2a-4669-88d6-75d546603ac3",
-        "document_id": "f37eb97c-605d-4aea-b28a-9843114d824c",
-        "document_version_id": "b390f7f9-ba3f-40b1-a62d-cffa3af51195",
-        "original_filename": "E2E-20260902084647-replacement.txt",
+        "attachment_id": "fdcac93b-de61-44c5-a169-40d51165baf2",
+        "document_id": "d783739f-b692-4fa7-a25c-16840e300c51",
+        "document_version_id": "d268e656-55f0-4d25-a71b-28a9b3bf9cf4",
+        "original_filename": "E2E-20260906124437-replacement.txt",
         "media_type": "text/plain",
         "byte_size": 41,
-        "content_hash": "bdaefd34878b812b1d92996bdc454df7aae6eb189f79c1bf2f9975efa665e21c",
+        "content_hash": "710aa9b2878622488885dacba7d5538f0cf2402008222db352bd320bbd382f33",
         "storage_status": "AVAILABLE",
         "malware_scan_status": "PASSED",
         "evidence_state": "VOID",
         "superseded_by_attachment_id": null,
         "lifecycle_reason": "端到端回归验证附件业务作废",
         "uploaded_by": "018f0000-0000-7000-8000-00000000aa04",
-        "created_at": "2026-09-02T08:46:53.332586Z"
+        "created_at": "2026-09-06T12:45:25.256513Z"
       }
     },
     {
@@ -204,22 +204,22 @@
       "name": "seed-lab-order-create",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/orders",
+      "url": "http://127.0.0.1:4192/api/v1/orders",
       "payload": {
-        "order_id": "6a41b52e-692b-4c92-a7d2-2e341745d876",
+        "order_id": "ae8dced0-9b66-4fa5-a26d-21a504047cad",
         "patient_id": "018f0000-0000-7000-8000-000000000001",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
         "order_scope": "TEMPORARY",
         "status": "DRAFT",
-        "clinical_indication": "E2E-20260902084647 LAB 引用回归前置医嘱",
+        "clinical_indication": "E2E-20260906124437 LAB 引用回归前置医嘱",
         "items": [
           {
-            "order_item_id": "31c35ba2-b0c3-45c9-877f-4c40b9e85716",
+            "order_item_id": "562bd8d7-c067-495d-9dbe-cd562898690d",
             "item_type": "LAB",
-            "catalog_code": "LAB-02084647",
-            "display_name": "E2E-20260902084647 LAB 项目",
+            "catalog_code": "LAB-06124437",
+            "display_name": "E2E-20260906124437 LAB 项目",
             "requested_quantity": 1,
-            "quantity_unit": "次",
+            "quantity_unit": "组",
             "medication_catalog_version_id": null,
             "drug_code": null,
             "ingredient_code": null,
@@ -234,7 +234,7 @@
         ],
         "execution_tasks": [],
         "row_version": 1,
-        "data_watermark": "13a87d27da9470603d87bd36fce4e872e6a52d10fd59d63507f5ec18def95ac2"
+        "data_watermark": "a23a60db5d05106c0a1904044820c48371cd1e14dc9311e67e70dab42cb17b1d"
       }
     },
     {
@@ -242,22 +242,22 @@
       "name": "seed-lab-order-sign",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/orders/6a41b52e-692b-4c92-a7d2-2e341745d876/sign",
+      "url": "http://127.0.0.1:4192/api/v1/orders/ae8dced0-9b66-4fa5-a26d-21a504047cad/sign",
       "payload": {
-        "order_id": "6a41b52e-692b-4c92-a7d2-2e341745d876",
+        "order_id": "ae8dced0-9b66-4fa5-a26d-21a504047cad",
         "patient_id": "018f0000-0000-7000-8000-000000000001",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
         "order_scope": "TEMPORARY",
         "status": "ACTIVE",
-        "clinical_indication": "E2E-20260902084647 LAB 引用回归前置医嘱",
+        "clinical_indication": "E2E-20260906124437 LAB 引用回归前置医嘱",
         "items": [
           {
-            "order_item_id": "31c35ba2-b0c3-45c9-877f-4c40b9e85716",
+            "order_item_id": "562bd8d7-c067-495d-9dbe-cd562898690d",
             "item_type": "LAB",
-            "catalog_code": "LAB-02084647",
-            "display_name": "E2E-20260902084647 LAB 项目",
+            "catalog_code": "LAB-06124437",
+            "display_name": "E2E-20260906124437 LAB 项目",
             "requested_quantity": 1,
-            "quantity_unit": "次",
+            "quantity_unit": "组",
             "medication_catalog_version_id": null,
             "drug_code": null,
             "ingredient_code": null,
@@ -272,18 +272,18 @@
         ],
         "execution_tasks": [
           {
-            "execution_task_id": "0dff5c21-39ea-4cb5-8aca-ea67bbc69844",
-            "order_id": "6a41b52e-692b-4c92-a7d2-2e341745d876",
-            "order_item_id": "31c35ba2-b0c3-45c9-877f-4c40b9e85716",
+            "execution_task_id": "1923f610-7144-4604-be8c-0d5bee6e49d8",
+            "order_id": "ae8dced0-9b66-4fa5-a26d-21a504047cad",
+            "order_item_id": "562bd8d7-c067-495d-9dbe-cd562898690d",
             "task_state": "PENDING",
             "requested_quantity": 1,
             "performed_quantity": 0,
-            "quantity_unit": "次",
+            "quantity_unit": "组",
             "row_version": 1
           }
         ],
         "row_version": 2,
-        "data_watermark": "2a1d482010c7d35ac1c4cacdc834fb10191cf32cd06e309c1fd20b69ffeb7b65"
+        "data_watermark": "7cfc7512fcfdf049854631dd2fdc0167ba6e50949e6d43e64aed0954ced32241"
       }
     },
     {
@@ -291,11 +291,11 @@
       "name": "seed-lab-specimen-create",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/lab-specimens",
+      "url": "http://127.0.0.1:4192/api/v1/lab-specimens",
       "payload": {
-        "specimen_id": "a5efa03c-87db-408e-9f27-0df6d60aab93",
-        "order_id": "6a41b52e-692b-4c92-a7d2-2e341745d876",
-        "order_item_id": "31c35ba2-b0c3-45c9-877f-4c40b9e85716",
+        "specimen_id": "d533b1bd-fc43-4c9a-90f8-681db8bdee8b",
+        "order_id": "ae8dced0-9b66-4fa5-a26d-21a504047cad",
+        "order_item_id": "562bd8d7-c067-495d-9dbe-cd562898690d",
         "patient_id": "018f0000-0000-7000-8000-000000000001",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
         "facility_id": "018f0000-0000-7000-8000-00000000aa03",
@@ -314,17 +314,17 @@
       "name": "seed-lab-specimen-collect",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/lab-specimens/a5efa03c-87db-408e-9f27-0df6d60aab93/collections",
+      "url": "http://127.0.0.1:4192/api/v1/lab-specimens/d533b1bd-fc43-4c9a-90f8-681db8bdee8b/collections",
       "payload": {
-        "specimen_id": "a5efa03c-87db-408e-9f27-0df6d60aab93",
-        "order_id": "6a41b52e-692b-4c92-a7d2-2e341745d876",
-        "order_item_id": "31c35ba2-b0c3-45c9-877f-4c40b9e85716",
+        "specimen_id": "d533b1bd-fc43-4c9a-90f8-681db8bdee8b",
+        "order_id": "ae8dced0-9b66-4fa5-a26d-21a504047cad",
+        "order_item_id": "562bd8d7-c067-495d-9dbe-cd562898690d",
         "patient_id": "018f0000-0000-7000-8000-000000000001",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
         "facility_id": "018f0000-0000-7000-8000-00000000aa03",
         "specimen_type": "BLOOD",
         "collection_status": "COLLECTED",
-        "collected_at": "2026-09-02T08:46:56.661547Z",
+        "collected_at": "2026-09-06T12:45:53.523609Z",
         "collected_by": "d1281807-abb4-3065-90e2-861ec72869fe",
         "received_at": null,
         "received_by": null,
@@ -337,19 +337,19 @@
       "name": "seed-lab-specimen-receive",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/lab-specimens/a5efa03c-87db-408e-9f27-0df6d60aab93/receptions",
+      "url": "http://127.0.0.1:4192/api/v1/lab-specimens/d533b1bd-fc43-4c9a-90f8-681db8bdee8b/receptions",
       "payload": {
-        "specimen_id": "a5efa03c-87db-408e-9f27-0df6d60aab93",
-        "order_id": "6a41b52e-692b-4c92-a7d2-2e341745d876",
-        "order_item_id": "31c35ba2-b0c3-45c9-877f-4c40b9e85716",
+        "specimen_id": "d533b1bd-fc43-4c9a-90f8-681db8bdee8b",
+        "order_id": "ae8dced0-9b66-4fa5-a26d-21a504047cad",
+        "order_item_id": "562bd8d7-c067-495d-9dbe-cd562898690d",
         "patient_id": "018f0000-0000-7000-8000-000000000001",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
         "facility_id": "018f0000-0000-7000-8000-00000000aa03",
         "specimen_type": "BLOOD",
         "collection_status": "RECEIVED",
-        "collected_at": "2026-09-02T08:46:56.661547Z",
+        "collected_at": "2026-09-06T12:45:53.523609Z",
         "collected_by": "d1281807-abb4-3065-90e2-861ec72869fe",
-        "received_at": "2026-09-02T08:46:56.769005Z",
+        "received_at": "2026-09-06T12:45:56.865811Z",
         "received_by": "d1281807-abb4-3065-90e2-861ec72869fe",
         "rejection_reason": null,
         "row_version": 3
@@ -360,15 +360,15 @@
       "name": "seed-lab-execution-complete",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/executions/0dff5c21-39ea-4cb5-8aca-ea67bbc69844/events",
+      "url": "http://127.0.0.1:4192/api/v1/executions/1923f610-7144-4604-be8c-0d5bee6e49d8/events",
       "payload": {
-        "execution_task_id": "0dff5c21-39ea-4cb5-8aca-ea67bbc69844",
-        "order_id": "6a41b52e-692b-4c92-a7d2-2e341745d876",
-        "order_item_id": "31c35ba2-b0c3-45c9-877f-4c40b9e85716",
+        "execution_task_id": "1923f610-7144-4604-be8c-0d5bee6e49d8",
+        "order_id": "ae8dced0-9b66-4fa5-a26d-21a504047cad",
+        "order_item_id": "562bd8d7-c067-495d-9dbe-cd562898690d",
         "task_state": "COMPLETED",
         "requested_quantity": 1,
         "performed_quantity": 1,
-        "quantity_unit": "次",
+        "quantity_unit": "组",
         "row_version": 2
       }
     },
@@ -377,24 +377,24 @@
       "name": "seed-lab-result-create",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/results",
+      "url": "http://127.0.0.1:4192/api/v1/results",
       "payload": {
-        "result_id": "5d5df8b2-5fba-4904-befb-a3218ed3aedd",
+        "result_id": "d59efae5-2705-4e63-898e-f79d2ad871f2",
         "patient_id": "018f0000-0000-7000-8000-000000000001",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
-        "order_id": "6a41b52e-692b-4c92-a7d2-2e341745d876",
-        "execution_task_id": "0dff5c21-39ea-4cb5-8aca-ea67bbc69844",
+        "order_id": "ae8dced0-9b66-4fa5-a26d-21a504047cad",
+        "execution_task_id": "1923f610-7144-4604-be8c-0d5bee6e49d8",
         "report_type": "LAB",
-        "source_system": "OPENEMR2026-MANUAL",
-        "source_report_key": "e0bcb994-2109-4b26-b598-17b8873d1db3",
+        "source_system": "HAOEMR-MANUAL",
+        "source_report_key": "ea7e10e0-2844-4a9b-9ab0-50f2f46aa6f3",
         "report_status": "FINAL",
-        "conclusion": "E2E-20260902084647 LAB 端到端报告",
-        "reported_at": "2026-09-02T08:46:57.497Z",
+        "conclusion": "E2E-20260906124437 LAB 端到端报告",
+        "reported_at": "2026-09-06T12:46:07.261Z",
         "observations": [
           {
-            "observation_id": "0d977acb-c7d7-446b-9e26-b3ab61090801",
-            "item_code": "LAB-02084647",
-            "item_name": "E2E-20260902084647 LAB 项目",
+            "observation_id": "e3305bcd-269a-4a4a-8348-a5dab0644cab",
+            "item_code": "LAB-06124437",
+            "item_name": "E2E-20260906124437 LAB 项目",
             "value_type": "NUMERIC",
             "numeric_value": 4.2,
             "text_value": null,
@@ -407,7 +407,7 @@
         "critical_values": [],
         "version_no": 1,
         "row_version": 1,
-        "data_watermark": "186a8719c3af03c901dbe09d1f28042d819dbff45a399916a5ff8752c7da8299"
+        "data_watermark": "7a3d4eb3bd9e033427d4653cf97a8671a16f47475eed7bedc049eb15e3fd4f67"
       }
     },
     {
@@ -415,23 +415,23 @@
       "name": "lis-reference-create",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/source-references",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/source-references",
       "payload": {
-        "source_reference_id": "c730b56f-2548-46a9-a8f7-75f9350137f7",
-        "document_id": "f37eb97c-605d-4aea-b28a-9843114d824c",
-        "document_version_id": "b390f7f9-ba3f-40b1-a62d-cffa3af51195",
+        "source_reference_id": "e077f24e-ecff-4f2a-ad3c-385a19fa2bc1",
+        "document_id": "d783739f-b692-4fa7-a25c-16840e300c51",
+        "document_version_id": "d268e656-55f0-4d25-a71b-28a9b3bf9cf4",
         "source_type": "RESULT",
-        "source_resource_id": "5d5df8b2-5fba-4904-befb-a3218ed3aedd",
-        "source_version_ref": "802415de-c24d-4c87-93c3-f98ea08dbd64",
-        "current_version_ref": "802415de-c24d-4c87-93c3-f98ea08dbd64",
+        "source_resource_id": "d59efae5-2705-4e63-898e-f79d2ad871f2",
+        "source_version_ref": "279bcb88-f445-4245-9cc0-c0ec3dc3709b",
+        "current_version_ref": "279bcb88-f445-4245-9cc0-c0ec3dc3709b",
         "freshness": "CURRENT",
         "target_field_path": "sections.assessment",
-        "display_label": "结果：E2E-20260902084647 LAB 端到端报告",
-        "excerpt_hash": "4e38d5ab3f57df73422b19443ebd281eee5c740aa200d8b3406f57c82b5e36ae",
+        "display_label": "结果：E2E-20260906124437 LAB 端到端报告",
+        "excerpt_hash": "41be4a535cb5ffefb96dd75e19386eb9d8f2301044236292ad5f31e0c06f4d40",
         "evidence_state": "ACTIVE",
         "lifecycle_reason": null,
         "recorded_by": "018f0000-0000-7000-8000-00000000aa04",
-        "recorded_at": "2026-09-02T08:46:59.731005Z"
+        "recorded_at": "2026-09-06T12:46:38.661621Z"
       }
     },
     {
@@ -439,22 +439,22 @@
       "name": "seed-imaging-order-create",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/orders",
+      "url": "http://127.0.0.1:4192/api/v1/orders",
       "payload": {
-        "order_id": "cbd2e083-b154-45db-aaaf-b0b046a20dad",
+        "order_id": "ca0abc3c-d73a-4c61-ab8d-5b8e1ef6885a",
         "patient_id": "018f0000-0000-7000-8000-000000000001",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
         "order_scope": "TEMPORARY",
         "status": "DRAFT",
-        "clinical_indication": "E2E-20260902084647 IMAGING 引用回归前置医嘱",
+        "clinical_indication": "E2E-20260906124437 IMAGING 引用回归前置医嘱",
         "items": [
           {
-            "order_item_id": "2719c5d4-1ae3-409b-b8b2-68bf63eace02",
+            "order_item_id": "deddbc79-0347-48b9-a41d-451bcbeb463c",
             "item_type": "IMAGING",
-            "catalog_code": "IMAGING-02084647",
-            "display_name": "E2E-20260902084647 IMAGING 项目",
+            "catalog_code": "IMAGING-06124437",
+            "display_name": "E2E-20260906124437 IMAGING 项目",
             "requested_quantity": 1,
-            "quantity_unit": "次",
+            "quantity_unit": "组",
             "medication_catalog_version_id": null,
             "drug_code": null,
             "ingredient_code": null,
@@ -469,7 +469,7 @@
         ],
         "execution_tasks": [],
         "row_version": 1,
-        "data_watermark": "eafc467c2a11805d7d913af2a5b15e0ba43ccd2128bc1637148b3f119d62079c"
+        "data_watermark": "a89aeed580bd2ad9ebf3c07da54530114bc330666185c6e512fbeea1b47ee4bb"
       }
     },
     {
@@ -477,22 +477,22 @@
       "name": "seed-imaging-order-sign",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/orders/cbd2e083-b154-45db-aaaf-b0b046a20dad/sign",
+      "url": "http://127.0.0.1:4192/api/v1/orders/ca0abc3c-d73a-4c61-ab8d-5b8e1ef6885a/sign",
       "payload": {
-        "order_id": "cbd2e083-b154-45db-aaaf-b0b046a20dad",
+        "order_id": "ca0abc3c-d73a-4c61-ab8d-5b8e1ef6885a",
         "patient_id": "018f0000-0000-7000-8000-000000000001",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
         "order_scope": "TEMPORARY",
         "status": "ACTIVE",
-        "clinical_indication": "E2E-20260902084647 IMAGING 引用回归前置医嘱",
+        "clinical_indication": "E2E-20260906124437 IMAGING 引用回归前置医嘱",
         "items": [
           {
-            "order_item_id": "2719c5d4-1ae3-409b-b8b2-68bf63eace02",
+            "order_item_id": "deddbc79-0347-48b9-a41d-451bcbeb463c",
             "item_type": "IMAGING",
-            "catalog_code": "IMAGING-02084647",
-            "display_name": "E2E-20260902084647 IMAGING 项目",
+            "catalog_code": "IMAGING-06124437",
+            "display_name": "E2E-20260906124437 IMAGING 项目",
             "requested_quantity": 1,
-            "quantity_unit": "次",
+            "quantity_unit": "组",
             "medication_catalog_version_id": null,
             "drug_code": null,
             "ingredient_code": null,
@@ -507,18 +507,18 @@
         ],
         "execution_tasks": [
           {
-            "execution_task_id": "b2906ea6-d9eb-4b4f-8dc2-ca549f1f916c",
-            "order_id": "cbd2e083-b154-45db-aaaf-b0b046a20dad",
-            "order_item_id": "2719c5d4-1ae3-409b-b8b2-68bf63eace02",
+            "execution_task_id": "9030574d-c681-4ab8-8a3d-a1f039f46cf1",
+            "order_id": "ca0abc3c-d73a-4c61-ab8d-5b8e1ef6885a",
+            "order_item_id": "deddbc79-0347-48b9-a41d-451bcbeb463c",
             "task_state": "PENDING",
             "requested_quantity": 1,
             "performed_quantity": 0,
-            "quantity_unit": "次",
+            "quantity_unit": "组",
             "row_version": 1
           }
         ],
         "row_version": 2,
-        "data_watermark": "e41719600d7aedf0b1139e4903e46bcd2ae34233677a02811764c83feac601d2"
+        "data_watermark": "6c61302ca1a735e7c089e06ebc4ddbad9821185fd469e2569354d3f02eeaca86"
       }
     },
     {
@@ -526,15 +526,15 @@
       "name": "seed-imaging-execution-complete",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/executions/b2906ea6-d9eb-4b4f-8dc2-ca549f1f916c/events",
+      "url": "http://127.0.0.1:4192/api/v1/executions/9030574d-c681-4ab8-8a3d-a1f039f46cf1/events",
       "payload": {
-        "execution_task_id": "b2906ea6-d9eb-4b4f-8dc2-ca549f1f916c",
-        "order_id": "cbd2e083-b154-45db-aaaf-b0b046a20dad",
-        "order_item_id": "2719c5d4-1ae3-409b-b8b2-68bf63eace02",
+        "execution_task_id": "9030574d-c681-4ab8-8a3d-a1f039f46cf1",
+        "order_id": "ca0abc3c-d73a-4c61-ab8d-5b8e1ef6885a",
+        "order_item_id": "deddbc79-0347-48b9-a41d-451bcbeb463c",
         "task_state": "COMPLETED",
         "requested_quantity": 1,
         "performed_quantity": 1,
-        "quantity_unit": "次",
+        "quantity_unit": "组",
         "row_version": 2
       }
     },
@@ -543,24 +543,24 @@
       "name": "seed-imaging-result-create",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/results",
+      "url": "http://127.0.0.1:4192/api/v1/results",
       "payload": {
-        "result_id": "c090c2c0-426b-48ae-b7ec-6d853099c46d",
+        "result_id": "0eb282c9-1ad2-4c87-aedb-4387bfe52eab",
         "patient_id": "018f0000-0000-7000-8000-000000000001",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
-        "order_id": "cbd2e083-b154-45db-aaaf-b0b046a20dad",
-        "execution_task_id": "b2906ea6-d9eb-4b4f-8dc2-ca549f1f916c",
+        "order_id": "ca0abc3c-d73a-4c61-ab8d-5b8e1ef6885a",
+        "execution_task_id": "9030574d-c681-4ab8-8a3d-a1f039f46cf1",
         "report_type": "IMAGING",
-        "source_system": "OPENEMR2026-MANUAL",
-        "source_report_key": "b82e87cf-636c-4585-a2f3-47eac904e27a",
+        "source_system": "HAOEMR-MANUAL",
+        "source_report_key": "c652de31-5dc0-4501-b384-a062e8aa86ca",
         "report_status": "FINAL",
-        "conclusion": "E2E-20260902084647 IMAGING 端到端报告",
-        "reported_at": "2026-09-02T08:47:02.615Z",
+        "conclusion": "E2E-20260906124437 IMAGING 端到端报告",
+        "reported_at": "2026-09-06T12:47:00.714Z",
         "observations": [
           {
-            "observation_id": "f2193be5-b374-4e86-bd69-1230c3fcee6b",
-            "item_code": "IMAGING-02084647",
-            "item_name": "E2E-20260902084647 IMAGING 项目",
+            "observation_id": "4dbe9e70-8c10-4680-8b12-f4d1d97d0548",
+            "item_code": "IMAGING-06124437",
+            "item_name": "E2E-20260906124437 IMAGING 项目",
             "value_type": "NUMERIC",
             "numeric_value": 4.2,
             "text_value": null,
@@ -573,7 +573,7 @@
         "critical_values": [],
         "version_no": 1,
         "row_version": 1,
-        "data_watermark": "5208c5d0dc990914a7577bab17ae0b1e9d0f76e8c38d5aca706d56589245159e"
+        "data_watermark": "1ea5ec2fbe9ab0f5e6821e8d42864d7c85c1c94202577ba391976e8da438c19a"
       }
     },
     {
@@ -581,23 +581,23 @@
       "name": "pacs-reference-create",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/source-references",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/source-references",
       "payload": {
-        "source_reference_id": "c21e4737-238a-42b2-88d3-b2d6c8f64c7f",
-        "document_id": "f37eb97c-605d-4aea-b28a-9843114d824c",
-        "document_version_id": "b390f7f9-ba3f-40b1-a62d-cffa3af51195",
+        "source_reference_id": "9c07ab79-62f9-4111-8577-322236a06531",
+        "document_id": "d783739f-b692-4fa7-a25c-16840e300c51",
+        "document_version_id": "d268e656-55f0-4d25-a71b-28a9b3bf9cf4",
         "source_type": "RESULT",
-        "source_resource_id": "c090c2c0-426b-48ae-b7ec-6d853099c46d",
-        "source_version_ref": "c18c1919-2454-4a5d-9e04-f9db00b279c5",
-        "current_version_ref": "c18c1919-2454-4a5d-9e04-f9db00b279c5",
+        "source_resource_id": "0eb282c9-1ad2-4c87-aedb-4387bfe52eab",
+        "source_version_ref": "d40d6ff2-b3ee-4df7-9778-a2b5d8c82f07",
+        "current_version_ref": "d40d6ff2-b3ee-4df7-9778-a2b5d8c82f07",
         "freshness": "CURRENT",
         "target_field_path": "sections.assessment",
-        "display_label": "结果：E2E-20260902084647 IMAGING 端到端报告",
-        "excerpt_hash": "eb2ebf39a4bfc8e4973d78b17f7d821349b5ec9f07f32eae55d958d6a50f2a01",
+        "display_label": "结果：E2E-20260906124437 IMAGING 端到端报告",
+        "excerpt_hash": "4bf5f3fc1c75d5dce2b5cdc7d2eec1c34e8275aa8bad7fa8f34a0f90b8b6275d",
         "evidence_state": "ACTIVE",
         "lifecycle_reason": null,
         "recorded_by": "018f0000-0000-7000-8000-00000000aa04",
-        "recorded_at": "2026-09-02T08:47:04.689977Z"
+        "recorded_at": "2026-09-06T12:47:16.683719Z"
       }
     },
     {
@@ -605,23 +605,23 @@
       "name": "source-reference-correct",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/source-references/c730b56f-2548-46a9-a8f7-75f9350137f7/corrections",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/source-references/e077f24e-ecff-4f2a-ad3c-385a19fa2bc1/corrections",
       "payload": {
-        "source_reference_id": "c730b56f-2548-46a9-a8f7-75f9350137f7",
-        "document_id": "f37eb97c-605d-4aea-b28a-9843114d824c",
-        "document_version_id": "b390f7f9-ba3f-40b1-a62d-cffa3af51195",
+        "source_reference_id": "e077f24e-ecff-4f2a-ad3c-385a19fa2bc1",
+        "document_id": "d783739f-b692-4fa7-a25c-16840e300c51",
+        "document_version_id": "d268e656-55f0-4d25-a71b-28a9b3bf9cf4",
         "source_type": "RESULT",
-        "source_resource_id": "5d5df8b2-5fba-4904-befb-a3218ed3aedd",
-        "source_version_ref": "802415de-c24d-4c87-93c3-f98ea08dbd64",
-        "current_version_ref": "802415de-c24d-4c87-93c3-f98ea08dbd64",
+        "source_resource_id": "d59efae5-2705-4e63-898e-f79d2ad871f2",
+        "source_version_ref": "279bcb88-f445-4245-9cc0-c0ec3dc3709b",
+        "current_version_ref": "279bcb88-f445-4245-9cc0-c0ec3dc3709b",
         "freshness": "CURRENT",
         "target_field_path": "sections.treatment_plan",
-        "display_label": "结果：E2E-20260902084647 LAB 端到端报告",
-        "excerpt_hash": "3287444258c0034ce37a184c1b24ad49e3a2f542a4b63f9f599fbe2c8599e62e",
+        "display_label": "结果：E2E-20260906124437 LAB 端到端报告",
+        "excerpt_hash": "a788425a3654dc1a858608ac89932de321e713c0cf109eb2fa62d436be68d112",
         "evidence_state": "CORRECTED",
         "lifecycle_reason": "端到端回归验证来源目标字段更正",
         "recorded_by": "018f0000-0000-7000-8000-00000000aa04",
-        "recorded_at": "2026-09-02T08:46:59.731005Z"
+        "recorded_at": "2026-09-06T12:46:38.661621Z"
       }
     },
     {
@@ -629,23 +629,23 @@
       "name": "source-reference-revoke",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/source-references/c21e4737-238a-42b2-88d3-b2d6c8f64c7f/revocations",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/source-references/9c07ab79-62f9-4111-8577-322236a06531/revocations",
       "payload": {
-        "source_reference_id": "c21e4737-238a-42b2-88d3-b2d6c8f64c7f",
-        "document_id": "f37eb97c-605d-4aea-b28a-9843114d824c",
-        "document_version_id": "b390f7f9-ba3f-40b1-a62d-cffa3af51195",
+        "source_reference_id": "9c07ab79-62f9-4111-8577-322236a06531",
+        "document_id": "d783739f-b692-4fa7-a25c-16840e300c51",
+        "document_version_id": "d268e656-55f0-4d25-a71b-28a9b3bf9cf4",
         "source_type": "RESULT",
-        "source_resource_id": "c090c2c0-426b-48ae-b7ec-6d853099c46d",
-        "source_version_ref": "c18c1919-2454-4a5d-9e04-f9db00b279c5",
-        "current_version_ref": "c18c1919-2454-4a5d-9e04-f9db00b279c5",
+        "source_resource_id": "0eb282c9-1ad2-4c87-aedb-4387bfe52eab",
+        "source_version_ref": "d40d6ff2-b3ee-4df7-9778-a2b5d8c82f07",
+        "current_version_ref": "d40d6ff2-b3ee-4df7-9778-a2b5d8c82f07",
         "freshness": "CURRENT",
         "target_field_path": "sections.assessment",
-        "display_label": "结果：E2E-20260902084647 IMAGING 端到端报告",
-        "excerpt_hash": "eb2ebf39a4bfc8e4973d78b17f7d821349b5ec9f07f32eae55d958d6a50f2a01",
+        "display_label": "结果：E2E-20260906124437 IMAGING 端到端报告",
+        "excerpt_hash": "4bf5f3fc1c75d5dce2b5cdc7d2eec1c34e8275aa8bad7fa8f34a0f90b8b6275d",
         "evidence_state": "REVOKED",
         "lifecycle_reason": "端到端回归验证来源引用撤销",
         "recorded_by": "018f0000-0000-7000-8000-00000000aa04",
-        "recorded_at": "2026-09-02T08:47:04.689977Z"
+        "recorded_at": "2026-09-06T12:47:16.683719Z"
       }
     },
     {
@@ -653,7 +653,7 @@
       "name": "editor-quality-after-source-lifecycle",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/quality-checks",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/quality-checks",
       "payload": []
     },
     {
@@ -661,7 +661,7 @@
       "name": "governance-quality-check",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/quality-checks",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/quality-checks",
       "payload": []
     },
     {
@@ -669,13 +669,13 @@
       "name": "editor-sign",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/signatures",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/signatures",
       "payload": {
-        "signature_id": "0cdeb38a-a882-4859-9f21-c1384630a228",
-        "document_version_id": "b390f7f9-ba3f-40b1-a62d-cffa3af51195",
+        "signature_id": "c81efcd7-6b16-4d50-b288-09f58bd2377e",
+        "document_version_id": "d268e656-55f0-4d25-a71b-28a9b3bf9cf4",
         "signer_user_id": "018f0000-0000-7000-8000-00000000aa04",
-        "signed_at": "2026-09-02T08:47:06.932548Z",
-        "content_hash": "c8cfd81193231ae2a9fed9ab36c006d4890c88239f32f3674751e32bca681003",
+        "signed_at": "2026-09-06T12:47:29.121873Z",
+        "content_hash": "dfedece1acdec67e47489604861780ecdcd2e05c05b7382329a04955772500b2",
         "signature_status": "VALID"
       }
     },
@@ -684,25 +684,25 @@
       "name": "signature-verification-run",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/signature-verifications",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/signature-verifications",
       "payload": {
-        "verification_run_id": "3d708db1-5364-4aeb-99b4-8009f14612ee",
-        "document_id": "f37eb97c-605d-4aea-b28a-9843114d824c",
-        "document_version_id": "b390f7f9-ba3f-40b1-a62d-cffa3af51195",
+        "verification_run_id": "9c7e8431-adbe-40ad-b9c0-68e1740958fe",
+        "document_id": "d783739f-b692-4fa7-a25c-16840e300c51",
+        "document_version_id": "d268e656-55f0-4d25-a71b-28a9b3bf9cf4",
         "outcome": "VALID",
         "verified_count": 1,
         "invalid_count": 0,
         "provider_code": "SYNTHETIC_CA",
         "details": [
           {
-            "stored_status": "VALID",
-            "content_hash_matches": true,
-            "signature_id": "0cdeb38a-a882-4859-9f21-c1384630a228",
+            "valid": true,
             "provider_evidence_code": "SYNTHETIC_SIGNATURE_MATCH",
-            "valid": true
+            "signature_id": "c81efcd7-6b16-4d50-b288-09f58bd2377e",
+            "content_hash_matches": true,
+            "stored_status": "VALID"
           }
         ],
-        "verified_at": "2026-09-02T08:47:07.223287Z"
+        "verified_at": "2026-09-06T12:47:32.878222Z"
       }
     },
     {
@@ -710,17 +710,17 @@
       "name": "version-correction-create",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/corrections",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/corrections",
       "payload": {
-        "correction_id": "56b2dbd6-62bb-4152-87ac-0be5db6d0060",
-        "document_id": "f37eb97c-605d-4aea-b28a-9843114d824c",
-        "source_document_version_id": "b390f7f9-ba3f-40b1-a62d-cffa3af51195",
-        "correction_document_version_id": "e8845c66-7697-464b-b740-c83c3a9672b9",
+        "correction_id": "d6491515-81c8-4de0-9a28-ed35f1259502",
+        "document_id": "d783739f-b692-4fa7-a25c-16840e300c51",
+        "source_document_version_id": "d268e656-55f0-4d25-a71b-28a9b3bf9cf4",
+        "correction_document_version_id": "236513aa-9956-44ce-92e5-31093cdffa13",
         "correction_type": "CORRECTION",
         "reason": "端到端回归验证已签病历依法更正",
         "status": "DRAFT",
         "requested_by": "018f0000-0000-7000-8000-00000000aa04",
-        "requested_at": "2026-09-02T08:47:07.514150Z",
+        "requested_at": "2026-09-06T12:47:34.878531Z",
         "signed_at": null,
         "propagations": []
       }
@@ -730,11 +730,11 @@
       "name": "correction-quality-check",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/quality-checks",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/quality-checks",
       "payload": [
         {
-          "finding_id": "f1501718-cf9f-4209-b44a-367df9d4e715",
-          "document_version_id": "e8845c66-7697-464b-b740-c83c3a9672b9",
+          "finding_id": "54510e80-c570-4216-bff4-5c4924cc3623",
+          "document_version_id": "236513aa-9956-44ce-92e5-31093cdffa13",
           "rule_code": "DOC-AUXILIARY-EXAM-SOURCE-REQUIRED",
           "severity": "WARNING",
           "message": "辅助检查已录入，但当前版本未绑定 LIS/PACS 或其他来源证据",
@@ -748,13 +748,13 @@
       "name": "governance-sign-correction",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/signatures",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/signatures",
       "payload": {
-        "signature_id": "22fe2075-e1ec-4352-a7a4-7c43b2cf7696",
-        "document_version_id": "e8845c66-7697-464b-b740-c83c3a9672b9",
+        "signature_id": "09274f14-3ac4-404f-b58d-58f28bef7743",
+        "document_version_id": "236513aa-9956-44ce-92e5-31093cdffa13",
         "signer_user_id": "018f0000-0000-7000-8000-00000000aa04",
-        "signed_at": "2026-09-02T08:47:08.144634Z",
-        "content_hash": "3585b7c8d202dd71c7284be5b60fdf627699986125a205918fbdbb9d5e294202",
+        "signed_at": "2026-09-06T12:47:41.175462Z",
+        "content_hash": "fe8b345843ff9a8eb85170e38bb3f8fd252504d47573f23c0010e992ef113a37",
         "signature_status": "VALID"
       }
     },
@@ -763,17 +763,17 @@
       "name": "correction-propagation-retry",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/correction-propagations/7d1daa49-7a9b-4e38-b004-00d08d6450b9/retry",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/correction-propagations/007241ff-071a-458d-87f7-b9a09327462e/retry",
       "payload": {
-        "propagation_id": "7d1daa49-7a9b-4e38-b004-00d08d6450b9",
+        "propagation_id": "007241ff-071a-458d-87f7-b9a09327462e",
         "destination_code": "EXTERNAL_SHARED_RECORD",
         "status": "SUCCEEDED",
         "attempt_count": 1,
         "last_error_code": null,
-        "last_attempt_at": "2026-09-02T08:47:08.405583Z",
-        "delivered_at": "2026-09-02T08:47:08.405583Z",
+        "last_attempt_at": "2026-09-06T12:47:43.567218Z",
+        "delivered_at": "2026-09-06T12:47:43.567218Z",
         "row_version": 2,
-        "created_at": "2026-09-02T08:47:08.136218Z"
+        "created_at": "2026-09-06T12:47:41.154417Z"
       }
     },
     {
@@ -781,32 +781,32 @@
       "name": "signature-revoke",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/f37eb97c-605d-4aea-b28a-9843114d824c/signature-revocations",
+      "url": "http://127.0.0.1:4192/api/v1/documents/d783739f-b692-4fa7-a25c-16840e300c51/signature-revocations",
       "payload": {
-        "revocation_id": "5fb218b3-8957-4310-83ee-32a9043b5f35",
-        "signature_id": "22fe2075-e1ec-4352-a7a4-7c43b2cf7696",
-        "document_id": "f37eb97c-605d-4aea-b28a-9843114d824c",
-        "document_version_id": "e8845c66-7697-464b-b740-c83c3a9672b9",
+        "revocation_id": "43629d8e-b1e8-437a-b713-bd2c2bfc5193",
+        "signature_id": "09274f14-3ac4-404f-b58d-58f28bef7743",
+        "document_id": "d783739f-b692-4fa7-a25c-16840e300c51",
+        "document_version_id": "236513aa-9956-44ce-92e5-31093cdffa13",
         "reason": "端到端回归验证签名撤销证据",
         "revoked_by": "018f0000-0000-7000-8000-00000000aa04",
-        "revoked_at": "2026-09-02T08:47:08.695310Z"
+        "revoked_at": "2026-09-06T12:47:49.721566Z"
       }
     },
     {
       "route": "record-diff",
       "name": "version-diff-readback",
       "status": "PASS",
-      "changedRows": 2
+      "changedRows": 0
     },
     {
       "route": "record",
       "name": "record-create-for-void",
       "status": 201,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents",
+      "url": "http://127.0.0.1:4192/api/v1/documents",
       "payload": {
-        "document_id": "0212c5f7-c3d7-48cd-9539-c6a53af6d56f",
-        "document_version_id": "d348e3d2-6f5a-41aa-93bd-9aabf71fef78",
+        "document_id": "b74fe465-477b-4122-a902-665e7c8bed71",
+        "document_version_id": "41d60b44-d5a7-4073-a325-5182547dc708",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
         "template_version_id": "5ae9203a-1b09-3a6d-a543-e9228bda82cf",
         "template_version_no": 1,
@@ -814,19 +814,19 @@
         "status": "DRAFT",
         "document_type_code": "WS445.2.OUTPATIENT_RECORD",
         "sections": {
-          "chief_complaint": "E2E-20260902084647 主诉 作废场景",
-          "present_illness": "E2E-20260902084647 现病史完整 作废场景",
-          "past_history": "E2E-20260902084647 既往史 作废场景",
+          "chief_complaint": "E2E-20260906124437 主诉 作废场景",
+          "present_illness": "E2E-20260906124437 现病史完整 作废场景",
+          "past_history": "E2E-20260906124437 既往史 作废场景",
           "allergy_history": "否认已知药物过敏",
-          "physical_exam": "E2E-20260902084647 体格检查 作废场景",
-          "auxiliary_exam": "E2E-20260902084647 辅助检查待引用来源 作废场景",
-          "assessment": "E2E-20260902084647 评估完整 作废场景",
-          "treatment_plan": "E2E-20260902084647 治疗计划完整 作废场景",
-          "followup_plan": "E2E-20260902084647 随访计划 作废场景"
+          "physical_exam": "E2E-20260906124437 体格检查 作废场景",
+          "auxiliary_exam": "E2E-20260906124437 辅助检查待引用来源 作废场景",
+          "assessment": "E2E-20260906124437 评估完整 作废场景",
+          "treatment_plan": "E2E-20260906124437 治疗计划完整 作废场景",
+          "followup_plan": "E2E-20260906124437 随访计划 作废场景"
         },
-        "content_hash": "9d8a20e302550378d6375ac65a0aa9d270ad2b224eaebd8ce10a267083ccbfc3",
+        "content_hash": "7800a8ca320673bd43ec734d4a55989856da3dcfa31df3f59f7031beaa187b02",
         "row_version": 1,
-        "created_at": "2026-09-02T08:47:09.428281Z"
+        "created_at": "2026-09-06T12:48:02.427289Z"
       }
     },
     {
@@ -834,10 +834,10 @@
       "name": "record-void",
       "status": 200,
       "method": "POST",
-      "url": "http://127.0.0.1:4181/api/v1/documents/0212c5f7-c3d7-48cd-9539-c6a53af6d56f/voids",
+      "url": "http://127.0.0.1:4192/api/v1/documents/b74fe465-477b-4122-a902-665e7c8bed71/voids",
       "payload": {
-        "document_id": "0212c5f7-c3d7-48cd-9539-c6a53af6d56f",
-        "document_version_id": "d5a635cd-de4a-4568-a78c-a3f7789ea998",
+        "document_id": "b74fe465-477b-4122-a902-665e7c8bed71",
+        "document_version_id": "86030110-5fc4-493f-a013-b40ec73822b5",
         "encounter_id": "018f0000-0000-7000-8000-000000000101",
         "template_version_id": "5ae9203a-1b09-3a6d-a543-e9228bda82cf",
         "template_version_no": 1,
@@ -845,21 +845,102 @@
         "status": "VOID",
         "document_type_code": "WS445.2.OUTPATIENT_RECORD",
         "sections": {
-          "assessment": "E2E-20260902084647 评估完整 作废场景",
-          "past_history": "E2E-20260902084647 既往史 作废场景",
-          "followup_plan": "E2E-20260902084647 随访计划 作废场景",
-          "physical_exam": "E2E-20260902084647 体格检查 作废场景",
-          "auxiliary_exam": "E2E-20260902084647 辅助检查待引用来源 作废场景",
-          "treatment_plan": "E2E-20260902084647 治疗计划完整 作废场景",
+          "assessment": "E2E-20260906124437 评估完整 作废场景",
+          "past_history": "E2E-20260906124437 既往史 作废场景",
+          "followup_plan": "E2E-20260906124437 随访计划 作废场景",
+          "physical_exam": "E2E-20260906124437 体格检查 作废场景",
+          "auxiliary_exam": "E2E-20260906124437 辅助检查待引用来源 作废场景",
+          "treatment_plan": "E2E-20260906124437 治疗计划完整 作废场景",
           "allergy_history": "否认已知药物过敏",
-          "chief_complaint": "E2E-20260902084647 主诉 作废场景",
-          "present_illness": "E2E-20260902084647 现病史完整 作废场景"
+          "chief_complaint": "E2E-20260906124437 主诉 作废场景",
+          "present_illness": "E2E-20260906124437 现病史完整 作废场景"
         },
-        "content_hash": "86bdc5b54f8cc5b9070864617bae1041672940f921c67e084bd549693d50fd7d",
+        "content_hash": "735819f449113d9bfcb19d9c3d0055855495847ebd55040aacc024711b52197f",
         "row_version": 2,
-        "created_at": "2026-09-02T08:47:09.699430Z"
+        "created_at": "2026-09-06T12:48:08.893967Z"
       }
     }
   ],
-  "findings": []
+  "findings": [
+    {
+      "route": "lab-workbench",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/inpatient/worklist?ward_id=018f0000-0000-7000-8000-00000000bb01 -> 403"
+    },
+    {
+      "route": "lab-workbench",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/admin/credentials -> 403"
+    },
+    {
+      "route": "lab-workbench",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/medical-record-assets?patient_id=018f0000-0000-7000-8000-000000000001 -> 403"
+    },
+    {
+      "route": "lab-workbench",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/admin/runtime/job-runs -> 403"
+    },
+    {
+      "route": "lab-workbench",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/inpatient/worklist?ward_id=018f0000-0000-7000-8000-00000000bb01 -> 403"
+    },
+    {
+      "route": "lab-workbench",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/admin/credentials -> 403"
+    },
+    {
+      "route": "lab-workbench",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/medical-record-assets?patient_id=018f0000-0000-7000-8000-000000000001 -> 403"
+    },
+    {
+      "route": "opd-results",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/admin/runtime/job-runs -> 403"
+    },
+    {
+      "route": "opd-results",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/inpatient/worklist?ward_id=018f0000-0000-7000-8000-00000000bb01 -> 403"
+    },
+    {
+      "route": "imaging-workbench",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/inpatient/worklist?ward_id=018f0000-0000-7000-8000-00000000bb01 -> 403"
+    },
+    {
+      "route": "imaging-workbench",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/admin/credentials -> 403"
+    },
+    {
+      "route": "imaging-workbench",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/medical-record-assets?patient_id=018f0000-0000-7000-8000-000000000001 -> 403"
+    },
+    {
+      "route": "imaging-workbench",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/admin/runtime/job-runs -> 403"
+    },
+    {
+      "route": "opd-results",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/inpatient/worklist?ward_id=018f0000-0000-7000-8000-00000000bb01 -> 403"
+    },
+    {
+      "route": "opd-results",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/admin/credentials -> 403"
+    },
+    {
+      "route": "opd-results",
+      "check": "http-status",
+      "detail": "GET http://127.0.0.1:4192/api/v1/medical-record-assets?patient_id=018f0000-0000-7000-8000-000000000001 -> 403"
+    }
+  ]
 }
