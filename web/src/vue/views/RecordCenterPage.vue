@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import type { DocumentVersionWire } from '../../generated/contracts';
 
@@ -25,6 +25,7 @@ import {
 import BusinessActionDialog from '../components/BusinessActionDialog.vue';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { captureResponseScope, clinicalOrganizationScope } from '../clinical-response-scope';
 import RecordQcPreview from '../components/RecordQcPreview.vue';
 
 const router = useRouter();
@@ -52,6 +53,18 @@ const assigneeUserId = ref('');
 const documentTypeCode = ref('WS445.2.OUTPATIENT_RECORD');
 const documentSections = ref<Record<string, string>>({});
 const documentVoidReason = ref('');
+const organizationScope = computed(clinicalOrganizationScope);
+
+watch(organizationScope, () => {
+  busy.value = false;
+  notice.value = '';
+  commandError.value = '';
+  dialog.value = null;
+  selected.value = null;
+  selectedDocumentVersion.value = null;
+  selectedReview.value = null;
+  qcPreview.value = null;
+});
 
 const sectionFields = [
   ['chief_complaint', '主诉'], ['present_illness', '现病史'], ['past_history', '既往史'],
@@ -60,13 +73,16 @@ const sectionFields = [
 ] as const;
 
 const centerQuery = useQuery({
-  queryKey: ['clinical', 'record-center-worklist-v2'],
+  queryKey: computed(() => ['clinical', 'record-center-worklist-v2', organizationScope.value]),
   queryFn: async () => {
+    const current = captureResponseScope(clinicalOrganizationScope);
     const lease = await issueRecordCenterLease();
+    if (!current()) throw new Error('机构范围已切换');
     const [worklist, reviewCases] = await Promise.all([
       listRecordCenterWorklist(lease),
       listRecordReviewCases(lease),
     ]);
+    if (!current()) throw new Error('机构范围已切换');
     return { lease, worklist, reviewCases };
   },
   retry: false,
@@ -96,10 +112,6 @@ const draftCount = computed(() => activeDocuments.value.filter((item) => item.st
 const blockingCount = computed(() => activeDocuments.value.filter((item) => item.has_blocking_finding).length);
 const overdueReviewCount = computed(() => reviewCases.value.filter((item) => !['CLOSED', 'VOID'].includes(item.status)
   && new Date(item.due_at).getTime() < Date.now()).length);
-const archiveReadyCount = computed(() => activeDocuments.value.filter((item) => item.status === 'SIGNED'
-  && item.has_valid_signature && !item.has_blocking_finding).length);
-const archiveReadiness = computed(() => activeDocuments.value.length === 0 ? 0
-  : Math.round((archiveReadyCount.value / activeDocuments.value.length) * 1000) / 10);
 
 function futureLocalDate(hours = 24) {
   const date = new Date(Date.now() + hours * 60 * 60 * 1000);
@@ -159,18 +171,21 @@ function beginCreateDocument(document: RecordCenterWorklistItem) {
 
 async function beginEditDocument(document: RecordCenterWorklistItem) {
   if (busy.value || document.status !== 'DRAFT') return;
+  const current = captureResponseScope(clinicalOrganizationScope);
   busy.value = true; commandError.value = '';
   try {
     selectDocumentContext(document);
     const lease = await issueDocumentLease();
+    if (!current()) return;
     const version = await loadDocument(lease, document.document_id);
+    if (!current()) return;
     selected.value = document;
     selectedDocumentVersion.value = version;
     documentSections.value = blankSections(version.sections);
     dialog.value = 'edit-document';
   } catch (error) {
-    const failure = toClinicalIssue(error); commandError.value = `${failure.code}：${failure.message}`;
-  } finally { busy.value = false; }
+    if (current()) { const failure = toClinicalIssue(error); commandError.value = `${failure.code}：${failure.message}`; }
+  } finally { if (current()) busy.value = false; }
 }
 
 function beginVoidDocument(document: RecordCenterWorklistItem) {
@@ -182,49 +197,60 @@ function beginVoidDocument(document: RecordCenterWorklistItem) {
 
 async function createDocument() {
   if (!selected.value || !documentTypeCode.value.trim() || busy.value) return;
+  const current = captureResponseScope(clinicalOrganizationScope);
   busy.value = true; commandError.value = '';
   try {
     selectDocumentContext(selected.value, null);
     const lease = await issueDocumentLease();
+    if (!current()) return;
     const created = await createClinicalDocument(lease, documentTypeCode.value, documentSections.value);
+    if (!current()) return;
     clinicalContext.documentId = created.document_id;
     dialog.value = null;
     notice.value = '新病历草稿已写入所选患者就诊，并立即进入质控与审签流程。';
     await centerQuery.refetch();
   } catch (error) {
-    const failure = toClinicalIssue(error); commandError.value = `${failure.code}：${failure.message}`;
-  } finally { busy.value = false; }
+    if (current()) { const failure = toClinicalIssue(error); commandError.value = `${failure.code}：${failure.message}`; }
+  } finally { if (current()) busy.value = false; }
 }
 
 async function updateDocument() {
   if (!selected.value || !selectedDocumentVersion.value || busy.value) return;
+  const current = captureResponseScope(clinicalOrganizationScope);
   busy.value = true; commandError.value = '';
   try {
     selectDocumentContext(selected.value);
     const lease = await issueDocumentLease();
+    if (!current()) return;
     await saveDocumentDraft(lease, selectedDocumentVersion.value, documentSections.value);
+    if (!current()) return;
     dialog.value = null;
     notice.value = '已生成新的不可变草稿版本，旧版本与审计证据保留。';
     await centerQuery.refetch();
   } catch (error) {
-    const failure = toClinicalIssue(error); commandError.value = `${failure.code}：${failure.message}`;
-  } finally { busy.value = false; }
+    if (current()) { const failure = toClinicalIssue(error); commandError.value = `${failure.code}：${failure.message}`; }
+  } finally { if (current()) busy.value = false; }
 }
 
 async function voidDocument() {
   if (!selected.value || documentVoidReason.value.trim().length < 4 || busy.value) return;
+  const current = captureResponseScope(clinicalOrganizationScope);
+  const target = selected.value;
   busy.value = true; commandError.value = '';
   try {
-    selectDocumentContext(selected.value);
+    selectDocumentContext(target);
     const lease = await issueDocumentLease();
-    const currentVersion = await loadDocument(lease, selected.value.document_id);
+    if (!current()) return;
+    const currentVersion = await loadDocument(lease, target.document_id);
+    if (!current()) return;
     await voidClinicalDocument(lease, currentVersion, documentVoidReason.value);
+    if (!current()) return;
     dialog.value = null;
     notice.value = '病历草稿已业务作废；正文、版本和操作证据未物理删除。';
     await centerQuery.refetch();
   } catch (error) {
-    const failure = toClinicalIssue(error); commandError.value = `${failure.code}：${failure.message}`;
-  } finally { busy.value = false; }
+    if (current()) { const failure = toClinicalIssue(error); commandError.value = `${failure.code}：${failure.message}`; }
+  } finally { if (current()) busy.value = false; }
 }
 
 function nextStatuses(status: RecordReviewCase['status']): RecordReviewCase['status'][] {
@@ -241,6 +267,7 @@ function nextStatuses(status: RecordReviewCase['status']): RecordReviewCase['sta
 async function createReview() {
   const data = centerQuery.data.value;
   if (!data || !selected.value || reviewReason.value.trim().length < 4 || !reviewDueAt.value) return;
+  const current = captureResponseScope(clinicalOrganizationScope);
   busy.value = true;
   commandError.value = '';
   try {
@@ -253,20 +280,21 @@ async function createReview() {
       assigneeUserId: assigneeUserId.value || null,
       dueAt: new Date(reviewDueAt.value).toISOString(),
     });
+    if (!current()) return;
     dialog.value = null;
     notice.value = '病历抽查单已创建；任务、时限、审计链和流程事件均已写入。';
     await centerQuery.refetch();
   } catch (error) {
-    const failure = toClinicalIssue(error);
-    commandError.value = `${failure.code}：${failure.message}`;
+    if (current()) { const failure = toClinicalIssue(error); commandError.value = `${failure.code}：${failure.message}`; }
   } finally {
-    busy.value = false;
+    if (current()) busy.value = false;
   }
 }
 
 async function transitionReview() {
   const data = centerQuery.data.value;
   if (!data || !selectedReview.value || transitionReason.value.trim().length < 4) return;
+  const current = captureResponseScope(clinicalOrganizationScope);
   busy.value = true;
   commandError.value = '';
   try {
@@ -275,16 +303,16 @@ async function transitionReview() {
       reason: transitionReason.value,
       assigneeUserId: targetReviewStatus.value === 'ASSIGNED' ? assigneeUserId.value : null,
     });
+    if (!current()) return;
     dialog.value = null;
     notice.value = targetReviewStatus.value === 'VOID'
       ? '抽查单已业务作废，历史事件和审计证据保留。'
       : '抽查状态已流转，并已写入不可变事件与审计链。';
     await centerQuery.refetch();
   } catch (error) {
-    const failure = toClinicalIssue(error);
-    commandError.value = `${failure.code}：${failure.message}`;
+    if (current()) { const failure = toClinicalIssue(error); commandError.value = `${failure.code}：${failure.message}`; }
   } finally {
-    busy.value = false;
+    if (current()) busy.value = false;
   }
 }
 
@@ -321,7 +349,7 @@ function formatTime(value: string | null) {
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="centerQuery.refetch()" />
     <template v-else>
       <p v-if="notice" class="record-command-message" role="status">{{ notice }}</p><p v-if="commandError" class="record-command-error" role="alert">{{ commandError }}</p>
-      <section class="metric-grid record-metrics" aria-label="病历指标"><article class="metric"><span class="name">授权范围病历</span><strong class="value">{{ activeDocuments.length }}</strong><small class="trend">门急住统一队列 · 作废 {{ documents.length - activeDocuments.length }} 份</small></article><article class="metric"><span class="name">待审签草稿</span><strong class="value">{{ draftCount }}</strong><small class="trend">按当前版本实时计算</small></article><article class="metric"><span class="name">质控硬阻断</span><strong class="value danger-text">{{ blockingCount }}</strong><small class="trend">开放 BLOCKING 发现</small></article><article class="metric"><span class="name">归档准备度</span><strong class="value">{{ archiveReadiness }}%</strong><small class="trend">有效签名且无硬阻断 · 抽查逾期 {{ overdueReviewCount }}</small></article></section>
+      <section class="metric-grid record-metrics" aria-label="病历指标"><article class="metric"><span class="name">授权范围病历</span><strong class="value">{{ activeDocuments.length }}</strong><small class="trend">门急住统一队列 · 作废 {{ documents.length - activeDocuments.length }} 份</small></article><article class="metric"><span class="name">待审签草稿</span><strong class="value">{{ draftCount }}</strong><small class="trend">按当前队列快照统计</small></article><article class="metric"><span class="name">质控硬阻断</span><strong class="value danger-text">{{ blockingCount }}</strong><small class="trend">开放 BLOCKING 发现</small></article><article class="metric"><span class="name">逾期抽查</span><strong class="value">{{ overdueReviewCount }}</strong><small class="trend">按当前队列的截止时间统计；归档须查看正式准备检查</small></article></section>
       <section class="card record-prototype-workbench"><div class="toolbar record-center-filters"><select v-model="statusFilter" class="select" aria-label="病历状态"><option value="ALL">全部状态</option><option value="DRAFT">草稿</option><option value="READY_TO_SIGN">待签署</option><option value="SIGNED">已签署</option><option value="CORRECTED">已更正</option><option value="VOID">已作废</option></select><select v-model="encounterTypeFilter" class="select" aria-label="就诊类型"><option value="ALL">门急住全部</option><option value="OUTPATIENT">门诊</option><option value="EMERGENCY">急诊</option><option value="INPATIENT">住院</option></select><select v-model="qualityFilter" class="select" aria-label="质控问题筛选"><option value="ALL">全部质量状态</option><option value="BLOCKING">存在硬阻断</option><option value="OPEN">存在开放问题</option><option value="NONE">暂无开放问题（非通过）</option></select><select class="select" aria-label="排序"><option>按阻断、优先级与时限</option></select><input v-model="searchText" class="search" placeholder="患者、就诊号、病历类型、作者或科室"></div>
         <div v-if="documents.length === 0" class="record-evidence-empty"><h2>授权范围内暂无病历</h2><p>这不是演示空状态：请检查岗位授权、诊疗关系和当前院区上下文。</p></div>
         <div v-else class="record-prototype-table-wrap"><table class="table"><thead><tr><th>业务域/患者</th><th>文书</th><th>状态/证据</th><th>质量</th><th>抽查流程</th><th>更新时间</th><th></th></tr></thead><tbody><tr v-for="document in visibleDocuments" :key="document.document_id" :class="{ voided: document.status === 'VOID' }"><td><span class="status blue">{{ encounterLabel(document.encounter_type) }}</span><br><b>{{ document.patient_name }}</b><br><span class="meta">{{ document.department_name || '未归属科室' }}</span></td><td><b>{{ document.document_type_code }}</b><br><span class="meta">{{ document.author_name }} · v{{ document.version_no }} · …{{ document.document_id.slice(-8) }}</span></td><td>{{ statusLabel(document.status) }}<br><span class="status" :class="document.has_valid_signature ? 'green' : 'amber'">{{ document.has_valid_signature ? '有效签名证据' : '无有效签名证据' }}</span></td><td><span class="status" :class="document.has_blocking_finding ? 'red' : document.open_finding_count ? 'amber' : 'blue'">{{ document.has_blocking_finding ? '硬阻断' : document.open_finding_count ? `${document.open_finding_count} 项开放` : '暂无开放问题（非通过）' }}</span><br><button class="btn sm" type="button" :disabled="busy" @click="qcPreview = { ...document }">查看质控</button></td><td><span class="status" :class="document.review_status ? 'amber' : 'blue'">{{ reviewStatusLabel(document.review_status) }}</span><br><span v-if="document.review_due_at" class="meta">截至 {{ formatTime(document.review_due_at) }}</span></td><td>{{ formatTime(document.updated_at) }}</td><td><div class="record-row-actions"><button class="btn sm" type="button" @click="openDocument(document, '/record-versions')">证据</button><button class="btn sm primary" type="button" :disabled="document.status === 'VOID'" @click="openDocument(document)">处理</button><button class="btn sm" type="button" :disabled="document.status === 'VOID'" @click="beginCreateDocument(document)">同次新建</button><button class="btn sm" type="button" :disabled="document.status !== 'DRAFT' || busy" @click="beginEditDocument(document)">编辑</button><button class="btn sm danger" type="button" :disabled="document.status !== 'DRAFT' || busy" @click="beginVoidDocument(document)">作废</button><button v-if="!document.review_case_id && document.status !== 'VOID'" class="btn sm" type="button" @click="beginCreateReview(document)">抽查</button><button v-else-if="document.review_case_id" class="btn sm" type="button" @click="beginTransition(document)">流转</button></div></td></tr><tr v-if="visibleDocuments.length === 0"><td colspan="7">没有符合当前筛选条件的病历，可调整质量、状态或患者筛选。</td></tr></tbody></table><button v-if="filteredDocuments.length > 10" class="btn record-expand" type="button" @click="showAll = !showAll">{{ showAll ? '收起列表' : `查看全部 ${filteredDocuments.length} 份` }}</button></div>
@@ -337,3 +365,7 @@ function formatTime(value: string | null) {
     <BusinessActionDialog :open="dialog === 'void-document'" :title="`作废病历草稿 · ${selected?.patient_name ?? ''}`" description="仅草稿允许业务作废；已签文书须走撤签和依法更正。" eyebrow="全院病历 / 作废" confirm-label="确认作废并留痕" danger :busy="busy" :confirm-disabled="documentVoidReason.trim().length < 4" @cancel="dialog = null" @confirm="voidDocument"><p class="dialog-warning">不会物理删除正文、版本、签名或审计证据。</p><label>作废原因（至少 4 字）<textarea v-model="documentVoidReason" rows="4" maxlength="2000" /></label></BusinessActionDialog>
   </section>
 </template>
+
+<style scoped>
+.record-metrics .metric{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0}.record-metrics .value{line-height:1.2}.record-metrics .trend{line-height:1.5;overflow-wrap:anywhere}
+</style>

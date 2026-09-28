@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ClinicalApiError } from '../../clinical-api';
+import { captureResponseScope, clinicalResponseScope } from '../clinical-response-scope';
 import { useQuery } from '@tanstack/vue-query';
 import { computed, reactive, ref, watch } from 'vue';
 import {
@@ -27,18 +29,28 @@ const busy = ref(false);
 const notice = ref('');
 const form = reactive({ title: '', priority: 'ROUTINE' as 'ROUTINE' | 'URGENT' | 'EMERGENCY', plannedAt: '', values: {} as Record<string, string | number | boolean> });
 
-const leaseQuery = useQuery({ queryKey: computed(() => ['specialty-execution-lease', props.definition.domain]), queryFn: issueSpecialtyExecutionLease, retry: false, staleTime: 5 * 60_000, gcTime: 0 });
-const casesQuery = useQuery({ queryKey: computed(() => ['specialty-execution-cases', props.definition.domain]), queryFn: () => listSpecialtyExecutionCases(leaseQuery.data.value!, props.definition.domain), enabled: () => Boolean(leaseQuery.data.value), retry: false, gcTime: 0 });
+const scope = computed(clinicalResponseScope);
+const leaseQuery = useQuery({ queryKey: computed(() => ['specialty-execution-lease', props.definition.domain, scope.value]), queryFn: issueSpecialtyExecutionLease, retry: false, staleTime: 5 * 60_000, gcTime: 0 });
+const casesQuery = useQuery({ queryKey: computed(() => ['specialty-execution-cases', props.definition.domain, scope.value]), queryFn: () => listSpecialtyExecutionCases(leaseQuery.data.value!, props.definition.domain), enabled: () => Boolean(leaseQuery.data.value), retry: false, gcTime: 0 });
 const cases = computed(() => casesQuery.data.value ?? []);
-const agentQuery = useQuery({ queryKey: computed(() => ['specialty-execution-agent-runs', props.definition.domain]), queryFn: async () => listMedicalAgentRuns(await issueMedicalAgentRunLease(cases.value[0]?.patient_id ?? '', cases.value[0]?.encounter_id ?? ''), cases.value[0]?.patient_id ?? '', cases.value[0]?.encounter_id ?? ''), enabled: () => activeTab.value === 'AGENT' && cases.value.length > 0, retry: false });
 const selected = computed(() => cases.value.find((item) => item.specialty_execution_case_id === selectedId.value) ?? cases.value[0] ?? null);
+const agentQuery = useQuery({ queryKey: computed(() => ['specialty-execution-agent-runs', props.definition.domain, scope.value, selected.value?.patient_id, selected.value?.encounter_id]), queryFn: async () => {
+  const item = selected.value; const isCurrent = captureResponseScope();
+  if (!item) return [];
+  const lease = await issueMedicalAgentRunLease(item.patient_id, item.encounter_id);
+  if (!isCurrent()) throw new ClinicalApiError('CONTEXT_CHANGED', '当前患者已变化，请重新读取', 409);
+  const runs = await listMedicalAgentRuns(lease, item.patient_id, item.encounter_id);
+  if (!isCurrent()) throw new ClinicalApiError('CONTEXT_CHANGED', '当前患者已变化，请重新读取', 409);
+  return runs;
+}, enabled: () => activeTab.value === 'AGENT' && Boolean(selected.value), retry: false, gcTime: 0 });
+const agentIssue = computed(() => agentQuery.error.value ? toClinicalIssue(agentQuery.error.value) : null);
 const issue = computed(() => { const error = leaseQuery.error.value ?? casesQuery.error.value; return error ? toClinicalIssue(error) : null; });
 const pendingCount = computed(() => cases.value.filter((item) => !['COMPLETED', 'CANCELLED'].includes(item.status)).length);
 const reviewCount = computed(() => cases.value.filter((item) => item.status === 'PENDING_REVIEW').length);
 const completedCount = computed(() => cases.value.filter((item) => item.status === 'COMPLETED').length);
 
 watch(cases, (items) => { if (!items.some((item) => item.specialty_execution_case_id === selectedId.value)) selectedId.value = items[0]?.specialty_execution_case_id ?? ''; }, { immediate: true });
-watch(() => props.definition.domain, () => { selectedId.value = ''; activeTab.value = 'CASES'; notice.value = ''; });
+watch([() => props.definition.domain, scope], () => { selectedId.value = ''; activeTab.value = 'CASES'; notice.value = ''; editorOpen.value = false; transitionOpen.value = false; editing.value = null; busy.value = false; });
 
 function openCreate() {
   editing.value = null; form.title = ''; form.priority = 'ROUTINE'; form.plannedAt = '';
@@ -54,17 +66,18 @@ function openEdit(item: SpecialtyExecutionCaseWire) {
 function payload() { return Object.fromEntries(Object.entries(form.values).filter(([, value]) => value !== '')); }
 async function save() {
   const lease = leaseQuery.data.value; if (!lease || busy.value || form.title.trim().length < 2) return;
-  busy.value = true; notice.value = '';
+  busy.value = true; notice.value = ''; const isCurrent = captureResponseScope();
   try {
     const input = { title: form.title.trim(), priority: form.priority, planned_at: form.plannedAt ? new Date(form.plannedAt).toISOString() : null, payload: payload() };
     const result = editing.value
       ? await updateSpecialtyExecutionCase(lease, editing.value, input)
       : await createSpecialtyExecutionCase(lease, { domain: props.definition.domain, ...input });
+    if (!isCurrent()) return;
     editorOpen.value = false; selectedId.value = result.specialty_execution_case_id;
     notice.value = editing.value ? '草稿已更新并写入不可变事件时间轴。' : `${props.definition.entityLabel}已创建，进入执行前必须完成双标识与专业必填项。`;
     await casesQuery.refetch();
-  } catch (error) { const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`; }
-  finally { busy.value = false; }
+  } catch (error) { if (!isCurrent()) return; const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`; }
+  finally { if (isCurrent()) busy.value = false; }
 }
 function requestTransition(item: SpecialtyExecutionCaseWire, action: Action) {
   selectedId.value = item.specialty_execution_case_id; pendingAction.value = action;
@@ -74,13 +87,14 @@ function requestTransition(item: SpecialtyExecutionCaseWire, action: Action) {
 async function applyTransition() {
   const lease = leaseQuery.data.value; const item = selected.value;
   if (!lease || !item || busy.value || transitionNote.value.trim().length < 2) return;
-  busy.value = true; notice.value = '';
+  busy.value = true; notice.value = ''; const isCurrent = captureResponseScope();
   try {
     await transitionSpecialtyExecutionCase(lease, item, pendingAction.value, transitionNote.value.trim());
+    if (!isCurrent()) return;
     transitionOpen.value = false; notice.value = `${item.business_number} 已${actionLabel(pendingAction.value)}，事件与操作者已留痕。`;
     await casesQuery.refetch();
-  } catch (error) { const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`; }
-  finally { busy.value = false; }
+  } catch (error) { if (!isCurrent()) return; const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`; }
+  finally { if (isCurrent()) busy.value = false; }
 }
 function nextAction(item: SpecialtyExecutionCaseWire): Action | null { return ({ DRAFT: 'MARK_READY', READY: 'START', IN_PROGRESS: 'REQUEST_REVIEW', PENDING_REVIEW: 'COMPLETE' } as Record<string, Action>)[item.status] ?? null; }
 function actionLabel(action: Action) { return ({ MARK_READY: '标记就绪', START: '开始执行', REQUEST_REVIEW: '提交复核', COMPLETE: '复核完成', CANCEL: '取消' } as Record<Action, string>)[action]; }
@@ -100,7 +114,7 @@ function fieldId(key: string) { return `specialty-execution-field-${props.defini
   <section data-page-root class="content vue-native-page production-execution-page">
     <div class="page-heading"><div><p class="eyebrow">诊疗执行中心 · 生产业务状态机</p><h1>{{ definition.title }}</h1><p>{{ definition.subtitle }}</p></div><button class="btn primary" type="button" @click="openCreate">新建{{ definition.entityLabel }}</button></div>
     <ExecutionPatientContextBar />
-    <div class="production-safety"><b>操作提示</b><span>系统会检查患者、必填信息和操作权限，并保留操作记录。</span><span>AI医助仅提供建议</span></div>
+    <div class="production-safety"><b>人工确认门禁</b><span>系统会检查患者、必填信息和操作权限，并保留操作记录。</span><span>AI医助仅提供建议</span></div>
     <ClinicalPageState v-if="leaseQuery.isPending.value || casesQuery.isPending.value" kind="loading" message="正在校验患者上下文并加载专业执行病例" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="casesQuery.refetch()" />
     <template v-else>
@@ -114,7 +128,7 @@ function fieldId(key: string) { return `specialty-execution-field-${props.defini
 
       <section v-else-if="activeTab === 'TIMELINE'" class="execution-panel"><header><div><h2>不可变事件时间轴</h2><p>所有创建、编辑、状态迁移均保留操作者、时间和当时快照。</p></div></header><ol v-if="selected?.events.length" class="timeline"><li v-for="event in selected.events" :key="event.specialty_execution_event_id"><i></i><div><strong>{{ actionLabel(({READY:'MARK_READY',STARTED:'START',REVIEW_REQUESTED:'REQUEST_REVIEW',COMPLETED:'COMPLETE',CANCELLED:'CANCEL'} as Record<string,Action>)[event.event_type] ?? 'MARK_READY') }}</strong><span>{{ event.from_status ?? '无' }} → {{ event.to_status }}</span><p>{{ event.note }}</p><small>{{ new Date(event.occurred_at).toLocaleString('zh-CN',{hour12:false}) }} · 操作者 {{ event.actor_user_id }}</small></div></li></ol><div v-else class="empty">当前病例暂无事件</div></section>
 
-      <section v-else-if="activeTab === 'AGENT'" class="execution-panel agent-panel"><header><div><h2>AI医助建议</h2><p>{{ definition.agentObjective }}</p></div><RouterLink class="btn primary" :to="{ path:'/ai-assistant', query:{ task_id:selected?.specialty_execution_case_id, objective:definition.agentObjective } }">打开 AI医助 EVA 分析</RouterLink></header><div class="agent-guard"><b>请人工确认</b><span>AI医助会根据当前患者和就诊信息提供建议，不能替代复核或关闭告警。</span></div><ul v-if="agentQuery.data.value?.length" class="agent-runs"><li v-for="run in agentQuery.data.value" :key="run.run_id"><code>{{ run.run_id }}</code><strong>{{ run.objective }}</strong><span>{{ run.state }}</span></li></ul><div v-else class="empty">当前就诊暂无 AI医助任务；可打开 AI医助 EVA 发起分析。</div></section>
+      <section v-else-if="activeTab === 'AGENT'" class="execution-panel agent-panel"><header><div><h2>AI医助建议</h2><p>{{ definition.agentObjective }}</p></div><RouterLink class="btn primary" :to="{ path:'/ai-assistant', query:{ task_id:selected?.specialty_execution_case_id, objective:definition.agentObjective } }">打开 AI医助 EVA 分析</RouterLink></header><div class="agent-guard"><b>请人工确认</b><span>AI医助会根据当前患者和就诊信息提供建议，不能替代复核或关闭告警。</span></div><ClinicalPageState v-if="agentQuery.isFetching.value" kind="loading" message="正在读取当前就诊医助任务" /><ClinicalPageState v-else-if="agentIssue" kind="error" :code="agentIssue.code" :message="agentIssue.message" @retry="agentQuery.refetch()" /><ul v-else-if="agentQuery.data.value?.length" class="agent-runs"><li v-for="run in agentQuery.data.value" :key="run.run_id"><code>{{ run.run_id }}</code><strong>{{ run.objective }}</strong><span>{{ run.state }}</span></li></ul><div v-else class="empty">当前就诊暂无 AI医助任务；可打开 AI医助 EVA 发起分析。</div></section>
 
       <section v-else class="execution-panel"><header><div><h2>证据与审计</h2><p>面向高层级追溯页面展示业务身份、版本与证据完整性。</p></div></header><dl v-if="selected" class="evidence-grid"><div><dt>业务号</dt><dd>{{ selected.business_number }}</dd></div><div><dt>病例 ID</dt><dd>{{ selected.specialty_execution_case_id }}</dd></div><div><dt>患者 / 就诊</dt><dd>{{ selected.patient_id }} / {{ selected.encounter_id }}</dd></div><div><dt>创建人 / 最近操作者</dt><dd>{{ selected.created_by }} / {{ selected.last_actor_user_id }}</dd></div><div><dt>当前版本</dt><dd>v{{ selected.row_version }}</dd></div><div><dt>不可变事件数</dt><dd>{{ selected.events.length }}</dd></div><div><dt>创建 / 更新</dt><dd>{{ new Date(selected.created_at).toLocaleString('zh-CN',{hour12:false}) }} / {{ new Date(selected.updated_at).toLocaleString('zh-CN',{hour12:false}) }}</dd></div><div><dt>Agent 自动写入</dt><dd>禁止</dd></div></dl><div v-else class="empty">请先选择病例</div></section>
     </template>

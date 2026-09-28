@@ -4,6 +4,8 @@
 import { useQuery } from '@tanstack/vue-query';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { authSession } from '../../auth-session';
+import { captureResponseScope, clinicalOrganizationScope } from '../clinical-response-scope';
 import { clinicalContext, issueInpatientLease, issueWardLease, loadInpatientOverview, loadInpatientWorklist } from '../../clinical-api';
 import { issueEmergencyFacilityLease, issueEmergencyLease, listEmergencyCoordinationCases, listEmergencyIdentityVerifications, listEmergencyObservations, listEmergencyResuscitations, listEmergencyTriageAssessments, listWaitingQueue } from '../../api/emergency';
 import { loadOutpatientWorkspaceSnapshot } from '../../api/outpatient-workspace';
@@ -11,28 +13,46 @@ import { toClinicalIssue } from '../clinical-error';
 import { aiMedicalAssistantRoster, aiMedicalAssistantRosterSummary } from '../ai-medical-assistant-roster';
 
 const router = useRouter();
-const emergencyFacilityLease = useQuery({ queryKey: ['clinical-portal', 'emergency', 'facility-lease'], queryFn: () => issueEmergencyFacilityLease('CLINICAL_PORTAL_EMERGENCY'), retry: false, staleTime: 5 * 60_000, gcTime: 0 });
-const emergencyPatientLease = useQuery({ queryKey: ['clinical-portal', 'emergency', 'patient-lease'], queryFn: () => issueEmergencyLease('CLINICAL_PORTAL_EMERGENCY'), retry: false, staleTime: 5 * 60_000, gcTime: 0 });
-const emergencyQueue = useQuery({ queryKey: ['clinical-portal', 'emergency', 'queue'], queryFn: () => listWaitingQueue(emergencyFacilityLease.data.value!), enabled: () => Boolean(emergencyFacilityLease.data.value), retry: false });
-const emergencyTriages = useQuery({ queryKey: ['clinical-portal', 'emergency', 'triage'], queryFn: () => listEmergencyTriageAssessments(emergencyPatientLease.data.value!), enabled: () => Boolean(emergencyPatientLease.data.value), retry: false });
-const emergencyResuscitations = useQuery({ queryKey: ['clinical-portal', 'emergency', 'resuscitation'], queryFn: () => listEmergencyResuscitations(emergencyPatientLease.data.value!), enabled: () => Boolean(emergencyPatientLease.data.value), retry: false });
-const emergencyObservations = useQuery({ queryKey: ['clinical-portal', 'emergency', 'observation'], queryFn: () => listEmergencyObservations(emergencyPatientLease.data.value!), enabled: () => Boolean(emergencyPatientLease.data.value), retry: false });
-const emergencyCoordination = useQuery({ queryKey: ['clinical-portal', 'emergency', 'coordination'], queryFn: () => listEmergencyCoordinationCases(emergencyPatientLease.data.value!), enabled: () => Boolean(emergencyPatientLease.data.value), retry: false });
-const emergencyIdentity = useQuery({ queryKey: ['clinical-portal', 'emergency', 'identity'], queryFn: () => listEmergencyIdentityVerifications(emergencyPatientLease.data.value!), enabled: () => Boolean(emergencyPatientLease.data.value), retry: false });
-const outpatientFacilityLease = useQuery({ queryKey: ['clinical-portal', 'outpatient', 'facility-lease'], queryFn: () => issueEmergencyFacilityLease('CLINICAL_PORTAL_OUTPATIENT'), retry: false, staleTime: 5 * 60_000, gcTime: 0 });
-const outpatientQueue = useQuery({ queryKey: ['clinical-portal', 'outpatient', 'queue'], queryFn: () => listWaitingQueue(outpatientFacilityLease.data.value!), enabled: () => Boolean(outpatientFacilityLease.data.value), retry: false });
+const facilityScope = computed(clinicalOrganizationScope);
+const emergencyScope = computed(() => JSON.stringify([facilityScope.value, clinicalContext.emergencyPatientId, clinicalContext.emergencyEncounterId]));
+const outpatientScope = computed(() => JSON.stringify([facilityScope.value, clinicalContext.patientId, clinicalContext.encounterId]));
+const emergencyContextReady = computed(() => Boolean(clinicalContext.emergencyPatientId && clinicalContext.emergencyEncounterId));
+const outpatientContextReady = computed(() => Boolean(clinicalContext.patientId && clinicalContext.encounterId));
+async function readScoped<T>(readScope: () => string, load: () => Promise<T>): Promise<T> {
+  const isCurrent = captureResponseScope(readScope);
+  const value = await load();
+  if (!isCurrent()) throw new Error('诊疗范围已切换，请重新读取门户数据');
+  return value;
+}
+const emergencyFacilityLease = useQuery({ queryKey: computed(() => ['clinical-portal', 'emergency', 'facility-lease', facilityScope.value]), queryFn: () => readScoped(clinicalOrganizationScope, () => issueEmergencyFacilityLease('CLINICAL_PORTAL_EMERGENCY')), retry: false, staleTime: 5 * 60_000, gcTime: 0 });
+const emergencyPatientLease = useQuery({ queryKey: computed(() => ['clinical-portal', 'emergency', 'patient-lease', emergencyScope.value]), queryFn: () => readScoped(() => emergencyScope.value, () => issueEmergencyLease('CLINICAL_PORTAL_EMERGENCY')), enabled: () => emergencyContextReady.value, retry: false, staleTime: 5 * 60_000, gcTime: 0 });
+const emergencyQueue = useQuery({ queryKey: computed(() => ['clinical-portal', 'emergency', 'queue', facilityScope.value, emergencyFacilityLease.data.value?.lease_id]), queryFn: () => readScoped(clinicalOrganizationScope, () => listWaitingQueue(emergencyFacilityLease.data.value!)), enabled: () => Boolean(emergencyFacilityLease.data.value), retry: false, gcTime: 0 });
+const emergencyTriages = useQuery({ queryKey: computed(() => ['clinical-portal', 'emergency', 'triage', emergencyScope.value, emergencyPatientLease.data.value?.lease_id]), queryFn: () => readScoped(() => emergencyScope.value, () => listEmergencyTriageAssessments(emergencyPatientLease.data.value!)), enabled: () => Boolean(emergencyPatientLease.data.value), retry: false, gcTime: 0 });
+const emergencyResuscitations = useQuery({ queryKey: computed(() => ['clinical-portal', 'emergency', 'resuscitation', emergencyScope.value, emergencyPatientLease.data.value?.lease_id]), queryFn: () => readScoped(() => emergencyScope.value, () => listEmergencyResuscitations(emergencyPatientLease.data.value!)), enabled: () => Boolean(emergencyPatientLease.data.value), retry: false, gcTime: 0 });
+const emergencyObservations = useQuery({ queryKey: computed(() => ['clinical-portal', 'emergency', 'observation', emergencyScope.value, emergencyPatientLease.data.value?.lease_id]), queryFn: () => readScoped(() => emergencyScope.value, () => listEmergencyObservations(emergencyPatientLease.data.value!)), enabled: () => Boolean(emergencyPatientLease.data.value), retry: false, gcTime: 0 });
+const emergencyCoordination = useQuery({ queryKey: computed(() => ['clinical-portal', 'emergency', 'coordination', emergencyScope.value, emergencyPatientLease.data.value?.lease_id]), queryFn: () => readScoped(() => emergencyScope.value, () => listEmergencyCoordinationCases(emergencyPatientLease.data.value!)), enabled: () => Boolean(emergencyPatientLease.data.value), retry: false, gcTime: 0 });
+const emergencyIdentity = useQuery({ queryKey: computed(() => ['clinical-portal', 'emergency', 'identity', emergencyScope.value, emergencyPatientLease.data.value?.lease_id]), queryFn: () => readScoped(() => emergencyScope.value, () => listEmergencyIdentityVerifications(emergencyPatientLease.data.value!)), enabled: () => Boolean(emergencyPatientLease.data.value), retry: false, gcTime: 0 });
+const outpatientFacilityLease = useQuery({ queryKey: computed(() => ['clinical-portal', 'outpatient', 'facility-lease', facilityScope.value]), queryFn: () => readScoped(clinicalOrganizationScope, () => issueEmergencyFacilityLease('CLINICAL_PORTAL_OUTPATIENT')), retry: false, staleTime: 5 * 60_000, gcTime: 0 });
+const outpatientQueue = useQuery({ queryKey: computed(() => ['clinical-portal', 'outpatient', 'queue', facilityScope.value, outpatientFacilityLease.data.value?.lease_id]), queryFn: () => readScoped(clinicalOrganizationScope, () => listWaitingQueue(outpatientFacilityLease.data.value!)), enabled: () => Boolean(outpatientFacilityLease.data.value), retry: false, gcTime: 0 });
 const outpatientSnapshot = useQuery({
-  queryKey: ['clinical-portal', 'outpatient', 'snapshot', clinicalContext.patientId, clinicalContext.encounterId],
-  queryFn: () => loadOutpatientWorkspaceSnapshot(clinicalContext.patientId, clinicalContext.encounterId),
+  queryKey: computed(() => ['clinical-portal', 'outpatient', 'snapshot', outpatientScope.value]),
+  queryFn: () => readScoped(() => outpatientScope.value,
+    () => loadOutpatientWorkspaceSnapshot(clinicalContext.patientId, clinicalContext.encounterId)),
+  enabled: () => outpatientContextReady.value,
   retry: false, staleTime: 0, gcTime: 0,
 });
 const inpatientDashboard = useQuery({
-  queryKey: ['clinical-portal', 'inpatient', 'dashboard'],
+  queryKey: computed(() => ['clinical-portal', 'inpatient', 'dashboard', clinicalOrganizationScope(), clinicalContext.inpatientWardId, clinicalContext.inpatientPatientId, clinicalContext.inpatientEncounterId]),
   queryFn: async () => {
+    const current = captureResponseScope(() => JSON.stringify([clinicalOrganizationScope(), clinicalContext.inpatientWardId, clinicalContext.inpatientPatientId, clinicalContext.inpatientEncounterId]));
     const [encounterLease, wardLease] = await Promise.all([issueInpatientLease(), issueWardLease()]);
+    if (!current()) throw new Error('住院范围已切换');
     const [overview, worklist] = await Promise.all([loadInpatientOverview(encounterLease), loadInpatientWorklist(wardLease)]);
+    if (!current()) throw new Error('住院范围已切换');
     return { overview, worklist };
   },
+  enabled: () => Boolean(authSession.user?.authorized_ward_ids?.includes(clinicalContext.inpatientWardId)
+    && clinicalContext.inpatientPatientId && clinicalContext.inpatientEncounterId),
   retry: false, staleTime: 0, gcTime: 0,
 });
 
@@ -128,12 +148,19 @@ const recentIdentityMatched = computed(() => {
   const latest = emergencyIdentity.data.value?.[0];
   return Boolean(latest?.outcome === 'MATCHED' && Date.now() - new Date(latest.verified_at).getTime() <= 30 * 60_000);
 });
-const emergencyDataUnavailable = computed(() => [emergencyQueue, emergencyTriages, emergencyResuscitations, emergencyObservations, emergencyCoordination, emergencyIdentity].some((query) => Boolean(query.error.value)));
+const emergencyDataUnavailable = computed(() => [emergencyFacilityLease, emergencyQueue, ...(emergencyContextReady.value
+  ? [emergencyPatientLease, emergencyTriages, emergencyResuscitations, emergencyObservations, emergencyCoordination, emergencyIdentity] : [])]
+  .some((query) => Boolean(query.error.value)));
+const emergencyLoading = computed(() => [emergencyFacilityLease, emergencyQueue, ...(emergencyContextReady.value
+  ? [emergencyPatientLease, emergencyTriages, emergencyResuscitations, emergencyObservations, emergencyCoordination, emergencyIdentity] : [])]
+  .some((query) => query.isPending.value));
 const outpatientDataUnavailable = computed(() => [outpatientFacilityLease, outpatientQueue, outpatientSnapshot].some((query) => Boolean(query.error.value)));
-const outpatientLoading = computed(() => [outpatientFacilityLease, outpatientQueue, outpatientSnapshot].some((query) => query.isPending.value));
-const inpatientDataUnavailable = computed(() => Boolean(inpatientDashboard.error.value));
-const inpatientIssue = computed(() => inpatientDashboard.error.value ? toClinicalIssue(inpatientDashboard.error.value) : null);
-const inpatientLoading = computed(() => inpatientDashboard.isPending.value);
+const outpatientLoading = computed(() => [outpatientFacilityLease, outpatientQueue, ...(outpatientContextReady.value ? [outpatientSnapshot] : [])]
+  .some((query) => query.isPending.value));
+const inpatientDataUnavailable = computed(() => Boolean(inpatientDashboard.error.value) || !inpatientDashboard.data.value && !inpatientDashboard.isLoading.value);
+const inpatientIssue = computed(() => inpatientDashboard.error.value ? toClinicalIssue(inpatientDashboard.error.value)
+  : !authSession.user?.authorized_ward_ids?.includes(clinicalContext.inpatientWardId) ? { code: 'WARD_SCOPE_UNAVAILABLE', message: '当前会话未提供该病区的有效授权范围，请选择授权病区或刷新登录会话。' } : null);
+const inpatientLoading = computed(() => inpatientDashboard.isLoading.value);
 const outpatientQueueEntries = computed(() => outpatientQueue.data.value ?? []);
 const outpatientDocuments = computed(() => outpatientSnapshot.data.value?.documents ?? []);
 const outpatientResults = computed(() => outpatientSnapshot.data.value?.results ?? []);
@@ -148,14 +175,15 @@ const outpatientMetrics = computed<[string, string][]>(() => {
     ['已到诊', String(queue.filter((entry) => ['CALLED', 'IN_CONSULTATION', 'COMPLETED'].includes(entry.status)).length)],
     ['候诊', String(queue.filter((entry) => entry.status === 'WAITING').length)],
     ['诊疗中', String(queue.filter((entry) => entry.status === 'IN_CONSULTATION').length)],
-    ['当前结果报告', String(outpatientResults.value.length)],
-    ['当前待签病历', String(outpatientDocuments.value.filter((document) => !['SIGNED', 'VOID'].includes(document.status)).length)],
+    ['当前结果报告', outpatientContextReady.value ? String(outpatientResults.value.length) : '未选择就诊'],
+    ['当前待签病历', outpatientContextReady.value ? String(outpatientDocuments.value.filter((document) => !['SIGNED', 'VOID'].includes(document.status)).length) : '未选择就诊'],
   ];
 });
 const outpatientAlerts = computed<[string, string, string][]>(() => {
   if (outpatientLoading.value) return [['门诊数据', '加载中', 'amber']];
   if (outpatientDataUnavailable.value) return [['门诊数据', '不可用', 'red']];
   const waiting = outpatientQueueEntries.value.filter((entry) => entry.status === 'WAITING').length;
+  if (!outpatientContextReady.value) return [['当前患者', '未选择', 'amber'], ['候诊', String(waiting), waiting ? 'amber' : 'green']];
   return [
     ['危急值', String(outpatientCriticalValues.value.length), outpatientCriticalValues.value.length ? 'red' : 'green'],
     ['候诊', String(waiting), waiting ? 'amber' : 'green'],
@@ -202,11 +230,19 @@ const domains = computed<DomainCard[]>(() => baseDomains.map((domain) => {
   };
   return {
     ...domain,
-    metrics: emergencyDataUnavailable.value
+    metrics: emergencyLoading.value
+      ? metricRows(['当前分诊', '需立即处置', '院区候诊', '当前留观', '开放协同', '待去向'], '…')
+      : emergencyDataUnavailable.value
       ? [['当前分诊', '不可用'], ['需立即处置', '—'], ['院区候诊', '—'], ['当前留观', '—'], ['开放协同', '—'], ['待去向', '—']]
+      : !emergencyContextReady.value
+        ? [['当前分诊', '未选择患者'], ['需立即处置', '—'], ['院区候诊', String(waitingCount.value)], ['当前留观', '—'], ['开放协同', '—'], ['待去向', '—']]
       : [['当前分诊', triageLabel(currentTriage.value?.triage_level)], ['需立即处置', currentTriage.value?.immediate_action_required ? '1' : '0'], ['院区候诊', String(waitingCount.value)], ['当前留观', String(activeObservationCount.value)], ['开放协同', String(openCoordination.value.length)], ['待去向', String(activeObservationCount.value)]],
-    alerts: emergencyDataUnavailable.value
+    alerts: emergencyLoading.value
+      ? [['急诊数据', '加载中', 'amber']]
+      : emergencyDataUnavailable.value
       ? [['急诊数据', '加载失败', 'red']]
+      : !emergencyContextReady.value
+        ? [['当前急诊患者', '未选择', 'amber']]
       : [['身份核验', recentIdentityMatched.value ? '有效' : '待核', recentIdentityMatched.value ? 'green' : 'red'], ['抢救未闭环', String(activeResuscitationCount.value), activeResuscitationCount.value ? 'red' : 'green'], ['协同已逾期', String(overdueCoordinationCount.value), overdueCoordinationCount.value ? 'amber' : 'green']],
     footer: [['当前上下文', `急诊患者 …${clinicalContext.emergencyPatientId.slice(-8)} · 就诊 …${clinicalContext.emergencyEncounterId.slice(-8)}`], ['数据边界', '院区候诊队列 + 当前急诊患者事实']],
   };

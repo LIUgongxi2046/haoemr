@@ -714,14 +714,64 @@
       "get": {
         "operationId": "getEncounterRecordQuality",
         "parameters": [
-          { "name": "encounter_id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "X-Organization-Context", "in": "header", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "X-Facility-Context", "in": "header", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "X-Patient-Context", "in": "header", "required": true, "schema": { "type": "string", "format": "uuid" } },
-          { "name": "X-Encounter-Context", "in": "header", "required": true, "schema": { "type": "string", "format": "uuid" } }
+          {
+            "name": "encounter_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Organization-Context",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Facility-Context",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Patient-Context",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Encounter-Context",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
         ],
-        "responses": { "200": { "description": "Current document quality summaries; not a terminal clearance or cross-document semantic review",
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/EncounterRecordQuality" } } } } }
+        "responses": {
+          "200": {
+            "description": "Current document quality summaries; not a terminal clearance or cross-document semantic review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EncounterRecordQuality"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/documents/{document_id}/governance": {
@@ -19553,6 +19603,261 @@
           }
         }
       }
+    },
+    "/api/v1/admin/configuration-packs": {
+      "get": {
+        "operationId": "listConfigurationPacks",
+        "tags": [
+          "System Administration"
+        ],
+        "summary": "listConfigurationPacks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ConfigurationPackCatalogItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/configuration-packs/prechecks": {
+      "post": {
+        "operationId": "precheckConfigurationPack",
+        "tags": [
+          "System Administration"
+        ],
+        "summary": "precheckConfigurationPack",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 128
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigurationPackPrecheck"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigurationPackPrecheckRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/configuration-packs/operations": {
+      "post": {
+        "operationId": "installConfigurationPack",
+        "tags": [
+          "System Administration"
+        ],
+        "summary": "installConfigurationPack",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 128
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigurationPackOperation"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigurationPackInstallRequest"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "listConfigurationPackOperations",
+        "tags": [
+          "System Administration"
+        ],
+        "summary": "listConfigurationPackOperations",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "facility_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ConfigurationPackOperation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/configuration-packs/operations/{operation_id}": {
+      "get": {
+        "operationId": "getConfigurationPackOperation",
+        "tags": [
+          "System Administration"
+        ],
+        "summary": "getConfigurationPackOperation",
+        "parameters": [
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigurationPackOperation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/configuration-packs/operations/{operation_id}/reconcile": {
+      "post": {
+        "operationId": "reconcileConfigurationPackOperation",
+        "tags": [
+          "System Administration"
+        ],
+        "summary": "reconcileConfigurationPackOperation",
+        "parameters": [
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 128
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigurationPackOperation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge-chunks/{chunk_id}": {
+      "get": {
+        "operationId": "getKnowledgeChunkCitation",
+        "parameters": [
+          {
+            "name": "chunk_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exact accessible active knowledge chunk; no fallback to another version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KnowledgeChunkCitation"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Citation is unavailable in the current authorized scope"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -19638,6 +19943,14 @@
           "expires_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "authorized_ward_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Ward scopes authorized for this user in the current session facility; empty means no automatic ward query."
           }
         }
       },
@@ -22102,6 +22415,11 @@
           "display_rules": {
             "type": "object",
             "additionalProperties": true
+          },
+          "restore_from_version_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Optional historical version of the same template. The server copies its immutable schema and frozen form binding; submitted content cannot override that source."
           }
         }
       },
@@ -22591,7 +22909,12 @@
         "properties": {
           "trigger_stage": {
             "type": "string",
-            "enum": ["MANUAL", "POST_SAVE", "PRE_SIGN", "TERMINAL"]
+            "enum": [
+              "MANUAL",
+              "POST_SAVE",
+              "PRE_SIGN",
+              "TERMINAL"
+            ]
           },
           "organization_id": {
             "type": "string",
@@ -42050,12 +42373,26 @@
         ],
         "properties": {
           "trigger_stage": {
-            "type": ["string", "null"],
-            "enum": ["MANUAL", "POST_SAVE", "PRE_SIGN", "TERMINAL", null]
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "MANUAL",
+              "POST_SAVE",
+              "PRE_SIGN",
+              "TERMINAL",
+              null
+            ]
           },
           "finding_snapshots": {
-            "type": ["array", "null"],
-            "items": { "$ref": "#/components/schemas/QualityFinding" }
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/QualityFinding"
+            }
           },
           "quality_run_id": {
             "type": "string",
@@ -42260,28 +42597,97 @@
         }
       },
       "EncounterRecordQualityItem": {
-        "type": "object", "additionalProperties": false,
-        "required": ["document_id", "document_version_id", "content_hash", "document_type_code", "document_status", "quality_state", "open_finding_count", "blocking_count"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "document_id",
+          "document_version_id",
+          "content_hash",
+          "document_type_code",
+          "document_status",
+          "quality_state",
+          "open_finding_count",
+          "blocking_count"
+        ],
         "properties": {
-          "document_id": { "type": "string", "format": "uuid" },
-          "document_version_id": { "type": "string", "format": "uuid" },
-          "content_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
-          "document_type_code": { "type": "string" },
-          "document_status": { "type": "string", "enum": ["DRAFT", "READY_TO_SIGN", "SIGNED", "CORRECTED", "VOID"] },
-          "quality_state": { "type": "string", "enum": ["NOT_RUN", "STALE", "PASSED", "WARNING", "BLOCKED"] },
-          "open_finding_count": { "type": "integer", "minimum": 0 },
-          "blocking_count": { "type": "integer", "minimum": 0 }
+          "document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_version_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "content_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "document_type_code": {
+            "type": "string"
+          },
+          "document_status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "READY_TO_SIGN",
+              "SIGNED",
+              "CORRECTED",
+              "VOID"
+            ]
+          },
+          "quality_state": {
+            "type": "string",
+            "enum": [
+              "NOT_RUN",
+              "STALE",
+              "PASSED",
+              "WARNING",
+              "BLOCKED"
+            ]
+          },
+          "open_finding_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "blocking_count": {
+            "type": "integer",
+            "minimum": 0
+          }
         }
       },
       "EncounterRecordQuality": {
-        "type": "object", "additionalProperties": false,
-        "required": ["patient_id", "encounter_id", "documents", "total_documents", "has_more"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "patient_id",
+          "encounter_id",
+          "documents",
+          "total_documents",
+          "has_more"
+        ],
         "properties": {
-          "patient_id": { "type": "string", "format": "uuid" },
-          "encounter_id": { "type": "string", "format": "uuid" },
-          "documents": { "type": "array", "maxItems": 100, "items": { "$ref": "#/components/schemas/EncounterRecordQualityItem" } },
-          "total_documents": { "type": "integer", "minimum": 0 },
-          "has_more": { "type": "boolean" }
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documents": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/EncounterRecordQualityItem"
+            }
+          },
+          "total_documents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "has_more": {
+            "type": "boolean"
+          }
         }
       },
       "DocumentGovernanceSnapshot": {
@@ -42301,7 +42707,9 @@
           "quality_run_history": {
             "type": "array",
             "maxItems": 20,
-            "items": { "$ref": "#/components/schemas/DocumentQualityRunEvidence" }
+            "items": {
+              "$ref": "#/components/schemas/DocumentQualityRunEvidence"
+            }
           },
           "document_id": {
             "type": "string",
@@ -52708,7 +53116,8 @@
             "type": "string"
           },
           "locator": {
-            "type": "object"
+            "type": "object",
+            "additionalProperties": true
           },
           "content_hash": {
             "type": "string",
@@ -54980,6 +55389,520 @@
               "ACTIVE",
               "RETIRED"
             ]
+          }
+        }
+      },
+      "ConfigurationPackTemplate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "document_type": {
+            "type": "string",
+            "maxLength": 96
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 96
+            }
+          },
+          "required_fields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 96
+            }
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "document_type",
+          "fields",
+          "required_fields"
+        ]
+      },
+      "ConfigurationPackDependency": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 32
+          }
+        },
+        "required": [
+          "code",
+          "version"
+        ]
+      },
+      "ConfigurationPackManifest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "type": {
+            "type": "string",
+            "maxLength": 16
+          },
+          "app_version": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "publisher": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "license": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfigurationPackDependency"
+            }
+          },
+          "templates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfigurationPackTemplate"
+            }
+          }
+        },
+        "required": [
+          "schema_version",
+          "code",
+          "version",
+          "name",
+          "type",
+          "app_version",
+          "publisher",
+          "license",
+          "dependencies",
+          "templates"
+        ]
+      },
+      "ConfigurationPackPrecheckRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "manifest_json": {
+            "type": "string",
+            "maxLength": 10485760
+          },
+          "keep_codes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 128
+            }
+          },
+          "draft_codes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 500,
+            "description": "Explicitly create a new draft from the incoming item while preserving hospital history and its published version. Mutually exclusive with keep_codes."
+          }
+        },
+        "required": [
+          "organization_id",
+          "facility_id",
+          "manifest_json",
+          "keep_codes"
+        ]
+      },
+      "ConfigurationPackDifference": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "NEW",
+              "UPDATE",
+              "KEEP",
+              "CONFLICT"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 512
+          },
+          "base_content": {
+            "type": "string",
+            "maxLength": 200000
+          },
+          "local_content": {
+            "type": "string",
+            "maxLength": 200000
+          },
+          "incoming_content": {
+            "type": "string",
+            "maxLength": 200000
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "action",
+          "reason",
+          "base_content",
+          "local_content",
+          "incoming_content"
+        ]
+      },
+      "ConfigurationPackPrecheck": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "precheck_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pack_code": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "pack_version": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "manifest_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "trusted": {
+            "type": "boolean"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "READY",
+              "BLOCKED"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 512
+            }
+          },
+          "differences": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfigurationPackDifference"
+            }
+          }
+        },
+        "required": [
+          "precheck_id",
+          "organization_id",
+          "facility_id",
+          "pack_code",
+          "pack_version",
+          "manifest_hash",
+          "trusted",
+          "state",
+          "expires_at",
+          "issues",
+          "differences"
+        ]
+      },
+      "ConfigurationPackInstallRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "precheck_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "retry_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "precheck_id"
+        ]
+      },
+      "ConfigurationPackOperation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "facility_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pack_code": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "pack_version": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "manifest_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "RUNNING",
+              "SUCCEEDED",
+              "FAILED_ROLLED_BACK",
+              "RECOVERY_REQUIRED"
+            ]
+          },
+          "requested_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "retry_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 96
+          },
+          "imported_count": {
+            "type": "integer"
+          },
+          "retained_count": {
+            "type": "integer"
+          },
+          "template_version_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "operation_id",
+          "organization_id",
+          "facility_id",
+          "pack_code",
+          "pack_version",
+          "manifest_hash",
+          "status",
+          "requested_by",
+          "retry_of",
+          "created_at",
+          "finished_at",
+          "error_code",
+          "imported_count",
+          "retained_count",
+          "template_version_ids"
+        ]
+      },
+      "ConfigurationPackCatalogItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "publisher": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "license": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "manifest_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "trusted": {
+            "type": "boolean"
+          },
+          "manifest_json": {
+            "type": "string",
+            "maxLength": 10485760
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "CONFIG",
+              "DEMO"
+            ]
+          },
+          "app_version": {
+            "type": "string"
+          },
+          "compatible": {
+            "type": "boolean"
+          },
+          "template_count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500
+          }
+        },
+        "required": [
+          "code",
+          "version",
+          "name",
+          "publisher",
+          "license",
+          "manifest_hash",
+          "trusted",
+          "manifest_json"
+        ]
+      },
+      "KnowledgeChunkCitation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "chunk_id",
+          "doc_version_id",
+          "version",
+          "title",
+          "section_path",
+          "text",
+          "content_hash",
+          "classification"
+        ],
+        "properties": {
+          "chunk_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "doc_version_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "section_path": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "content_hash": {
+            "type": "string"
+          },
+          "classification": {
+            "type": "string"
+          },
+          "effective_from": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "effective_to": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
           }
         }
       }

@@ -207,17 +207,6 @@ final class ModelDeploymentService {
                 throw new ModelDeploymentException("MODEL_DEPLOYMENT_CONNECTION_NOT_READY", 409,
                         "Verify the model connection before publishing");
             }
-            boolean independentlyPassed = jdbc.sql("""
-                    select exists(
-                      select 1 from model_evaluation
-                      where tenant_id = :tenant and model_deployment_id = :deployment
-                        and status = 'PASSED' and evaluated_by <> :publisher)
-                    """).param("tenant", identity.tenantId()).param("deployment", deploymentId)
-                    .param("publisher", identity.userId()).query(Boolean.class).single();
-            if (!independentlyPassed) {
-                throw new ModelDeploymentException("MODEL_DEPLOYMENT_RELEASE_EVALUATION_REQUIRED", 409,
-                        "Publishing requires a passed evaluation recorded by an independent reviewer");
-            }
             jdbc.sql("""
                     update model_deployment set evaluation_status = 'APPROVED',
                       row_version = row_version + 1, updated_at = now()

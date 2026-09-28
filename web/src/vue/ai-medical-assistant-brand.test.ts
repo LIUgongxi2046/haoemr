@@ -188,15 +188,15 @@ describe('AI医助 EVA 品牌契约', () => {
 
     expect(center).toContain("listModelDeployments");
     expect(center).toContain("listMedicalAgentCatalog");
-    expect(center).toContain('model.release_evidence_ready');
-    expect(dialog).toContain('model.release_evidence_ready');
+    expect(center).not.toContain('model.release_evidence_ready');
+    expect(dialog).not.toContain('model.release_evidence_ready');
     expect(center).toContain("model.endpoint_url?.includes('.example/') !== true");
     expect(dialog).toContain("model.endpoint_url?.includes('.example/') !== true");
     expect(center).toContain('modelAvailabilityNotice');
     expect(dialog).toContain('modelAvailabilityNotice');
     expect(center).toContain('当前没有可供 AI医助 EVA 使用的合规模型');
     expect(dialog).toContain('当前没有可供 AI医助 EVA 使用的合规模型');
-    expect(connection).toContain('item.release_evidence_ready');
+    expect(connection).not.toContain('item.release_evidence_ready');
     expect(connection).toContain('运行时可用');
     expect(center).toContain('AI医助 EVA 工作台暂时无法连接');
     expect(center).not.toContain('服务运行正常');

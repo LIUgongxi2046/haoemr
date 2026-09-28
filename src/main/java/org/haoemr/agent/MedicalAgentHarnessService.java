@@ -759,12 +759,6 @@ final class MedicalAgentHarnessService {
                   and status = 'ACTIVE' and evaluation_status = 'APPROVED'
                   and connection_status = 'READY' and test_only = false
                   and (:allow_synthetic_test_models or endpoint_url not like 'https://%.example/%')
-                  and exists (
-                    select 1 from model_evaluation evaluation
-                    where evaluation.tenant_id = model_deployment.tenant_id
-                      and evaluation.model_deployment_id = model_deployment.model_deployment_id
-                      and evaluation.status = 'PASSED'
-                  )
                 """).param("tenant", tenantId).param("deployment", deploymentId)
                 .param("allow_synthetic_test_models", syntheticTestModelsEnabled())
                 .query((rs, row) -> new ModelSelection(
@@ -935,12 +929,6 @@ final class MedicalAgentHarnessService {
                   endpoint_url, api_key_ref, residency_policy from model_deployment
                 where tenant_id = :tenant and status = 'ACTIVE' and evaluation_status = 'APPROVED'
                   and connection_status = 'READY' and test_only = false
-                  and exists (
-                    select 1 from model_evaluation evaluation
-                    where evaluation.tenant_id = model_deployment.tenant_id
-                      and evaluation.model_deployment_id = model_deployment.model_deployment_id
-                      and evaluation.status = 'PASSED'
-                  )
                 """ + requested + liveOnly + " order by updated_at desc, model_deployment_id limit 1")
                 .param("tenant", tenantId);
         if (requestedDeploymentId != null) query = query.param("deployment", requestedDeploymentId);

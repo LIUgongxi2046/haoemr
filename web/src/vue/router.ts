@@ -457,7 +457,8 @@ router.beforeEach((to) => {
   return true;
 });
 
-router.afterEach((to) => {
+router.afterEach((to, _from, failure) => {
+  if (failure) return;
   if (typeof document !== 'undefined') {
     document.documentElement.dataset.routeId = String(to.meta.contractId ?? to.name ?? 'unknown');
   }

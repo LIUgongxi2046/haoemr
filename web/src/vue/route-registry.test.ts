@@ -1,10 +1,27 @@
 import { createMemoryHistory } from 'vue-router';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { createHaoEmrRouter } from './router';
+import { createHaoEmrRouter, router as applicationRouter } from './router';
+import { authSession } from '../auth-session';
 import { nativeVueRouteIds, primaryNavigationId, routeRegistry, specialtyGuardRouteIds, specialtyScopeForRoute } from './route-registry';
 
 describe('Vue route registry', () => {
+  it('keeps the actual route marker when an editor cancels navigation', async () => {
+    const token = authSession.token;
+    authSession.token = 'local-route-test';
+    const dataset = { routeId: 'initial' };
+    vi.stubGlobal('document', { documentElement: { dataset } });
+    const removeA = applicationRouter.addRoute({ path: '/__test_actual', component: { render: () => null }, meta: { contractId: 'actual' } });
+    const removeB = applicationRouter.addRoute({ path: '/__test_cancelled', component: { render: () => null }, meta: { contractId: 'cancelled' } });
+    let removeGuard = () => {};
+    try {
+      await applicationRouter.push('/__test_actual'); expect(dataset.routeId).toBe('actual');
+      removeGuard = applicationRouter.beforeEach(() => false);
+      await applicationRouter.push('/__test_cancelled');
+      expect(applicationRouter.currentRoute.value.path).toBe('/__test_actual');
+      expect(dataset.routeId).toBe('actual');
+    } finally { removeGuard(); removeA(); removeB(); authSession.token = token; vi.unstubAllGlobals(); }
+  });
   it('registers the exact 196-route contract with one primary domain per route', () => {
     expect(routeRegistry).toHaveLength(196);
     expect(new Set(routeRegistry.map((route) => route.route_id)).size).toBe(196);

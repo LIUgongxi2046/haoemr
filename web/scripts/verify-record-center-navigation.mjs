@@ -11,7 +11,7 @@ const username = process.env.HAOEMR_DEV_LOGIN_USERNAME || 'linwei';
 const password = process.env.HAOEMR_DEV_LOGIN_PASSWORD || 'HaoEMR-dev!';
 const routes = [
   ['record', '病历工作台'], ['record-editor', '专注编辑'], ['record-sources', '来源证据'],
-  ['record-qc', '质控审签'], ['record-versions', '版本证据'],
+  ['record-versions', '版本证据'],
   ['lis-report', 'LIS 报告'], ['pacs-viewer', 'PACS 影像'],
 ];
 
@@ -63,6 +63,14 @@ try {
       return { active: label };
     });
   }
+  await check('record-qc-deep-link', async () => {
+    await desktop.evaluate(() => { window.location.hash = '#/record-qc'; });
+    await desktop.waitForFunction(() => document.documentElement.dataset.routeId === 'record-qc', undefined, { timeout: 30_000 });
+    const nav = desktop.getByRole('navigation', { name: '全院病历中心二级导航' });
+    await nav.getByRole('link', { name: '病历工作台', exact: true }).and(desktop.locator('[aria-current="page"]')).waitFor();
+    if (await nav.getByRole('link', { name: '质控审签', exact: true }).count()) throw new Error('质控入口仍占用二级导航');
+    return { active: '病历工作台' };
+  });
   await desktop.evaluate(() => { window.location.hash = '#/record'; });
   await desktop.waitForFunction(() => document.documentElement.dataset.routeId === 'record');
   await desktop.screenshot({ path: resolve(outputDir, 'record-navigation-1440x1000.png'), fullPage: true });

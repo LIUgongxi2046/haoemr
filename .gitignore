@@ -17,3 +17,5 @@ artifacts/test-runs/*/
 output/playwright/**/*-failure.png
 output/*-build/
 output/*-gradle-cache/
+.audit-s-series-20260921/
+.local-preview/

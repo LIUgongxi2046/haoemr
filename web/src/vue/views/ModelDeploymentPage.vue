@@ -126,6 +126,7 @@ function resetForm() {
 
 function openCreate() {
   resetForm();
+  notice.value = '';
   editorOpen.value = true;
 }
 
@@ -139,8 +140,12 @@ function edit(model: ModelDeploymentWire) {
 
 async function saveModel() {
   const lease = leaseQuery.data.value;
-  if (!lease || busy.value || !form.providerCode.trim() || !form.displayName.trim()
-    || !form.modelCode.trim()) return;
+  if (!lease || busy.value) return;
+  if (!form.providerCode.trim() || !form.modelCode.trim() || !form.displayName.trim()
+    || !form.endpointUrl.trim()) {
+    notice.value = '请填写模型提供方、模型名称、显示名称和 API 地址。';
+    return;
+  }
   busy.value = editingModel.value ? 'update' : 'create'; notice.value = '';
   try {
     if (editingModel.value) {
@@ -159,7 +164,7 @@ async function saveModel() {
         display_name: form.displayName.trim(), residency_policy: form.residencyPolicy,
         endpoint_url: form.endpointUrl.trim() || null, api_key_ref: null, api_key: form.apiKey.trim() || null,
       });
-      notice.value = '模型 API 配置已安全保存。页面不会再显示完整密钥；请继续执行“测试连接”。只有真实提供方的连通、独立评测和发布均通过后，才会进入 AI医助 EVA 路由。';
+      notice.value = '模型 API 配置已安全保存。页面不会再显示完整密钥；请继续执行“测试连接”。连接通过并发布后即可进入 AI医助 EVA 路由，评测记录可按需补充。';
     }
     resetForm();
     editorOpen.value = false;
@@ -329,7 +334,7 @@ async function revokeProcessingApproval() {
                   <td><code>{{ providerLabel(model) }}</code></td>
                   <td><span class="admin-status" :class="model.connection_status === 'READY' ? 'active' : model.connection_status === 'FAILED' ? 'rejected' : 'evaluating'">{{ connectionStatusLabels[model.connection_status] }}</span><small v-if="isRetiredSynthetic(model)" class="model-connection-error">开发验收配置已退役，不能用于生产路由</small><small v-else-if="model.credential_hint">{{ model.credential_hint }}</small><small v-if="model.last_connection_tested_at">{{ formatDate(model.last_connection_tested_at) }} · {{ model.last_connection_latency_ms ?? 0 }} ms</small><small v-if="model.last_connection_error_code && !isRetiredSynthetic(model)" class="model-connection-error">{{ model.last_connection_error_code }}</small></td>
                   <td>{{ residencyPolicyLabels[model.residency_policy] }}</td>
-                  <td><span class="admin-status" :class="model.test_only ? 'warning' : model.release_evidence_ready ? model.evaluation_status.toLowerCase() : 'rejected'">{{ model.test_only ? '仅开发测试' : model.release_evidence_ready ? evaluationStatusLabels[model.evaluation_status] : '缺少通过评测证据' }}</span><small v-if="model.test_only" class="model-connection-error">仅允许在合成开发环境做最小连接验证；不可发布或进入临床任务路由</small><small v-else-if="!model.release_evidence_ready" class="model-connection-error">运行时已阻断；请由独立人员留存真实通过评测，禁止补写虚构分数</small></td>
+                  <td><span class="admin-status" :class="model.test_only ? 'warning' : model.evaluation_status.toLowerCase()">{{ model.test_only ? '仅开发测试' : evaluationStatusLabels[model.evaluation_status] }}</span><small v-if="model.test_only" class="model-connection-error">仅允许在合成开发环境做最小连接验证；不可发布或进入临床任务路由</small><small v-else-if="!model.release_evidence_ready">评测为可选项，当前未留存评测记录</small></td>
                   <td><span class="admin-status" :class="model.status.toLowerCase()">{{ model.status === 'ACTIVE' ? '有效' : '已停用' }}</span></td>
                   <td><div class="admin-row-actions"><template v-if="model.status === 'ACTIVE'"><button class="task-action" :disabled="isRetiredSynthetic(model) || !model.credential_configured || Boolean(busy)" @click="testConnection(model)">{{ busy === `test:${model.model_deployment_id}` ? '验证中…' : '测试连接' }}</button><button v-if="!model.test_only && !isRetiredSynthetic(model) && model.connection_status === 'READY' && model.evaluation_status !== 'APPROVED'" class="task-action publish" :disabled="Boolean(busy)" :title="'发布后进入 AI医助 EVA 模型路由'" @click="publish(model)">{{ busy === `publish:${model.model_deployment_id}` ? '发布中…' : '发布' }}</button><button v-if="!isRetiredSynthetic(model) && model.residency_policy === 'CLOUD_ALLOWED'" class="task-action" :disabled="Boolean(busy)" @click="openProcessingApproval(model)">云端处理授权</button><button v-if="!isRetiredSynthetic(model)" class="task-action" :disabled="Boolean(busy)" @click="edit(model)">编辑</button><button class="task-action danger" :disabled="Boolean(busy)" @click="deactivateTarget = model">删除</button></template><button v-else class="task-action danger" :disabled="Boolean(busy)" @click="purgeTarget = model">彻底移除</button></div></td>
                 </tr>
@@ -341,6 +346,7 @@ async function revokeProcessingApproval() {
 
       <AdminActionDialog v-model:open="editorOpen" :title="editingModel ? '编辑模型 API' : '新建模型 API 配置'" description="保存后，AI医助 EVA 及医助团队的后续任务会读取最新有效连接配置。" size="large" :busy="Boolean(busy)" @update:open="!$event && resetForm()">
           <form class="admin-form ai-center-dialog-form" @submit.prevent="saveModel">
+            <p v-if="notice" class="admin-notice" role="alert">{{ notice }}</p>
             <label><span>模型提供方</span><select v-model="form.providerCode" required :disabled="Boolean(editingModel)" @change="applyProviderPreset"><option value="" disabled>请选择提供方</option><option v-for="provider in providerOptions" :key="provider.code" :value="provider.code">{{ provider.label }}</option></select></label>
             <label><span>模型名称（发送给模型厂商）</span><input v-model="form.modelCode" maxlength="128" required :disabled="Boolean(editingModel)" placeholder="例：deepseek-chat / qwen-plus / glm-4-plus" /><small>必须是提供方控制台认可的真实模型名，会随每次 Agent 调用发送给厂商。</small></label>
             <label><span>显示名称</span><input v-model="form.displayName" maxlength="256" required placeholder="例：DeepSeek 医疗主模型" /></label>

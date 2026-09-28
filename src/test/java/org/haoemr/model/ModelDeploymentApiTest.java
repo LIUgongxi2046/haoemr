@@ -126,24 +126,18 @@ final class ModelDeploymentApiTest {
     }
 
     @Test
-    void givenOnlyPublisherEvaluation_whenPublishing_thenIndependentReleaseGateRejects() {
+    void givenReadyConnectionWithoutEvaluation_whenPublishing_thenApproved() {
         ModelDeploymentWire registered = models.register(identity(), "model-" + UUID.randomUUID(),
                 new ModelDeploymentRegisterRequestWire(organization, facility, "MODEL-" + UUID.randomUUID(),
-                        "LOCAL-INFER", "独立评测门禁模型", ModelDeploymentRegisterRequestWire.ResidencyPolicyValue.ON_PREM_ONLY,
+                        "LOCAL-INFER", "连接通过即可发布模型", ModelDeploymentRegisterRequestWire.ResidencyPolicyValue.ON_PREM_ONLY,
                         "https://gateway.test/v1", "env://TEST_MODEL_API_KEY", null));
         jdbc.sql("update model_deployment set connection_status = 'READY' where tenant_id = :tenant and model_deployment_id = :deployment")
                 .param("tenant", tenant).param("deployment", registered.modelDeploymentId()).update();
-        jdbc.sql("""
-                insert into model_evaluation(tenant_id, model_evaluation_id, model_deployment_id, eval_name,
-                  score, threshold, status, evaluated_at, evaluated_by)
-                values (:tenant, :evaluation, :deployment, '自评', 0.95, 0.80, 'PASSED', now(), :reviewer)
-                """).param("tenant", tenant).param("evaluation", UUID.randomUUID())
-                .param("deployment", registered.modelDeploymentId()).param("reviewer", UUID.fromString(USER)).update();
-        assertThatThrownBy(() -> models.publish(identity(), "publish-" + UUID.randomUUID(), registered.modelDeploymentId(),
-                new ModelDeploymentPublishRequestWire(organization, facility, registered.rowVersion())))
-                .isInstanceOf(ModelDeploymentException.class)
-                .satisfies(error -> assertThat(((ModelDeploymentException) error).code())
-                        .isEqualTo("MODEL_DEPLOYMENT_RELEASE_EVALUATION_REQUIRED"));
+
+        ModelDeploymentWire published = models.publish(identity(), "publish-" + UUID.randomUUID(),
+                registered.modelDeploymentId(), new ModelDeploymentPublishRequestWire(
+                        organization, facility, registered.rowVersion()));
+        assertThat(published.evaluationStatus()).isEqualTo(ModelDeploymentWire.EvaluationStatusValue.APPROVED);
     }
 
     @Test

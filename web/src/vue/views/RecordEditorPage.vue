@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import AgentAdoptionUndo from '../components/AgentAdoptionUndo.vue';
+import { captureAgentAdoption, type AgentAdoptionSnapshot } from '../agent-adoption-undo';
+import { captureResponseScope } from '../clinical-response-scope';
+import { useUnsavedLeave } from '../composables/use-unsaved-leave';
+import UnsavedChangesDialog from '../components/UnsavedChangesDialog.vue';
 import { computed, nextTick, ref, watch } from 'vue';
 import { runQualityChecks, saveDocumentDraft, signDocument } from '../../clinical-api';
 import AgentInlineReview from '../components/AgentInlineReview.vue';
@@ -51,8 +56,17 @@ function showQuality() { qcPanel.value?.scrollIntoView({ block: 'nearest' }); }
 const agentPatientId = computed(() => current.data.value?.lease.patient_id ?? null);
 const agentEncounterId = computed(() => current.data.value?.lease.encounter_id ?? null);
 const pendingAgentRunId = ref<string | null>(null);
+const lastAdoption = ref<AgentAdoptionSnapshot | null>(null);
+function undoAdoption(next: Record<string, unknown>, allRestored: boolean) {
+  if (!document.value || document.value.status !== 'DRAFT' || busy.value || saveState.value === 'conflict') return;
+  sections.value = next;
+  if (allRestored) pendingAgentRunId.value = null;
+  lastAdoption.value = null;
+  saveState.value = 'dirty';
+  notice.value = '已撤销到编辑区，并保留未选择恢复的后续修改；请核对保存结果。';
+}
 const handoff = useAgentDraftHandoff(() => ({ patientId: agentPatientId.value, encounterId: agentEncounterId.value }));
-watch(() => document.value?.document_id, () => { pendingAgentRunId.value = null; });
+watch(() => document.value?.document_id, () => { pendingAgentRunId.value = null; lastAdoption.value = null; });
 function adoptAgentDraft(draft: Record<string, string>, candidate: MedicalAgentRunWire) {
   if (!document.value || document.value.status !== 'DRAFT' || busy.value
     || candidate.patient_id !== agentPatientId.value || candidate.encounter_id !== agentEncounterId.value
@@ -60,14 +74,17 @@ function adoptAgentDraft(draft: Record<string, string>, candidate: MedicalAgentR
     notice.value = '候选或文书状态已变化，请在当前患者的可编辑草稿中重新运行医助。'; return;
   }
   if (saveState.value === 'dirty' || saveState.value === 'conflict') { notice.value = '请先保存现有修改，再审阅并带入医助候选。'; return; }
-  sections.value = { ...sections.value, ...draft };
+  const allowedDraft = Object.fromEntries(Object.entries(draft).filter(([field]) => sectionFields.some(([key]) => key === field)));
+  if (!Object.keys(allowedDraft).length) { notice.value = '候选中没有当前编辑器支持的字段。'; return; }
+  lastAdoption.value = captureAgentAdoption(document.value.document_id, candidate.run_id, sections.value, allowedDraft);
+  sections.value = { ...sections.value, ...allowedDraft };
   pendingAgentRunId.value = candidate.run_id;
   saveState.value = 'dirty';
   notice.value = '已带入医生确认的候选段落；保存时将核验来源版本并保留医助来源记录。';
 }
 
 const agentDraftObjective = computed(() => '基于当前病历起草或完善文书内容候选，仅供医生审阅后采用，不自动写入。');
-const filledSections = computed(() => Object.values(sections.value).filter((value) => String(value ?? '').trim()).length);
+const filledSections = computed(() => sectionFields.filter(([key]) => String(sections.value[key] ?? '').trim()).length);
 const saveStateLabel = computed(() => ({
   idle: '尚未编辑', dirty: '有未保存更改', saving: '正在保存…', saved: '已保存',
   conflict: '版本冲突 · 禁止覆盖', signed: '已签署只读',
@@ -97,20 +114,23 @@ async function confirmSave() {
   const snapshot = current.data.value;
   if (!snapshot || busy.value || snapshot.document.status !== 'DRAFT') return;
   busy.value = 'save'; notice.value = ''; saveState.value = 'saving';
+  const isCurrent = captureResponseScope();
   const submitted = { ...sections.value };
   try {
     const saved = await saveDocumentDraft(snapshot.lease, draftBase.value ?? snapshot.document, submitted, pendingAgentRunId.value);
+    if (!isCurrent() || current.data.value?.document.document_id !== snapshot.document.document_id) return;
     pendingAgentRunId.value = null;
     saveDialogOpen.value = false;
     await current.refetch();
     await nextTick();
-    if (current.data.value?.document.document_id !== saved.document_id) return;
+    if (!isCurrent() || current.data.value?.document.document_id !== saved.document_id) return;
     draftBase.value = saved;
     saveState.value = JSON.stringify(sections.value) === JSON.stringify(submitted) ? 'saved' : 'dirty';
     if (current.data.value?.document.document_version_id === saved.document_version_id) qcAuto.afterSave();
     savedAt.value = new Intl.DateTimeFormat('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(new Date());
     notice.value = saveState.value === 'dirty' ? '提交内容已保存；保存期间继续输入的内容仍待保存。' : '草稿已保存为新的不可变版本';
   } catch (error) {
+    if (!isCurrent()) return;
     const next = toClinicalIssue(error);
     saveState.value = next.code === 'VERSION_CONFLICT' ? 'conflict' : 'dirty';
     notice.value = `${next.code}：${next.message}`;
@@ -162,14 +182,19 @@ function confirmSign() {
     .catch((error) => { const next = toClinicalIssue(error); notice.value = `${next.code}：${next.message}`; })
     .finally(() => { busy.value = null; });
 }
+const leave = useUnsavedLeave({ dirty: () => qcDirty.value, busy: () => Boolean(busy.value), save: confirmSave, discard: async () => {
+  sections.value = { ...current.data.value?.document.sections }; draftBase.value = current.data.value?.document ?? null; pendingAgentRunId.value = null; saveState.value = 'idle';
+} });
 </script>
 
 <template>
+  <UnsavedChangesDialog :open="leave.open.value" :busy="leave.busy.value" :message="leave.message.value" @save="leave.saveAndLeave" @discard="leave.discardAndLeave" @stay="leave.stay" />
   <section data-page-root class="content vue-native-page">
     <div class="page-heading"><div><h1>病历 · 专注编辑</h1><p>{{ document ? `草稿 v${document.version_no} · ${document.document_type_code}` : '当前版本' }} · {{ saveStateLabel }}</p></div>
       <div class="toolbar-actions"><RouterLink class="btn" to="/record-sources">来源证据</RouterLink><button class="btn" type="button" :disabled="Boolean(busy) || saveState === 'dirty'" @click="checkQuality">质控 {{ findings.length }}</button><button class="btn primary" type="button" :disabled="Boolean(busy) || document?.status !== 'DRAFT' || saveState === 'dirty'" @click="sign">提交审签</button></div></div>
     <RecordPatientStrip />
     <p v-if="handoff.notice.value" role="status">{{ handoff.notice.value }}</p>
+    <AgentAdoptionUndo :snapshot="lastAdoption" :document-id="document?.document_id ?? ''" :sections="sections" :labels="qcFields" :disabled="Boolean(busy) || document?.status !== 'DRAFT' || saveState === 'conflict'" @undo="undoAdoption" />
     <AgentCandidateReview v-if="handoff.run.value" :run="handoff.run.value" allow-document-adoption @adopt-draft="adoptAgentDraft" />
     <AgentInlineReview allow-document-adoption @adopt-draft="adoptAgentDraft" v-if="current.data.value" agent-code="DOCUMENT_DRAFTER" stage-code="OUTPATIENT" :objective="agentDraftObjective" :patient-id="agentPatientId" :encounter-id="agentEncounterId" target-type="DOCUMENT" :target-id="document?.document_id" title="AI 病历起草候选" source-route="record-editor" />
     <ClinicalPageState v-if="current.isPending.value" kind="loading" message="正在加载当前病历版本" />
@@ -179,6 +204,7 @@ function confirmSign() {
       <section class="card focus-canvas" aria-label="专注编辑器"><div class="editor-ribbon"><button class="btn sm" type="button" @click="showQuality">质控问题</button><span class="grow" /><span class="status green">● {{ savedAt || '当前版本已载入' }}</span></div>
         <div ref="qcPanel"><RecordQcPanel :snapshot="qc.snapshot.value" :version-id="document.document_version_id" :content-hash="document.content_hash" :fields="qcFields" :dirty="qcDirty" :loading="qc.loading.value" :error="qc.error.value" :sections="sections" v-model:auto-enabled="qcAuto.enabled.value" :auto-running="qcAuto.running.value" :auto-error="qcAuto.error.value" @retry-auto="qcAuto.afterSave()" @retry="qc.refresh()" @locate="focusSection" /></div>
         <EncounterRecordQcPanel v-if="current.data.value" :lease="current.data.value.lease" :revision="qc.snapshot.value?.data_watermark ?? document.content_hash" />
+        <RouterLink class="btn sm" to="/record-qc">查看完整质控与签名证据</RouterLink>
         <div v-if="notice" class="notice record-editor-notice" role="status">{{ notice }}</div><div v-if="saveState === 'conflict'" class="notice hard" role="alert"><div class="notice-title">版本冲突：系统已禁止覆盖</div>其他工作站已保存新版本，请刷新后基于当前版本继续。</div>
         <article class="document-sheet"><h2>临床病历</h2><p class="document-meta">当前患者 · 当前就诊 · {{ document.document_type_code }}</p><div v-for="field in sectionFields" :key="field[0]" class="doc-section"><b>{{ field[1] }}</b><textarea :id="`record-field-${field[0]}`" :aria-label="String(field[1])" class="field textarea" :class="{ 'warning-field': field[0] === 'treatment_plan', 'source-field': field[0] === 'assessment' }" :value="String(sections[field[0]] ?? '')" :rows="field[2]" :readonly="document.status !== 'DRAFT' || saveState === 'conflict'" @focus="activeSection = field[0]" @input="updateSection(field[0], $event)" /></div></article>
         <div class="footer-actions"><RouterLink class="btn" to="/record">退出编辑</RouterLink><span class="grow" /><button class="btn" type="button" :disabled="Boolean(busy) || saveState !== 'dirty'" @click="save">{{ saveState === 'saving' ? '保存中…' : '保存新版本' }}</button><button class="btn primary" type="button" :disabled="Boolean(busy) || saveState === 'dirty'" @click="checkQuality">签署前检查</button></div></section>

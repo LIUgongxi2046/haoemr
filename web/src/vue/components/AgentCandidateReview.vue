@@ -8,6 +8,11 @@ import { presentMedicalAgentResult } from '../medical-agent-run-presenter';
 import { createMedicalAgentReminder } from '../../api/medical-agents';
 import { toClinicalIssue } from '../clinical-error';
 import BusinessActionDialog from './BusinessActionDialog.vue';
+import { getKnowledgeChunkCitation, issueKnowledgeLease } from '../../api/knowledge';
+import type { KnowledgeChunkCitationWire } from '../../generated/contracts';
+import { clinicalResponseScope } from '../clinical-response-scope';
+import { verifyKnowledgeCitation } from '../knowledge-citation';
+import { ClinicalApiError } from '../../clinical-api';
 
 const props = defineProps<{ run: MedicalAgentRunWire; allowDocumentAdoption?: boolean }>();
 const emit = defineEmits<{ navigate: []; 'adopt-draft': [sections: Record<string, string>, run: MedicalAgentRunWire] }>();
@@ -20,8 +25,40 @@ const reminderMessage = ref('');
 const creatingReminder = ref(false);
 const reminderId = ref<string | null>(null);
 const selected = ref<string[]>([]);
+const runScope = ref(clinicalResponseScope());
+const scopeValid = computed(() => runScope.value === clinicalResponseScope());
+const citationOpen = ref(false);
+const citationBusy = ref(false);
+const citationError = ref('');
+const citation = ref<KnowledgeChunkCitationWire | null>(null);
+const unavailableSources = ref(new Set<string>());
+let citationRequest = 0;
+function closeCitation() { citationRequest++; citationOpen.value = false; citationBusy.value = false; citation.value = null; citationError.value = ''; }
+async function openCitation(source: Record<string, unknown>) {
+  if (!scopeValid.value) return;
+  const requestId = ++citationRequest;
+  const current = () => requestId === citationRequest && scopeValid.value;
+  citationOpen.value = true; citationBusy.value = true; citation.value = null; citationError.value = '';
+  try {
+    if (typeof source.source_id !== 'string' || typeof source.source_version !== 'string' || typeof source.content_hash !== 'string') {
+      throw new ClinicalApiError('KNOWLEDGE_CITATION_INCOMPLETE', '引用缺少版本或内容指纹，无法核对来源，请重新检索。', 409);
+    }
+    const expected = { source_id: source.source_id, source_version: source.source_version, content_hash: source.content_hash };
+    const lease = await issueKnowledgeLease();
+    if (!current()) return;
+    const result = await getKnowledgeChunkCitation(lease, expected.source_id);
+    if (current()) {
+      citation.value = verifyKnowledgeCitation(expected, result);
+      const next = new Set(unavailableSources.value); next.delete(expected.source_id); unavailableSources.value = next;
+    }
+  } catch (error) { if (current()) {
+    citationError.value = toClinicalIssue(error).message;
+    unavailableSources.value = new Set([...unavailableSources.value, String(source.source_id)]);
+  } }
+  finally { if (current()) citationBusy.value = false; }
+}
 const labels: Record<string, string> = { chief_complaint: '主诉', present_illness: '现病史', past_history: '既往史', allergy_history: '过敏史', physical_exam: '体格检查', auxiliary_exam: '辅助检查', assessment: '诊断与评估', treatment_plan: '治疗计划', followup_plan: '复诊与随访' };
-const ready = computed(() => ['WAITING_FOR_REVIEW', 'COMPLETED'].includes(props.run.state) && props.run.output.execution_mode === 'LIVE_MODEL');
+const ready = computed(() => scopeValid.value && ['WAITING_FOR_REVIEW', 'COMPLETED'].includes(props.run.state) && props.run.output.execution_mode === 'LIVE_MODEL');
 const draftSections = computed<Record<string, string>>(() => {
   const draft: Record<string, string> = {};
   for (const child of props.run.child_runs.filter(c => c.state === 'COMPLETED')) {
@@ -38,12 +75,13 @@ const references = computed(() => {
     if (seen.has(key)) return false; seen.add(key); return true;
   });
 });
-watch(() => props.run.run_id, () => { reviewing.value = false; reminderDialog.value = false; reminderId.value = null; selected.value = []; notice.value = ''; });
+watch(() => props.run.run_id, () => { runScope.value = clinicalResponseScope(); unavailableSources.value = new Set(); closeCitation(); reviewing.value = false; reminderDialog.value = false; reminderId.value = null; selected.value = []; notice.value = ''; });
+watch(clinicalResponseScope, () => { closeCitation(); reviewing.value = false; reminderDialog.value = false; selected.value = []; });
 async function openHandoff(path: string, query: Record<string, string>) {
   if (!ready.value || !props.run.patient_id || !props.run.encounter_id) return;
-  clinicalStore.activateOutpatient({ patientId: props.run.patient_id, encounterId: props.run.encounter_id,
+  if (!await clinicalStore.activateOutpatient({ patientId: props.run.patient_id, encounterId: props.run.encounter_id,
     patientDisplayName: clinicalStore.patientId === props.run.patient_id ? clinicalStore.patientDisplayName : '医助任务对应患者',
-    documentId: props.run.target_type === 'DOCUMENT' ? props.run.target_id : null });
+    documentId: props.run.target_type === 'DOCUMENT' ? props.run.target_id : null })) return;
   try {
     const failure = await router.push({ path, query });
     if (!failure) emit('navigate');
@@ -78,10 +116,10 @@ async function copy() {
 </script>
 
 <template>
-  <section class="agent-candidate-review" aria-label="医助成果与来源">
+  <section v-if="scopeValid" class="agent-candidate-review" aria-label="医助成果与来源">
     <details v-if="references.length" class="agent-candidate-evidence">
       <summary>查看 {{ references.length }} 条来源依据</summary>
-      <ul><li v-for="(source, index) in references" :key="index"><b>{{ source.title || source.source_type }}</b><small>{{ source.source_id }} · 版本 {{ source.source_version }}</small><p v-if="source.excerpt">{{ source.excerpt }}</p><small v-if="source.content_hash">内容指纹：{{ source.content_hash }}</small></li></ul>
+      <ul><li v-for="(source, index) in references" :key="index"><b>{{ source.title || source.source_type }}</b><small>{{ source.source_id }} · 版本 {{ source.source_version }}</small><p v-if="unavailableSources.has(String(source.source_id))">来源暂不可用，原摘录已隐藏，请重新核验。</p><p v-else-if="source.excerpt">{{ source.excerpt }}</p><small v-if="source.content_hash">内容指纹：{{ source.content_hash }}</small><button v-if="source.source_type === 'KNOWLEDGE_CHUNK'" class="btn" type="button" @click="openCitation(source)">核对来源</button></li></ul>
     </details>
     <div v-if="Object.keys(draftSections).length" class="agent-draft-preview">
       <h3>可编辑文书草稿</h3>
@@ -95,6 +133,18 @@ async function copy() {
       <button v-if="reminderId" class="btn primary" type="button" @click="openHandoff('/ai-reminder-detail', { reminder_id: reminderId })">打开提醒与任务</button>
     </div>
     <p v-if="notice" role="status">{{ notice }}</p>
+    <BusinessActionDialog :open="citationOpen" title="核对知识来源" eyebrow="引用核对" confirm-label="完成核对" @confirm="closeCitation" @cancel="closeCitation">
+      <p v-if="citationBusy" role="status">正在重新检查来源权限与有效性…</p>
+      <p v-else-if="citationError" role="alert">{{ citationError }}</p>
+      <template v-else-if="citation">
+        <h3>{{ citation.title }}</h3>
+        <p>版本 {{ citation.version }} · {{ citation.section_path || '正文' }}</p>
+        <p>适用范围：{{ citation.classification === 'PUBLIC' ? '公开知识' : '本机构内部知识' }}；当前版本有效。</p>
+        <p>有效期：{{ citation.effective_from || '未限定起始' }} 至 {{ citation.effective_to || '未限定结束' }}</p>
+        <p style="white-space:pre-wrap;overflow-wrap:anywhere">{{ citation.text }}</p>
+        <small>版本 ID：{{ citation.doc_version_id }} · 内容指纹：{{ citation.content_hash }}</small>
+      </template>
+    </BusinessActionDialog>
     <BusinessActionDialog :open="reminderDialog" title="确认待办提醒" eyebrow="人工承接" description="请编辑为明确的待办事项。确认后保存提醒与医助来源，随后可转为任务、分派和跟踪；诊疗操作仍需在对应业务页面确认。" confirm-label="保存待办提醒" :confirm-disabled="creatingReminder || !ready || reminderMessage.trim().length < 4" @confirm="saveReminder" @cancel="reminderDialog = false">
       <label>待办内容<textarea v-model="reminderMessage" rows="10" maxlength="2000" style="width:100%" /></label>
     </BusinessActionDialog>
@@ -102,6 +152,7 @@ async function copy() {
       <label v-for="(text, field) in draftSections" :key="field" class="agent-draft-field"><span><input v-model="selected" type="checkbox" :value="field" /> {{ labels[field] }}</span><p>{{ text }}</p></label>
     </BusinessActionDialog>
   </section>
+  <p v-else role="status">就诊或身份上下文已变化，请在当前页面重新读取医助任务。</p>
 </template>
 
 <style scoped>

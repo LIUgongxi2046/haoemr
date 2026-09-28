@@ -167,6 +167,11 @@ final class TertiaryOperationalDataImportTest {
                   on e.tenant_id = row.tenant_id and e.encounter_id = row.encounter_id
                   where row.tenant_id = :tenant and
                     (e.source_system = 'SYNTHETIC-50' or e.encounter_id = :inpatient)
+                union all
+                select row.vital_sign_record_id from vital_sign_record row join encounter e
+                  on e.tenant_id = row.tenant_id and e.encounter_id = row.encounter_id
+                  where row.tenant_id = :tenant and
+                    (e.source_system = 'SYNTHETIC-50' or e.encounter_id = :inpatient)
                 """).param("tenant", TENANT_ID).param("outpatient", OUTPATIENT_ENCOUNTER)
                 .param("inpatient", INPATIENT_ENCOUNTER).query(UUID.class).list();
 

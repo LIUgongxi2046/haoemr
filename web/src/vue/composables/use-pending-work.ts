@@ -1,9 +1,10 @@
-import { computed, onMounted, onBeforeUnmount, watch, type Ref } from 'vue';
+import { computed, onMounted, onBeforeUnmount, ref, watch, type Ref } from 'vue';
 import { useQueries, useQueryClient } from '@tanstack/vue-query';
 import { authSession } from '../../auth-session';
 import { clinicalContext } from '../../clinical-api';
 import { onClinicalWrite } from '../../clinical-data-events';
 import { pendingSources, uniqueTaskScopeRows, type PendingResult } from '../pending-work';
+import { mayRequestPendingSource } from '../pending-request-policy';
 
 // Bound background fan-out so the navigation cannot starve the active workbench.
 let running = 0;
@@ -14,9 +15,13 @@ async function limited<T>(work: () => Promise<T>): Promise<T> {
   try { return await work(); }
   finally { const next = waiting.shift(); if (next) next(); else running--; }
 }
-export function usePendingWork(mode: Ref<string>) {
+export function usePendingWork(mode: Ref<string>, activeWorkspace: Ref<string> = mode) {
   const client = useQueryClient();
   const sources = pendingSources();
+  const denied = ref(new Set<string>());
+  const selectedRole = computed(() => authSession.user?.role_codes[authSession.user.role_assignment_ids.indexOf(clinicalContext.roleId)]);
+  const allowed = (id: string) => (id !== 'ward-documents' || Boolean(authSession.user?.authorized_ward_ids?.includes(clinicalContext.inpatientWardId)))
+    && mayRequestPendingSource(id, selectedRole.value, denied.value, { ...clinicalContext, workspaceMode: activeWorkspace.value });
   const scope = computed(() => [authSession.user?.user_id, clinicalContext.tenantId, clinicalContext.organizationId,
     clinicalContext.facilityId, clinicalContext.roleId, clinicalContext.adminRoleId,
     clinicalContext.patientId, clinicalContext.encounterId, clinicalContext.emergencyPatientId,
@@ -30,19 +35,25 @@ export function usePendingWork(mode: Ref<string>) {
     queryFn: () => {
       return limited(async () => {
         if (JSON.stringify(scope.value) !== expectedScope) throw new Error('统计范围已切换');
-        const count = await source.load();
+        if (!allowed(source.id)) throw new Error('当前统计来源已停止请求');
+        let count: number;
+        try { count = await source.load(); }
+        catch (error) {
+          if (JSON.stringify(scope.value) === expectedScope && [401, 403].includes(Number((error as { status?: number })?.status))) denied.value = new Set([...denied.value, source.id]);
+          throw error;
+        }
         if (JSON.stringify(scope.value) !== expectedScope) throw new Error('统计范围已切换');
         return count;
       });
     },
-    enabled: Boolean(authSession.user), staleTime: 30_000, gcTime: 0, retry: false,
+    enabled: Boolean(authSession.user) && allowed(source.id), staleTime: 30_000, gcTime: 0, retry: false,
     refetchOnWindowFocus: true,
   })); }) });
-  const rows = computed<PendingResult[]>(() => sources.map((source, index) => {
+  const rows = computed<PendingResult[]>(() => sources.map((source, index): PendingResult => {
     const query = queries.value[index];
-    return { ...source, count: query?.isError ? null : query?.data ?? null,
-      state: query?.isError ? 'error' : query?.data === undefined ? 'loading' : 'ready' };
-  }));
+    return { ...source, count: denied.value.has(source.id) || query?.isError ? null : query?.data ?? null,
+      state: denied.value.has(source.id) || query?.isError ? 'error' : query?.data === undefined ? 'loading' : 'ready' };
+  }).filter(row => denied.value.has(row.id) || allowed(row.id)));
   function forMenu(menu: string) {
     if (menu === 'clinical-tasks') return rows.value.filter(row => row.id === `tasks-${mode.value}`);
     if (menu === 'clinical') return uniqueTaskScopeRows(rows.value.filter(row => row.id.startsWith('tasks-')), {
@@ -55,22 +66,24 @@ export function usePendingWork(mode: Ref<string>) {
     if (menu === 'inpatient') return rows.value.filter(row => row.id === 'ward-documents');
     return rows.value.filter(row => row.menu === menu);
   }
-  function refresh() {
+  function invalidate() {
     return client.invalidateQueries({ predicate: query => query.queryKey[0] === 'pending-work'
       || !query.queryKey.some(part => typeof part === 'string' && part.includes('lease')) });
   }
+  function refresh() { denied.value = new Set(); return invalidate(); }
   let debounce: ReturnType<typeof setTimeout> | undefined;
   const unsubscribe = onClinicalWrite(() => {
     clearTimeout(debounce);
-    debounce = setTimeout(() => { void refresh(); }, 250);
+    debounce = setTimeout(() => { void invalidate(); }, 250);
   });
   let interval: ReturnType<typeof setInterval> | undefined;
   onMounted(() => {
     interval = setInterval(() => {
-      if (authSession.user && document.visibilityState === 'visible') void refresh();
+      if (authSession.user && document.visibilityState === 'visible') void invalidate();
     }, 60_000);
   });
   watch(scope, () => {
+    denied.value = new Set();
     // Static query keys in older workbenches must not retain the previous patient/role's data.
     void client.resetQueries({ predicate: query => query.queryKey[0] !== 'pending-work' });
   });

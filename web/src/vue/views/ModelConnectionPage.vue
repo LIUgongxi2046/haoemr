@@ -56,8 +56,8 @@ async function runConnectionTest() {
       <p v-if="notice" class="admin-notice" role="status">{{ notice }}</p>
       <section class="admin-metrics" aria-label="模型连接统计">
         <article><span>模型服务</span><strong>{{ models.length }}</strong><small>数据库实时配置</small></article>
-        <article><span>运行时可用</span><strong>{{ models.filter((item) => !isRetiredSynthetic(item) && item.status === 'ACTIVE' && item.connection_status === 'READY' && item.release_evidence_ready).length }}</strong><small>启用、连接通过且具有通过评测证据</small></article>
-        <article><span>需处理</span><strong>{{ models.filter((item) => isRetiredSynthetic(item) || item.connection_status !== 'READY' || !item.release_evidence_ready).length }}</strong><small>未配置、待检测、失败、缺少通过评测证据或已退役开发配置</small></article>
+        <article><span>运行时可用</span><strong>{{ models.filter((item) => !isRetiredSynthetic(item) && item.status === 'ACTIVE' && item.connection_status === 'READY').length }}</strong><small>启用且连接通过</small></article>
+        <article><span>需处理</span><strong>{{ models.filter((item) => isRetiredSynthetic(item) || item.connection_status !== 'READY').length }}</strong><small>未配置、待检测、失败或已退役开发配置</small></article>
       </section>
       <section class="admin-panel">
         <header><div><h2>连接检测台账</h2><p>真实 Provider 的检测会发出最小请求，并记录时间、时延和错误码；不把本地配置校验表述为外部服务可用。</p></div><button class="button secondary" @click="modelsQuery.refetch()">刷新</button></header>

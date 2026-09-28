@@ -27,6 +27,11 @@ public final class ProductionEnvironmentPostProcessor implements EnvironmentPost
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+        if (Boolean.parseBoolean(environment.getProperty("haoemr.bootstrap.enabled", "false"))
+                && (!environment.matchesProfiles("prod") || environment.matchesProfiles("dev-synthetic")
+                    || !"none".equals(environment.getProperty("spring.main.web-application-type")))) {
+            throw new ApplicationContextException("Bootstrap requires production configuration and a non-web command process");
+        }
         if (!environment.matchesProfiles("prod")) {
             return;
         }

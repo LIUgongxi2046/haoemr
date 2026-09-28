@@ -1,5 +1,6 @@
 import { clinicalContext, issueContextLease, request, wardHeaders } from '../clinical-api';
 import {
+  knowledgeChunkCitationWireSchema,
   knowledgeDocumentCreateRequestWireSchema,
   knowledgeDocumentVersionWireSchema,
   knowledgeDocumentWireSchema,
@@ -36,6 +37,12 @@ import {
 /** 知识中心为机构-院区级上下文（无患者），签发一次租约后复用。 */
 export function issueKnowledgeLease(): Promise<ContextLeaseWire> {
   return issueContextLease(null, null, 'KNOWLEDGE');
+}
+
+export async function getKnowledgeChunkCitation(lease: ContextLeaseWire, chunkId: string) {
+  return knowledgeChunkCitationWireSchema.parse(await request(`/knowledge-chunks/${encodeURIComponent(chunkId)}`, {
+    headers: wardHeaders(lease),
+  }));
 }
 
 function orgFacility() {

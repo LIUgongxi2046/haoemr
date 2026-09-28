@@ -1,0 +1,181 @@
+{
+  "mode": "existing-project-incremental-design",
+  "navigation": [
+    {
+      "id": "clinical",
+      "label": "临床业务门户",
+      "icon": "⌂",
+      "group": "临床工作域"
+    },
+    {
+      "id": "outpatient",
+      "label": "门诊工作台",
+      "icon": "◫",
+      "group": "临床工作域"
+    },
+    {
+      "id": "emergency",
+      "label": "急诊工作台",
+      "icon": "✚",
+      "group": "临床工作域"
+    },
+    {
+      "id": "inpatient",
+      "label": "住院工作站",
+      "icon": "▥",
+      "group": "临床工作域"
+    },
+    {
+      "id": "record",
+      "label": "全院病历中心",
+      "icon": "▤",
+      "group": "病历与质量"
+    },
+    {
+      "id": "quality-center",
+      "label": "医疗质量中心",
+      "icon": "◈",
+      "group": "病历与质量"
+    },
+    {
+      "id": "archive-assets",
+      "label": "病案资产中心",
+      "icon": "▣",
+      "group": "病历与质量"
+    },
+    {
+      "id": "care-operations",
+      "label": "诊疗执行中心",
+      "icon": "✚",
+      "group": "业务协同"
+    },
+    {
+      "id": "clinical-tasks",
+      "label": "任务中心",
+      "icon": "☑",
+      "group": "业务协同"
+    },
+    {
+      "id": "data-center",
+      "label": "数据中心",
+      "icon": "⌁",
+      "group": "平台中心"
+    },
+    {
+      "id": "ai-assistant",
+      "label": "AI中心",
+      "icon": "✦",
+      "group": "平台中心"
+    },
+    {
+      "id": "knowledge-center",
+      "label": "知识中心",
+      "icon": "⬡",
+      "group": "平台中心"
+    },
+    {
+      "id": "workflow",
+      "label": "业务配置",
+      "icon": "⌘",
+      "group": "管理与配置"
+    },
+    {
+      "id": "admin",
+      "label": "系统管理",
+      "icon": "⚙",
+      "group": "管理与配置"
+    },
+    {
+      "id": "mock-interfaces",
+      "label": "模拟接口",
+      "icon": "⇄",
+      "group": "管理与配置"
+    }
+  ],
+  "admin_navigation": [
+    {
+      "href": "/admin",
+      "id": "admin",
+      "label": "管理工作台"
+    },
+    {
+      "href": "/admin-org",
+      "id": "admin-org",
+      "label": "组织机构"
+    },
+    {
+      "href": "/admin-users",
+      "id": "admin-users",
+      "label": "用户账户"
+    },
+    {
+      "href": "/admin-roles",
+      "id": "admin-roles",
+      "label": "角色工作组"
+    },
+    {
+      "href": "/admin-permissions",
+      "id": "admin-permissions",
+      "label": "权限策略"
+    },
+    {
+      "href": "/admin-auth",
+      "id": "admin-auth",
+      "label": "认证安全"
+    },
+    {
+      "href": "/admin-dictionaries",
+      "id": "admin-dictionaries",
+      "label": "字典术语"
+    },
+    {
+      "href": "/admin-master-data",
+      "id": "admin-master-data",
+      "label": "主数据"
+    },
+    {
+      "href": "/admin-templates",
+      "id": "admin-templates",
+      "label": "模板输出"
+    },
+    {
+      "href": "/admin-parameters",
+      "id": "admin-parameters",
+      "label": "参数开关"
+    },
+    {
+      "href": "/admin-parameters?view=branding",
+      "id": "admin-parameters",
+      "label": "品牌与名称"
+    },
+    {
+      "href": "/admin-jobs",
+      "id": "admin-jobs",
+      "label": "通知任务"
+    },
+    {
+      "href": "/admin-audit",
+      "id": "admin-audit",
+      "label": "管理审计"
+    }
+  ],
+  "styles": [
+    {
+      "path": "web/src/styles.css",
+      "sha256": "8c5fb9af9e75e7a051ec59c38ecf3a9c77a75e3e2c83c92675619d26cdbb325d"
+    },
+    {
+      "path": "web/src/prototype.css",
+      "sha256": "dbea64cb99a1fbe9c987c8e6fc452c8b54531fe133a64caa8de8e496ed9c18ff"
+    },
+    {
+      "path": "web/src/align-prototype.css",
+      "sha256": "31ac53a7bbc76e51d26cbc426268187e798e909e0790b21af4e1b861f230c263"
+    },
+    {
+      "path": "web/src/vue/vue-shell.css",
+      "sha256": "75b9c21faf85c0ea001f0f4c25d284232fd26ff45f69a0ec639e10cc79b208e0"
+    }
+  ],
+  "note": "Existing CSS copied verbatim in production import order; only preview-specific styles appended."
+}

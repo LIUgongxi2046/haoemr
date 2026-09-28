@@ -368,6 +368,8 @@ final class MedicalAgentToolGateway {
                   and d.classification in ('PUBLIC', 'INTERNAL')
                   and (d.effective_from is null or d.effective_from <= now())
                   and (d.effective_to is null or d.effective_to > now())
+                  and (v.effective_from is null or v.effective_from <= now())
+                  and (v.effective_to is null or v.effective_to > now())
                   and (c.text ilike any(string_to_array(:terms, '|'))
                     or d.title ilike any(string_to_array(:terms, '|')))
                 order by v.created_at desc, c.chunk_id limit 12

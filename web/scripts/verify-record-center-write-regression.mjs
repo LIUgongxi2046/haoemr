@@ -5,7 +5,7 @@ import { chromium } from 'playwright';
 
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const projectDir = resolve(webDir, '..');
-const outputDir = resolve(projectDir, 'output/playwright/record-center-write-regression');
+const outputDir = resolve(process.env.HAOEMR_TEST_OUTPUT_DIR || resolve(projectDir, 'output/playwright/record-center-write-regression'));
 const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
 const username = process.env.HAOEMR_DEV_LOGIN_USERNAME || 'linwei';
 const password = process.env.HAOEMR_DEV_LOGIN_PASSWORD || 'HaoEMR-dev!';
@@ -393,7 +393,7 @@ try {
   await ensureSessionFresh();
   await submitWrite('editor-quality-after-source-lifecycle', `/api/v1/documents/${documentId}/quality-checks`, 'POST',
     () => page.getByRole('button', { name: '签署前检查', exact: true }).click());
-  await navigate('质控审签', 'record-qc');
+  await navigate('查看完整质控与签名证据', 'record-qc');
   await submitWrite('governance-quality-check', `/api/v1/documents/${documentId}/quality-checks`, 'POST',
     () => page.getByRole('button', { name: '运行确定性质控', exact: true }).click());
   await navigate('专注编辑', 'record-editor');
@@ -403,6 +403,12 @@ try {
       .getByRole('button', { name: '确认签署并留存证据', exact: true }).click();
   });
 
+  await check('editor-sign-readback-ready', async () => {
+    await page.getByText('已签署只读', { exact: false }).waitFor();
+    await page.waitForFunction(() => Array.from(document.querySelectorAll('button'))
+      .some(button => button.textContent?.trim() === '签署前检查' && !button.disabled));
+    return { signedReadbackCompleted: true };
+  });
   await navigate('版本证据', 'record-versions');
   await submitWrite('signature-verification-run', `/api/v1/documents/${documentId}/signature-verifications`, 'POST',
     () => page.getByRole('button', { name: '批量验签', exact: true }).click());
@@ -424,7 +430,7 @@ try {
   await navigate('专注编辑', 'record-editor');
   await submitWrite('correction-quality-check', `/api/v1/documents/${documentId}/quality-checks`, 'POST',
     () => page.getByRole('button', { name: '签署前检查', exact: true }).click());
-  await navigate('质控审签', 'record-qc');
+  await navigate('查看完整质控与签名证据', 'record-qc');
   await submitWrite('governance-sign-correction', `/api/v1/documents/${documentId}/signatures`, 'POST', async () => {
     await page.getByRole('button', { name: '预览最终文书并签署', exact: true }).click();
     const dialog = page.getByRole('dialog').filter({ hasText: '确认签署当前不可变版本' });

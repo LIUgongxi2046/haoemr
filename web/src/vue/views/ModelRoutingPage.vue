@@ -24,8 +24,7 @@ const readiness = (model: (typeof models.value)[number]) => {
   if (model.provider_code === 'SYNTHETIC' || model.endpoint_url?.includes('.example/') === true)
     return { ready: false, label: '开发验收配置已退役', reason: '保留示例地址不会进入生产医助模型候选集' };
   if (model.status !== 'ACTIVE') return { ready: false, label: '服务已停用', reason: '不会进入医助模型候选集' };
-  if (!model.release_evidence_ready) return { ready: false, label: '缺少通过评测证据', reason: '运行时拒绝仅凭遗留“已批准”状态进入医助模型候选集' };
-  if (model.evaluation_status !== 'APPROVED') return { ready: false, label: '评测未通过', reason: '必须先完成真实模型评测' };
+  if (model.evaluation_status !== 'APPROVED') return { ready: false, label: '尚未发布', reason: '需要先发布模型服务' };
   if (model.connection_status !== 'READY') return { ready: false, label: '连接不可用', reason: '需要通过真实连接检测' };
   if (model.residency_policy === 'CLOUD_ALLOWED' && !activeApproval(model.model_deployment_id))
     return { ready: false, label: '缺少云端处理授权', reason: '需补充个人信息保护影响评估与委托处理依据' };
@@ -56,7 +55,7 @@ function residencyLabel(value: string) {
           <tbody><tr v-for="model in models" :key="model.model_deployment_id">
             <td><strong>{{ model.display_name }}</strong><small>{{ model.provider_code }} · {{ model.model_code }}</small></td>
             <td>{{ residencyLabel(model.residency_policy) }}<small><code>{{ model.endpoint_url ?? '院内部署地址未公开' }}</code></small></td>
-            <td>{{ model.release_evidence_ready ? (model.evaluation_status === 'APPROVED' ? '评测通过' : model.evaluation_status === 'REJECTED' ? '评测拒绝' : '评测中') : '缺少通过评测证据' }} · {{ model.connection_status === 'READY' ? '连接可用' : '连接不可用' }}</td>
+            <td>{{ model.evaluation_status === 'APPROVED' ? (model.release_evidence_ready ? '已评测通过' : '未进行评测') : model.evaluation_status === 'REJECTED' ? '评测拒绝' : '评测中' }} · {{ model.connection_status === 'READY' ? '连接可用' : '连接不可用' }}</td>
             <td>{{ model.residency_policy !== 'CLOUD_ALLOWED' ? '不适用' : activeApproval(model.model_deployment_id) ? '有效' : '缺失或已过期' }}</td>
             <td><span class="admin-status" :class="readiness(model).ready ? 'active' : 'inactive'">{{ readiness(model).label }}</span><small>{{ readiness(model).reason }}</small></td>
           </tr></tbody>

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import type { InpatientDocumentRuleWire, InpatientDocumentTaskWire, InpatientWorklistItemWire } from '../../generated/contracts';
 import {
+  clinicalContext,
   createInpatientClinicalEvent, createInpatientDocumentTask,
   getInpatientSyntheticActor, inpatientSyntheticActors,
   issueInpatientLease, issueWardLease, loadInpatientDocumentRules, loadInpatientOverview,
@@ -17,19 +18,28 @@ import BusinessActionDialog from '../components/BusinessActionDialog.vue';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 import InpatientPrototypeRail from '../components/InpatientPrototypeRail.vue';
 import { toClinicalIssue } from '../clinical-error';
+import { workspaceContextState } from '../clinical-workspace-state';
+import { captureResponseScope, clinicalOrganizationScope } from '../clinical-response-scope';
 
 type ClinicalEventType = 'CONSULTATION_REQUESTED' | 'PREOPERATIVE_DECISION' | 'OPERATION_COMPLETED'
   | 'RESCUE_COMPLETED' | 'TRANSFUSION_COMPLETED' | 'CRITICAL_ILLNESS_DECLARED' | 'DEATH_CONFIRMED';
 
+const contextState = computed(() => workspaceContextState(clinicalContext, 'inpatient'));
+const workspaceScope = () => JSON.stringify([clinicalOrganizationScope(), clinicalContext.inpatientPatientId,
+  clinicalContext.inpatientEncounterId, clinicalContext.inpatientAdmissionId, clinicalContext.inpatientWardId]);
 const inpatient = useQuery({
-  queryKey: ['clinical', 'inpatient-workspace'],
+  queryKey: computed(() => ['clinical', 'inpatient-workspace', workspaceScope()]),
   queryFn: async () => {
+    const current = captureResponseScope(workspaceScope);
     const [encounterLease, wardLease] = await Promise.all([issueInpatientLease(), issueWardLease()]);
+    if (!current()) throw new Error('住院就诊已切换');
     const [overview, worklist, documentRules] = await Promise.all([
       loadInpatientOverview(encounterLease), loadInpatientWorklist(wardLease), loadInpatientDocumentRules(wardLease),
     ]);
+    if (!current()) throw new Error('住院就诊已切换');
     return { encounterLease, wardLease, overview, worklist, documentRules };
   },
+  enabled: () => contextState.value === 'ready',
   retry: false, staleTime: 0, gcTime: 0,
 });
 const router = useRouter();
@@ -44,6 +54,7 @@ const rejectionTaskId = ref<string | null>(null);
 const startTaskId = ref<string | null>(null);
 const rejectionReason = ref('');
 const selectedActorKey = ref<InpatientSyntheticActorKey>(getInpatientSyntheticActor()?.key ?? 'AUTHOR');
+watch(workspaceScope, () => { eventOpen.value = false; dailyCourseOpen.value = false; rejectionTaskId.value = null; startTaskId.value = null; notice.value = ''; busy.value = null; });
 const issue = computed(() => inpatient.error.value ? toClinicalIssue(inpatient.error.value) : null);
 const overview = computed(() => inpatient.data.value?.overview);
 const admission = computed(() => overview.value?.admission);
@@ -122,13 +133,15 @@ function formatDate(value: string) { return new Intl.DateTimeFormat('zh-CN', { m
 <template>
   <section data-page-root class="content vue-native-page">
     <div class="page-head">
-      <div class="page-title"><h1>住院医生工作站</h1><p>心内科一病区 · 在管患者实时刷新</p></div>
-      <div class="head-actions"><RouterLink class="btn" to="/admission-bed">入院与床位</RouterLink><RouterLink class="btn primary" to="/inpatient-overview">进入患者总览</RouterLink></div>
+      <div class="page-title"><h1>住院医生工作站</h1><p>{{ overview?.ward_display_name || '当前授权病区' }} · 在管患者实时刷新</p></div>
+      <div class="head-actions"><RouterLink class="btn" to="/admission-bed">入院与床位</RouterLink><RouterLink v-if="contextState === 'ready'" class="btn primary" to="/inpatient-overview">进入患者总览</RouterLink></div>
     </div>
-    <ClinicalPageState v-if="inpatient.isPending.value" kind="loading" message="正在加载病区、患者和床位信息" />
+    <ClinicalPageState v-if="contextState === 'unconfigured'" kind="empty" message="尚未选择有效机构与院区，请联系管理员在原组织机构页面完成配置。" />
+    <ClinicalPageState v-else-if="contextState === 'no-encounter'" kind="empty" message="尚未选择住院就诊，请通过原“入院与床位”入口登记或选择授权患者。" />
+    <ClinicalPageState v-else-if="inpatient.isLoading.value" kind="loading" message="正在加载病区、患者和床位信息" />
     <ClinicalPageState v-else-if="issue" kind="error" :code="issue.code" :message="issue.message" @retry="inpatient.refetch()" />
     <template v-else-if="overview && admission && inpatient.data.value">
-      <section class="patient-strip" aria-label="住院患者上下文"><div class="patient-avatar">{{ overview.patient_display_name.slice(0, 1) }}</div><div><strong>{{ overview.patient_display_name }}</strong><span>{{ developmentCopy.contextNotice }}</span></div><dl><div><dt>住院状态</dt><dd>{{ admission.status }}</dd></div><div><dt>病区床位</dt><dd>{{ overview.ward_display_name }} · {{ overview.bed_label }}床</dd></div><div><dt>当前岗位</dt><dd>{{ activeActor?.roleLabel ?? '住院医师' }} · {{ activeActor?.displayName ?? '当前登录用户' }}</dd></div></dl><span class="lease-badge">当前患者 / 当前住院</span></section>
+      <section class="patient-strip" aria-label="住院患者上下文"><div class="patient-avatar">{{ overview.patient_display_name.slice(0, 1) }}</div><div><strong>{{ overview.patient_display_name }}</strong><span>{{ developmentCopy.contextNotice }}</span></div><dl><div><dt>住院状态</dt><dd>{{ admission.status }}</dd></div><div><dt>病区床位</dt><dd>{{ overview.ward_display_name }} · {{ overview.bed_label?.endsWith('床') ? overview.bed_label : `${overview.bed_label}床` }}</dd></div><div><dt>当前岗位</dt><dd>{{ activeActor?.roleLabel ?? '住院医师' }} · {{ activeActor?.displayName ?? '当前登录用户' }}</dd></div></dl><span class="lease-badge">当前患者 / 当前住院</span></section>
       <div class="metric-grid" aria-label="住院关键指标">
         <div class="metric"><div class="name">病区在院</div><div class="value">{{ inpatient.data.value.worklist.length }}</div><div class="trend">仅当前岗位授权范围</div></div>
         <div class="metric"><div class="name">待完成文书</div><div class="value">{{ pendingCount }}</div><div class="trend">按国家时限与机构规则</div></div>
@@ -136,10 +149,10 @@ function formatDate(value: string) { return new Intl.DateTimeFormat('zh-CN', { m
         <div class="metric"><div class="name">数据水印</div><div class="value">{{ overview.data_watermark.slice(0, 8) }}</div><div class="trend">刷新后重新校验</div></div>
       </div>
       <AgentInlineReview agent-code="ENCOUNTER_SUMMARIZER" stage-code="INPATIENT_DAILY" :objective="inpatientDailyObjective" :patient-id="agentPatientId" :encounter-id="agentEncounterId" target-type="ENCOUNTER" :target-id="agentEncounterId" title="AI 住院日常摘要候选" source-route="inpatient" />
-      <div class="grid inpatient-grid"><aside class="card scroll-card"><div class="card-head">病区患者 <span class="sub">{{ inpatient.data.value.worklist.length }} 人</span></div><div class="ward-list"><button v-for="item in inpatient.data.value.worklist" :key="item.admission_id" type="button" :class="{ active: item.admission_id === admission.admission_id }" @click="openPatient(item)"><b>{{ item.bed_label }}床 · {{ item.patient_display_name }}</b><span>待办 {{ item.pending_task_count }} · 超时 {{ item.overdue_task_count }}</span></button></div></aside><section class="editor-card inpatient-overview-card"><div class="card-toolbar"><div><h2>单患者住院总览</h2><span class="state-chip signed">{{ admission.status }}</span></div><div class="toolbar-actions"><RouterLink class="button secondary" to="/inpatient-overview">打开完整总览</RouterLink><button class="button secondary" :disabled="Boolean(busy) || admission.status !== 'ADMITTED' || selectedActorKey !== 'AUTHOR'" @click="dailyCourseOpen = true">新增病程</button><button v-if="admission.status === 'ADMITTED'" class="button secondary" :disabled="Boolean(busy) || selectedActorKey !== 'AUTHOR'" @click="eventOpen = true">记录临床事件</button><RouterLink v-if="admission.status === 'ADMITTED'" class="button secondary" to="/inpatient-discharge">办理出院</RouterLink></div></div>
-        <div class="inpatient-summary-grid"><div><span>入院时间</span><strong>{{ formatDate(admission.admitted_at) }}</strong></div><div><span>当前病区</span><strong>{{ overview.ward_display_name }}</strong></div><div><span>当前床位</span><strong>{{ overview.bed_label }}床</strong></div><div><span>住院号</span><strong>…{{ admission.admission_id.slice(-8) }}</strong></div></div>
+      <div class="grid inpatient-grid"><aside class="card scroll-card"><div class="card-head">病区患者 <span class="sub">{{ inpatient.data.value.worklist.length }} 人</span></div><div class="ward-list"><button v-for="item in inpatient.data.value.worklist" :key="item.admission_id" type="button" :class="{ active: item.admission_id === admission.admission_id }" @click="openPatient(item)"><b>{{ item.bed_label?.endsWith('床') ? item.bed_label : `${item.bed_label}床` }} · {{ item.patient_display_name }}</b><span>待办 {{ item.pending_task_count }} · 超时 {{ item.overdue_task_count }}</span></button></div></aside><section class="editor-card inpatient-overview-card"><div class="card-toolbar"><div><h2>单患者住院总览</h2><span class="state-chip signed">{{ admission.status }}</span></div><div class="toolbar-actions"><RouterLink class="button secondary" to="/inpatient-overview">打开完整总览</RouterLink><button class="button secondary" :disabled="Boolean(busy) || admission.status !== 'ADMITTED' || selectedActorKey !== 'AUTHOR'" @click="dailyCourseOpen = true">新增病程</button><button v-if="admission.status === 'ADMITTED'" class="button secondary" :disabled="Boolean(busy) || selectedActorKey !== 'AUTHOR'" @click="eventOpen = true">记录临床事件</button><RouterLink v-if="admission.status === 'ADMITTED'" class="button secondary" to="/inpatient-discharge">办理出院</RouterLink></div></div>
+        <div class="inpatient-summary-grid"><div><span>入院时间</span><strong>{{ formatDate(admission.admitted_at) }}</strong></div><div><span>当前病区</span><strong>{{ overview.ward_display_name }}</strong></div><div><span>当前床位</span><strong>{{ overview.bed_label?.endsWith('床') ? overview.bed_label : `${overview.bed_label}床` }}</strong></div><div><span>住院号</span><strong>…{{ admission.admission_id.slice(-8) }}</strong></div></div>
         <div v-if="notice" class="inline-notice" :class="{ error: notice.includes('：') }" role="status">{{ notice }}</div>
-        <BusinessActionDialog :open="dailyCourseOpen" title="新增日常病程任务" description="确认后会产生真实待办并纳入文书时限与审签流程。" confirm-label="确认新增病程" :busy="Boolean(busy)" @cancel="dailyCourseOpen = false" @confirm="createDailyCourse"><p class="dialog-warning">当前患者：{{ overview.patient_display_name }} · {{ overview.bed_label }}床</p></BusinessActionDialog>
+        <BusinessActionDialog :open="dailyCourseOpen" title="新增日常病程任务" description="确认后会产生真实待办并纳入文书时限与审签流程。" confirm-label="确认新增病程" :busy="Boolean(busy)" @cancel="dailyCourseOpen = false" @confirm="createDailyCourse"><p class="dialog-warning">当前患者：{{ overview.patient_display_name }} · {{ overview.bed_label?.endsWith('床') ? overview.bed_label : `${overview.bed_label}床` }}</p></BusinessActionDialog>
         <BusinessActionDialog :open="eventOpen && admission.status === 'ADMITTED'" title="记录住院临床事件" description="事件事实与对应文书任务同事务提交；重复来源事件不会重复建任务。" confirm-label="确认并生成文书任务" :busy="Boolean(busy)" width="wide" @cancel="eventOpen = false" @confirm="createClinicalEvent"><label>事件类型<select v-model="eventType"><option value="CONSULTATION_REQUESTED">发起会诊</option><option value="PREOPERATIVE_DECISION">确定手术方案</option><option value="OPERATION_COMPLETED">手术完成</option><option value="RESCUE_COMPLETED">抢救结束</option><option value="TRANSFUSION_COMPLETED">输血完成</option><option value="CRITICAL_ILLNESS_DECLARED">宣布病危/病重</option><option value="DEATH_CONFIRMED">确认死亡</option></select></label><label>事件摘要<textarea v-model="eventSummary" required rows="4" maxlength="1000" placeholder="记录时间、关键事实、参与人员与结果" /></label></BusinessActionDialog>
         <BusinessActionDialog :open="Boolean(rejectionTask)" title="退回住院病历修改" description="退回会撤销当前审签推进，作者必须形成新版本并重新质控；旧版本和签名证据仍保留。" confirm-label="确认退回修改" :busy="Boolean(busy)" :confirm-disabled="rejectionReason.trim().length < 4" danger @cancel="rejectionTaskId = null; rejectionReason = ''" @confirm="rejectionTask && rejectTask(rejectionTask)"><p v-if="rejectionTask" class="dialog-warning">{{ documentLabel(rejectionTask.document_type_code, rules) }} · 当前待 {{ rejectionTask.next_signature_level }}</p><label>退回原因（至少 4 字）<textarea v-model="rejectionReason" aria-label="审签退回原因" maxlength="1000" rows="4" placeholder="填写明确、可执行的修改要求" /></label></BusinessActionDialog>
         <BusinessActionDialog :open="Boolean(startTaskTarget)" title="建立住院病历草稿" description="将依据文书规则创建真实结构化草稿并把任务推进到处理中；后续修改通过版本化保存完成。" confirm-label="确认建立草稿" :busy="Boolean(busy)" @cancel="startTaskId = null" @confirm="startTaskTarget && startTask(startTaskTarget)"><p v-if="startTaskTarget" class="dialog-warning">{{ documentLabel(startTaskTarget.document_type_code, rules) }} · 截止 {{ formatDate(startTaskTarget.due_at) }}</p></BusinessActionDialog>

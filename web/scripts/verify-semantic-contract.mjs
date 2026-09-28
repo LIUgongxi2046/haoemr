@@ -7,8 +7,10 @@ const projectDir = resolve(webDir, '..');
 const routes = JSON.parse(await readFile(resolve(projectDir, 'contracts/generated/route-contract.generated.json'), 'utf8')).routes;
 const semantics = JSON.parse(await readFile(resolve(projectDir, 'docs/process/testing/route-semantic-contract.json'), 'utf8'));
 const failures = [];
-if (semantics.route_count !== 198 || semantics.routes.length !== 198) failures.push('SEMANTIC_ROUTE_COUNT');
+if (semantics.route_count !== routes.length || semantics.routes.length !== routes.length) failures.push('SEMANTIC_ROUTE_COUNT');
 const sourceIds = new Set(routes.map((route) => route.route_id));
+const semanticIds = new Set(semantics.routes.map((route) => route.route_id));
+for (const id of sourceIds) if (!semanticIds.has(id)) failures.push(`MISSING_ROUTE:${id}`);
 for (const route of semantics.routes) {
   if (!sourceIds.has(route.route_id)) failures.push(`UNKNOWN_ROUTE:${route.route_id}`);
   for (const field of ['title','primary_domain','data_source']) if (!route[field]) failures.push(`EMPTY_${field}:${route.route_id}`);
@@ -20,4 +22,4 @@ for (const id of ['outpatient','agent-compose','agent-context','agent-evals','da
   if (!route || route.critical_text.length < 3) failures.push(`HIGH_RISK_ASSERTIONS_MISSING:${id}`);
 }
 if (failures.length) { console.error(JSON.stringify({ status: 'FAIL', failures }, null, 2)); process.exit(1); }
-console.log(JSON.stringify({ status: 'PASS', routes: '198/198', high_risk: semantics.routes.filter((route) => route.critical_text.length).length }));
+console.log(JSON.stringify({ status: 'PASS', routes: `${semantics.routes.length}/${routes.length}`, high_risk: semantics.routes.filter((route) => route.critical_text.length).length }));

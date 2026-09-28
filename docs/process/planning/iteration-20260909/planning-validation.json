@@ -1,0 +1,45 @@
+{
+  "date": "2026-09-09",
+  "mode": "PLANNING_ONLY",
+  "tasks": 43,
+  "acceptance_cases": 129,
+  "requirements_covered": 30,
+  "phase_counts": {
+    "R0": 3,
+    "R1": 22,
+    "R2": 9,
+    "R3": 4,
+    "交付操作": 5
+  },
+  "acyclic": true,
+  "all_dependencies_resolve": true,
+  "production_code_changed": false,
+  "tests_executed": false,
+  "r1_longest_dependency_chain_by_node_count": [
+    "ITER-DEV-001",
+    "ITER-DEV-004",
+    "ITER-DEV-006",
+    "ITER-DEV-007",
+    "ITER-DEV-012",
+    "ITER-DEV-013",
+    "ITER-DEV-014",
+    "ITER-DEV-015",
+    "ITER-DEV-016",
+    "ITER-DEV-017",
+    "ITER-DEV-018",
+    "ITER-DEV-020",
+    "ITER-DEV-023",
+    "ITER-DEV-025"
+  ],
+  "notes": [
+    "文档结构校验不是产品验收",
+    "全部任务 PLANNED，全部验收 NOT_RUN",
+    "未执行生成契约、迁移、应用测试、提交、推送或部署"
+  ],
+  "baseline_files_checked": 3523,
+  "baseline_files_changed": [],
+  "document_links_missing": 0,
+  "nfr_covered": 10,
+  "all_task_statuses": "PLANNED",
+  "all_acceptance_statuses": "NOT_RUN"
+}

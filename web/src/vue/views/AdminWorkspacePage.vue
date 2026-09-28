@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import InitializationChecklist from '../components/InitializationChecklist.vue';
 import { useQuery } from '@tanstack/vue-query';
 import { computed } from 'vue';
 import { analyzeRoleGovernance, loadSystemAdministrationSnapshot } from '../../api/system-administration';
@@ -86,6 +87,7 @@ function formatDateTime(value: string | null | undefined) { return value ? new I
         <section class="card"><div class="card-head">高优先级管理待办</div><div class="admin-table-wrap"><table class="table"><thead><tr><th>风险/任务</th><th>对象</th><th>责任人</th><th>时限</th><th>状态</th></tr></thead><tbody><tr v-for="item in tasks" :key="`${item[0]}-${item[1]}`"><td><b>{{ item[0] }}</b></td><td>{{ item[1] }}</td><td>{{ item[2] }}</td><td>{{ item[3] }}</td><td><span class="status" :class="item[5]">{{ item[4] }}</span></td></tr></tbody></table></div></section>
         <aside class="card"><div class="card-head">最近发布与回滚</div><div class="card-body"><div v-if="!releases.length" class="admin-empty">审计链中暂无发布或回退事件。</div><div v-for="item in releases" :key="`${item[0]}-${item[1]}`" class="admin-release-item"><span>{{ item[0] }}</span><i :class="item[3]"></i><div><b>{{ item[1] }}</b><p>{{ item[2] }}</p></div></div><div class="notice info"><div class="notice-title">管理与配置分域</div>本域管理身份、主数据和运行参数；临床流程、表单、规则与接口映射进入业务配置域。</div></div></aside>
       </div>
+      <InitializationChecklist />
     </template>
   </section>
 </template>

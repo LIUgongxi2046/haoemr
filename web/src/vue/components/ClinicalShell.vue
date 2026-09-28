@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { clinicalLeaveGate } from '../clinical-leave-guard';
 import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -19,7 +20,8 @@ const route = useRoute();
 const router = useRouter();
 const routeId = computed(() => String(route.meta.contractId ?? 'safe-not-found'));
 const taskCountMode = computed(() => ['outpatient', 'emergency', 'inpatient'].includes(String(route.query.mode)) ? String(route.query.mode) : 'inpatient');
-const pendingWork = usePendingWork(taskCountMode);
+const activeWorkspace = computed(() => /^(inpatient|ip-|ward$|admission-bed$)/.test(routeId.value) ? 'inpatient' : '');
+const pendingWork = usePendingWork(taskCountMode, activeWorkspace);
 const pendingGroups = computed(() => navigation.filter(item => item.id !== 'clinical')
   .map(item => ({ id: item.id, label: item.label, rows: pendingWork.forMenu(item.id) }))
   .filter(group => group.rows.length));
@@ -172,14 +174,14 @@ const subNav = computed<SubNav | null>(() => {
     };
   }
   if (recordRoutes.includes(c)) {
-    const active = c === 'record-sign' ? 'record-qc' : c === 'record-diff' ? 'record-versions' : c;
+    const active = c === 'record-sign' || c === 'record-qc' ? 'record' : c === 'record-diff' ? 'record-versions' : c;
     return {
       kind: 'center',
       title: '全院病历中心',
       active,
       items: [
         ['record', '病历工作台'], ['record-editor', '专注编辑'], ['record-sources', '来源证据'],
-        ['record-qc', '质控审签'], ['record-versions', '版本证据'],
+        ['record-versions', '版本证据'],
         ['lis-report', 'LIS 报告'], ['pacs-viewer', 'PACS 影像'],
       ],
     };
@@ -313,8 +315,9 @@ function toggleMenu(menu: Exclude<TopbarMenu, null>) {
   activeMenu.value = activeMenu.value === menu ? null : menu;
 }
 
-function selectRole(roleId: string) {
+async function selectRole(roleId: string) {
   if (!roleOptions.value.some((role) => role.id === roleId)) return;
+  if (selectedRoleId.value !== roleId && !await clinicalLeaveGate.confirm()) return;
   selectedRoleId.value = roleId;
   clinicalContext.roleId = roleId;
   activeMenu.value = null;

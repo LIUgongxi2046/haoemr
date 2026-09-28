@@ -76,11 +76,11 @@ const history = computed(() => historyQuery.data.value ?? []);
 
 const families = computed(() => catalogQuery.data.value ?? []);
 const availableModels = computed(() => (modelsQuery.data.value ?? []).filter((model) => model.status === 'ACTIVE'
-  && model.evaluation_status === 'APPROVED' && model.connection_status === 'READY' && model.release_evidence_ready
+  && model.evaluation_status === 'APPROVED' && model.connection_status === 'READY'
   && !model.test_only && model.endpoint_url?.includes('.example/') !== true));
 const modelAvailabilityNotice = computed(() => {
   if (modelsQuery.isPending.value || modelsQuery.isError.value || availableModels.value.length) return '';
-  return '当前没有可供 AI医助 EVA 使用的合规模型。请由模型管理员完成真实模型登记、连接检测与独立评测后再试。';
+  return '当前没有可供 AI医助 EVA 使用的合规模型。请由模型管理员完成真实模型登记、连接检测和发布后再试。';
 });
 const selectedFamily = computed(() => families.value.find((family) => family.main_agent.agent_code === selectedMainAgentCode.value));
 const availableStages = computed(() => selectedFamily.value?.child_agents ?? []);

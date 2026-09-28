@@ -101,12 +101,6 @@ final class DeepSeekClinicalModelProvider implements ClinicalModelProvider {
                       and status = 'ACTIVE' and evaluation_status = 'APPROVED' and connection_status = 'READY'
                       and test_only = false
                       and endpoint_url not like 'https://%.example/%'
-                      and exists (
-                        select 1 from model_evaluation evaluation
-                        where evaluation.tenant_id = model_deployment.tenant_id
-                          and evaluation.model_deployment_id = model_deployment.model_deployment_id
-                          and evaluation.status = 'PASSED'
-                      )
                     order by updated_at desc, model_deployment_id desc limit 1
                     """).param("tenant", prompt.tenantId()).param("provider", prompt.providerCode())
                     .param("model", prompt.modelCode())

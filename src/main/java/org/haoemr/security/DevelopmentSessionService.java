@@ -245,9 +245,20 @@ final class DevelopmentSessionService {
                 .list();
         String shift = "今日 08:00–17:00 · " + DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 .withZone(ZoneOffset.ofHours(8)).format(Instant.now());
+        List<UUID> authorizedWards = jdbc.sql("""
+                select distinct scope.ward_id from ward_role_scope scope
+                join clinical_ward ward on ward.tenant_id=scope.tenant_id and ward.ward_id=scope.ward_id
+                join role_assignment assignment on assignment.tenant_id=scope.tenant_id
+                  and assignment.role_assignment_id=scope.role_assignment_id
+                where scope.tenant_id=:tenant and ward.facility_id=:facility
+                  and assignment.user_id=:user and assignment.status='ACTIVE'
+                  and assignment.valid_from <= now() and (assignment.valid_until is null or assignment.valid_until > now())
+                  and scope.valid_from <= now() and (scope.valid_until is null or scope.valid_until > now())
+                order by scope.ward_id
+                """).param("tenant",tenantId).param("facility",account.facilityId()).param("user",userId).query(UUID.class).list();
         return new SessionUserWire(tenantId, userId, account.displayName(), account.organizationId(),
                 account.organizationName(), account.facilityId(), account.facilityName(),
-                roles.stream().map(Role::id).toList(), roles.stream().map(Role::code).toList(), shift, expiresAt);
+                roles.stream().map(Role::id).toList(), roles.stream().map(Role::code).toList(), shift, expiresAt, authorizedWards);
     }
 
     private List<UUID> activeRoles(UUID tenantId, UUID userId) {

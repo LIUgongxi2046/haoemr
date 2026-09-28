@@ -30,11 +30,18 @@ function primaryActions(route) {
 }
 
 function criticalText(route) {
-  // 高风险页面的“关键文案”随生产化重构已不再稳定（如“确定性合成适配器/
-  // 门禁与替换契约”已改名或移除），保留这些硬编码字符串会导致路由审计大量误报。
-  // 页面关键内容改由 H1 非空、一级导航唯一激活、无横向溢出、API 可收敛等
-  // 结构化断言持续校验；若需恢复逐页关键文案，应按当前页面重新逐条登记。
-  return [];
+  const highRiskText = {
+    outpatient: ['门诊医生工作台', '候诊队列', '下一位患者'],
+    'agent-compose': ['医助团队与能力工具编排', '版本台账', '新建草稿'],
+    'agent-context': ['医助诊疗范围策略', '版本台账', '新建草稿'],
+    'agent-evals': ['医助评测与发布审核', '版本台账', '新建草稿'],
+    'data-center': ['数据总览', '跨域需关注事项', '核心临床数据规模指标快照'],
+    research: ['科研项目与统计中心', '科研项目台账', '新建项目'],
+    'admin-auth': ['认证与账户安全策略', '安全基线差异', '创建策略草稿'],
+    'model-routing': ['医助模型候选与数据边界', '运行时模型候选集', '医疗数据使用要求'],
+    'pathology-workbench': ['病理标本到诊断签署', '新建病理病例', '专业执行深层功能'],
+  };
+  return highRiskText[route.route_id] ?? [];
 }
 
 const routes = source.routes.map((route) => ({

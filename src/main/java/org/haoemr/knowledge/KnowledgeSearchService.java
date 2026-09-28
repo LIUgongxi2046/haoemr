@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.haoemr.contracts.KnowledgeFeedbackCreateRequestWire;
+import org.haoemr.contracts.KnowledgeChunkCitationWire;
 import org.haoemr.contracts.KnowledgeReferenceWire;
 import org.haoemr.contracts.KnowledgeSearchRequestWire;
 import org.haoemr.contracts.KnowledgeSearchResultWire;
@@ -41,6 +42,11 @@ final class KnowledgeSearchService {
                 join knowledge_document_version v on v.tenant_id = c.tenant_id and v.doc_version_id = c.doc_version_id
                 join knowledge_document d on d.tenant_id = v.tenant_id and d.document_id = v.document_id
                 where c.tenant_id = :tenant and v.status = 'ACTIVE'
+                  and d.classification in ('PUBLIC', 'INTERNAL')
+                  and (d.effective_from is null or d.effective_from <= now())
+                  and (d.effective_to is null or d.effective_to > now())
+                  and (v.effective_from is null or v.effective_from <= now())
+                  and (v.effective_to is null or v.effective_to > now())
                   and (cast(:type as varchar) is null or d.content_type = cast(:type as varchar))
                   and (c.text ilike :like or d.title ilike :like or d.document_code ilike :like)
                 order by case when d.title ilike :like then 0 else 1 end, v.created_at desc
@@ -63,6 +69,32 @@ final class KnowledgeSearchService {
         }
         recordLog(identity, query, watermark);
         return new KnowledgeSearchResultWire(references);
+    }
+
+    KnowledgeChunkCitationWire citation(ClinicalIdentity identity, UUID chunkId) {
+        return jdbc.sql("""
+                select c.chunk_id, c.doc_version_id, v.version, v.content_hash, d.title,
+                  coalesce(c.section_path, '') as section_path, c.text, d.classification,
+                  greatest(d.effective_from, v.effective_from) as effective_from,
+                  least(d.effective_to, v.effective_to) as effective_to
+                from knowledge_chunk c
+                join knowledge_document_version v on v.tenant_id = c.tenant_id and v.doc_version_id = c.doc_version_id
+                join knowledge_document d on d.tenant_id = v.tenant_id and d.document_id = v.document_id
+                where c.tenant_id = :tenant and c.chunk_id = :chunk and v.status = 'ACTIVE'
+                  and d.classification in ('PUBLIC', 'INTERNAL')
+                  and (d.effective_from is null or d.effective_from <= now())
+                  and (d.effective_to is null or d.effective_to > now())
+                  and (v.effective_from is null or v.effective_from <= now())
+                  and (v.effective_to is null or v.effective_to > now())
+                """).param("tenant", identity.tenantId()).param("chunk", chunkId)
+                .query((rs, row) -> new KnowledgeChunkCitationWire(
+                        rs.getObject("chunk_id", UUID.class), rs.getObject("doc_version_id", UUID.class),
+                        rs.getString("version"), rs.getString("title"), rs.getString("section_path"),
+                        rs.getString("text"), rs.getString("content_hash"), rs.getString("classification"),
+                        rs.getObject("effective_from", OffsetDateTime.class) == null ? null : rs.getObject("effective_from", OffsetDateTime.class).toInstant(),
+                        rs.getObject("effective_to", OffsetDateTime.class) == null ? null : rs.getObject("effective_to", OffsetDateTime.class).toInstant()))
+                .optional().orElseThrow(() -> new KnowledgeException("KNOWLEDGE_SOURCE_UNAVAILABLE", 404,
+                        "当前权限范围内该来源不可用，可能已失效或撤回。请重新检索并核对依据。"));
     }
 
     void createFeedback(

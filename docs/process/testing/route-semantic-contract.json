@@ -132,7 +132,11 @@
         "rollback"
       ],
       "data_source": "DETERMINISTIC_SCENARIO_API",
-      "critical_text": [],
+      "critical_text": [
+        "认证与账户安全策略",
+        "安全基线差异",
+        "创建策略草稿"
+      ],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -761,7 +765,11 @@
         "rollback"
       ],
       "data_source": "CONFIGURATION_LIFECYCLE_API",
-      "critical_text": [],
+      "critical_text": [
+        "医助团队与能力工具编排",
+        "版本台账",
+        "新建草稿"
+      ],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -811,7 +819,11 @@
         "rollback"
       ],
       "data_source": "CONFIGURATION_LIFECYCLE_API",
-      "critical_text": [],
+      "critical_text": [
+        "医助诊疗范围策略",
+        "版本台账",
+        "新建草稿"
+      ],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -861,7 +873,11 @@
         "rollback"
       ],
       "data_source": "CONFIGURATION_LIFECYCLE_API",
-      "critical_text": [],
+      "critical_text": [
+        "医助评测与发布审核",
+        "版本台账",
+        "新建草稿"
+      ],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -2032,7 +2048,11 @@
         "rollback"
       ],
       "data_source": "METRIC_SNAPSHOT_API_WITH_LINEAGE",
-      "critical_text": [],
+      "critical_text": [
+        "数据总览",
+        "跨域需关注事项",
+        "核心临床数据规模指标快照"
+      ],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -5011,7 +5031,11 @@
         "rollback"
       ],
       "data_source": "DETERMINISTIC_SCENARIO_API",
-      "critical_text": [],
+      "critical_text": [
+        "医助模型候选与数据边界",
+        "运行时模型候选集",
+        "医疗数据使用要求"
+      ],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -6369,7 +6393,11 @@
         "recovery"
       ],
       "data_source": "CLINICAL_FACT_API",
-      "critical_text": [],
+      "critical_text": [
+        "门诊医生工作台",
+        "候诊队列",
+        "下一位患者"
+      ],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -6509,7 +6537,11 @@
         "compensation"
       ],
       "data_source": "DETERMINISTIC_SCENARIO_API",
-      "critical_text": [],
+      "critical_text": [
+        "病理标本到诊断签署",
+        "新建病理病例",
+        "专业执行深层功能"
+      ],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",
@@ -7881,7 +7913,11 @@
         "rollback"
       ],
       "data_source": "METRIC_SNAPSHOT_API_WITH_LINEAGE",
-      "critical_text": [],
+      "critical_text": [
+        "科研项目与统计中心",
+        "科研项目台账",
+        "新建项目"
+      ],
       "browser_assertions": [
         "main [data-page-root].vue-native-page 可见",
         "H1 非空",

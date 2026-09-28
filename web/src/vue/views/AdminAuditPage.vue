@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router';
 import { useQuery } from '@tanstack/vue-query';
 import { computed, ref, watch } from 'vue';
 import type { AuditEventWire } from '../../generated/contracts';
@@ -12,8 +13,10 @@ import AdminActionDialog from '../components/AdminActionDialog.vue';
 import { adminCodeLabel, auditActionOptions, auditResourceOptions } from '../admin-display';
 import { toClinicalIssue } from '../clinical-error';
 
-const actionCode = ref('');
-const resourceType = ref('');
+const route = useRoute();
+const actionCode = ref(typeof route.query.action_code === 'string' ? route.query.action_code : '');
+const resourceType = ref(typeof route.query.resource_type === 'string' ? route.query.resource_type : '');
+const resourceId = computed(() => typeof route.query.resource_id === 'string' ? route.query.resource_id : undefined);
 
 const leaseQuery = useQuery({
   queryKey: ['audit', 'lease'],
@@ -21,10 +24,11 @@ const leaseQuery = useQuery({
   retry: false, staleTime: 5 * 60_000, gcTime: 0,
 });
 const eventsQuery = useQuery({
-  queryKey: ['audit', 'events', actionCode, resourceType],
+  queryKey: ['audit', 'events', actionCode, resourceType, resourceId],
   queryFn: () => listAuditEvents(leaseQuery.data.value!, {
     action_code: actionCode.value.trim() || undefined,
     resource_type: resourceType.value.trim() || undefined,
+    resource_id: resourceId.value,
   }),
   enabled: () => Boolean(leaseQuery.data.value), retry: false,
 });

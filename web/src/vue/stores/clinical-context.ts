@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { clinicalLeaveGate } from '../clinical-leave-guard';
 import type { ContextLeaseWire } from '../../generated/contracts';
 import { clinicalContext, selectOutpatientContext, selectOutpatientDocument } from '../../clinical-api';
 
@@ -20,7 +21,8 @@ export const useClinicalContextStore = defineStore('clinical-context', {
       this.purposeCode = lease.purpose_code;
       this.contextEpoch += 1;
     },
-    activateOutpatient(input: { patientId: string; encounterId: string; patientDisplayName: string; documentId?: string | null }) {
+    async activateOutpatient(input: { patientId: string; encounterId: string; patientDisplayName: string; documentId?: string | null }) {
+      if ((this.patientId !== input.patientId || this.encounterId !== input.encounterId || (input.documentId != null && this.documentId !== input.documentId)) && !await clinicalLeaveGate.confirm()) return false;
       selectOutpatientContext(input);
       this.leaseId = null;
       this.patientId = input.patientId;
@@ -29,8 +31,10 @@ export const useClinicalContextStore = defineStore('clinical-context', {
       this.documentId = input.documentId ?? null;
       this.purposeCode = null;
       this.contextEpoch += 1;
+      return true;
     },
-    activateDocument(documentId: string) {
+    async activateDocument(documentId: string) {
+      if (this.documentId !== documentId && !await clinicalLeaveGate.confirm()) return false;
       selectOutpatientDocument(documentId);
       this.documentId = documentId;
       this.contextEpoch += 1;

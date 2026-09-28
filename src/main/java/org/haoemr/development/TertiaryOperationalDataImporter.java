@@ -615,7 +615,9 @@ final class TertiaryOperationalDataImporter {
                   recorded_at, recorded_by, source, temperature, pulse, respiration,
                   systolic_bp, diastolic_bp, spo2)
                 select :tenant,
-                  md5('tertiary-operational-v1:vital:' || encounter_id || ':' || ordinal)::uuid,
+                  overlay(overlay(
+                    md5('tertiary-operational-v1:vital:' || encounter_id || ':' || ordinal)
+                    placing '4' from 13 for 1) placing '8' from 17 for 1)::uuid,
                   patient_id, encounter_id, facility_id, admission_id,
                   now() - ((ordinal * 4 + admission_no) * interval '1 hour'), :operator,
                   case when ordinal % 3 = 0 then 'DEVICE' else 'MANUAL' end,

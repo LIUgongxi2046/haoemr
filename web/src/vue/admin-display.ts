@@ -15,6 +15,9 @@ const codeLabels: Readonly<Record<string, string>> = Object.freeze({
   WORKFORCE_PERSON: '人员主档', RESEARCH_DATASET: '科研数据集', CONFIGURATION: '系统配置', APP_USER: '系统用户',
   NURSING_RECORD: '护理记录', MEDICATION_ORDER: '药品医嘱', LAB_RESULT: '检验结果',
   IMAGING_RESULT: '影像报告', INPATIENT_ADMISSION: '入院登记',
+  CONFIGURATION_PACK: '配置包安装', CONFIG_PACK_PRECHECKED: '预检配置包',
+  CONFIG_PACK_INSTALL_STARTED: '开始安装配置包', CONFIG_PACK_INSTALLED: '配置包导入草稿',
+  CONFIG_PACK_INSTALL_FAILED: '配置包安装失败', CONFIG_PACK_RECOVERED: '确认安装回滚',
   AUDIT_EVENT: '审计事件', CONFIG_ITEM: '配置项', PATIENT_IDENTITY: '患者身份信息',
   LEASE_ISSUE: '建立限时访问授权', READ: '查看', CREATE: '新增', UPDATE: '修改',
   WRITE: '书写', WRITE_DRAFT: '起草', SIGN: '签署', EXPORT: '导出', MANAGE: '管理',
@@ -72,11 +75,11 @@ export const authorizationPurposeOptions = Object.freeze([
 
 export const auditActionOptions = Object.freeze([
   ['', '全部操作'],
-  ...Object.entries(codeLabels).filter(([code]) => /_(CREATED|DEACTIVATED|DISABLED|ENDED|PUBLISHED|DEFINED|UPDATED|ROLLED_BACK|SUCCEEDED|FAILED|SIMULATED|DRAFTED)$/.test(code)),
+  ...Object.entries(codeLabels).filter(([code]) => /^(CONFIG_PACK_)|_(CREATED|DEACTIVATED|DISABLED|ENDED|PUBLISHED|DEFINED|UPDATED|ROLLED_BACK|SUCCEEDED|FAILED|SIMULATED|DRAFTED)$/.test(code)),
 ] as ReadonlyArray<readonly [string, string]>);
 
 export const auditResourceOptions = Object.freeze([
-  ['', '全部资源'], ['AUTHORIZATION_POLICY', '权限策略'], ['WORKFORCE_PERSON', '人员主档'],
+  ['', '全部资源'], ['CONFIGURATION_PACK', '配置包安装'], ['AUTHORIZATION_POLICY', '权限策略'], ['WORKFORCE_PERSON', '人员主档'],
   ['ORGANIZATION_UNIT', '组织单元'], ['DICTIONARY_ITEM', '字典条目'], ['CONFIGURATION_ITEM', '配置项'],
   ['DOCUMENT_TEMPLATE', '文书模板'], ['APP_USER', '系统用户'], ['EMERGENCY_ACCESS_GRANT', '紧急访问授权'],
 ] as const);

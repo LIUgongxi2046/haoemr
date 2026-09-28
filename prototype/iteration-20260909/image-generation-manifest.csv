@@ -1,0 +1,2 @@
+asset_id,generation_tool,prompt_summary,source_image_path,html_target,status,current_use
+setup-welcome,image_gen.imagegen,医院、档案与安全存储的纸雕欢迎插画,assets/generated/setup-welcome.png,prototype.html#SCR-01,ARCHIVED-V01,未用于 v0.2；保留旧版来源记录

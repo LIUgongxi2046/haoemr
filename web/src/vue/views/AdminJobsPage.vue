@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router';
+import ConfigurationPackPanel from '../components/ConfigurationPackPanel.vue';
 import { useQuery } from '@tanstack/vue-query';
 import { computed, ref, watch } from 'vue';
 import {
@@ -13,6 +15,8 @@ import AdminActionDialog from '../components/AdminActionDialog.vue';
 import ConfigurationStudioPage from '../components/ConfigurationStudioPage.vue';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
 
+const route = useRoute();
+const installationView = computed(() => route.query.view === 'installations');
 const definition = configurationStudio('admin-jobs');
 const mode = ref<'RUNTIME' | 'CONFIG'>('RUNTIME');
 const selectedConfigId = ref('');
@@ -21,18 +25,18 @@ const busy = ref('');
 const notice = ref('');
 const resolutionTarget = ref<AdministrationGovernanceFinding | null>(null);
 const resolution = ref('已核对责任人与证据，完成整改并记录复核结论');
-const leaseQuery = useQuery({ queryKey: ['admin-jobs', 'lease'], queryFn: issueConfigurationLease, retry: false, staleTime: 300_000, gcTime: 0 });
+const leaseQuery = useQuery({ queryKey: ['admin-jobs', 'lease'], queryFn: issueConfigurationLease, enabled: () => !installationView.value, retry: false, staleTime: 300_000, gcTime: 0 });
 const configQuery = useQuery({
   queryKey: ['admin-jobs', 'configurations'], queryFn: () => listConfigurations(leaseQuery.data.value!, 'JOB'),
-  enabled: () => Boolean(leaseQuery.data.value), retry: false,
+  enabled: () => !installationView.value && Boolean(leaseQuery.data.value), retry: false,
 });
 const runsQuery = useQuery({
   queryKey: ['admin-jobs', 'runs'], queryFn: () => listAdministrationJobRuns(), retry: false,
-  refetchInterval: 2000,
+  enabled: () => !installationView.value, refetchInterval: () => installationView.value ? false : 2000,
 });
 const findingsQuery = useQuery({
   queryKey: ['admin-jobs', 'findings', selectedRunId], queryFn: () => listAdministrationFindings(selectedRunId.value),
-  enabled: () => Boolean(selectedRunId.value), retry: false,
+  enabled: () => !installationView.value && Boolean(selectedRunId.value), retry: false,
 });
 const configs = computed(() => configQuery.data.value ?? []);
 const activeConfigs = computed(() => configs.value.filter((item) => item.status === 'ACTIVE'));
@@ -92,7 +96,9 @@ async function resolveFinding() {
 </script>
 
 <template>
-  <div v-if="mode === 'CONFIG'"><div class="auth-backbar content"><button class="btn" type="button" @click="mode = 'RUNTIME'">← 返回任务执行中心</button></div><ConfigurationStudioPage :definition="definition" /></div>
+  <div class="auth-backbar content" aria-label="任务页视图"><RouterLink class="btn" to="/admin-jobs">运行记录与任务定义</RouterLink> <RouterLink class="btn" to="/admin-jobs?view=installations">配置安装记录</RouterLink></div>
+  <ConfigurationPackPanel v-if="installationView" mode="operations" />
+  <div v-else-if="mode === 'CONFIG'"><div class="auth-backbar content"><button class="btn" type="button" @click="mode = 'RUNTIME'">← 返回任务执行中心</button></div><ConfigurationStudioPage :definition="definition" /></div>
   <section v-else data-page-root class="content admin-content vue-native-page">
     <div class="page-head"><div class="page-title"><h1>通知任务与治理执行中心</h1><p>任务从已发布配置进入数据库队列，由规则执行器产生批次、结果、异常和可处置治理问题</p></div><div class="head-actions"><button class="btn" type="button" @click="runsQuery.refetch()">刷新执行记录</button><button class="btn" type="button" @click="mode = 'CONFIG'">任务配置与发布</button><button class="btn primary" type="button" :disabled="!selectedConfigId || Boolean(busy)" @click="start">立即执行</button></div></div>
     <ClinicalPageState v-if="leaseQuery.isPending.value || configQuery.isPending.value || runsQuery.isPending.value" kind="loading" message="正在读取任务配置与执行批次" />

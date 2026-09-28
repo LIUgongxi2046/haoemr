@@ -27,6 +27,18 @@ final class ProductionEnvironmentPostProcessorTest {
     Path temporaryDirectory;
 
     @Test
+    void bootstrapCannotRunInWebOrSyntheticMode() {
+        var synthetic=new MockEnvironment().withProperty("haoemr.bootstrap.enabled","true").withProperty("spring.main.web-application-type","none");
+        synthetic.setActiveProfiles("dev-synthetic");
+        assertThatThrownBy(()->processor.postProcessEnvironment(synthetic,application)).hasMessageContaining("non-web command");
+        var web=productionEnvironment(completeProperties(false));
+        web.setProperty("haoemr.bootstrap.enabled","true");
+        assertThatThrownBy(()->processor.postProcessEnvironment(web,application)).hasMessageContaining("non-web command");
+        web.setProperty("spring.main.web-application-type","none");
+        assertThatCode(()->processor.postProcessEnvironment(web,application)).doesNotThrowAnyException();
+    }
+
+    @Test
     void givenANonProductionProfile_whenConfigurationIsAbsent_thenValidationIsNotApplied() {
         MockEnvironment environment = new MockEnvironment().withProperty("spring.profiles.active", "dev-synthetic");
         environment.setActiveProfiles("dev-synthetic");

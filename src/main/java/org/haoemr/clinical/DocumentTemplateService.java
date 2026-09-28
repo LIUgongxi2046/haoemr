@@ -109,8 +109,16 @@ final class DocumentTemplateService {
                     .param("expected", request.expectedTemplateRowVersion()).query(Integer.class).optional()
                     .orElseThrow(() -> conflict("Template changed or is inactive"));
             UUID versionId = UUID.randomUUID();
-            insertVersion(identity, templateId, versionId, next, request.sectionSchema(),
-                    request.requiredFields(), request.displayRules());
+            if (request.restoreFromVersionId() == null) {
+                insertVersion(identity, templateId, versionId, next, request.sectionSchema(), request.requiredFields(), request.displayRules());
+            } else {
+                DocumentTemplateWire source = jdbc.sql("select template_version_id from clinical_document_template_version where tenant_id=:tenant and template_id=:template and template_version_id=:source and version_no < :latest")
+                    .param("tenant",identity.tenantId()).param("template",templateId).param("source",request.restoreFromVersionId()).param("latest",next-1)
+                    .query(UUID.class).optional().map(id -> find(identity.tenantId(),templateId,id))
+                    .orElseThrow(() -> invalid("Restoration requires a historical version of the same template"));
+                // Only a server-loaded immutable version may retain a frozen form binding.
+                insertVersion(identity,templateId,versionId,next,source.sectionSchema(),source.requiredFields(),source.displayRules(),true);
+            }
             int updated = jdbc.sql("""
                     update clinical_document_template set row_version = row_version + 1, updated_at = now()
                     where tenant_id = :tenant and template_id = :template and row_version = :expected
@@ -211,9 +219,14 @@ final class DocumentTemplateService {
 
     private void insertVersion(ClinicalIdentity identity, UUID templateId, UUID versionId, int versionNo,
             Map<String, Object> schema, List<String> required, Map<String, Object> displayRules) {
+        insertVersion(identity,templateId,versionId,versionNo,schema,required,displayRules,false);
+    }
+
+    private void insertVersion(ClinicalIdentity identity, UUID templateId, UUID versionId, int versionNo,
+            Map<String,Object> schema, List<String> required, Map<String,Object> displayRules, boolean preserveHistoricalBinding) {
         Map<String, Object> effectiveDisplayRules = new LinkedHashMap<>(displayRules == null ? Map.of() : displayRules);
         LinkedHashSet<String> effectiveRequired = new LinkedHashSet<>(required == null ? List.of() : required);
-        FormConfigurationBinding form = resolveFormBinding(identity.tenantId(), schema, effectiveDisplayRules);
+        FormConfigurationBinding form = preserveHistoricalBinding ? null : resolveFormBinding(identity.tenantId(), schema, effectiveDisplayRules);
         if (form != null) {
             effectiveRequired.addAll(form.requiredFields());
             effectiveDisplayRules.put("form_config_key", form.configKey());
@@ -360,7 +373,7 @@ final class DocumentTemplateService {
         jdbc.sql("""
                 insert into audit_event(tenant_id,audit_event_id,occurred_at,actor_user_id,action_code,
                   resource_type,resource_id,trace_id,previous_hash,event_hash,details)
-                values (:tenant,:audit,now(),:actor,:action,'DOCUMENT_TEMPLATE',:resource,:trace,
+                values (:tenant,:audit,clock_timestamp(),:actor,:action,'DOCUMENT_TEMPLATE',:resource,:trace,
                   :previous,:hash,jsonb_build_object('version',:version))
                 """).param("tenant",identity.tenantId()).param("audit",audit).param("actor",identity.userId())
                 .param("action",action).param("resource",templateId).param("trace",trace)
@@ -407,7 +420,12 @@ final class DocumentTemplateService {
             @JsonProperty("expected_template_row_version") long expectedTemplateRowVersion,
             @JsonProperty("section_schema") Map<String,Object> sectionSchema,
             @JsonProperty("required_fields") List<String> requiredFields,
-            @JsonProperty("display_rules") Map<String,Object> displayRules) {}
+            @JsonProperty("display_rules") Map<String,Object> displayRules,
+            @JsonProperty("restore_from_version_id") UUID restoreFromVersionId) {
+        DocumentTemplateVersionCreateRequest(long row, Map<String,Object> schema, List<String> required, Map<String,Object> display) {
+            this(row,schema,required,display,null);
+        }
+    }
     record DocumentTemplateVersionPublishRequest(
             @JsonProperty("expected_version_row_version") long expectedVersionRowVersion,
             @JsonProperty("effective_from") Instant effectiveFrom) {}

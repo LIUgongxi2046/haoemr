@@ -7,6 +7,7 @@ const props = withDefaults(defineProps<{
   eyebrow?: string;
   description?: string;
   confirmLabel?: string;
+  cancelLabel?: string;
   busy?: boolean;
   confirmDisabled?: boolean;
   danger?: boolean;
@@ -15,6 +16,7 @@ const props = withDefaults(defineProps<{
   description: '',
   eyebrow: '业务配置',
   confirmLabel: '确认',
+  cancelLabel: '取消',
   busy: false,
   confirmDisabled: false,
   danger: false,
@@ -61,7 +63,7 @@ function cancel() {
       <footer>
         <slot name="leading-actions" />
         <span class="business-dialog__spacer" />
-        <button type="button" class="btn" :disabled="busy" @click="cancel">取消</button>
+        <button type="button" class="btn" :disabled="busy" @click="cancel">{{ cancelLabel }}</button>
         <button type="submit" class="btn primary" :class="{ danger }" :disabled="busy || confirmDisabled">
           {{ busy ? '处理中…' : confirmLabel }}
         </button>

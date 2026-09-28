@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generated_from": "contracts/openapi.json + contracts/governance.source.json",
-  "operation_count": 614,
+  "operation_count": 621,
   "operations": [
     {
       "operation_id": "acceptInpatientConsultation",
@@ -3294,6 +3294,23 @@
       "status": "DEFAULTED_POLICY_V1"
     },
     {
+      "operation_id": "getConfigurationPackOperation",
+      "caller": "AUTHORIZED_WEB_OR_INTEGRATION_CLIENT",
+      "method": "GET",
+      "path": "/api/v1/admin/configuration-packs/operations/{operation_id}",
+      "auth": "OIDC_SESSION + ContextLease + domain authorization",
+      "input_schema": "NONE",
+      "output_schema": "ConfigurationPackOperation",
+      "error_refs": [
+        "API_ERROR"
+      ],
+      "idempotency": "SAFE_READ",
+      "timeout_ms": 3000,
+      "rate_limit": "policy:getConfigurationPackOperation",
+      "version": "0.1.0",
+      "status": "DEFAULTED_POLICY_V1"
+    },
+    {
       "operation_id": "getConfigurationRuntimeExecution",
       "caller": "AUTHORIZED_WEB_OR_INTEGRATION_CLIENT",
       "method": "GET",
@@ -3511,6 +3528,23 @@
       "idempotency": "SAFE_READ",
       "timeout_ms": 3000,
       "rate_limit": "policy:getInpatientPathwayWorkspace",
+      "version": "0.1.0",
+      "status": "DEFAULTED_POLICY_V1"
+    },
+    {
+      "operation_id": "getKnowledgeChunkCitation",
+      "caller": "AUTHORIZED_WEB_OR_INTEGRATION_CLIENT",
+      "method": "GET",
+      "path": "/knowledge-chunks/{chunk_id}",
+      "auth": "OIDC_SESSION + ContextLease + domain authorization",
+      "input_schema": "NONE",
+      "output_schema": "KnowledgeChunkCitation",
+      "error_refs": [
+        "API_ERROR"
+      ],
+      "idempotency": "SAFE_READ",
+      "timeout_ms": 3000,
+      "rate_limit": "policy:getKnowledgeChunkCitation",
       "version": "0.1.0",
       "status": "DEFAULTED_POLICY_V1"
     },
@@ -3783,6 +3817,23 @@
       "idempotency": "Idempotency-Key + domain unique constraints + expected version",
       "timeout_ms": 8000,
       "rate_limit": "policy:ingestMedicalRecordAsset",
+      "version": "0.1.0",
+      "status": "DEFAULTED_POLICY_V1"
+    },
+    {
+      "operation_id": "installConfigurationPack",
+      "caller": "AUTHORIZED_WEB_OR_INTEGRATION_CLIENT",
+      "method": "POST",
+      "path": "/api/v1/admin/configuration-packs/operations",
+      "auth": "OIDC_SESSION + ContextLease + domain authorization",
+      "input_schema": "ConfigurationPackInstallRequest",
+      "output_schema": "ConfigurationPackOperation",
+      "error_refs": [
+        "API_ERROR"
+      ],
+      "idempotency": "Idempotency-Key + domain unique constraints + expected version",
+      "timeout_ms": 8000,
+      "rate_limit": "policy:installConfigurationPack",
       "version": "0.1.0",
       "status": "DEFAULTED_POLICY_V1"
     },
@@ -4327,6 +4378,40 @@
       "idempotency": "SAFE_READ",
       "timeout_ms": 3000,
       "rate_limit": "policy:listClinicalTaskTeamQueues",
+      "version": "0.1.0",
+      "status": "DEFAULTED_POLICY_V1"
+    },
+    {
+      "operation_id": "listConfigurationPackOperations",
+      "caller": "AUTHORIZED_WEB_OR_INTEGRATION_CLIENT",
+      "method": "GET",
+      "path": "/api/v1/admin/configuration-packs/operations",
+      "auth": "OIDC_SESSION + ContextLease + domain authorization",
+      "input_schema": "NONE",
+      "output_schema": "ConfigurationPackOperation[]",
+      "error_refs": [
+        "API_ERROR"
+      ],
+      "idempotency": "SAFE_READ",
+      "timeout_ms": 3000,
+      "rate_limit": "policy:listConfigurationPackOperations",
+      "version": "0.1.0",
+      "status": "DEFAULTED_POLICY_V1"
+    },
+    {
+      "operation_id": "listConfigurationPacks",
+      "caller": "AUTHORIZED_WEB_OR_INTEGRATION_CLIENT",
+      "method": "GET",
+      "path": "/api/v1/admin/configuration-packs",
+      "auth": "OIDC_SESSION + ContextLease + domain authorization",
+      "input_schema": "NONE",
+      "output_schema": "ConfigurationPackCatalogItem[]",
+      "error_refs": [
+        "API_ERROR"
+      ],
+      "idempotency": "SAFE_READ",
+      "timeout_ms": 3000,
+      "rate_limit": "policy:listConfigurationPacks",
       "version": "0.1.0",
       "status": "DEFAULTED_POLICY_V1"
     },
@@ -7068,6 +7153,23 @@
       "status": "DEFAULTED_POLICY_V1"
     },
     {
+      "operation_id": "precheckConfigurationPack",
+      "caller": "AUTHORIZED_WEB_OR_INTEGRATION_CLIENT",
+      "method": "POST",
+      "path": "/api/v1/admin/configuration-packs/prechecks",
+      "auth": "OIDC_SESSION + ContextLease + domain authorization",
+      "input_schema": "ConfigurationPackPrecheckRequest",
+      "output_schema": "ConfigurationPackPrecheck",
+      "error_refs": [
+        "API_ERROR"
+      ],
+      "idempotency": "Idempotency-Key + domain unique constraints + expected version",
+      "timeout_ms": 8000,
+      "rate_limit": "policy:precheckConfigurationPack",
+      "version": "0.1.0",
+      "status": "DEFAULTED_POLICY_V1"
+    },
+    {
       "operation_id": "preparePharmacyDispensing",
       "caller": "AUTHORIZED_WEB_OR_INTEGRATION_CLIENT",
       "method": "POST",
@@ -7338,6 +7440,23 @@
       "idempotency": "Idempotency-Key + domain unique constraints + expected version",
       "timeout_ms": 8000,
       "rate_limit": "policy:recomputeResearchCohort",
+      "version": "0.1.0",
+      "status": "DEFAULTED_POLICY_V1"
+    },
+    {
+      "operation_id": "reconcileConfigurationPackOperation",
+      "caller": "AUTHORIZED_WEB_OR_INTEGRATION_CLIENT",
+      "method": "POST",
+      "path": "/api/v1/admin/configuration-packs/operations/{operation_id}/reconcile",
+      "auth": "OIDC_SESSION + ContextLease + domain authorization",
+      "input_schema": "NONE",
+      "output_schema": "ConfigurationPackOperation",
+      "error_refs": [
+        "API_ERROR"
+      ],
+      "idempotency": "Idempotency-Key + domain unique constraints + expected version",
+      "timeout_ms": 8000,
+      "rate_limit": "policy:reconcileConfigurationPackOperation",
       "version": "0.1.0",
       "status": "DEFAULTED_POLICY_V1"
     },

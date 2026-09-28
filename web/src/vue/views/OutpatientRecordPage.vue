@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import AgentAdoptionUndo from '../components/AgentAdoptionUndo.vue';
+import { captureAgentAdoption, type AgentAdoptionSnapshot } from '../agent-adoption-undo';
+import { captureResponseScope } from '../clinical-response-scope';
+import { useUnsavedLeave } from '../composables/use-unsaved-leave';
+import UnsavedChangesDialog from '../components/UnsavedChangesDialog.vue';
 import { useQueryClient } from '@tanstack/vue-query';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import type { DocumentVersionWire } from '../../generated/contracts';
@@ -79,8 +84,17 @@ const conflictFields = computed(() => {
 const agentPatientId = computed(() => current.data.value?.lease.patient_id ?? null);
 const agentEncounterId = computed(() => current.data.value?.lease.encounter_id ?? null);
 const pendingAgentRunId = ref<string | null>(null);
+const lastAdoption = ref<AgentAdoptionSnapshot | null>(null);
+function undoAdoption(next: Record<string, unknown>, allRestored: boolean) {
+  if (!document.value || document.value.status !== 'DRAFT' || busy.value || saveState.value === 'conflict') return;
+  sections.value = next;
+  if (allRestored) pendingAgentRunId.value = null;
+  lastAdoption.value = null;
+  markDirty();
+  notice.value = '已撤销到编辑区，并保留未选择恢复的后续修改；请核对保存结果。';
+}
 const handoff = useAgentDraftHandoff(() => ({ patientId: agentPatientId.value, encounterId: agentEncounterId.value }));
-watch(() => document.value?.document_id, () => { pendingAgentRunId.value = null; });
+watch(() => document.value?.document_id, () => { pendingAgentRunId.value = null; lastAdoption.value = null; });
 function adoptAgentDraft(draft: Record<string, string>, candidate: MedicalAgentRunWire) {
   if (!document.value || document.value.status !== 'DRAFT' || busy.value
     || candidate.patient_id !== agentPatientId.value || candidate.encounter_id !== agentEncounterId.value
@@ -88,7 +102,10 @@ function adoptAgentDraft(draft: Record<string, string>, candidate: MedicalAgentR
     notice.value = '候选或文书状态已变化，请在当前患者的可编辑草稿中重新运行医助。'; return;
   }
   if (hasUnsavedChanges.value) { notice.value = '请先保存现有修改，再审阅并带入医助候选。'; return; }
-  sections.value = { ...sections.value, ...draft };
+  const allowedDraft = Object.fromEntries(Object.entries(draft).filter(([field]) => sectionFields.some(([key]) => key === field)));
+  if (!Object.keys(allowedDraft).length) { notice.value = '候选中没有当前编辑器支持的字段。'; return; }
+  lastAdoption.value = captureAgentAdoption(document.value.document_id, candidate.run_id, sections.value, allowedDraft);
+  sections.value = { ...sections.value, ...allowedDraft };
   pendingAgentRunId.value = candidate.run_id;
   markDirty();
   notice.value = '已带入医生确认的候选段落；保存时将核验来源版本并保留医助来源记录。';
@@ -101,13 +118,13 @@ let maximumTimer: ReturnType<typeof setTimeout> | undefined;
 let saveInFlight = false;
 let composing = false;
 
-watch(() => current.data.value?.document.document_id, async (nextDocumentId, previousDocumentId) => {
+watch(() => current.data.value?.document.document_id, async (nextDocumentId, previousDocumentId, onCleanup) => {
+  let stale = false; onCleanup(() => { stale = true; });
   const next = current.data.value?.document;
   if (!next) return;
   clearAutosaveTimers();
-  if (previousDocumentId && previousDocumentId !== nextDocumentId && secureStorageId.value) {
-    await clearSecureCopyQuietly(secureStorageId.value);
-  }
+  // A context change must not delete the previous document's recoverable encrypted draft.
+  secureStorageId.value = ''; contextFingerprint.value = '';
   sections.value = { ...next.sections };
   editGeneration.value = 0;
   conflictRemote.value = null;
@@ -117,6 +134,7 @@ watch(() => current.data.value?.document.document_id, async (nextDocumentId, pre
     current.data.value?.lease.tenant_id ?? '', current.data.value?.lease.patient_id ?? '',
     current.data.value?.lease.encounter_id ?? '', next.document_id,
   ]);
+  if (stale) return;
   contextFingerprint.value = fingerprint;
   secureStorageId.value = `document-${fingerprint}`;
   if (next.status !== 'DRAFT') {
@@ -125,7 +143,7 @@ watch(() => current.data.value?.document.document_id, async (nextDocumentId, pre
   }
   try {
     const recovered = await loadSecureDocumentDraft(secureStorageId.value, fingerprint);
-    if (recovered && JSON.stringify(recovered.sections) !== JSON.stringify(next.sections)) recoveryDraft.value = recovered;
+    if (!stale && recovered && JSON.stringify(recovered.sections) !== JSON.stringify(next.sections)) recoveryDraft.value = recovered;
   } catch {
     saveState.value = 'error';
     notice.value = '当前浏览器无法启用会话级加密草稿，已停止自动保存；请检查浏览器存储策略后重试。';
@@ -159,12 +177,8 @@ async function execute(label: string, action: () => Promise<void>) {
 
 function replaceCurrentDocument(nextDocument: NonNullable<typeof document.value>) {
   if (!current.data.value) return;
-  queryClient.setQueryData([
-    'clinical',
-    'current-document',
-    current.data.value.lease.patient_id,
-    current.data.value.lease.encounter_id,
-  ], {
+  if (current.data.value.document.document_id !== nextDocument.document_id) return;
+  queryClient.setQueryData(current.contextKey.value, {
     lease: current.data.value.lease,
     document: nextDocument,
   });
@@ -198,7 +212,7 @@ function askAi() {
     notice.value = run?.state === 'WAITING_FOR_REVIEW'
       ? 'AI医助 EVA 文书候选只供人工复核，不会自动写入病历。'
       : run?.failure_code === 'MEDICAL_AGENT_MODEL_UNAVAILABLE'
-        ? '尚未生成文书候选：当前没有经独立评测并可用的真实模型；病历仍可手工完成。'
+        ? '尚未生成文书候选：当前没有已发布且连接可用的真实模型；病历仍可手工完成。'
         : run
           ? `尚未生成文书候选：请查看上方运行记录${run.failure_code ? `（${run.failure_code}）` : ''}后转人工处理或修复后重试；病历仍可手工完成。`
           : '尚未生成文书候选：未能创建 AI医助 EVA 运行，请检查上方提示后转人工处理；病历仍可手工完成。';
@@ -296,10 +310,12 @@ async function persistDraft(manual: boolean) {
   clearAutosaveTimers();
   saveInFlight = true;
   saveState.value = 'autosaving';
+  const isCurrent = captureResponseScope();
   const startedGeneration = editGeneration.value;
   const submittedSections = clinicalJsonSnapshot(sections.value);
   try {
     const next = await saveDocumentDraft(snapshot.lease, snapshot.document, submittedSections, pendingAgentRunId.value);
+    if (!isCurrent() || current.data.value?.document.document_id !== snapshot.document.document_id) return;
     pendingAgentRunId.value = null;
     replaceCurrentDocument(next);
     lastSavedAt.value = new Intl.DateTimeFormat('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(new Date());
@@ -315,11 +331,13 @@ async function persistDraft(manual: boolean) {
       scheduleAutosave();
     }
   } catch (error) {
+    if (!isCurrent() || current.data.value?.document.document_id !== snapshot.document.document_id) return;
     await persistSecureCopy();
+    if (!isCurrent()) return;
     if (error instanceof ClinicalApiError && error.code === 'VERSION_CONFLICT') {
       conflictLocal.value = clinicalJsonSnapshot(sections.value);
       conflictBaseVersionId.value = snapshot.document.document_version_id;
-      try { conflictRemote.value = await loadCurrentDocument(snapshot.lease); } catch { conflictRemote.value = null; }
+      try { const remote = await loadCurrentDocument(snapshot.lease); if (!isCurrent()) return; conflictRemote.value = remote; } catch { if (!isCurrent()) return; conflictRemote.value = null; }
       saveState.value = 'conflict';
       notice.value = '检测到其他工作站已保存新版本；本地草稿仍在加密缓存中，系统不会覆盖。';
     } else {
@@ -392,9 +410,15 @@ async function useRemoteVersion() {
   if (secureStorageId.value) await clearSecureCopyQuietly(secureStorageId.value);
   notice.value = '已采用服务器当前版本，本地冲突草稿已清除。';
 }
+const leave = useUnsavedLeave({ dirty: () => hasUnsavedChanges.value, busy: () => Boolean(busy.value) || saveState.value === 'autosaving', save: () => persistDraft(true), discard: async () => {
+  clearAutosaveTimers();
+  if (secureStorageId.value) await clearSecureDocumentDraft(secureStorageId.value);
+  sections.value = { ...current.data.value?.document.sections }; recoveryDraft.value = null; conflictRemote.value = null; pendingAgentRunId.value = null; saveState.value = 'saved';
+} });
 </script>
 
 <template>
+  <UnsavedChangesDialog :open="leave.open.value" :busy="leave.busy.value" :message="leave.message.value" @save="leave.saveAndLeave" @discard="leave.discardAndLeave" @stay="leave.stay" />
   <section data-page-root class="content vue-native-page">
     <div class="page-heading"><div><p class="eyebrow">门诊 / 病历编辑</p><h1>门诊病历工作台</h1><p>记录当前门诊就诊的病历内容，并查看保存状态。</p></div>
       <div class="status-legend" :class="`save-${saveState}`"><span class="dot" :class="saveState === 'saved' || saveState === 'signed' ? 'success' : saveState === 'conflict' || saveState === 'error' ? 'danger' : 'warning'" />{{ saveStateLabel }}<small v-if="lastSavedAt"> · {{ lastSavedAt }}</small></div></div>
@@ -404,6 +428,7 @@ async function useRemoteVersion() {
         <div><dt>就诊类型</dt><dd>门诊 · 进行中</dd></div><div><dt>数据范围</dt><dd>当前患者 / 当前就诊</dd></div></dl>
       <span v-if="current.data.value" class="lease-badge">已核验</span></section>
     <p v-if="handoff.notice.value" role="status">{{ handoff.notice.value }}</p>
+    <AgentAdoptionUndo :snapshot="lastAdoption" :document-id="document?.document_id ?? ''" :sections="sections" :labels="qcFields" :disabled="Boolean(busy) || document?.status !== 'DRAFT' || saveState === 'conflict' || saveState === 'autosaving'" @undo="undoAdoption" />
     <AgentCandidateReview v-if="handoff.run.value" :run="handoff.run.value" allow-document-adoption @adopt-draft="adoptAgentDraft" />
     <AgentInlineReview allow-document-adoption @adopt-draft="adoptAgentDraft" v-if="current.data.value" ref="agentReview" agent-code="DOCUMENT_DRAFTER" stage-code="OUTPATIENT" :objective="outpatientDraftObjective" :patient-id="agentPatientId" :encounter-id="agentEncounterId" target-type="ENCOUNTER" :target-id="agentEncounterId" title="AI 门诊文书起草候选" source-route="opd-record" />
     <ClinicalPageState v-if="current.isPending.value" kind="loading" />

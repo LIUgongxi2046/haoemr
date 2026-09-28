@@ -18,9 +18,11 @@ describe('outpatient workspace interaction contract', () => {
     const shell = source('./components/ClinicalShell.vue');
     expect(shell).toContain("label: '全院病历中心'");
     expect(shell).toContain("title: '全院病历中心'");
-    for (const route of ['record', 'record-editor', 'record-sources', 'record-qc', 'record-versions', 'lis-report', 'pacs-viewer']) {
+    for (const route of ['record', 'record-editor', 'record-sources', 'record-versions', 'lis-report', 'pacs-viewer']) {
       expect(shell).toContain(`['${route}'`);
     }
+    expect(shell).not.toContain("['record-qc',");
+    expect(source('./views/RecordEditorPage.vue')).toContain('to="/record-qc">查看完整质控与签名证据');
     for (const page of [
       './views/RecordCenterPage.vue', './views/RecordEditorPage.vue', './views/RecordSourcesPage.vue',
       './views/RecordGovernancePage.vue', './views/RecordVersionsPage.vue', './views/LisReportPage.vue',

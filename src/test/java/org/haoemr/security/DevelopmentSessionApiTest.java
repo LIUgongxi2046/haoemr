@@ -38,6 +38,7 @@ final class DevelopmentSessionApiTest {
         String token = payload.path("bearer_token").stringValue();
         assertThat(token).isNotBlank();
         assertThat(payload.path("user").path("display_name").stringValue()).isEqualTo("林伟 / William Lin");
+        assertThat(payload.path("user").path("authorized_ward_ids").toString()).contains("018f0000-0000-7000-8000-00000000bb01");
         assertThat(jdbc.sql("select count(*) from user_session where revoked_at is null and expires_at > now()")
                 .query(Long.class).single()).isPositive();
 
@@ -49,6 +50,17 @@ final class DevelopmentSessionApiTest {
         assertThat(send("/api/v1/session/current", "GET", null, token).statusCode()).isEqualTo(401);
         assertThat(jdbc.sql("select count(*) from user_session where revoked_at is not null")
                 .query(Long.class).single()).isPositive();
+    }
+
+    @Test void laboratorySessionDoesNotAdvertiseAnUnauthorizedWard() throws Exception {
+        HttpResponse<String> login = send("/api/v1/session/login", "POST",
+                "{\"username\":\"ruifeng.cao\",\"password\":\"HaoEMR-dev!\"}", null);
+        assertThat(login.statusCode()).isEqualTo(200);
+        JsonNode payload = mapper.readTree(login.body());
+        assertThat(payload.path("user").path("authorized_ward_ids").isArray()).isTrue();
+        assertThat(payload.path("user").path("authorized_ward_ids").isEmpty()).isTrue();
+        String token = payload.path("bearer_token").stringValue();
+        assertThat(send("/api/v1/session/logout", "POST", null, token).statusCode()).isEqualTo(204);
     }
 
     @Test

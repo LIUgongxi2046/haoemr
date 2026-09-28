@@ -128,7 +128,7 @@ async function deactivate(agent: AgentRegistryWire) {
       <div>
         <p class="eyebrow">AI中心 / 医助agent配置</p>
         <h1>医助agent设计与编排</h1>
-        <p>5 个医助agent统筹 33 位专科医助，覆盖诊前、接诊、文书、质控、结果闭环和诊疗协同；所有结果均需医生确认。</p>
+        <p>{{ families.length }} 个医助agent统筹 {{ childAgentCount }} 位专科医助，覆盖诊前、接诊、文书、质控、结果闭环和诊疗协同；所有结果均需医生确认。</p>
       </div>
     </div>
 

@@ -152,6 +152,8 @@ final class SyntheticDataImporter implements ApplicationRunner {
      */
     private void reconcileTenantScopedMigrationSeeds() {
         seedFallbackKnowledgeWhenEmpty();
+        activateSyntheticPathwayVersionsWhenEmpty();
+        seedFallbackKnowledgeGraphWhenEmpty();
         upsertInpatientDocumentRules();
         upsertAgentCatalog();
         upsertAiPlatformCatalog();
@@ -196,6 +198,26 @@ final class SyntheticDataImporter implements ApplicationRunner {
                 "pathway knowledge tasks",
                 "select count(*) from pathway_knowledge_task where tenant_id = :tenant",
                 1);
+        requireTenantSeedRows(
+                "active pathway knowledge versions",
+                "select count(*) from pathway_knowledge_version where tenant_id = :tenant and status = 'ACTIVE'",
+                1);
+        requireTenantSeedRows(
+                "knowledge sources",
+                "select count(*) from knowledge_source_registry where tenant_id = :tenant and status = 'ACTIVE'",
+                1);
+        requireTenantSeedRows(
+                "knowledge document versions",
+                "select count(*) from knowledge_document_version where tenant_id = :tenant and status = 'ACTIVE'",
+                1);
+        requireTenantSeedRows(
+                "knowledge graph concepts",
+                "select count(*) from knowledge_concept where tenant_id = :tenant",
+                10);
+        requireTenantSeedRows(
+                "knowledge graph relations",
+                "select count(*) from knowledge_relation where tenant_id = :tenant",
+                8);
     }
 
     private void requireTenantSeedRows(String catalog, String sql, long minimum) {
@@ -345,6 +367,50 @@ final class SyntheticDataImporter implements ApplicationRunner {
             ScriptUtils.executeSqlScript(
                     connection,
                     new ClassPathResource("db/migration/V360__seed_pathway_knowledge_content.sql"));
+        } finally {
+            DataSourceUtils.releaseConnection(connection, dataSource);
+        }
+    }
+
+    private void activateSyntheticPathwayVersionsWhenEmpty() {
+        long activeCount = jdbc.sql("""
+                select count(*) from pathway_knowledge_version
+                where tenant_id = :tenant and status = 'ACTIVE'
+                """).param("tenant", TENANT_ID).query(Long.class).single();
+        if (activeCount > 0) {
+            return;
+        }
+        jdbc.sql("""
+                update pathway_knowledge_version version
+                set status = 'ACTIVE', reviewed_by = :reviewer, reviewed_at = coalesce(reviewed_at, now()),
+                  approved_by = :approver, approved_at = coalesce(approved_at, now()),
+                  published_at = coalesce(published_at, now())
+                where version.tenant_id = :tenant
+                  and version.status = 'DRAFT'
+                  and version.content_hash = 'assessment-ct-mr'
+                  and not exists (
+                    select 1 from pathway_knowledge_version active
+                    where active.tenant_id = version.tenant_id
+                      and active.pathway_knowledge_id = version.pathway_knowledge_id
+                      and active.status = 'ACTIVE'
+                  )
+                """).param("tenant", TENANT_ID).param("reviewer", COLLABORATOR_USER_ID)
+                .param("approver", MEDICAL_RECORDS_USER_ID).update();
+    }
+
+    private void seedFallbackKnowledgeGraphWhenEmpty() {
+        long conceptCount = jdbc.sql("""
+                select count(*) from knowledge_concept
+                where tenant_id = :tenant
+                """).param("tenant", TENANT_ID).query(Long.class).single();
+        if (conceptCount > 0) {
+            return;
+        }
+        Connection connection = DataSourceUtils.getConnection(dataSource);
+        try {
+            ScriptUtils.executeSqlScript(
+                    connection,
+                    new ClassPathResource("db/migration/V391__seed_synthetic_knowledge_center.sql"));
         } finally {
             DataSourceUtils.releaseConnection(connection, dataSource);
         }
@@ -2633,7 +2699,7 @@ final class SyntheticDataImporter implements ApplicationRunner {
                 on conflict (tenant_id, dictionary_code, item_code) do update
                 set dictionary_item_id = excluded.dictionary_item_id
                 where dictionary_item.dictionary_item_id =
-                  md5('tertiary-dictionary:' || dictionary_item.dictionary_code || ':' || dictionary_item.item_code)::uuid
+                  overlay(overlay(md5('tertiary-dictionary:' || dictionary_item.dictionary_code || ':' || dictionary_item.item_code) placing '5' from 13 for 1) placing '8' from 17 for 1)::uuid
                   and dictionary_item.dictionary_item_id <> excluded.dictionary_item_id
                 """).param("tenant", TENANT_ID).update();
     }
@@ -2681,7 +2747,7 @@ final class SyntheticDataImporter implements ApplicationRunner {
                 insert into audit_event(
                   tenant_id, audit_event_id, occurred_at, actor_user_id, action_code,
                   resource_type, resource_id, trace_id, previous_hash, event_hash, details)
-                select :tenant, md5('tertiary-audit:' || seed.sequence_no)::uuid,
+                select :tenant, overlay(overlay(md5('tertiary-audit:' || seed.sequence_no) placing '5' from 13 for 1) placing '8' from 17 for 1)::uuid,
                   now() - seed.age_hours * interval '1 hour', seed.actor_id::uuid,
                   seed.action_code, seed.resource_type, seed.resource_id::uuid,
                   'syn-admin-' || lpad(seed.sequence_no::text, 4, '0'),

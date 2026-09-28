@@ -1,0 +1,11 @@
+{
+  "candidate_source_sha256": "a62481a90526ead7f518d41b407b4b331dba3a593f27f72532c70e6a238b60ec",
+  "criteria": 129,
+  "counts": {
+    "PASS": 28,
+    "PARTIAL": 62,
+    "BLOCKED": 24,
+    "DEFERRED_RELEASE": 15
+  },
+  "note": "PASS only closes the listed criterion in its described local scope; PARTIAL/BLOCKED/DEFERRED_RELEASE never count as passed. Whole tasks require all three criteria and general DoD."
+}

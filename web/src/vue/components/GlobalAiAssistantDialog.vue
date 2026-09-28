@@ -63,11 +63,11 @@ const routingQuery = useQuery({ queryKey: computed(() => ['global-eva', 'routing
 
 const agents = computed(() => agentQuery.data.value ?? []);
 const availableModels = computed(() => (modelsQuery.data.value ?? []).filter((model) => model.status === 'ACTIVE'
-  && model.evaluation_status === 'APPROVED' && model.connection_status === 'READY' && model.release_evidence_ready
+  && model.evaluation_status === 'APPROVED' && model.connection_status === 'READY'
   && !model.test_only && model.endpoint_url?.includes('.example/') !== true));
 const modelAvailabilityNotice = computed(() => {
   if (modelsQuery.isPending.value || modelsQuery.isError.value || availableModels.value.length) return '';
-  return '当前没有可供 AI医助 EVA 使用的合规模型。请由模型管理员完成真实模型登记、连接检测与独立评测后再试。';
+  return '当前没有可供 AI医助 EVA 使用的合规模型。请由模型管理员完成真实模型登记、连接检测和发布后再试。';
 });
 const selectedAgent = computed(() => agents.value.find((family) => family.main_agent.agent_code === selectedAgentCode.value));
 const selectedChild = computed(() => selectedAgent.value?.child_agents.find((child) => child.stage_code === selectedStageCode.value));

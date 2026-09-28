@@ -12,6 +12,7 @@ import {
   type PatientTimelineWire,
 } from '../generated/contracts';
 import { explicitContextHeaders, issueContextLease, request } from '../clinical-api';
+import { captureResponseScope, clinicalOrganizationScope } from '../vue/clinical-response-scope';
 
 export interface OutpatientWorkspaceSnapshot {
   lease: ContextLeaseWire;
@@ -26,8 +27,13 @@ export async function loadOutpatientWorkspaceSnapshot(
   patientId: string,
   encounterId: string,
 ): Promise<OutpatientWorkspaceSnapshot> {
+  const current = captureResponseScope(clinicalOrganizationScope);
+  const assertCurrent = () => { if (!current()) throw new Error('诊疗范围已切换，请重新读取当前就诊。'); };
+  if (!patientId || !encounterId) throw new Error('请先选择门诊患者与就诊。');
   const lease = await issueContextLease(patientId, encounterId, 'OUTPATIENT_WORKSPACE');
+  assertCurrent();
   const timelineLease = await issueContextLease(patientId, null, 'PATIENT_TIMELINE');
+  assertCurrent();
   const headers = explicitContextHeaders(lease, patientId, encounterId);
   const [documents, diagnoses, orders, results, timeline] = await Promise.all([
     request(`/encounters/${encodeURIComponent(encounterId)}/documents`, { headers }),
@@ -38,6 +44,7 @@ export async function loadOutpatientWorkspaceSnapshot(
       headers: explicitContextHeaders(timelineLease, patientId, null),
     }),
   ]);
+  assertCurrent();
   return {
     lease,
     documents: documentVersionWireSchema.array().parse(documents),

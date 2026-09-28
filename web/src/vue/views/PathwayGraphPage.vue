@@ -68,7 +68,7 @@ type SimEdge = KnowledgeGraphEdgeWire & { _key?: string };
 const edgeKey = (e: { source: string; target: string; predicate: string }) =>
   `${e.source}→${e.target}→${e.predicate}`;
 
-const nodeIndex = computed(() => new Map(allNodes.value.map((n) => [n.id, n])));
+const nodeIndex = computed(() => new Map([...allNodes.value, ...viewNodes.value].map((n) => [n.id, n])));
 
 const searchResults = computed(() => {
   const q = searchQuery.value.trim().toLowerCase();

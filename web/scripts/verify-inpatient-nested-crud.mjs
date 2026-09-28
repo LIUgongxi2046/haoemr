@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 
 const webDir = resolve(fileURLToPath(new URL('..', import.meta.url)));
-const outputDir = resolve(webDir, '../output/playwright/inpatient-nested-crud');
+const outputDir = resolve(process.env.HAOEMR_TEST_OUTPUT_DIR || resolve(webDir, '../output/playwright/inpatient-nested-crud'));
 const baseUrl = (process.env.HAOEMR_BROWSER_BASE_URL || 'http://127.0.0.1:4178').replace(/\/$/, '');
 const stamp = Date.now().toString().slice(-8);
 const batch = `IP-BATCH-${stamp}`;
@@ -51,7 +51,10 @@ async function go(route) {
     if (route.id === 'inpatient-pharmacy') {
       const detailHeading = page.getByRole('heading', { name: route.heading, exact: true });
       if (!(await detailHeading.isVisible().catch(() => false))) {
-        const select = page.getByRole('button', { name: '选择患者并下转', exact: true }).first();
+        const targetEncounter = process.env.HAOEMR_E2E_INPATIENT_ENCOUNTER_ID;
+        const select = targetEncounter
+          ? page.locator('[data-execution-patient-row]').filter({ hasText: targetEncounter }).getByRole('button', { name: '选择患者并下转', exact: true })
+          : page.getByRole('button', { name: '选择患者并下转', exact: true }).first();
         await select.waitFor({ timeout: 20_000 });
         await select.click();
       }

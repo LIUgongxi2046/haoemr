@@ -1,0 +1,4 @@
+asset_id,file_path,usage,width,height,format,transparency,source,license_or_restriction
+setup-welcome,assets/master/setup-welcome.png,ARCHIVED-V01；旧欢迎插画，本版不使用,1536,1024,png,false,image_gen.imagegen,生成资产；无真实患者资料；不构成标识或认证
+existing-brand,assets/existing/haonan-medical-ai-logo.png,沿用原顶栏品牌,沿用源文件,沿用源文件,png,沿用源文件,web/public/brand/haonan-medical-ai-logo.png,原项目已有资产；沿用项目授权范围
+existing-eva,assets/existing/ai-medical-assistant-eva.png,沿用原 Eva 入口,沿用源文件,沿用源文件,png,沿用源文件,web/public/brand/ai-medical-assistant-eva.png,原项目已有资产；沿用项目授权范围

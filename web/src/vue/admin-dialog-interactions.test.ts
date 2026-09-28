@@ -101,7 +101,7 @@ describe('系统管理弹窗交互契约', () => {
   it('AI医助 EVA 的新任务直接创建空白聊天，清空已有任务仍确认', () => {
     const assistant = views['./views/AiAssistantPage.vue'];
     expect(assistant).toContain('@click="newTask">新建医助任务</button>');
-    expect(assistant).toContain("function newTask() { messages.value = []; draft.value = '';");
+    expect(assistant).toContain("function newTask() { releaseConversation(); messages.value = []; draft.value = '';");
     expect(assistant).not.toContain('title="新建医助任务"');
     expect(assistant).toContain('title="清空当前任务"');
     expect(assistant).toContain('<AdminConfirmDialog');

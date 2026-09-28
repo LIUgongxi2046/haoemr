@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useQuery } from '@tanstack/vue-query';
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { loadAuthenticationAdministration } from '../../api/system-administration';
 import { defineConfiguration, issueConfigurationLease } from '../../api/config';
 import ClinicalPageState from '../components/ClinicalPageState.vue';
@@ -8,6 +8,7 @@ import AdminActionDialog from '../components/AdminActionDialog.vue';
 import SimulationWorkbenchPage from '../components/SimulationWorkbenchPage.vue';
 import { adminCodeLabel, adminValueLabel } from '../admin-display';
 import { toClinicalIssue } from '../clinical-error';
+import { captureResponseScope, clinicalOrganizationScope } from '../clinical-response-scope';
 import { simulationWorkbench } from '../simulation-workbenches';
 
 const activeTab = ref<'POLICY' | 'SIMULATION'>('POLICY');
@@ -17,11 +18,29 @@ const createBusy = ref(false);
 const createNotice = ref('');
 const parameterForm = reactive({ key: 'auth-', name: '', valueType: 'STRING', value: '', scope: 'GLOBAL', inheritance: 'FACILITY -> ORGANIZATION -> GLOBAL' });
 const definition = simulationWorkbench('admin-auth');
+const organizationScope = computed(clinicalOrganizationScope);
+watch(organizationScope, () => {
+  createOpen.value = false;
+  createBusy.value = false;
+  createNotice.value = '';
+  showBaseline.value = false;
+});
 const query = useQuery({
-  queryKey: ['admin', 'authentication-administration'], queryFn: loadAuthenticationAdministration,
+  queryKey: computed(() => ['admin', 'authentication-administration', organizationScope.value]),
+  queryFn: async () => {
+    const current = captureResponseScope(clinicalOrganizationScope);
+    const result = await loadAuthenticationAdministration();
+    if (!current()) throw new Error('机构范围已切换');
+    return result;
+  },
   retry: false, staleTime: 0, gcTime: 0,
 });
-const configLeaseQuery = useQuery({ queryKey: ['admin', 'authentication-administration', 'config-lease'], queryFn: issueConfigurationLease, retry: false, staleTime: 5 * 60_000, gcTime: 0 });
+const configLeaseQuery = useQuery({ queryKey: computed(() => ['admin', 'authentication-administration', 'config-lease', organizationScope.value]), queryFn: async () => {
+  const current = captureResponseScope(clinicalOrganizationScope);
+  const lease = await issueConfigurationLease();
+  if (!current()) throw new Error('机构范围已切换');
+  return lease;
+}, retry: false, staleTime: 5 * 60_000, gcTime: 0 });
 const issue = computed(() => query.error.value ? toClinicalIssue(query.error.value) : null);
 const snapshot = computed(() => query.data.value);
 const settings = computed(() => (snapshot.value?.parameters ?? []).map((item) => ({
@@ -54,14 +73,16 @@ function stateLabel(state: string) { return ({ DRAFT: '草稿', PENDING_APPROVAL
 async function createAuthenticationParameter() {
   const lease = configLeaseQuery.data.value;
   if (!lease || createBusy.value || !parameterForm.key.trim() || !parameterForm.name.trim() || !parameterForm.value.trim()) return;
+  const current = captureResponseScope(clinicalOrganizationScope);
   createBusy.value = true; createNotice.value = '';
   try {
     await defineConfiguration(lease, { config_type: 'PARAMETER', config_key: parameterForm.key.trim(), display_name: parameterForm.name.trim(), payload: { schema_version: 1, description: '认证与账户安全页创建的受控安全参数', value_type: parameterForm.valueType, configured_value: parameterForm.value.trim(), scope: parameterForm.scope, inheritance: parameterForm.inheritance, secret_reference: '', effective_at: new Date().toISOString() } });
+    if (!current()) return;
     createNotice.value = '认证安全参数草稿已写入数据库，发布前需要校验和独立审批。';
     createOpen.value = false; parameterForm.key = 'auth-'; parameterForm.name = ''; parameterForm.value = '';
     await query.refetch();
-  } catch (error) { const next = toClinicalIssue(error); createNotice.value = `${next.code}：${next.message}`; }
-  finally { createBusy.value = false; }
+  } catch (error) { if (current()) { const next = toClinicalIssue(error); createNotice.value = `${next.code}：${next.message}`; } }
+  finally { if (current()) createBusy.value = false; }
 }
 </script>
 
@@ -74,7 +95,7 @@ async function createAuthenticationParameter() {
       <p v-if="createNotice" class="admin-notice" role="status">{{ createNotice }}</p>
       <section v-if="showBaseline" class="admin-panel admin-form-panel"><header><div><h2>生产认证策略 / 安全基线差异</h2><p>依据数据库版本状态逐项核对，草稿和待审批项不会伪装成已生效。</p></div></header><div class="admin-diff-list"><article v-for="item in settings" :key="item.key"><b>{{ item.name }}</b><span>{{ item.value }}</span><span class="status" :class="item.state === 'ACTIVE' ? 'green' : 'amber'">{{ stateLabel(item.state) }}</span></article><div v-if="!settings.length" class="admin-empty">暂无安全参数，请先创建策略草稿。</div></div></section>
       <div class="grid auth-layout">
-        <section class="card"><div class="card-head">生产认证策略 · 数据库当前版本 <span class="status" :class="unpublishedSettings ? 'amber' : 'green'">{{ unpublishedSettings ? `${unpublishedSettings} 项待发布` : '全部已生效' }}</span></div><div class="card-body"><div class="setting-grid" aria-label="认证安全设置"><article v-for="item in settings" :key="item.key"><span>{{ item.name }}</span><b>{{ item.value }}</b><small>{{ stateLabel(item.state) }}</small></article><div v-if="!settings.length" class="admin-empty">数据库中暂无认证安全参数，请进入参数管理创建。</div></div><div class="notice rule"><div class="notice-title">安全配置全程留痕</div>认证参数使用版本化配置、独立审批与回退；登录和退出事件进入不可覆盖审计链。</div></div></section>
+        <section class="card"><div class="card-head">生产认证策略 · 数据库当前版本 <span class="status" :class="!settings.length || unpublishedSettings ? 'amber' : 'green'">{{ !settings.length ? '尚未配置' : unpublishedSettings ? `${unpublishedSettings} 项待发布` : '全部已生效' }}</span></div><div class="card-body"><div class="setting-grid" aria-label="认证安全设置"><article v-for="item in settings" :key="item.key"><span>{{ item.name }}</span><b>{{ item.value }}</b><small>{{ stateLabel(item.state) }}</small></article><div v-if="!settings.length" class="admin-empty">数据库中暂无认证安全参数，请进入参数管理创建。</div></div><div class="notice rule"><div class="notice-title">安全配置全程留痕</div>认证参数使用版本化配置、独立审批与回退；登录和退出事件进入不可覆盖审计链。</div></div></section>
         <aside class="card"><div class="card-head">高风险账户</div><div class="card-body"><div class="queue-item"><div class="queue-title">登录失败事件 <b>{{ failedEvents }}</b><span class="status" :class="failedEvents ? 'red' : 'green'">{{ failedEvents ? '待复核' : '通过' }}</span></div></div><div class="queue-item"><div class="queue-title">停用/非活动账户 <b>{{ inactiveAccounts }}</b><span class="status" :class="inactiveAccounts ? 'amber' : 'green'">{{ inactiveAccounts ? '待处置' : '通过' }}</span></div></div><div class="queue-item"><div class="queue-title">紧急访问待复核 <b>{{ pendingReviews }}</b><span class="status" :class="pendingReviews ? 'red' : 'green'">{{ pendingReviews ? '待复核' : '通过' }}</span></div></div><div class="queue-item"><div class="queue-title">未发布安全参数 <b>{{ unpublishedSettings }}</b><span class="status" :class="unpublishedSettings ? 'amber' : 'green'">{{ unpublishedSettings ? '待发布' : '通过' }}</span></div></div><button class="btn" type="button" style="width:100%;margin-top:12px" @click="activeTab = 'SIMULATION'">打开账户安全复核</button></div></aside>
       </div>
       <section class="card admin-secondary-ledger"><div class="card-head">最近认证事件 <span class="status blue">数据库审计</span></div><div class="admin-table-wrap"><table class="table"><thead><tr><th>时间</th><th>主体</th><th>审计对象</th><th>认证方式</th><th>结果</th></tr></thead><tbody><tr v-for="item in events" :key="item.id"><td>{{ item.time }}</td><td><b>{{ item.subject }}</b></td><td>{{ item.source }}</td><td>{{ item.method }}</td><td><span class="status" :class="item.tone">{{ item.result }}</span></td></tr><tr v-if="!events.length"><td colspan="5" class="admin-empty">审计链中暂无登录或退出事件。</td></tr></tbody></table></div></section>

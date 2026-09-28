@@ -1957,29 +1957,26 @@ export async function dischargeInpatient(
 }
 
 export async function loadCurrentDocument(lease: ContextLeaseWire): Promise<DocumentVersionWire> {
-  if (clinicalContext.documentId) {
+  const scope = () => JSON.stringify([clinicalContext.tenantId, clinicalContext.userId, clinicalContext.roleId,
+    clinicalContext.organizationId, clinicalContext.facilityId, clinicalContext.patientId, clinicalContext.encounterId, clinicalContext.documentId]);
+  const before = scope();
+  const assertCurrent = () => { if (before !== scope()) throw new ClinicalApiError('CONTEXT_CHANGED', '上下文已变化，请重新加载当前病历', 409); };
+  const requestedDocument = clinicalContext.documentId;
+  if (requestedDocument) {
     try {
-      return documentVersionWireSchema.parse(await request(`/documents/${clinicalContext.documentId}`, {
-        headers: scopedHeaders(lease),
-      }));
+      const document = documentVersionWireSchema.parse(await request(`/documents/${requestedDocument}`, { headers: scopedHeaders(lease) }));
+      assertCurrent();
+      return document;
     } catch (error) {
+      assertCurrent();
       if (!(error instanceof ClinicalApiError) || ![403, 404].includes(error.status)) throw error;
-      // A document remembered by the browser may have been voided, reassigned, or
-      // selected under an older encounter. Never carry that identifier into the
-      // active encounter; rediscover the document through the scoped list API.
-      selectOutpatientContext({
-        patientId: clinicalContext.patientId,
-        encounterId: clinicalContext.encounterId,
-        patientDisplayName: clinicalContext.patientDisplayName,
-        documentId: null,
-      });
+      // Rediscover only inside the original lease. Never clear or replace a new patient's selected document.
     }
   }
   const documents = await loadEncounterDocuments(lease);
+  assertCurrent();
   const current = documents.find((item) => item.status !== 'VOID') ?? documents[0];
-  if (!current) {
-    throw new ClinicalApiError('OUTPATIENT_DOCUMENT_NOT_FOUND', '当前就诊尚未建立门诊病历', 404);
-  }
+  if (!current) throw new ClinicalApiError('OUTPATIENT_DOCUMENT_NOT_FOUND', '当前就诊尚未建立门诊病历', 404);
   selectOutpatientDocument(current.document_id);
   return current;
 }

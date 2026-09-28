@@ -19,6 +19,7 @@ export const sessionUserWireSchema = z.object({
   "role_codes": z.array(z.string()),
   "shift_display": z.string(),
   "expires_at": z.string(),
+  "authorized_ward_ids": z.array(z.string().uuid()).optional(),
 }).strict();
 export type SessionUserWire = z.infer<typeof sessionUserWireSchema>;
 
@@ -570,6 +571,7 @@ export const documentTemplateVersionCreateRequestWireSchema = z.object({
   "section_schema": z.record(z.string(), z.unknown()),
   "required_fields": z.array(z.string()),
   "display_rules": z.record(z.string(), z.unknown()),
+  "restore_from_version_id": z.string().uuid().optional(),
 }).strict();
 export type DocumentTemplateVersionCreateRequestWire = z.infer<typeof documentTemplateVersionCreateRequestWireSchema>;
 
@@ -7256,9 +7258,7 @@ export const knowledgeReferenceWireSchema = z.object({
   "source_type": z.string(),
   "source_id": z.string(),
   "source_version": z.string(),
-  "locator": z.object({
-
-}).strict(),
+  "locator": z.record(z.string(), z.unknown()),
   "content_hash": z.string(),
   "excerpt": z.string(),
   "score": z.number().optional(),
@@ -7786,6 +7786,125 @@ export const pathwayReviewQueueItemWireSchema = z.object({
   "status": z.enum(["DRAFT","IN_REVIEW","APPROVED","ACTIVE","RETIRED"]),
 }).strict();
 export type PathwayReviewQueueItemWire = z.infer<typeof pathwayReviewQueueItemWireSchema>;
+
+export const configurationPackTemplateWireSchema = z.object({
+  "code": z.string(),
+  "name": z.string(),
+  "document_type": z.string(),
+  "fields": z.array(z.string()),
+  "required_fields": z.array(z.string()),
+}).strict();
+export type ConfigurationPackTemplateWire = z.infer<typeof configurationPackTemplateWireSchema>;
+
+export const configurationPackDependencyWireSchema = z.object({
+  "code": z.string(),
+  "version": z.string(),
+}).strict();
+export type ConfigurationPackDependencyWire = z.infer<typeof configurationPackDependencyWireSchema>;
+
+export const configurationPackManifestWireSchema = z.object({
+  "schema_version": z.number().int(),
+  "code": z.string(),
+  "version": z.string(),
+  "name": z.string(),
+  "type": z.string(),
+  "app_version": z.string(),
+  "publisher": z.string(),
+  "license": z.string(),
+  "dependencies": z.array(configurationPackDependencyWireSchema),
+  "templates": z.array(configurationPackTemplateWireSchema),
+}).strict();
+export type ConfigurationPackManifestWire = z.infer<typeof configurationPackManifestWireSchema>;
+
+export const configurationPackPrecheckRequestWireSchema = z.object({
+  "organization_id": z.string().uuid(),
+  "facility_id": z.string().uuid(),
+  "manifest_json": z.string(),
+  "keep_codes": z.array(z.string()),
+  "draft_codes": z.array(z.string()).max(500).optional(),
+}).strict();
+export type ConfigurationPackPrecheckRequestWire = z.infer<typeof configurationPackPrecheckRequestWireSchema>;
+
+export const configurationPackDifferenceWireSchema = z.object({
+  "code": z.string(),
+  "name": z.string(),
+  "action": z.enum(["NEW","UPDATE","KEEP","CONFLICT"]),
+  "reason": z.string(),
+  "base_content": z.string(),
+  "local_content": z.string(),
+  "incoming_content": z.string(),
+}).strict();
+export type ConfigurationPackDifferenceWire = z.infer<typeof configurationPackDifferenceWireSchema>;
+
+export const configurationPackPrecheckWireSchema = z.object({
+  "precheck_id": z.string().uuid(),
+  "organization_id": z.string().uuid(),
+  "facility_id": z.string().uuid(),
+  "pack_code": z.string(),
+  "pack_version": z.string(),
+  "manifest_hash": z.string(),
+  "trusted": z.boolean(),
+  "state": z.enum(["READY","BLOCKED"]),
+  "expires_at": z.string(),
+  "issues": z.array(z.string()),
+  "differences": z.array(configurationPackDifferenceWireSchema),
+}).strict();
+export type ConfigurationPackPrecheckWire = z.infer<typeof configurationPackPrecheckWireSchema>;
+
+export const configurationPackInstallRequestWireSchema = z.object({
+  "precheck_id": z.string().uuid(),
+  "retry_of": z.string().uuid().nullable().optional(),
+}).strict();
+export type ConfigurationPackInstallRequestWire = z.infer<typeof configurationPackInstallRequestWireSchema>;
+
+export const configurationPackOperationWireSchema = z.object({
+  "operation_id": z.string().uuid(),
+  "organization_id": z.string().uuid(),
+  "facility_id": z.string().uuid(),
+  "pack_code": z.string(),
+  "pack_version": z.string(),
+  "manifest_hash": z.string(),
+  "status": z.enum(["RUNNING","SUCCEEDED","FAILED_ROLLED_BACK","RECOVERY_REQUIRED"]),
+  "requested_by": z.string().uuid(),
+  "retry_of": z.string().uuid().nullable(),
+  "created_at": z.string(),
+  "finished_at": z.string().nullable(),
+  "error_code": z.string().nullable(),
+  "imported_count": z.number().int(),
+  "retained_count": z.number().int(),
+  "template_version_ids": z.array(z.string().uuid()),
+}).strict();
+export type ConfigurationPackOperationWire = z.infer<typeof configurationPackOperationWireSchema>;
+
+export const configurationPackCatalogItemWireSchema = z.object({
+  "code": z.string(),
+  "version": z.string(),
+  "name": z.string(),
+  "publisher": z.string(),
+  "license": z.string(),
+  "manifest_hash": z.string(),
+  "trusted": z.boolean(),
+  "manifest_json": z.string(),
+  "type": z.enum(["CONFIG","DEMO"]).optional(),
+  "app_version": z.string().optional(),
+  "compatible": z.boolean().optional(),
+  "template_count": z.number().int().optional(),
+}).strict();
+export type ConfigurationPackCatalogItemWire = z.infer<typeof configurationPackCatalogItemWireSchema>;
+
+export const knowledgeChunkCitationWireSchema = z.object({
+  "chunk_id": z.string().uuid(),
+  "doc_version_id": z.string().uuid(),
+  "version": z.string(),
+  "title": z.string(),
+  "section_path": z.string(),
+  "text": z.string(),
+  "content_hash": z.string(),
+  "classification": z.string(),
+  "effective_from": z.string().nullable().optional(),
+  "effective_to": z.string().nullable().optional(),
+}).strict();
+export type KnowledgeChunkCitationWire = z.infer<typeof knowledgeChunkCitationWireSchema>;
 
 export interface ClinicalContextLease {
   leaseId: string;

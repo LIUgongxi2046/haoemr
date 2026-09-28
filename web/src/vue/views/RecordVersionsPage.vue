@@ -230,3 +230,7 @@ function statusLabel(status: string) {
     </template>
   </section>
 </template>
+
+<style scoped>
+.record-real-versions .version-row{grid-template-columns:14px 32px minmax(120px,1fr) 60px 100px 58px 50px}.record-real-versions .version-row .btn{min-width:0;white-space:nowrap}
+</style>

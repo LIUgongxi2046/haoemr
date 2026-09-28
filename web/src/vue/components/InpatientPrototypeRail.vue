@@ -54,7 +54,7 @@ const completion = computed(() => {
     <template v-else-if="mode === 'overview'">
       <div class="card-head">文书与诊疗待办 <span class="status red">{{ overdueCount }} 阻断</span></div>
       <div class="card-body prototype-rail-body">
-        <div class="completion-ring" :class="{ warning: completion < 80 }"><b>{{ completion }}%</b><span>病历完整度</span></div>
+        <div class="completion-ring" :style="{ background: `conic-gradient(#e99d23 ${completion}%, #e8edf2 0)` }" :class="{ warning: completion < 80 }"><b>{{ completion }}%</b><span>病历完整度</span></div>
         <div v-if="pendingCount" class="notice hard"><div class="notice-title">住院文书待完成</div>当前还有 {{ pendingCount }} 项任务未闭环。<RouterLink to="/inpatient-course">立即处理</RouterLink></div>
         <div class="notice rule"><div class="notice-title">临床变化须形成记录</div>异常体征、新结果与医嘱调整应在当日病程中可追溯。</div>
         <div class="section-title">今日任务</div>
@@ -120,7 +120,7 @@ const completion = computed(() => {
     <template v-else>
       <div class="card-head">整改与归档责任 <span class="status red">{{ pendingCount }} 阻断</span></div>
       <div class="card-body prototype-rail-body">
-        <div class="completion-ring warning"><b>{{ completion }}%</b><span>出院准备度</span></div>
+        <div class="completion-ring warning" :style="{ background: `conic-gradient(#e99d23 ${completion}%, #e8edf2 0)` }"><b>{{ completion }}%</b><span>出院准备度</span></div>
         <div class="section-title">阻断项责任链</div>
         <div class="prototype-queue"><div><b>住院文书</b><span class="status" :class="pendingCount ? 'red' : 'green'">{{ pendingCount ? `${pendingCount} 项待处理` : '已就绪' }}</span></div><div><b>上级审签</b><span class="status amber">按规则校验</span></div><div><b>结果与医嘱</b><span class="status blue">独立闭环</span></div><div><b>病案归档</b><span class="status gray">出院后校验</span></div></div>
         <div class="notice hard"><div class="notice-title">病案归档不可误提交</div>临床出院、病历完成和病案归档是不同状态，未完成病历不得显示为已归档。</div>

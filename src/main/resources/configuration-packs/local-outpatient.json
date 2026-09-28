@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "code": "haoemr-local-outpatient",
+  "version": "1.0.0",
+  "name": "门诊基础模板（本地验收样例）",
+  "type": "CONFIG",
+  "app_version": "0.1.0-SNAPSHOT",
+  "publisher": "haoemr-local-fixture",
+  "license": "AGPL-3.0-only；仅合成结构验收，正式内容待机构确认",
+  "dependencies": [],
+  "templates": [
+    {"code":"local-opd-initial","name":"门诊初诊记录（结构样例）","document_type":"LOCAL_OPD_INITIAL","fields":["chief_complaint","present_illness","assessment","treatment_plan"],"required_fields":["chief_complaint"]},
+    {"code":"local-opd-review","name":"门诊复诊记录（结构样例）","document_type":"LOCAL_OPD_REVIEW","fields":["chief_complaint","interval_history","assessment","treatment_plan"],"required_fields":["chief_complaint"]},
+    {"code":"local-opd-followup","name":"门诊随访记录（结构样例）","document_type":"LOCAL_OPD_FOLLOWUP","fields":["followup_reason","interval_history","followup_plan"],"required_fields":["followup_reason"]}
+  ]
+}
