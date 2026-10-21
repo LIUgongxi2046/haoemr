@@ -87,3 +87,10 @@ docker compose -f deploy/compose.synthetic.yml up --build
 ```bash
 scripts/package-synthetic.sh
 ```
+
+## 作者与职业介绍
+
+作者：刘浩南（刘浩贤）。拥有12年医疗健康与产业互联网产品经验，曾任金域医学产品与解决方案部总监，目前从事独立开发，关注广州的 AI 产品总监、AI 产品负责人与 AI 产品经理机会。
+
+- [职业介绍与代表案例](https://doctor-graph.com.cn/about/)
+- [HaoEMR 产品介绍与个人工作](https://doctor-graph.com.cn/products/haoemr/)
