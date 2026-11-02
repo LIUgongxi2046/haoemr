@@ -73,6 +73,21 @@ final class ModelDataProcessingApprovalController {
                 command.expectedRowVersion(), command.reason()));
     }
 
+    @PostMapping("/synthetic-demo")
+    ResponseEntity<ApprovalView> approveSyntheticDemo(
+            HttpServletRequest request, @PathVariable UUID modelDeploymentId,
+            @RequestHeader("Idempotency-Key") String idempotencyKey,
+            @RequestBody SyntheticDemoRequest command) {
+        ClinicalIdentity identity = security.authorizeForPurposes(request, command.organizationId(),
+                command.facilityId(), null, null, Set.of("AI_PLATFORM_ADMIN"));
+        return ResponseEntity.status(201).cacheControl(CacheControl.noStore()).body(
+                approvals.approveSyntheticDemo(identity, idempotencyKey, modelDeploymentId,
+                        command.legalBasis(), command.allowedContextScopes(), command.expiresAt()));
+    }
+
+    record SyntheticDemoRequest(UUID organizationId, UUID facilityId, String legalBasis,
+            List<String> allowedContextScopes, OffsetDateTime expiresAt) {}
+
     record ApproveRequest(UUID organizationId, UUID facilityId, String legalBasis, String piaReference,
             String processorAgreementReference, String endpointRegion, int retentionDays,
             List<String> allowedContextScopes, OffsetDateTime expiresAt) {}

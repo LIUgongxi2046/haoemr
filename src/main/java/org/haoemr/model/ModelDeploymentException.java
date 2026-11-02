@@ -1,6 +1,6 @@
 package org.haoemr.model;
 
-final class ModelDeploymentException extends RuntimeException {
+public final class ModelDeploymentException extends RuntimeException {
 
     private final String code;
     private final int status;
@@ -11,7 +11,7 @@ final class ModelDeploymentException extends RuntimeException {
         this.status = status;
     }
 
-    String code() { return code; }
+    public String code() { return code; }
 
-    int status() { return status; }
+    public int status() { return status; }
 }

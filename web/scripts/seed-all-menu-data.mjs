@@ -152,6 +152,7 @@ async function seedInpatientDocument(page) {
   if (!await start.count() || await start.isDisabled()) return { route: 'inpatient-doc-editor', status: 'NO_STARTABLE_TASK' };
   const createResponse = page.waitForResponse((response) => response.url().includes('/api/v1/') && response.request().method() === 'POST', { timeout: 15_000 }).catch(() => null);
   await start.click();
+  await page.getByRole('button', { name: '确认建立并书写', exact: true }).click();
   const created = await createResponse;
   await page.waitForFunction(() => document.documentElement.dataset.routeId === 'inpatient-doc-editor', undefined, { timeout: 15_000 });
   await page.waitForFunction(() => Boolean(document.querySelector('.inpatient-document-editor')), undefined, { timeout: 20_000 });
@@ -165,12 +166,14 @@ async function seedInpatientDocument(page) {
   if (await save.count() && !await save.isDisabled()) {
     const saveResponse = page.waitForResponse((response) => response.url().includes('/api/v1/') && ['POST', 'PUT', 'PATCH'].includes(response.request().method()), { timeout: 15_000 }).catch(() => null);
     await save.click();
+    await page.getByRole('button', { name: '确认保存新版本', exact: true }).click();
     saved = await saveResponse;
     await page.waitForTimeout(650);
   }
   const quality = page.getByRole('button', { name: '运行确定性质控', exact: true });
   if (await quality.count() && !await quality.isDisabled()) {
     await quality.click();
+    await page.getByRole('button', { name: '确认运行质控', exact: true }).click();
     await page.waitForTimeout(650);
   }
   return {
@@ -182,14 +185,14 @@ async function seedInpatientDocument(page) {
 
 async function seedArchiveAsset(page) {
   await openRoute(page, 'archive-catalog');
-  if (await page.locator('.archive-table tbody tr').count()) return { route: 'archive-catalog', status: 'EXISTING' };
-  await page.getByRole('button', { name: '新增资产编目', exact: true }).click();
-  const form = page.locator('.archive-catalog-create');
-  await form.locator('select').selectOption('SCAN');
-  await form.locator('label').filter({ hasText: '存放位置' }).locator('input').fill('病案库 A 区 03 柜 SYN-20260825');
-  await form.locator('label').filter({ hasText: '内容哈希' }).locator('input').fill('8c3f7c8d34c524313f289a928573dbb84d0333d24f3c6b01a6f901d1a9c58176');
+  if (await page.locator('.archive-table-wrap tbody tr:not(:has(.prototype-empty))').count()) return { route: 'archive-catalog', status: 'EXISTING' };
+  await page.getByRole('button', { name: '新建资产', exact: true }).click();
+  const form = page.getByRole('dialog');
+  await form.getByLabel('资产名称', { exact: true }).fill('模拟病例资料');
+  await form.getByLabel('当前保管位置', { exact: true }).fill('演示病案资料库');
+  await form.locator('[data-testid="asset-file"]').setInputFiles(resolve(projectDir, 'samples/data/synthetic-record-archive.txt'));
   await page.waitForTimeout(100);
-  const submit = page.getByRole('button', { name: '完成资产编目', exact: true });
+  const submit = page.getByRole('button', { name: '完成编目', exact: true });
   const responsePromise = page.waitForResponse((response) => response.url().includes('/api/v1/medical-record-assets') && response.request().method() === 'POST', { timeout: 15_000 }).catch(() => null);
   await submit.click();
   const response = await responsePromise;
@@ -321,6 +324,11 @@ const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 const results = [];
 try {
+  await page.goto(`${baseUrl}/#/clinical`, { waitUntil: 'domcontentloaded' });
+  await page.getByLabel('用户名', { exact: true }).fill(process.env.HAOEMR_DEV_LOGIN_USERNAME || 'linwei');
+  await page.locator('#system-login-password').fill(process.env.HAOEMR_DEV_LOGIN_PASSWORD || 'HaoEMR-dev!');
+  await page.getByRole('button', { name: '登录系统', exact: true }).click();
+  await page.locator('main').waitFor({ state: 'visible', timeout: 30_000 });
   if (!requestedRoutes.size || requestedRoutes.has('archive-catalog') || requestedRoutes.has('asset-detail') || requestedRoutes.has('archive-borrow') || requestedRoutes.has('archive-integrity')) {
     results.push(await seedArchiveAsset(page));
   }

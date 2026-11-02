@@ -2,6 +2,7 @@ package org.haoemr.agent;
 
 import java.util.List;
 import java.util.UUID;
+import org.haoemr.model.ModelDeploymentException;
 import org.haoemr.security.ClinicalAccessDeniedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +26,11 @@ final class MedicalAgentHarnessExceptionHandler {
         String category = failure.status() == 409 ? "CONFLICT"
                 : failure.status() == 403 ? "AUTHORIZATION" : "VALIDATION";
         return ResponseEntity.status(failure.status()).body(error(failure.code(), category, failure.getMessage()));
+    }
+
+    @ExceptionHandler(ModelDeploymentException.class)
+    ResponseEntity<ApiErrorEnvelope> processingApprovalFailure(ModelDeploymentException failure) {
+        return ResponseEntity.status(failure.status()).body(error(failure.code(), "CONFLICT", failure.getMessage()));
     }
 
     private static ApiErrorEnvelope error(String code, String category, String message) {

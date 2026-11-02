@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import org.haoemr.security.ClinicalIdentity;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -21,10 +22,12 @@ final class ModelDataProcessingApprovalService {
 
     private final JdbcClient jdbc;
     private final TransactionTemplate transactions;
+    private final Environment environment;
 
-    ModelDataProcessingApprovalService(JdbcClient jdbc, TransactionTemplate transactions) {
+    ModelDataProcessingApprovalService(JdbcClient jdbc, TransactionTemplate transactions, Environment environment) {
         this.jdbc = jdbc;
         this.transactions = transactions;
+        this.environment = environment;
     }
 
     List<ApprovalView> list(ClinicalIdentity identity, UUID deploymentId) {
@@ -33,7 +36,7 @@ final class ModelDataProcessingApprovalService {
                 select approval_id, model_deployment_id, legal_basis, pia_reference,
                   processor_agreement_reference, endpoint_region, retention_days,
                   allowed_context_scopes, status, approved_by, approved_at, expires_at,
-                  revoked_by, revoked_at, revocation_reason, row_version
+                  revoked_by, revoked_at, revocation_reason, row_version, approval_kind
                 from medical_ai_external_processing_approval
                 where tenant_id = :tenant and model_deployment_id = :deployment
                 order by approved_at desc, approval_id desc
@@ -42,20 +45,41 @@ final class ModelDataProcessingApprovalService {
                         rs.getObject("approval_id", UUID.class),
                         rs.getObject("model_deployment_id", UUID.class), rs.getString("legal_basis"),
                         rs.getString("pia_reference"), rs.getString("processor_agreement_reference"),
-                        rs.getString("endpoint_region"), rs.getInt("retention_days"),
+                        rs.getString("endpoint_region"), rs.getObject("retention_days", Integer.class),
                         List.of((String[]) rs.getArray("allowed_context_scopes").getArray()),
                         rs.getString("status"), rs.getObject("approved_by", UUID.class),
                         rs.getObject("approved_at", OffsetDateTime.class),
                         rs.getObject("expires_at", OffsetDateTime.class),
                         rs.getObject("revoked_by", UUID.class), rs.getObject("revoked_at", OffsetDateTime.class),
-                        rs.getString("revocation_reason"), rs.getLong("row_version"))).list();
+                        rs.getString("revocation_reason"), rs.getLong("row_version"), rs.getString("approval_kind"))).list();
     }
 
     ApprovalView approve(
             ClinicalIdentity identity, String idempotencyKey, UUID deploymentId, ApprovalCommand command) {
         validate(command);
+        return create(identity, idempotencyKey, deploymentId, command, "CLINICAL");
+    }
+
+    ApprovalView approveSyntheticDemo(ClinicalIdentity identity, String idempotencyKey, UUID deploymentId,
+            String legalBasis, List<String> scopes, OffsetDateTime expiresAt) {
+        SyntheticDemoProcessingPolicy.requireEnvironment(environment, identity.tenantId(), scopes);
+        SyntheticDemoProcessingPolicy.requireDataset(jdbc, identity.tenantId(), null, null);
+        if (shortText(legalBasis, 4, 512) || expiresAt == null
+                || !expiresAt.isAfter(OffsetDateTime.now())
+                || expiresAt.isAfter(OffsetDateTime.now().plusDays(7))) {
+            throw invalid("模拟演示授权需要处理依据和七天以内的有效期");
+        }
+        return create(identity, idempotencyKey, deploymentId,
+                new ApprovalCommand(legalBasis, null, null, null, null, scopes, expiresAt), "SYNTHETIC_DEMO");
+    }
+
+    private ApprovalView create(ClinicalIdentity identity, String idempotencyKey, UUID deploymentId,
+            ApprovalCommand command, String approvalKind) {
         return transactions.execute(status -> {
             Deployment deployment = requireDeployment(identity.tenantId(), deploymentId);
+            if ("SYNTHETIC_DEMO".equals(approvalKind)) {
+                SyntheticDemoProcessingPolicy.requireProvider(deployment.providerCode(), deployment.endpointUrl());
+            }
             if (!"ACTIVE".equals(deployment.status()) || !"CLOUD_ALLOWED".equals(deployment.residencyPolicy())) {
                 throw invalid("Only an active CLOUD_ALLOWED deployment can receive external-processing approval");
             }
@@ -77,14 +101,15 @@ final class ModelDataProcessingApprovalService {
                     insert into medical_ai_external_processing_approval(
                       tenant_id, approval_id, model_deployment_id, legal_basis, pia_reference,
                       processor_agreement_reference, endpoint_region, retention_days,
-                      allowed_context_scopes, status, approved_by, expires_at)
+                      allowed_context_scopes, status, approved_by, expires_at, approval_kind)
                     values (:tenant, :approval, :deployment, :legal_basis, :pia, :agreement,
-                      :region, :retention, cast(:scopes as text[]), 'ACTIVE', :actor, :expires_at)
+                      :region, :retention, cast(:scopes as text[]), 'ACTIVE', :actor, :expires_at, :kind)
                     """).param("tenant", identity.tenantId()).param("approval", approvalId)
                     .param("deployment", deploymentId).param("legal_basis", command.legalBasis().trim())
-                    .param("pia", command.piaReference().trim())
-                    .param("agreement", command.processorAgreementReference().trim())
-                    .param("region", command.endpointRegion().trim()).param("retention", command.retentionDays())
+                    .param("pia", command.piaReference())
+                    .param("agreement", command.processorAgreementReference())
+                    .param("region", command.endpointRegion()).param("retention", command.retentionDays())
+                    .param("kind", approvalKind)
                     .param("scopes", "{" + String.join(",", command.allowedContextScopes()) + "}")
                     .param("actor", identity.userId()).param("expires_at", command.expiresAt()).update();
             appendEvidence(identity, approvalId, 1, "MODEL_EXTERNAL_PROCESSING_APPROVED",
@@ -137,10 +162,11 @@ final class ModelDataProcessingApprovalService {
 
     private Deployment requireDeployment(UUID tenantId, UUID deploymentId) {
         return jdbc.sql("""
-                select residency_policy, status from model_deployment
+                select residency_policy, status, provider_code, endpoint_url from model_deployment
                 where tenant_id = :tenant and model_deployment_id = :deployment
                 """).param("tenant", tenantId).param("deployment", deploymentId)
-                .query((rs, row) -> new Deployment(rs.getString("residency_policy"), rs.getString("status")))
+                .query((rs, row) -> new Deployment(rs.getString("residency_policy"), rs.getString("status"),
+                        rs.getString("provider_code"), rs.getString("endpoint_url")))
                 .optional().orElseThrow(ModelDeploymentService::contextDenied);
     }
 
@@ -149,7 +175,7 @@ final class ModelDataProcessingApprovalService {
                 || shortText(command.piaReference(), 4, 256)
                 || shortText(command.processorAgreementReference(), 4, 256)
                 || shortText(command.endpointRegion(), 2, 128)
-                || command.retentionDays() < 0 || command.retentionDays() > 3650
+                || command.retentionDays() == null || command.retentionDays() < 0 || command.retentionDays() > 3650
                 || command.expiresAt() == null || !command.expiresAt().isAfter(OffsetDateTime.now())
                 || command.allowedContextScopes() == null || command.allowedContextScopes().isEmpty()
                 || !ALLOWED_SCOPES.containsAll(command.allowedContextScopes())) {
@@ -230,13 +256,13 @@ final class ModelDataProcessingApprovalService {
     }
 
     record ApprovalCommand(String legalBasis, String piaReference, String processorAgreementReference,
-            String endpointRegion, int retentionDays, List<String> allowedContextScopes, OffsetDateTime expiresAt) {}
+            String endpointRegion, Integer retentionDays, List<String> allowedContextScopes, OffsetDateTime expiresAt) {}
 
     record ApprovalView(UUID approvalId, UUID modelDeploymentId, String legalBasis, String piaReference,
-            String processorAgreementReference, String endpointRegion, int retentionDays,
+            String processorAgreementReference, String endpointRegion, Integer retentionDays,
             List<String> allowedContextScopes, String status, UUID approvedBy, OffsetDateTime approvedAt,
             OffsetDateTime expiresAt, UUID revokedBy, OffsetDateTime revokedAt,
-            String revocationReason, long rowVersion) {}
+            String revocationReason, long rowVersion, String approvalKind) {}
 
-    private record Deployment(String residencyPolicy, String status) {}
+    private record Deployment(String residencyPolicy, String status, String providerCode, String endpointUrl) {}
 }

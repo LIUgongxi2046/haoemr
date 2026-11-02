@@ -361,9 +361,11 @@ async function revokeProcessingApproval() {
         <div v-if="busy.startsWith('approval:list:')" class="admin-empty" role="status">正在读取授权台账…</div>
         <div v-else class="processing-approval-layout">
           <section v-if="activeApproval" class="processing-approval-current">
-            <div><span>当前状态</span><b>已授权</b></div><div><span>终端地域</span><b>{{ activeApproval.endpoint_region }}</b></div>
+            <div><span>当前状态</span><b>{{ activeApproval.approval_kind === 'SYNTHETIC_DEMO' ? '模拟演示授权' : '诊疗数据授权' }}</b></div><div><span>终端地域</span><b>{{ activeApproval.endpoint_region ?? '未声明（仅模拟数据）' }}</b></div>
             <div><span>有效期至</span><b>{{ formatDate(activeApproval.expires_at) }}</b></div><div><span>允许范围</span><b>{{ activeApproval.allowed_context_scopes.map(code => contextScopeOptions.find(item => item.code === code)?.label ?? code).join('、') }}</b></div>
-            <div><span>影响评估</span><b>{{ activeApproval.pia_reference }}</b></div><div><span>处理协议</span><b>{{ activeApproval.processor_agreement_reference }}</b></div>
+            <div><span>处理依据</span><b>{{ activeApproval.legal_basis }}</b></div>
+            <template v-if="activeApproval.approval_kind === 'CLINICAL'"><div><span>影响评估</span><b>{{ activeApproval.pia_reference }}</b></div><div><span>处理协议</span><b>{{ activeApproval.processor_agreement_reference }}</b></div></template>
+            <p v-else class="dialog-warning">仅限项目模拟数据，不包含附件及真实患者资料。供应商保留期限未声明；此授权不构成诊疗数据处理审批。</p>
             <button class="button danger" type="button" :disabled="Boolean(busy)" @click="revokeApprovalTarget = activeApproval">撤销当前授权</button>
           </section>
           <form v-else class="admin-form ai-center-dialog-form" @submit.prevent="saveProcessingApproval">
@@ -375,7 +377,7 @@ async function revokeProcessingApproval() {
             <p class="dialog-warning">授权不会赋予模型签署病历、开立医嘱或改写业务终态的权限。</p>
             <div class="admin-form-actions"><button class="button secondary" type="button" :disabled="Boolean(busy)" @click="approvalOpen = false">取消</button><button class="button primary" :disabled="Boolean(busy) || approvalForm.allowedContextScopes.length === 0">{{ busy === 'approval:create' ? '正在授权…' : '确认授权' }}</button></div>
           </form>
-          <section v-if="approvalHistory.length" class="approval-history"><h3>授权历史</h3><article v-for="approval in approvalHistory" :key="approval.approval_id"><span class="admin-status" :class="approval.status === 'ACTIVE' ? 'active' : 'rejected'">{{ approval.status === 'ACTIVE' ? '有效' : '已撤销' }}</span><b>{{ approval.pia_reference }}</b><small>{{ formatDate(approval.approved_at) }} · v{{ approval.row_version }}<template v-if="approval.revocation_reason"> · {{ approval.revocation_reason }}</template></small></article></section>
+          <section v-if="approvalHistory.length" class="approval-history"><h3>授权历史</h3><article v-for="approval in approvalHistory" :key="approval.approval_id"><span class="admin-status" :class="approval.status === 'ACTIVE' ? 'active' : 'rejected'">{{ approval.status === 'ACTIVE' ? '有效' : '已撤销' }}</span><b>{{ approval.approval_kind === 'SYNTHETIC_DEMO' ? '模拟演示授权' : approval.pia_reference }}</b><small>{{ formatDate(approval.approved_at) }} · v{{ approval.row_version }}<template v-if="approval.revocation_reason"> · {{ approval.revocation_reason }}</template></small></article></section>
         </div>
       </AdminActionDialog>
       <AdminConfirmDialog :open="Boolean(deactivateTarget)" :title="`删除模型配置 ${deactivateTarget?.display_name ?? ''}`" description="删除将以安全停用方式执行；后续医助任务不再选择该模型，历史评测、运行记录和审计证据继续保留。" confirm-label="确认删除并停用" :busy="Boolean(busy)" @update:open="!$event && (deactivateTarget = null)" @confirm="deactivateTarget && deactivate(deactivateTarget)"><div v-if="deactivateTarget" class="admin-impact-grid"><div><span>模型标识</span><b>{{ deactivateTarget.model_code }}</b></div><div><span>提供方</span><b>{{ deactivateTarget.provider_code }}</b></div><div><span>当前版本</span><b>v{{ deactivateTarget.row_version }}</b></div><div><span>流程影响</span><b>退出后续模型路由</b></div></div></AdminConfirmDialog>

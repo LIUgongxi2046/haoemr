@@ -281,7 +281,9 @@
     "src/main/resources/db/migration/V388__document_quality_run_finding_snapshot.sql",
     "src/main/resources/db/migration/V389__configuration_pack_installation.sql",
     "src/main/resources/db/migration/V390__normalize_vital_sign_identifiers.sql",
-    "src/main/resources/db/migration/V391__seed_synthetic_knowledge_center.sql"
+    "src/main/resources/db/migration/V391__seed_synthetic_knowledge_center.sql",
+    "src/main/resources/db/migration/V392__normalize_synthetic_nursing_care_plan_uuids.sql",
+    "src/main/resources/db/migration/V393__synthetic_demo_processing_approval.sql"
   ],
   "status": "OBSERVED_FROM_MIGRATIONS",
   "field_count": 3538,

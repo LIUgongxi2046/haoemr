@@ -8,7 +8,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice(assignableTypes = ModelDeploymentController.class)
+@RestControllerAdvice(assignableTypes = {ModelDeploymentController.class, ModelDataProcessingApprovalController.class})
 final class ModelDeploymentExceptionHandler {
     @ExceptionHandler(ModelDeploymentException.class)
     ResponseEntity<ApiErrorEnvelope> domainFailure(ModelDeploymentException failure) {

@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import org.haoemr.approval.ActionApprovalService;
+import org.haoemr.model.SyntheticDemoProcessingPolicy;
 import org.haoemr.security.ClinicalIdentity;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
@@ -110,7 +111,7 @@ final class MedicalAgentHarnessService {
             ModelSelection model = resolveModel(identity.tenantId(), command.modelDeploymentId());
             ensureModelResidency(lease.residencyPolicy(), model.residencyPolicy());
             ExternalProcessingApproval processingApproval = externalProcessingApproval(
-                    identity.tenantId(), model, command.contextScopes(), null);
+                    identity.tenantId(), model, command, null);
             List<NodeRow> nodes = nodes(main.compositionCode(), main.compositionVersion(), command.stageCode());
             if (nodes.isEmpty()) {
                 throw new AgentRunException("AGENT_STAGE_UNSUPPORTED", 409,
@@ -180,7 +181,7 @@ final class MedicalAgentHarnessService {
         ensureModelResidency(snapshot.modelResidencyPolicy(), model.residencyPolicy());
         CreateRunCommand command = snapshot.command();
         ensureRuntimePolicyStillActive(tenantId, snapshot);
-        externalProcessingApproval(tenantId, model, command.contextScopes(),
+        externalProcessingApproval(tenantId, model, command,
                 snapshot.externalProcessingApprovalId());
         List<NodeRow> nodes = nodes(snapshot.compositionCode(), snapshot.compositionVersion(), snapshot.stageCode());
         appendEvent(tenantId, runId, null, "MainAgentStarted", Map.of(
@@ -949,7 +950,7 @@ final class MedicalAgentHarnessService {
     }
 
     private ExternalProcessingApproval externalProcessingApproval(
-            UUID tenantId, ModelSelection model, List<String> requestedScopes, UUID pinnedApprovalId) {
+            UUID tenantId, ModelSelection model, CreateRunCommand command, UUID pinnedApprovalId) {
         if (!"CLOUD_ALLOWED".equals(model.residencyPolicy())) {
             if (pinnedApprovalId != null) {
                 throw new AgentRunException("MODEL_PROCESSING_APPROVAL_MISMATCH", 409,
@@ -959,19 +960,28 @@ final class MedicalAgentHarnessService {
         }
         String pinned = pinnedApprovalId == null ? "" : " and approval_id = :approval";
         JdbcClient.StatementSpec query = jdbc.sql("""
-                select approval_id from medical_ai_external_processing_approval
+                select approval_id, approval_kind from medical_ai_external_processing_approval
                 where tenant_id = :tenant and model_deployment_id = :deployment
                   and status = 'ACTIVE' and expires_at > now()
                   and allowed_context_scopes @> cast(:scopes as text[])
                 """ + pinned + " order by approved_at desc limit 1")
                 .param("tenant", tenantId).param("deployment", model.deploymentId())
-                .param("scopes", "{" + String.join(",", requestedScopes) + "}");
+                .param("scopes", "{" + String.join(",", command.contextScopes()) + "}");
         if (pinnedApprovalId != null) query = query.param("approval", pinnedApprovalId);
-        UUID approvalId = query.query(UUID.class).optional().orElseThrow(() -> new AgentRunException(
+        ProcessingApprovalRow approval = query.query((rs, row) -> new ProcessingApprovalRow(
+                rs.getObject("approval_id", UUID.class), rs.getString("approval_kind")))
+                .optional().orElseThrow(() -> new AgentRunException(
                 "MODEL_EXTERNAL_PROCESSING_NOT_APPROVED", 409,
-                "The cloud model has no active data-processing approval covering the requested context scopes"));
-        return new ExternalProcessingApproval(approvalId);
+                "当前云端模型缺少覆盖所选数据范围的有效授权，请在模型配置中检查数据处理授权及有效期"));
+        if ("SYNTHETIC_DEMO".equals(approval.kind())) {
+            SyntheticDemoProcessingPolicy.requireEnvironment(environment, tenantId, command.contextScopes());
+            SyntheticDemoProcessingPolicy.requireProvider(model.providerCode(), model.endpointUrl());
+            SyntheticDemoProcessingPolicy.requireDataset(jdbc, tenantId, command.patientId(), command.encounterId());
+        }
+        return new ExternalProcessingApproval(approval.id());
     }
+
+    private record ProcessingApprovalRow(UUID id, String kind) {}
 
     @SuppressWarnings("unchecked")
     private RuntimePolicy runtimePolicy(UUID tenantId) {

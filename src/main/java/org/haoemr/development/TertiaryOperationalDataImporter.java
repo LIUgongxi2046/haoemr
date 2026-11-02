@@ -656,7 +656,9 @@ final class TertiaryOperationalDataImporter {
                   nursing_problem, goal, intervention, evaluation, priority, status,
                   created_by, completed_by, completed_at)
                 select :tenant,
-                  md5('tertiary-operational-v1:care-plan:' || encounter_id || ':' || ordinal)::uuid,
+                  overlay(overlay(
+                    md5('tertiary-operational-v1:care-plan:' || encounter_id || ':' || ordinal)
+                    placing '4' from 13 for 1) placing '8' from 17 for 1)::uuid,
                   patient_id, encounter_id, facility_id, admission_id, nursing_problem, goal, intervention,
                   case when ordinal = 5 then '已完成环境整理与家属教育，患者能主动求助' else null end,
                   priority, case when ordinal = 5 then 'COMPLETED' else 'ACTIVE' end,

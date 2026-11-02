@@ -102,6 +102,11 @@ const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 const results = [];
 
 try {
+  await page.goto(`${baseUrl}/#/clinical`, { waitUntil: 'domcontentloaded' });
+  await page.getByLabel('用户名', { exact: true }).fill(process.env.HAOEMR_DEV_LOGIN_USERNAME || 'linwei');
+  await page.locator('#system-login-password').fill(process.env.HAOEMR_DEV_LOGIN_PASSWORD || 'HaoEMR-dev!');
+  await page.getByRole('button', { name: '登录系统', exact: true }).click();
+  await page.locator('main').waitFor({ state: 'visible', timeout: 30_000 });
   for (const [routeIndex, route] of routes.entries()) {
     if (routeIndex === 0) await page.goto(`${baseUrl}/#/${route}`, { waitUntil: 'domcontentloaded', timeout: 25_000 });
     else await page.evaluate((nextRoute) => { window.location.hash = `#/${nextRoute}`; }, route);
@@ -151,6 +156,10 @@ try {
         await control.fill(String(Number.isInteger(number) ? number : number.toFixed(1)));
         continue;
       }
+      if (meta.type === 'datetime-local') {
+        await control.fill(localDateTimeFor(meta.label));
+        continue;
+      }
       if (meta.value) continue;
       if (!meta.required && /可选/.test(`${meta.label} ${meta.placeholder}`) && !/材料批次/.test(meta.label)) continue;
       if (meta.type === 'datetime-local') await control.fill(localDateTimeFor(meta.label));
@@ -172,7 +181,7 @@ try {
       const payload = await response.json().catch(() => null);
       syntheticReferences.cycleId = payload?.art_cycle_record_id ?? syntheticReferences.cycleId;
     }
-    await page.waitForTimeout(800);
+    await page.waitForTimeout(2000);
     const after = await page.locator('main tbody tr').count();
     const notice = await page.locator('main [role="status"]').allTextContents();
     const status = after > before ? 'CREATED' : 'SUBMITTED_NO_ROW';
